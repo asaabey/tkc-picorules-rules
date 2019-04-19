@@ -58,8 +58,9 @@ BEGIN
 END sanitise_varname;
 
 BEGIN
-    s:='EADV.[egfrsaasa_knk].DT.LAST';
+    --s:='EADV.[egfrsaasa_knk].DT.LAST';
     
+    s:='EADV.[]';
     t:=splitstr(s,'.');
     DBMS_OUTPUT.PUT_LINE ('split string ::' || s);
     for i in 1..t.COUNT LOOP

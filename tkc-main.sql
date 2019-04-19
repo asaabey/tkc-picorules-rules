@@ -20,11 +20,15 @@ BEGIN
     VALUES('r1', 'egfrl => eGFR; acrl => ACR;');
     
     INSERT INTO rpipe 
-    VALUES('r2', 'hdld => EADV.[Z49.1].DT.LAST();');
+    VALUES('r2', 'hdld => EADV.[Z49_%].DT.LAST();');
     
     INSERT INTO rpipe 
-    VALUES('r3', 'ckdstage(egfr.last,acrl):{egfrl>=90 => 1}{egfrl<90 AND egfrl>=60  AND acrl>=30 => 2},{egfrl<60 AND egfrl>=45 => 3b},{egfrl<45 AND egfrl>=30 => 3a},{egfrl<30 AND egfrl>=15 => 4},{egfrl<15=> 5}');
---            
+    VALUES('r2.1', 'sbp_lv => EADV.[SYSTOLIC].VAL.LAST();');
+    
+    INSERT INTO rpipe 
+    VALUES('r2.2', 'cong_icpc2p => EADV.[U88093,U95008,U95004].DT.LAST();');
+    
+    
 INSERT INTO rpipe 
 VALUES('r4', 'ckdstage(egfrl,acrl):{egfrl>=90 AND acrl>30 => 1},{egfrl<90 AND egfrl>=60  AND acrl>30 => 2},{egfrl<60 AND egfrl>=45 => 3b},{egfrl<45 AND egfrl>=30 => 3a},{egfrl<30 AND egfrl>=15 => 4},{egfrl<15=> 5}');
     

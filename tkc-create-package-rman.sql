@@ -115,7 +115,9 @@ FUNCTION sanitise_varname(varname VARCHAR2) return VARCHAR2
 AS
     s VARCHAR2(100); 
 BEGIN
+    -- trim bounding parantheses
     s:= TRANSLATE(varname, '1-+(){}[] ', '1');
+    -- surround with double quotes if full stop and spaces found in var from varnames
     IF instr(varname,'.')>0 OR instr(varname,' ')>0 THEN 
         s:= '"' || s || '"';
     END IF;
@@ -274,6 +276,7 @@ IS
     func        varchar2(32);
     funcparam   PLS_INTEGER;
     att         varchar2(100);
+    att_str     varchar2(256);
     tbl         varchar2(100);
     prop         varchar2(100);
     assnvar     varchar2(100);
@@ -285,6 +288,7 @@ IS
     groupby_txt VARCHAR(2000);
     is_sub_val INT:=0;
     varr tbl_type;
+    att_tbl tbl_type;
     ude_function_undefined EXCEPTION;
 BEGIN
     
@@ -329,6 +333,25 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Syntax error');
     END IF;
     
+    IF INSTR(att,',')>0 THEN
+   
+        att_tbl:= rman_pckg.splitstr(att,',','','');
+        
+        for i IN 1..att_tbl.COUNT LOOP
+              IF i=1 THEN 
+                att_str:=att_str || sanitise_varname(att_tbl(i)) || '`,';
+              ELSIF i=att_tbl.COUNT THEN
+                att_str:=att_str || '`' || sanitise_varname(att_tbl(i));
+              ELSE
+                att_str:=att_str || '`' || sanitise_varname(att_tbl(i)) || '`,';
+              END IF;
+        END LOOP;
+        
+        att:=att_str;
+        
+        equality_cmd:=' IN';
+    END IF;
+    
     --if % operator found in att name
     IF INSTR(att,like_op)>0 THEN
             equality_cmd:=' LIKE';
@@ -342,7 +365,7 @@ BEGIN
         WHEN FUNC IN ('MAX','MIN','COUNT','SUM','AVG','MEDIAN') THEN
             
             
-            where_txt:= att_col || equality_cmd || ' `' || sanitise_varname(att) || '`';
+            where_txt:= att_col || equality_cmd || '(`' || sanitise_varname(att) || '`)';
             --where_txt:= att_col || '=`' || sanitise_varname(att) || '`';
             --where_txt:= att_col || '=`' || att || '`';
             from_txt:= tbl;
@@ -369,7 +392,7 @@ BEGIN
                 END IF;
                 IF func='FIRST' THEN sortdirection:='';END IF;  
                 ctename:=get_cte_name(indx);  
-                where_txt:= att_col || equality_cmd || ' `' || sanitise_varname(att) || '`';
+                where_txt:= att_col || equality_cmd || '(`' || sanitise_varname(att) || '`)';
                 --where_txt:= att_col || '=`' || sanitise_varname(att) || '`';
                 from_txt:= tbl;
                 
