@@ -28,4 +28,4 @@ BEGIN
    FROM   dual;
 END;
  
- 
+CREATE INDEX att_idx ON EADV(att);

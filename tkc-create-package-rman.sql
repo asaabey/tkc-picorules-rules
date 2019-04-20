@@ -55,6 +55,8 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     
     PROCEDURE getcomposite(cmpstat OUT NVARCHAR2); 
     
+    FUNCTION sql_predicate(att_str VARCHAR2) RETURN VARCHAR2;
+    
     FUNCTION sanitise_varname(varname VARCHAR2) return VARCHAR2;
     
     --FUNCTION splitstr(list in varchar2,delimiter in varchar2 default ',') return tbl_type;
@@ -81,6 +83,10 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     sqlstat     OUT VARCHAR2,
     rows_added OUT PLS_INTEGER
     ) ;
+    
+    PROCEDURE build_scalar_sql_exp(
+    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
+    );
     
     PROCEDURE build_cond_sql_exp(indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);   
 END;
@@ -111,12 +117,50 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --    end if;
 --  end loop;
 --end splitstr;
+FUNCTION sql_predicate(att_str VARCHAR2) RETURN VARCHAR2
+AS
+att_tbl tbl_type;
+eq_op VARCHAR2(6);
+escape_stat VARCHAR(20):=' ESCAPE ''!''';
+s VARCHAR2(5000);
+att_col CONSTANT VARCHAR2(30):='ATT';
+BEGIN
+    IF INSTR(att_str,',')>0 THEN
+        att_tbl:=rman_pckg.splitstr(att_str,',','','');
+        FOR i in 1..att_tbl.COUNT LOOP
+            IF INSTR(att_tbl(i),'%')>0 THEN
+                eq_op:=' LIKE ';
+            ELSE 
+                eq_op:=' = ';
+            END IF;
+            s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';
+--            IF eq=' LIKE ' AND INSTR(sanitise_varname(att_tbl(i)),'_') THEN
+--                  
+--            ELSE
+--                s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';  
+--            END IF;
+            IF i<att_tbl.COUNT THEN
+                s:=s || ' OR ';
+            END IF;
+        END LOOP;
+    ELSIF INSTR(att_str,',')=0 THEN
+        IF INSTR(att_str,'%')>0 THEN
+                eq_op:=' LIKE ';
+            ELSE 
+                eq_op:=' = ';
+            END IF;
+            s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_str) || '`)';  
+    END IF;
+    
+    return s;
+END sql_predicate;
+
 FUNCTION sanitise_varname(varname VARCHAR2) return VARCHAR2
 AS
     s VARCHAR2(100); 
 BEGIN
     -- trim bounding parantheses
-    s:= TRANSLATE(varname, '1-+(){}[] ', '1');
+    s:= TRANSLATE(varname, '1-+{}[] ', '1');
     -- surround with double quotes if full stop and spaces found in var from varnames
     IF instr(varname,'.')>0 OR instr(varname,' ')>0 THEN 
         s:= '"' || s || '"';
@@ -185,7 +229,7 @@ BEGIN
      
         ctename:=get_cte_name(i);        
         
-        cmpstat := cmpstat || ctename || ' AS (SELECT ' || rmanobj(I).select_clause || ' FROM ' || rmanobj(I).from_clause ;
+        cmpstat := cmpstat || ctename || ' AS (SELECT ' || REPLACE(rmanobj(I).select_clause,'`','''') || ' FROM ' || rmanobj(I).from_clause ;
                 
         IF rmanobj(I).where_clause IS NOT NULL THEN cmpstat:=cmpstat ||' WHERE ' || REPLACE(rmanobj(I).where_clause,'`',''''); END IF;
         
@@ -275,7 +319,7 @@ PROCEDURE build_func_sql_exp
 IS
     func        varchar2(32);
     funcparam   PLS_INTEGER;
-    att         varchar2(100);
+    att         varchar2(4000);
     att_str     varchar2(256);
     tbl         varchar2(100);
     prop         varchar2(100);
@@ -333,30 +377,9 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Syntax error');
     END IF;
     
-    IF INSTR(att,',')>0 THEN
-   
-        att_tbl:= rman_pckg.splitstr(att,',','','');
-        
-        for i IN 1..att_tbl.COUNT LOOP
-              IF i=1 THEN 
-                att_str:=att_str || sanitise_varname(att_tbl(i)) || '`,';
-              ELSIF i=att_tbl.COUNT THEN
-                att_str:=att_str || '`' || sanitise_varname(att_tbl(i));
-              ELSE
-                att_str:=att_str || '`' || sanitise_varname(att_tbl(i)) || '`,';
-              END IF;
-        END LOOP;
-        
-        att:=att_str;
-        
-        equality_cmd:=' IN';
-    END IF;
+    --att:=sanitise_varname(sql_predicate(att));
     
-    --if % operator found in att name
-    IF INSTR(att,like_op)>0 THEN
-            equality_cmd:=' LIKE';
-    END IF;
-    
+    att:=sql_predicate(att);
     
     
     CASE 
@@ -364,14 +387,12 @@ BEGIN
         
         WHEN FUNC IN ('MAX','MIN','COUNT','SUM','AVG','MEDIAN') THEN
             
+            where_txt:=att;
             
-            where_txt:= att_col || equality_cmd || '(`' || sanitise_varname(att) || '`)';
-            --where_txt:= att_col || '=`' || sanitise_varname(att) || '`';
-            --where_txt:= att_col || '=`' || att || '`';
             from_txt:= tbl;
             select_txt:=  entity_id_col || ',' || func || '(' || prop || ') AS ' || assnvar || ' ';
-            groupby_txt:=att_col ||',' || entity_id_col;
-            
+            --groupby_txt:=att_col ||',' || entity_id_col;
+            groupby_txt:=entity_id_col;
             InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
             rows_added:= 1;
@@ -391,12 +412,12 @@ BEGIN
                 ELSE rankindx := funcparam + 1;
                 END IF;
                 IF func='FIRST' THEN sortdirection:='';END IF;  
-                ctename:=get_cte_name(indx);  
-                where_txt:= att_col || equality_cmd || '(`' || sanitise_varname(att) || '`)';
-                --where_txt:= att_col || '=`' || sanitise_varname(att) || '`';
+                ctename:=get_cte_name(indx); 
+                where_txt:=att;
                 from_txt:= tbl;
                 
-                select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ',' || att_col ||' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
+                --select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ',' || att_col ||' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
+                select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
                 groupby_txt:='';
                 is_sub_val:=1;
                 
@@ -421,10 +442,8 @@ BEGIN
         WHEN FUNC='EXISTS' THEN
             DECLARE 
             BEGIN
+                where_txt:=att;
                 
-                where_txt:= att_col || equality_cmd || ' `' || sanitise_varname(att) || '`';
-                --where_txt:= att_col || '=`' || sanitise_varname(att) || '`';
-                --where_txt:= att_col || '=`' || att || '` ';
                 from_txt:= def_tbl_name;
                 select_txt:= entity_id_col || ',1 AS ' || assnvar || ' ';
                 groupby_txt:=entity_id_col || ',' || att_col;
@@ -450,6 +469,125 @@ EXCEPTION
 END build_func_sql_exp;
 
 PROCEDURE build_cond_sql_exp(
+    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
+)   
+IS
+
+    t1 tbl_type;
+    
+    avn varchar2(50);
+    expr varchar2(32767);
+    used_vars varchar2(100);
+    
+    
+    
+    expr_tbl tbl_type;
+    used_vars_tbl tbl_type;
+    expr_elem tbl_type;
+    
+    expr_then varchar2(32);
+    expr_when varchar(100);
+    from_clause varchar2(2000);
+    op_delim varchar2(3):='|';
+    txt  VARCHAR2(32767);
+    
+    select_text varchar2(32767);
+
+BEGIN
+    from_clause:='';
+    select_text:='CASE ';
+    
+    --split initial statement into assigned var (avn) and expr at :
+    -- found form of avn() :
+    
+    
+    IF INSTR(txtin,':')>0  AND INSTR(txtin,'(',1,1)>0 THEN
+        avn:=SUBSTR(txtin, 1, INSTR(txtin,'(',1,1)-1);
+    END IF;
+
+    -- split at major assignment
+    
+    IF avn IS NOT NULL THEN
+        --major assignment should be of function () type
+       
+            
+            used_vars:=REGEXP_SUBSTR(SUBSTR(txtin,1,INSTR(txtin,':')-1), '\((.*)?\)', 1, 1, 'i', 1);
+DBMS_OUTPUT.PUT_LINE('---------------------------- '|| used_vars);
+            used_vars_tbl:=rman_pckg.splitstr(used_vars,',');
+            
+            --build from clause using cte joins
+            IF used_vars_tbl.COUNT=1 THEN
+                from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
+            ELSIF used_vars_tbl.COUNT>1 THEN
+     
+                from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
+                for i IN 2..used_vars_tbl.LAST LOOP
+          
+                    from_clause:=from_clause || ' INNER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
+                            || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
+                            || get_cte_name(vstack(used_vars_tbl(1))) || '.' || entity_id_col || ' ';
+                END LOOP;
+                
+            ELSE
+                -- RAISE EXCEPTION
+                DBMS_OUTPUT.PUT(', ');
+            END IF;
+            
+                       
+            expr:= SUBSTR(txtin,INSTR(txtin,':'));
+            
+            expr_tbl:=rman_pckg.splitstr(expr,',','{','}');
+            
+            
+            --split to expression array
+            for i in 1..expr_tbl.COUNT loop
+                --check if properly formed by curly brackets
+                expr:=regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1,1,NULL,1);
+                
+
+                --split minor assignment
+                expr_elem:=rman_pckg.splitstr(expr,'=>');
+                if expr_elem.EXISTS(2) THEN
+                    if expr_elem(1) IS NOT NULL THEN
+                        expr_then:=expr_elem(2);
+                        expr_when:=trim(expr_elem(1));
+
+
+                         
+                        select_text:=select_text || 'WHEN '|| expr_when || ' THEN ' || expr_then || ' ';  
+
+                    ELSE 
+                        expr_then:=expr_elem(2);
+                        
+                        select_text:=select_text || 'ELSE '|| expr_then || ' ';
+                    end if;
+                
+                    
+                end if;
+                
+                
+            end loop;
+            
+            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || get_cte_name(vstack(used_vars_tbl(1))) ||'.' || entity_id_col || ' ';
+            vstack(avn):=indx;
+            
+
+            InsertIntoRman(indx,'',from_clause,select_text,'',avn,0,sqlstat);
+        
+            rows_added:= 1;
+        
+       
+    END IF;
+    
+--EXCEPTION
+--    WHEN NO_DATA_FOUND THEN
+--          DBMS_OUTPUT.PUT_LINE ('no conditional assignment'); 
+--        
+--    WHEN OTHERS THEN
+--        dbms_output.put_line('exc other');
+END build_cond_sql_exp;
+
+PROCEDURE build_scalar_sql_exp(
     indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
 )   
 IS
@@ -520,6 +658,7 @@ BEGIN
             for i in expr_tbl.first..expr_tbl.last loop
                 --check if properly formed by curly brackets
                 expr:=regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1,1,NULL,1);
+    
                 --split minor assignment
                 expr_elem:=rman_pckg.splitstr(expr,'=>');
                 if expr_elem.EXISTS(2) THEN
@@ -557,11 +696,14 @@ EXCEPTION
         
     WHEN OTHERS THEN
         dbms_output.put_line('exc other');
-END build_cond_sql_exp;
+END build_scalar_sql_exp;
 
 PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
     rpipe_col rpipe_tbl_type;
     indx PLS_INTEGER;
+    
+    indxtmp VARCHAR2(100);
+    
     rows_added PLS_INTEGER;
     statements_tbl tbl_type;
     rs VARCHAR2(4000);
@@ -631,6 +773,18 @@ BEGIN
         
     end loop;
     getcomposite(sqlout);
+    
+--    indxtmp:=vstack.FIRST;
+--    
+--    WHILE (indxtmp is not null)
+--    LOOP
+--        dbms_output.put_line('--- >>' || vstack(indxtmp));
+--        indxtmp:=vstack.next(indxtmp);
+--    END LOOP;
+    
+    
+    
+    
     
 END parse_rpipe;
 

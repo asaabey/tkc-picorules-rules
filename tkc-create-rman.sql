@@ -2,7 +2,7 @@ DROP TABLE rman;
 CREATE TABLE rman
 (
     id INT NOT NULL,
-    where_clause VARCHAR2(100),
+    where_clause VARCHAR2(4000),
     from_clause VARCHAR2(4000),
     select_clause VARCHAR2(4000),
     groupby_clause VARCHAR2(100),

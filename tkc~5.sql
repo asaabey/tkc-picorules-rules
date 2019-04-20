@@ -1,21 +1,31 @@
-CLEAR SCREEN;
-SET SERVEROUTPUT ON;
-DECLARE 
-    txt varchar2(4000);
-    ext varchar2(4000);
-BEGIN
-    txt:='ckdstage(eGFRLast,ACRLast):{egfrl<90 AND egfrl>=60 => 2},
-            {egfrl<60 AND egfrl>=45 => 3b},
-            {egfrl<45 AND egfrl>=30 => 3a},
-            {egfrl<30 AND egfrl>=15 => 4},
-            {=> 5}';
-    
-    txt:='egfrl => EADV.eGFR.VAL.LAST(1)';
-    
-    
-    nn
-    ext:= regexp_coureeeeeent(txt, '\w+\((.*)?\)\:');
-    
-    DBMS_OUTPUT.put_line(ext);
-END;
-/
+SELECT
+    system_rules_attribute_id,
+    classification_like,
+    code_like
+FROM
+    system_rules_codes
+WHERE 
+    SYSTEM_RULES_ATTRIBUTE_ID IN ('RRT.HD.Px.Tertiary','RRT.HD.Dx.ICD') ;
+
+SELECT ATT, COUNT(*),EID
+FROM eadv
+WHERE (ATT LIKE 'icd_Z49%' ESCAPE '!')
+--WHERE ATT IN ('E08')
+GROUP BY ATT,EID
+ORDER BY EID;
+
+
+
+SELECT ATT, COUNT(*)
+FROM eadv
+WHERE (ATT LIKE '%!%%' ESCAPE '!')
+--WHERE ATT IN ('E08')
+GROUP BY ATT;
+
+UPDATE EADV
+SET att='icd_' || att
+WHERE (ATT LIKE '%!_%' ESCAPE '!');
+
+UPDATE EADV
+SET att=REPLACE(att,'%','_DFCC')
+WHERE (ATT LIKE '%!%%' ESCAPE '!');

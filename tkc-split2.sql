@@ -19,18 +19,19 @@ begin
             -- find next delimiter
             i := instr(list_, delimiter);
              --if delimiter found
-            DBMS_OUTPUT.put_line('splitstr :::' || i);
+      --      DBMS_OUTPUT.put_line('splitstr :::' || i);
             if i > 0 THEN 
                 -- find ignore bouding region
                 ignore_left_pos:=INSTR(list_,ignore_left);
                 ignore_right_pos:=INSTR(list_,ignore_right);
                 
-                --splitted.extend(1);              
+                --splitted.extend(1);   
+                -- when bounding region defined and delimiter found inside bounding region
                 if ignore_left_pos>0 AND ignore_right_pos>ignore_left_pos AND i>ignore_left_pos AND i<ignore_right_pos THEN
-                        --if trim(substr(list_, 2, ignore_right_pos-2)) IS NOT NULL THEN
+                        
                             splitted.extend(1);
                             splitted(splitted.last) := substr(list_, length(ignore_left), ignore_right_pos-length(ignore_right));
-                            list_ := substr(list_, i+(ignore_right_pos-ignore_left_pos-3));
+                            list_ := substr(list_, i+(ignore_right_pos-ignore_left_pos));
                         --end if;
                 else
                         --if trim(substr(list_, 1, i - 1)) IS NOT NULL THEN
@@ -45,7 +46,7 @@ begin
                     splitted(splitted.last) := trim(list_);
                     return splitted;
             end if;
-            DBMS_OUTPUT.PUT_LINE('roll::: ' || i || '() ' || list_);
+            --DBMS_OUTPUT.PUT_LINE('roll::: ' || i || '() ' || list_);
           end loop;
 end splitstr;
 FUNCTION sanitise_varname(varname VARCHAR2) return VARCHAR2
@@ -58,15 +59,15 @@ BEGIN
 END sanitise_varname;
 
 BEGIN
-    --s:='EADV.[egfrsaasa_knk].DT.LAST';
+    s:='EADV.[egfrsaasa.knk].DT.LAST';
     
-    s:='EADV.[]';
-    t:=splitstr(s,'.');
+    --s:='EADV.[]';
+    t:=splitstr(s,'.','[',']');
     DBMS_OUTPUT.PUT_LINE ('split string ::' || s);
     for i in 1..t.COUNT LOOP
         DBMS_OUTPUT.PUT_LINE ('split::(' || i || ')::' || t(i));
     END LOOP;
     
-    DBMS_OUTPUT.PUT_LINE('sanitise : ' || sanitise_varname('[ASA12]'));
+    --DBMS_OUTPUT.PUT_LINE('sanitise : ' || sanitise_varname('[ASA12]'));
 
 END;
