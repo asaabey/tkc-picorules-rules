@@ -489,8 +489,8 @@ IS
     used_vars_tbl tbl_type;
     expr_elem tbl_type;
     
-    expr_then varchar2(32);
-    expr_when varchar(100);
+    expr_then varchar2(32767);
+    expr_when varchar2(32767);
     from_clause varchar2(2000);
     op_delim varchar2(3):='|';
     txt  VARCHAR2(32767);
@@ -519,27 +519,50 @@ BEGIN
 --DBMS_OUTPUT.PUT_LINE('-----------------------'|| avn || '--- '|| used_vars);
             used_vars_tbl:=rman_pckg.splitstr(used_vars,',');
             
-            --build from clause using cte joins
-            IF used_vars_tbl.COUNT=1 THEN
-                from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
-            ELSIF used_vars_tbl.COUNT>1 THEN
-                from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
-                for i IN 2..used_vars_tbl.LAST LOOP
-          
-                    from_clause:=from_clause || ' INNER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
-                            || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                            || get_cte_name(vstack(used_vars_tbl(1))) || '.' || entity_id_col || ' ';
-                END LOOP;
-                
+            expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
+            
+            IF INSTR(expr,'1=1 ')>0 THEN
+
+                    IF used_vars_tbl.COUNT=1 THEN
+                        from_clause :=from_clause || get_cte_name(0);
+                    ELSIF used_vars_tbl.COUNT>1 THEN
+                        from_clause :=from_clause || get_cte_name(0);
+                        for i IN 1..used_vars_tbl.LAST LOOP
+                  
+                            from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
+                                    || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
+                                    || get_cte_name(0) || '.' || entity_id_col || ' ';
+                        END LOOP;
+                        
+                    ELSE
+                        -- RAISE EXCEPTION
+                        DBMS_OUTPUT.PUT(', ');
+                    END IF;
+
             ELSE
-                -- RAISE EXCEPTION
-                DBMS_OUTPUT.PUT(', ');
+            --build from clause using cte joins
+                    IF used_vars_tbl.COUNT=1 THEN
+                        from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
+                    ELSIF used_vars_tbl.COUNT>1 THEN
+                        from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
+                        for i IN 2..used_vars_tbl.LAST LOOP
+                  
+                            from_clause:=from_clause || ' INNER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
+                                    || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
+                                    || get_cte_name(vstack(used_vars_tbl(1))) || '.' || entity_id_col || ' ';
+                        END LOOP;
+                        
+                    ELSE
+                        -- RAISE EXCEPTION
+                        DBMS_OUTPUT.PUT(', ');
+                    END IF;
             END IF;
+            
             
                        
             expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
             
-dbms_output.put_line('......expr..-> '|| avn || ' --> ' ||expr);
+--dbms_output.put_line('......expr..-> '|| avn || ' --> ' ||expr);
             
             expr_tbl:=rman_pckg.splitstr(expr,',','{','}');
             
@@ -547,10 +570,10 @@ dbms_output.put_line('......expr..-> '|| avn || ' --> ' ||expr);
             --split to expression array
             for i in 1..expr_tbl.COUNT loop
                 --check if properly formed by curly brackets
-dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || '--> expr_tbl(i) ' || expr_tbl(i));
+--dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || '--> expr_tbl(i) ' || expr_tbl(i));
                 expr:=regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1,1,NULL,1);
                 
-dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || ' --> ' ||expr);
+--dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || ' --> ' ||expr);
 
                 --split minor assignment
                 expr_elem:=rman_pckg.splitstr(expr,'=>','','');
@@ -558,24 +581,15 @@ dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || ' --> 
                     if expr_elem(1) IS NOT NULL THEN
                         expr_then:=expr_elem(2);
                         expr_when:=trim(expr_elem(1));
-
-
-                         
                         select_text:=select_text || 'WHEN '|| expr_when || ' THEN ' || expr_then || ' ';  
-
                     ELSE 
                         expr_then:=expr_elem(2);
-                        
                         select_text:=select_text || 'ELSE '|| expr_then || ' ';
-                    end if;
-                
-                    
+                    end if;             
                 end if;
-                
-                
             end loop;
             
-            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || get_cte_name(vstack(used_vars_tbl(1))) ||'.' || entity_id_col || ' ';
+            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || get_cte_name(0) ||'.' || entity_id_col || ' ';
             vstack(avn):=indx;
             
 
@@ -672,13 +686,13 @@ BEGIN
     end loop;
     getcomposite(sqlout);
     
---    indxtmp:=vstack.FIRST;
---    
---    WHILE (indxtmp is not null)
---    LOOP
---        dbms_output.put_line('--- >>' || vstack(indxtmp));
---        indxtmp:=vstack.next(indxtmp);
---    END LOOP;
+    indxtmp:=vstack.FIRST;
+    
+    WHILE (indxtmp is not null)
+    LOOP
+        dbms_output.put_line('--- >>' || indxtmp);
+        indxtmp:=vstack.next(indxtmp);
+    END LOOP;
     
     
     
