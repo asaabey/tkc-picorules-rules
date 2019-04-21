@@ -96,27 +96,7 @@ END;
 CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 --https://stackoverflow.com/questions/3710589/is-there-a-function-to-split-a-string-in-pl-sql/3710619#3710619
---FUNCTION splitstr(
---  list in varchar2,
---  delimiter in varchar2 default ','
---) return tbl_type as
---  splitted tbl_type := tbl_type();
---  i pls_integer := 0;
---  list_ varchar2(32767) := list;
---begin
---  loop
---    i := instr(list_, delimiter);
---    if i > 0 then
---      splitted.extend(1);
---      splitted(splitted.last) := substr(list_, 1, i - 1);
---      list_ := substr(list_, i + length(delimiter));
---    else
---      splitted.extend(1);
---      splitted(splitted.last) := trim(list_);
---      return splitted;
---    end if;
---  end loop;
---end splitstr;
+
 FUNCTION sql_predicate(att_str VARCHAR2) RETURN VARCHAR2
 AS
 att_tbl tbl_type;
@@ -326,8 +306,10 @@ IS
     att         varchar2(4000);
     att_str     varchar2(256);
     tbl         varchar2(100);
-    prop         varchar2(100);
+    prop        varchar2(100);
     assnvar     varchar2(100);
+    predicate   varchar2(4000);
+    constparam  varchar2(4000);
     
     equality_cmd  varchar2(5):='=';
     where_txt VARCHAR(2000);
@@ -353,7 +335,16 @@ BEGIN
 --    
 --    END LOOP;
     
-     IF varr.COUNT=4 THEN
+    IF varr.COUNT=5 THEN
+        tbl:=UPPER(varr(1));
+        att:=varr(2);
+        prop:=varr(3);
+        func:=UPPER(SUBSTR(varr(4), 1, INSTR(varr(4),'(',1,1)-1));
+        funcparam:=NVL(REGEXP_SUBSTR(varr(4), '\((.*)?\)', 1, 1, 'i', 1),0);
+        IF UPPER(SUBSTR(varr(5),1,5))='WHERE' THEN
+            predicate:=' AND '|| REGEXP_SUBSTR(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
+        END IF;
+    ELSIF varr.COUNT=4 THEN
         tbl:=UPPER(varr(1));
         att:=varr(2);
         prop:=varr(3);
@@ -372,11 +363,21 @@ BEGIN
         func:='LAST';
         funcparam:=0;
     ELSIF varr.COUNT=1 THEN
-        tbl:=def_tbl_name;
-        att:=varr(1);
-        prop:=val_col;
-        func:='LAST';
-        funcparam:=0;
+        IF UPPER(SUBSTR(varr(1),1,5))='CONST' THEN
+            --tbl:='DUAL';
+            --att:='1=1';
+            --prop:=val_col;
+            func:='CONST';
+            --funcparam:=0;
+            constparam:=REGEXP_SUBSTR(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
+        ELSE
+            tbl:=def_tbl_name;
+            att:=varr(1);
+            prop:=val_col;
+            func:='LAST';
+            funcparam:=0;
+        END IF;
+        
     ELSE
         DBMS_OUTPUT.PUT_LINE('Syntax error');
     END IF;
@@ -391,7 +392,7 @@ BEGIN
         
         WHEN FUNC IN ('MAX','MIN','COUNT','SUM','AVG','MEDIAN') THEN
             
-            where_txt:=att;
+            where_txt:=att || predicate;
             
             from_txt:= tbl;
             select_txt:=  entity_id_col || ',' || func || '(' || prop || ') AS ' || assnvar || ' ';
@@ -417,7 +418,7 @@ BEGIN
                 END IF;
                 IF func='FIRST' THEN sortdirection:='';END IF;  
                 ctename:=get_cte_name(indx); 
-                where_txt:=att;
+                where_txt:=att || predicate;
                 from_txt:= tbl;
                 
                 --select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ',' || att_col ||' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
@@ -461,6 +462,25 @@ BEGIN
                     vstack(assnvar):=indx;
                 END IF;
             END;
+        WHEN FUNC='CONST' THEN
+            DECLARE
+            BEGIN
+                where_txt:='1=1';
+                
+                from_txt:= def_tbl_name;
+                select_txt:= entity_id_col || ',' || constparam || ' AS ' || assnvar || ' ';
+                groupby_txt:=entity_id_col;
+                
+                is_sub_val:=0;
+            
+                InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
+            
+                rows_added:= 1;
+            
+                IF assnvar IS NOT NULL THEN
+                    vstack(assnvar):=indx;
+                END IF;
+            END;
         ELSE 
             RAISE ude_function_undefined;
             
@@ -479,9 +499,10 @@ IS
 
     t1 tbl_type;
     
-    avn varchar2(50);
+    avn varchar2(5000);
     expr varchar2(32767);
-    used_vars varchar2(100);
+    used_vars varchar2(5000);
+    left_tbl_name varchar2(100);
     
     
     
@@ -491,7 +512,7 @@ IS
     
     expr_then varchar2(32767);
     expr_when varchar2(32767);
-    from_clause varchar2(2000);
+    from_clause varchar2(32767);
     op_delim varchar2(3):='|';
     txt  VARCHAR2(32767);
     
@@ -521,17 +542,19 @@ BEGIN
             
             expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
             
-            IF INSTR(expr,'1=1 ')>0 THEN
-
-                    IF used_vars_tbl.COUNT=1 THEN
-                        from_clause :=from_clause || get_cte_name(0);
-                    ELSIF used_vars_tbl.COUNT>1 THEN
-                        from_clause :=from_clause || get_cte_name(0);
+            left_tbl_name := get_cte_name(0);
+            
+--            IF INSTR(expr,'1=1 ')>0 THEN
+            IF 1=1 THEN
+                    IF used_vars_tbl.COUNT>0 THEN
+                        from_clause :=from_clause || left_tbl_name;
+                    --ELSIF used_vars_tbl.COUNT>1 THEN
+                      --  from_clause :=from_clause || left_tbl_name;
                         for i IN 1..used_vars_tbl.LAST LOOP
                   
                             from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
                                     || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                                    || get_cte_name(0) || '.' || entity_id_col || ' ';
+                                    || left_tbl_name || '.' || entity_id_col || ' ';
                         END LOOP;
                         
                     ELSE
@@ -541,15 +564,16 @@ BEGIN
 
             ELSE
             --build from clause using cte joins
+                    left_tbl_name:=get_cte_name(vstack(used_vars_tbl(1)));
                     IF used_vars_tbl.COUNT=1 THEN
-                        from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
+                        from_clause :=from_clause || left_tbl_name;
                     ELSIF used_vars_tbl.COUNT>1 THEN
-                        from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
+                        from_clause :=from_clause || left_tbl_name;
                         for i IN 2..used_vars_tbl.LAST LOOP
                   
                             from_clause:=from_clause || ' INNER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
                                     || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                                    || get_cte_name(vstack(used_vars_tbl(1))) || '.' || entity_id_col || ' ';
+                                    || left_tbl_name || '.' || entity_id_col || ' ';
                         END LOOP;
                         
                     ELSE
@@ -589,7 +613,7 @@ BEGIN
                 end if;
             end loop;
             
-            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || get_cte_name(0) ||'.' || entity_id_col || ' ';
+            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || left_tbl_name ||'.' || entity_id_col || ' ';
             vstack(avn):=indx;
             
 
@@ -644,12 +668,10 @@ BEGIN
         
         IF INSTR(rs, ';')>0 THEN
             statements_tbl:=rman_pckg.splitstr(rs,';');
-            
             -- loop through each statement in rule line
             FOR j IN 1..statements_tbl.COUNT LOOP
-            
                 ss:=statements_tbl(j);
-                
+DBMS_OUTPUT.put_line('--> statement size --> ' || LENGTH(ss) || ' chars ,' || LENGTHB(ss));
                 IF LENGTH(trim(ss))>0 THEN
                     --aggregate declaration
                     --identified by :
@@ -669,35 +691,19 @@ BEGIN
             
                 
                 END IF;
-                    
             END LOOP;
-            
-            
-            
-           
-        
-        
         END IF;
-        
-     
-    
-        
-        
-    end loop;
+    END LOOP;
     getcomposite(sqlout);
     
-    indxtmp:=vstack.FIRST;
-    
-    WHILE (indxtmp is not null)
-    LOOP
-        dbms_output.put_line('--- >>' || indxtmp);
-        indxtmp:=vstack.next(indxtmp);
-    END LOOP;
-    
-    
-    
-    
-    
+--    indxtmp:=vstack.FIRST;
+--    
+--    WHILE (indxtmp is not null)
+--    LOOP
+--        dbms_output.put_line('--- >>' || indxtmp);
+--        indxtmp:=vstack.next(indxtmp);
+--    END LOOP;
+--    
 END parse_rpipe;
 
 END;
