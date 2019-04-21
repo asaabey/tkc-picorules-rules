@@ -84,9 +84,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     rows_added OUT PLS_INTEGER
     ) ;
     
-    PROCEDURE build_scalar_sql_exp(
-    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
-    );
+--    PROCEDURE build_scalar_sql_exp(
+--    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
+--    );
     
     PROCEDURE build_cond_sql_exp(indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);   
 END;
@@ -176,7 +176,7 @@ FUNCTION splitstr(
   ignore_right in CHAR DEFAULT ']'
 ) return tbl_type as  splitted tbl_type := tbl_type();
   i pls_integer := 0;
-  list_ varchar2(32767) := list;
+  list_ varchar2(32767) := trim(list);
   ignore_right_pos PLS_INTEGER;
   ignore_left_pos PLS_INTEGER;
   ignore_length PLS_INTEGER;
@@ -184,21 +184,25 @@ begin
         loop       
             -- find next delimiter
             i := instr(list_, delimiter);
-             --if delimiter found
+            splitted.extend(1);
             if i > 0 THEN 
                 -- find ignore bouding region
                 ignore_left_pos:=INSTR(list_,ignore_left);
                 ignore_right_pos:=INSTR(list_,ignore_right);
-                splitted.extend(1);              
+                       
+                -- when bounding region defined and delimiter found inside bounding region
                 if ignore_left_pos>0 AND ignore_right_pos>ignore_left_pos AND i>ignore_left_pos AND i<ignore_right_pos THEN
-                        splitted(splitted.last) := substr(list_, 2, ignore_right_pos-2);
-                        list_ := substr(list_, i + (ignore_right_pos-ignore_left_pos-3));
+                        
+                            splitted(splitted.last) := trim(substr(list_,1,(ignore_right_pos-ignore_left_pos)+1));
+                            list_ := trim(substr(list_, ignore_right_pos+2));
+                        
                 else
-                        splitted(splitted.last) := trim(substr(list_, 1, i - 1));
-                        list_ := substr(list_, i + length(delimiter));
+                            splitted(splitted.last) := trim(substr(list_, 1, i - 1));
+                            list_ := trim(substr(list_, i + length(delimiter)));
+                        
                 end if;
             else
-                    splitted.extend(1);
+                    
                     splitted(splitted.last) := trim(list_);
                     return splitted;
             end if;
@@ -512,14 +516,13 @@ BEGIN
        
             
             used_vars:=REGEXP_SUBSTR(SUBSTR(txtin,1,INSTR(txtin,':')-1), '\((.*)?\)', 1, 1, 'i', 1);
-DBMS_OUTPUT.PUT_LINE('---------------------------- '|| used_vars);
+--DBMS_OUTPUT.PUT_LINE('-----------------------'|| avn || '--- '|| used_vars);
             used_vars_tbl:=rman_pckg.splitstr(used_vars,',');
             
             --build from clause using cte joins
             IF used_vars_tbl.COUNT=1 THEN
                 from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
             ELSIF used_vars_tbl.COUNT>1 THEN
-     
                 from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
                 for i IN 2..used_vars_tbl.LAST LOOP
           
@@ -534,7 +537,9 @@ DBMS_OUTPUT.PUT_LINE('---------------------------- '|| used_vars);
             END IF;
             
                        
-            expr:= SUBSTR(txtin,INSTR(txtin,':'));
+            expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
+            
+dbms_output.put_line('......expr..-> '|| avn || ' --> ' ||expr);
             
             expr_tbl:=rman_pckg.splitstr(expr,',','{','}');
             
@@ -542,11 +547,13 @@ DBMS_OUTPUT.PUT_LINE('---------------------------- '|| used_vars);
             --split to expression array
             for i in 1..expr_tbl.COUNT loop
                 --check if properly formed by curly brackets
+dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || '--> expr_tbl(i) ' || expr_tbl(i));
                 expr:=regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1,1,NULL,1);
                 
+dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || ' --> ' ||expr);
 
                 --split minor assignment
-                expr_elem:=rman_pckg.splitstr(expr,'=>');
+                expr_elem:=rman_pckg.splitstr(expr,'=>','','');
                 if expr_elem.EXISTS(2) THEN
                     if expr_elem(1) IS NOT NULL THEN
                         expr_then:=expr_elem(2);
@@ -587,116 +594,7 @@ DBMS_OUTPUT.PUT_LINE('---------------------------- '|| used_vars);
 --        dbms_output.put_line('exc other');
 END build_cond_sql_exp;
 
-PROCEDURE build_scalar_sql_exp(
-    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
-)   
-IS
 
-    t1 tbl_type;
-    
-    avn varchar2(50);
-    expr varchar2(32767);
-    used_vars varchar2(100);
-    
-    
-    expr_tbl tbl_type;
-    used_vars_tbl tbl_type;
-    expr_elem tbl_type;
-    
-    expr_then varchar2(32);
-    expr_when varchar(100);
-    from_clause varchar2(2000);
-    op_delim varchar2(3):='|';
-    txt  VARCHAR2(32767);
-    
-    select_text varchar2(32767);
-
-BEGIN
-    from_clause:='';
-    select_text:='CASE ';
-    
-    --split initial statement into assigned var (avn) and expr at :
-    -- found form of avn() :
-    IF INSTR(txtin,':')>0  AND INSTR(txtin,'(',1,1)>0 THEN
-        avn:=SUBSTR(txtin, 1, INSTR(txtin,'(',1,1)-1);
-    END IF;
-
-    -- split at major assignment
-    
-    IF avn IS NOT NULL THEN
-        --major assignment should be of function () type
-       
-            
-            used_vars:=REGEXP_SUBSTR(txtin, '\((.*)?\)', 1, 1, 'i', 1);
-            used_vars_tbl:=rman_pckg.splitstr(used_vars,',');
-            
-            --build from clause using cte joins
-            IF used_vars_tbl.COUNT=1 THEN
-                from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
-            ELSIF used_vars_tbl.COUNT>1 THEN
-     
-                from_clause :=from_clause || get_cte_name(vstack(used_vars_tbl(1)));
-                for i IN 2..used_vars_tbl.LAST LOOP
-          
-                    from_clause:=from_clause || ' INNER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
-                            || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                            || get_cte_name(vstack(used_vars_tbl(1))) || '.' || entity_id_col || ' ';
-                END LOOP;
-                
-            ELSE
-                -- RAISE EXCEPTION
-                DBMS_OUTPUT.PUT(', ');
-            END IF;
-            
-                       
-            expr:= SUBSTR(txtin,INSTR(txtin,':'));
-            
-            expr_tbl:=rman_pckg.splitstr(expr,',','{','}');
-            
-            
-            --split to expression array
-            for i in expr_tbl.first..expr_tbl.last loop
-                --check if properly formed by curly brackets
-                expr:=regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1,1,NULL,1);
-    
-                --split minor assignment
-                expr_elem:=rman_pckg.splitstr(expr,'=>');
-                if expr_elem.EXISTS(2) THEN
-                    if expr_elem(1) IS NOT NULL THEN
-                        expr_then:=expr_elem(2);
-                        expr_when:=trim(expr_elem(1));
-                    
-                        select_text:=select_text || 'WHEN '|| expr_when || ' THEN ''' || expr_then || ''' ';  
-                    ELSE 
-                        expr_then:=expr_elem(2);
-                        
-                        select_text:=select_text || 'ELSE '''|| expr_then || ''' ';  
-                    end if;
-                
-                    
-                end if;
-                
-                
-            end loop;
-            
-            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || get_cte_name(vstack(used_vars_tbl(1))) ||'.' || entity_id_col || ' ';
-            vstack(avn):=indx;
-            
-
-            InsertIntoRman(indx,'',from_clause,select_text,'',avn,0,sqlstat);
-        
-            rows_added:= 1;
-        
-       
-    END IF;
-    
-EXCEPTION
-    WHEN NO_DATA_FOUND THEN
-          DBMS_OUTPUT.PUT_LINE ('no conditional assignment'); 
-        
-    WHEN OTHERS THEN
-        dbms_output.put_line('exc other');
-END build_scalar_sql_exp;
 
 PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
     rpipe_col rpipe_tbl_type;

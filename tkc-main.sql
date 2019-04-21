@@ -15,8 +15,8 @@ BEGIN
       
     INSERT INTO rpipe VALUES('r1.1', 'egfrlv => eGFR; acrlv => ACR;');
     INSERT INTO rpipe VALUES('r1.1', 'egfrld => EADV.eGFR.DT.MAX(); acrld => EADV.ACR.DT.MAX();');
-    INSERT INTO rpipe VALUES('r2.1', 'egfr10(egfrlv,acrlv) : {1=1 => TO_CHAR(egfrlv*10)} ');
-    INSERT INTO rpipe VALUES('r5.22', 'egfrcoal(egfrlv,acrlv) : {1=1 => TO_CHAR(egfrlv)}');
+   -- INSERT INTO rpipe VALUES('r2.1', 'egfr10(egfrlv,acrlv) : {1=1 => TO_CHAR(egfrlv*10)} ');
+   -- INSERT INTO rpipe VALUES('r5.22', 'egfrcoal(egfrlv,acrlv,egfrld) : {1=1 => COALESCE(egfrlv,acrlv,egfrld)}');
 
     INSERT INTO rpipe VALUES('r2.1', 'sbp_lv => EADV.[SYSTOLIC].VAL.LAST();');
    
