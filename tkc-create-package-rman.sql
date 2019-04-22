@@ -33,7 +33,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
 
     TYPE rman_tbl_type IS TABLE OF rman%ROWTYPE;
     
-    TYPE rpipe_tbl_type IS TABLE OF RPIPE%ROWTYPE;
+    TYPE rpipe_tbl_type IS TABLE OF rman_rpipe%ROWTYPE;
     
     TYPE vstack_type IS TABLE OF PLS_INTEGER INDEX BY VARCHAR2(100);
     vstack  vstack_type;
@@ -59,8 +59,12 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     
     FUNCTION sanitise_varname(varname VARCHAR2) return VARCHAR2;
     
-    --FUNCTION splitstr(list in varchar2,delimiter in varchar2 default ',') return tbl_type;
+    
     FUNCTION splitstr(list in varchar2,delimiter in varchar2 default ',',ignore_left in CHAR DEFAULT '[',  ignore_right in CHAR DEFAULT ']') return tbl_type;
+    
+    FUNCTION splitclob(list in clob,delimiter in varchar2 default ',', ignore_left in CHAR DEFAULT '[', ignore_right in CHAR DEFAULT ']') return tbl_type2;
+    
+    FUNCTION sanitise_clob(clbin CLOB) RETURN CLOB;
     
     FUNCTION get_cte_name (indx BINARY_INTEGER) return NVARCHAR2; 
     
@@ -88,7 +92,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
 --    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
 --    );
     
-    PROCEDURE build_cond_sql_exp(indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);   
+    PROCEDURE build_cond_sql_exp(indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);  
+    
+    PROCEDURE parse_ruleblocks(blockid varchar2);
 END;
 /
 
@@ -188,6 +194,58 @@ begin
             end if;
           end loop;
 end splitstr;
+
+FUNCTION splitclob(
+  list in clob,
+  delimiter in varchar2 default ',',
+  ignore_left in CHAR DEFAULT '[',
+  ignore_right in CHAR DEFAULT ']'
+) return tbl_type2 as  splitted tbl_type2 := tbl_type2();
+  i pls_integer := 0;
+  list_ clob := trim(list);
+  ignore_right_pos PLS_INTEGER;
+  ignore_left_pos PLS_INTEGER;
+  ignore_length PLS_INTEGER;
+begin
+        loop       
+            -- find next delimiter
+            i := dbms_lob.instr(list_, delimiter);
+            splitted.extend(1);
+            
+            
+            if i > 0 THEN 
+                -- find ignore bouding region
+                ignore_left_pos:=dbms_lob.instr(list_,ignore_left);
+                ignore_right_pos:=dbms_lob.instr(list_,ignore_right);
+                       
+                -- when bounding region defined and delimiter found inside bounding region
+                if ignore_left_pos>0 AND ignore_right_pos>ignore_left_pos AND i>ignore_left_pos AND i<ignore_right_pos THEN
+                        
+                            splitted(splitted.last) := trim(dbms_lob.substr(list_,(ignore_right_pos-ignore_left_pos)+1,1));
+                            list_ := dbms_lob.substr(list_,32767,ignore_right_pos+2);
+                        
+                else
+                            splitted(splitted.last) := trim(dbms_lob.substr(list_, i - 1,1));
+                            list_ := dbms_lob.substr(list_,32767,i + length(delimiter));
+                        
+                end if;
+            else
+                    
+                    splitted(splitted.last) := list_;
+                    return splitted;
+                    
+            end if;
+          end loop;
+end splitclob;
+
+FUNCTION sanitise_clob(clbin CLOB) RETURN CLOB AS
+    clb CLOB:=clbin;
+BEGIN
+    clb:=replace(clb,chr(13),' ');
+    clb:=replace(clb,chr(10),' ');
+    clb:=regexp_replace(clb, '[[:space:]]+',' '); 
+    return clb;
+END sanitise_clob;
 
 FUNCTION get_cte_name (indx BINARY_INTEGER) return NVARCHAR2 
 AS
@@ -647,7 +705,7 @@ PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
 BEGIN
     SELECT ruleid, rulebody 
     BULK COLLECT INTO rpipe_col
-    FROM RPIPE;
+    FROM rman_rpipe;
     
     DELETE FROM rman;
     
@@ -671,7 +729,7 @@ BEGIN
             -- loop through each statement in rule line
             FOR j IN 1..statements_tbl.COUNT LOOP
                 ss:=statements_tbl(j);
-DBMS_OUTPUT.put_line('--> statement size --> ' || LENGTH(ss) || ' chars ,' || LENGTHB(ss));
+--DBMS_OUTPUT.put_line('--> statement size --> ' || LENGTH(ss) || ' chars ,' || LENGTHB(ss));
                 IF LENGTH(trim(ss))>0 THEN
                     --aggregate declaration
                     --identified by :
@@ -705,6 +763,33 @@ DBMS_OUTPUT.put_line('--> statement size --> ' || LENGTH(ss) || ' chars ,' || LE
 --    END LOOP;
 --    
 END parse_rpipe;
+
+PROCEDURE parse_ruleblocks(blockid varchar2) IS
+
+
+rbt rman_ruleblocks%ROWTYPE;
+rbtbl tbl_type2;
+BEGIN
+    SELECT blockid,picoruleblock 
+    INTO rbt.blockid, rbt.picoruleblock
+    FROM rman_ruleblocks
+    WHERE blockid = blockid AND ROWNUM=1;
+    
+    DELETE FROM rman_rpipe;
+    
+--DBMS_OUTPUT.put_line('rec ' || rbt.blockid || ' --> ' || rbt.picoruleblock || '<-- END');
+    rbtbl:=splitclob(rbt.picoruleblock,';','','');
+    FOR i in 1..rbtbl.COUNT LOOP
+
+        IF LENGTH(trim(rbtbl(i)))>0 THEN
+--dbms_output.put_line('block '|| i || '-- ' || rbtbl(i));
+            INSERT INTO rman_rpipe VALUES(blockid || lpad(i,5,0), rbtbl(i));
+        END IF;
+    END LOOP;
+
+    
+
+END parse_ruleblocks;
 
 END;
 
