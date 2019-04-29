@@ -351,6 +351,58 @@ BEGIN
             sqlstat:='rows added :' || SQL%ROWCOUNT;
 END InsertIntoRman;
 
+PROCEDURE build_assn_var
+(
+    txtin IN VARCHAR2,
+    delim IN VARCHAR2,
+    left_tbl_name IN VARCHAR2,
+    from_clause OUT VARCHAR2,
+    avn OUT VARCHAR2
+
+) IS
+    used_vars VARCHAR2(4000);
+    used_vars_tbl tbl_type;
+    txt VARCHAR2(4000);
+BEGIN
+            
+            txt:=SUBSTR(txtin,1,INSTR(txtin,delim)-LENGTH(delim)); 
+            
+--            IF INSTR(txt,delim)>0  AND INSTR(txt,'(',1,1)>0 THEN
+            IF INSTR(txt,'(',1,1)>0 THEN
+                avn:=TRIM(SUBSTR(txt, 1, INSTR(txt,'(',1,1)-1));
+--                used_vars:=REGEXP_SUBSTR(SUBSTR(txtin,1,INSTR(txtin,delim)-length(delim)), '\((.*)?\)', 1, 1, 'i', 1);
+                used_vars:=REGEXP_SUBSTR(txt, '\((.*)?\)', 1, 1, 'i', 1);
+--                IF INSTR(used_vars,',')>0 THEN
+--                                  
+--                END IF;            
+                used_vars_tbl:=rman_pckg.splitstr(used_vars,','); 
+                
+                IF used_vars_tbl.COUNT>0 THEN
+                            from_clause :=from_clause || left_tbl_name;                    
+                            for i IN 1..used_vars_tbl.LAST LOOP
+                      
+                                from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
+                                        || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
+                                        || left_tbl_name || '.' || entity_id_col || ' ';
+                            END LOOP;
+                            
+                ELSE
+                            -- RAISE EXCEPTION
+                            DBMS_OUTPUT.PUT('BUILD :: no vars!' );
+                END IF;
+            ELSE
+                avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-1));
+                from_clause :=from_clause || left_tbl_name; 
+            END IF;
+--DBMS_OUTPUT.PUT_LINE('BUILD :: avn -> ' ||  '  used_vars-> ' || used_vars );             
+            
+--EXCEPTION
+--    WHEN OTHERS THEN
+--    DBMS_OUTPUT.PUT_LINE('BUILD ASSN VAR FAILED ');
+
+END build_assn_var;
+
+
 PROCEDURE build_func_sql_exp
 (
     indx        IN INT,
@@ -366,12 +418,15 @@ IS
     tbl         varchar2(100);
     prop        varchar2(100);
     assnvar     varchar2(100);
+    avn         varchar2(100);
     predicate   varchar2(4000);
     constparam  varchar2(4000);
+    left_tbl_name varchar2(100);
     
     equality_cmd  varchar2(5):='=';
     where_txt VARCHAR(2000);
     from_txt VARCHAR(2000);
+    from_clause VARCHAR(2000);
     select_txt VARCHAR(2000);
     groupby_txt VARCHAR(2000);
     is_sub_val INT:=0;
@@ -382,9 +437,7 @@ BEGIN
     
     
     -- parse txt string
-    assnvar:=trim(substr(txtin,1,instr(txtin,assn_op)-1));
-    
-    assnvar:=sanitise_varname(assnvar);
+   
 --DBMS_OUTPUT.PUT_LINE('func :::: ' || trim(substr(txtin,instr(txtin,assn_op)+length(assn_op))));
     --varr:=rman_pckg.splitstr(trim(substr(txtin,instr(txtin,'=>',1,1)+2,length(txtin))),'.','[',']');
     varr:=rman_pckg.splitstr(trim(substr(txtin,instr(txtin,assn_op)+length(assn_op))),'.','[',']');
@@ -444,6 +497,19 @@ BEGIN
     
     att:=sql_predicate(att);
     
+    left_tbl_name := tbl;
+    
+    build_assn_var(txtin,'=>',left_tbl_name,from_clause,avn);
+    
+    assnvar:=avn;
+    
+--    dbms_output.put_line('BUILD ASSN VAR : txtin ' || txtin || ' :: LEFT TBL :' || left_tbl_name || ' FROM_CLAUSE '  || from_clause || ' ASSNVAR :' || assnvar );
+--    assnvar:=trim(substr(txtin,1,instr(txtin,assn_op)-1));
+    
+    assnvar:=sanitise_varname(assnvar);
+    
+--    from_clause:=tbl;
+    
     
     CASE 
         
@@ -452,10 +518,12 @@ BEGIN
             
             where_txt:=att || predicate;
             
-            from_txt:= tbl;
-            select_txt:=  entity_id_col || ',' || func || '(' || prop || ') AS ' || assnvar || ' ';
+--            from_txt:= tbl;
+            from_txt:= from_clause;
+            select_txt:=  tbl || '.' || entity_id_col || ',' || func || '(' || prop || ') AS ' || assnvar || ' ';
             --groupby_txt:=att_col ||',' || entity_id_col;
-            groupby_txt:=entity_id_col;
+--            groupby_txt:=entity_id_col;
+            groupby_txt:=tbl || '.' || entity_id_col;
             InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
             rows_added:= 1;
@@ -477,7 +545,8 @@ BEGIN
                 IF func='FIRST' THEN sortdirection:='';END IF;  
                 ctename:=get_cte_name(indx); 
                 where_txt:=att || predicate;
-                from_txt:= tbl;
+                --from_txt:= tbl;
+                from_txt:= from_clause;
                 
                 --select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ',' || att_col ||' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
                 select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
@@ -507,7 +576,9 @@ BEGIN
             BEGIN
                 where_txt:=att;
                 
-                from_txt:= def_tbl_name;
+--                from_txt:= def_tbl_name;
+                
+                from_txt:= from_clause;
                 select_txt:= entity_id_col || ',1 AS ' || assnvar || ' ';
                 groupby_txt:=entity_id_col || ',' || att_col;
                 is_sub_val:=0;
@@ -525,7 +596,8 @@ BEGIN
             BEGIN
                 where_txt:='1=1';
                 
-                from_txt:= def_tbl_name;
+                --from_txt:= def_tbl_name;
+                from_txt:= from_clause;
                 select_txt:= entity_id_col || ',' || constparam || ' AS ' || assnvar || ' ';
                 groupby_txt:=entity_id_col;
                 
@@ -543,11 +615,11 @@ BEGIN
             RAISE ude_function_undefined;
             
     END CASE;    
-EXCEPTION
-    WHEN ude_function_undefined THEN
-        DBMS_OUTPUT.PUT_LINE('RMAN EXCEPTION: PROC build_func_sql_exp : Undefined function');
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('RMAN EXCEPTION: PROC build_func_sql_exp :Undefined error');
+--EXCEPTION
+--    WHEN ude_function_undefined THEN
+--        DBMS_OUTPUT.PUT_LINE('RMAN EXCEPTION: PROC build_func_sql_exp : Undefined function');
+--    WHEN OTHERS THEN
+--        DBMS_OUTPUT.PUT_LINE('RMAN EXCEPTION: PROC build_func_sql_exp :Undefined error');
 END build_func_sql_exp;
 
 PROCEDURE build_cond_sql_exp(
@@ -582,65 +654,13 @@ BEGIN
     
     --split initial statement into assigned var (avn) and expr at :
     -- found form of avn() :
+    left_tbl_name := get_cte_name(0);
     
+    build_assn_var(txtin,':',left_tbl_name,from_clause,avn);
     
-    IF INSTR(txtin,':')>0  AND INSTR(txtin,'(',1,1)>0 THEN
-        avn:=SUBSTR(txtin, 1, INSTR(txtin,'(',1,1)-1);
-    END IF;
-
     -- split at major assignment
     
     IF avn IS NOT NULL THEN
-        --major assignment should be of function () type
-       
-            
-            used_vars:=REGEXP_SUBSTR(SUBSTR(txtin,1,INSTR(txtin,':')-1), '\((.*)?\)', 1, 1, 'i', 1);
---DBMS_OUTPUT.PUT_LINE('-----------------------'|| avn || '--- '|| used_vars);
-            used_vars_tbl:=rman_pckg.splitstr(used_vars,',');
-            
-            expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
-            
-            left_tbl_name := get_cte_name(0);
-            
---            IF INSTR(expr,'1=1 ')>0 THEN
-            IF 1=1 THEN
-                    IF used_vars_tbl.COUNT>0 THEN
-                        from_clause :=from_clause || left_tbl_name;
-                    --ELSIF used_vars_tbl.COUNT>1 THEN
-                      --  from_clause :=from_clause || left_tbl_name;
-                        for i IN 1..used_vars_tbl.LAST LOOP
-                  
-                            from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
-                                    || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                                    || left_tbl_name || '.' || entity_id_col || ' ';
-                        END LOOP;
-                        
-                    ELSE
-                        -- RAISE EXCEPTION
-                        DBMS_OUTPUT.PUT(', ');
-                    END IF;
-
-            ELSE
-            --build from clause using cte joins
-                    left_tbl_name:=get_cte_name(vstack(used_vars_tbl(1)));
-                    IF used_vars_tbl.COUNT=1 THEN
-                        from_clause :=from_clause || left_tbl_name;
-                    ELSIF used_vars_tbl.COUNT>1 THEN
-                        from_clause :=from_clause || left_tbl_name;
-                        for i IN 2..used_vars_tbl.LAST LOOP
-                  
-                            from_clause:=from_clause || ' INNER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
-                                    || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                                    || left_tbl_name || '.' || entity_id_col || ' ';
-                        END LOOP;
-                        
-                    ELSE
-                        -- RAISE EXCEPTION
-                        DBMS_OUTPUT.PUT(', ');
-                    END IF;
-            END IF;
-            
-            
                        
             expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
             
@@ -754,14 +774,6 @@ BEGIN
     END LOOP;
     getcomposite(sqlout);
     
---    indxtmp:=vstack.FIRST;
---    
---    WHILE (indxtmp is not null)
---    LOOP
---        dbms_output.put_line('--- >>' || indxtmp);
---        indxtmp:=vstack.next(indxtmp);
---    END LOOP;
---    
 END parse_rpipe;
 
 PROCEDURE parse_ruleblocks(blockid varchar2) IS
