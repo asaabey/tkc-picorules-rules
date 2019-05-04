@@ -3,7 +3,7 @@ CLEAR SCREEN;
 
 CREATE OR REPLACE PACKAGE rman_pckg AS
 --Package		rman_pckg
---Version		0.0.0.2
+--Version		0.0.0.3
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -123,8 +123,8 @@ BEGIN
             ELSE 
                 eq_op:=' = ';
             END IF;
-            s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';
-
+            --s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';
+            s:=s || '(' || att_col || eq_op || '`' || att_tbl(i) || '`)';
             IF i<att_tbl.COUNT THEN
                 s:=s || ' OR ';
             END IF;
@@ -373,6 +373,7 @@ BEGIN
                 avn:=TRIM(SUBSTR(txt, 1, INSTR(txt,'(',1,1)-1));
 
                 used_vars:=REGEXP_SUBSTR(txt, '\((.*)?\)', 1, 1, 'i', 1);
+                
                 used_vars_tbl:=rman_pckg.splitstr(used_vars,','); 
                 
                 IF used_vars_tbl.COUNT>0 THEN
