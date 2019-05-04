@@ -13,33 +13,45 @@ DECLARE
 BEGIN
     DELETE FROM rman_ruleblocks;
     
-        clb:='
+--        clb:='
+--    
+--        egfrlv => eGFR;
+--        egfrld => EADV.eGFR.DT.MAX();
+--        
+--        egfr_count_6m(egfrld) => EADV.eGFR.DT.COUNT().WHERE(DT>egfrld-180);
+--        egfr_count => EADV.eGFR.DT.COUNT();
+--        
+--        acrlv => ACR;
+--        
+--        cga_g(egfrlv,acrlv):
+--            {egfrlv>=90 => `G1`},
+--            {egfrlv<90 AND egfrlv>=60 => `G2`},
+--            {egfrlv<60 AND egfrlv>=45 => `G3A`},
+--            {egfrlv<45 AND egfrlv>=30 => `G3B`},
+--            {egfrlv<30 AND egfrlv>=15 => `G4`},
+--            {egfrlv<15=> `G5`},
+--            {=>`NA`};
+--            
+--        cga_a(acrlv):
+--            {acrlv<3 => `A1`},
+--            {acrlv<30 AND acrlv>=3 => `A2`},
+--            {acrlv<300 AND acrlv>=30 => `A3`},
+--            {acrlv>300 => `A4`},{=>`NA`};
+--        
+--    ';
+    clb:='
     
-        egfrlv => eGFR;
-        egfrld => EADV.eGFR.DT.MAX();
+        hd.icd=>EADV.[icd_Z49.1].DT.MAX();
         
-        egfr_count_6m(egfrld) => EADV.eGFR.DT.COUNT().WHERE(DT>egfrld-180);
-        egfr_count => EADV.eGFR.DT.COUNT();
+        /*
+        hd_icpc => EADV.[U59001,U59008].DT.MAX();
         
-        acrlv => ACR;
+        hd => EADV.[U59001,U59008,icd_Z49.1].DT.MAX();
+        */
         
-        cga_g(egfrlv,acrlv):
-            {egfrlv>=90 => `G1`},
-            {egfrlv<90 AND egfrlv>=60 => `G2`},
-            {egfrlv<60 AND egfrlv>=45 => `G3A`},
-            {egfrlv<45 AND egfrlv>=30 => `G3B`},
-            {egfrlv<30 AND egfrlv>=15 => `G4`},
-            {egfrlv<15=> `G5`},
-            {=>`NA`};
-            
-        cga_a(acrlv):
-            {acrlv<3 => `A1`},
-            {acrlv<30 AND acrlv>=3 => `A2`},
-            {acrlv<300 AND acrlv>=30 => `A3`},
-            {acrlv>300 => `A4`},{=>`NA`};
+        hdflag("hd.icd"):{"hd.icd" is not null => 1}{=>0}    
         
     ';
-    
     
     
     
@@ -105,8 +117,6 @@ BEGIN
     
     rman_pckg.parse_ruleblocks(blockid);
     rman_pckg.parse_rpipe(strsql);
-    
---    strsql:=REPLACE(strsql,'''','''''');
     
     UPDATE rman_ruleblocks SET sqlblock=strsql WHERE blockid=blockid;
     DBMS_OUTPUT.PUT_LINE('--sql block-->' || chr(10) || chr(10) || strsql);

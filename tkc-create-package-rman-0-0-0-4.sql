@@ -291,6 +291,32 @@ BEGIN
     
 END trim_comments;
 
+FUNCTION format_column_name(txtin VARCHAR2) RETURN VARCHAR2
+AS
+txtout VARCHAR2(100):=txtin;
+BEGIN
+    IF LENGTH(txtout)>30 THEN
+        txtout:=substr(txtout,1,30);
+    END IF;
+    IF INSTR(txtout,'.')>0  OR INSTR(txtout,' ')>0 THEN
+        txtout:='"' || txtout || '"';
+    END IF;
+    RETURN txtout;
+END;
+
+FUNCTION format_bindvar_name(txtin VARCHAR2) RETURN VARCHAR2
+AS
+txtout VARCHAR2(100):=txtin;
+BEGIN
+    IF LENGTH(txtout)>30 THEN
+        txtout:=substr(txtout,1,30);
+    END IF;
+    IF INSTR(txtout,'.')>0  OR INSTR(txtout,' ')>0 THEN
+        txtout:=TRANSLATE(txtout,'. ','_');
+    END IF;
+    RETURN txtout;
+END;
+
 PROCEDURE getcomposite (cmpstat OUT NVARCHAR2) IS
     rmanobj rman_tbl_type;
     ctename nvarchar2(20);
@@ -858,16 +884,16 @@ BEGIN
         CASE tbl_desc(i).col_type
             WHEN 1  THEN --varchar2
                     dbms_sql.define_column(select_cursor,i,'a',32);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len ||') ' || CHR(10);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' VARCHAR2(' || tbl_desc(i).col_max_len ||') ' || CHR(10);
             WHEN 2 THEN --number
                     dbms_sql.define_column(select_cursor,i,1);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' NUMBER ' || CHR(10);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' NUMBER ' || CHR(10);
             WHEN 12 THEN --date
                     dbms_sql.define_column(select_cursor,i,SYSDATE);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' DATE ' || CHR(10);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' DATE ' || CHR(10);
             WHEN 96 THEN --char
                     dbms_sql.define_column(select_cursor,i,'a',32);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len || ')' || CHR(10);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' VARCHAR2(' || tbl_desc(i).col_max_len || ')' || CHR(10);
             ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
         END CASE;
         IF i<tbl_desc.LAST THEN
@@ -892,7 +918,7 @@ BEGIN
     --Assemble insert statement
     insert_tbl_sql_str := 'INSERT INTO ' || tbl_name || ' VALUES(';
     FOR i IN 1..tbl_desc.COUNT LOOP
-        insert_tbl_sql_str := insert_tbl_sql_str || ':' || tbl_desc(i).col_name; 
+        insert_tbl_sql_str := insert_tbl_sql_str || ':' || format_bindvar_name(tbl_desc(i).col_name); 
         IF i<tbl_desc.COUNT THEN
             insert_tbl_sql_str:=insert_tbl_sql_str || ', ';
         END IF;
@@ -903,28 +929,7 @@ BEGIN
     
     status:=dbms_sql.EXECUTE(select_cursor);
     
-    --copy each column to array
-    FOR i IN 1..tbl_desc.COUNT LOOP
-         
-
-         CASE tbl_desc(i).col_type
-            WHEN 1  THEN --varchar2
-                    dbms_sql.define_column(select_cursor,i,'a',32);
-                    
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len ||') ' || CHR(10);
-            WHEN 2 THEN --number
-                    dbms_sql.define_column(select_cursor,i,1);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' NUMBER ' || CHR(10);
-            WHEN 12 THEN --date
-                    dbms_sql.define_column(select_cursor,i,SYSDATE);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' DATE ' || CHR(10);
-            WHEN 96 THEN --char
-                    dbms_sql.define_column(select_cursor,i,'a',32);
-                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len || ')' || CHR(10);
-            ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
-        END CASE;
-    END LOOP;
-
+    --Binding
     LOOP
     
         fetched_rows:=dbms_sql.fetch_rows(select_cursor);
@@ -939,17 +944,16 @@ BEGIN
             CASE tbl_desc(i).col_type
                 WHEN 1  THEN --varchar2
                         dbms_sql.column_value(select_cursor,i,typ01_val);
-                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ01_val); 
-                        
+                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ01_val);                                                 
                 WHEN 2 THEN --number
                         dbms_sql.column_value(select_cursor,i,typ02_val);
-                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ02_val); 
+                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ02_val); 
                 WHEN 12 THEN --date
                         dbms_sql.column_value(select_cursor,i,typ12_val);
-                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ12_val); 
+                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ12_val); 
                 WHEN 96 THEN --char
                         dbms_sql.column_value(select_cursor,i,typ96_val);
-                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ96_val); 
+                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ96_val); 
                 ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
             END CASE;
         i:=tbl_desc.NEXT(i);
