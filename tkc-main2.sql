@@ -4,7 +4,8 @@ SET FEEDBACK ON;
 
 DECLARE
 
-    strsql      VARCHAR2(32767);
+    --strsql      VARCHAR2(32767);
+    strsql      CLOB;
     clb         CLOB;
     blockid     varchar2(100);
 
@@ -41,20 +42,16 @@ BEGIN
     
     
     
---    clb:='
---    
---        egfrlv => eGFR;
---        egfrld => EADV.eGFR.DT.MAX();
---        
---        egfr_count_6m => EADV.eGFR.DT.COUNT()
---        
---    ';
     
 --    clb:='
---            egfrlv => eGFR;
+--            egfrlv => EADV.eGFR.VAL.LAST(2);
 --            acrlv => ACR;
 --            egfrld => EADV.eGFR.DT.MAX(); 
 --            acrld => EADV.ACR.DT.MAX();
+--            
+--            egfr_count_6m(egfrld) => EADV.eGFR.DT.COUNT().WHERE(DT>egfrld-180);
+--            egfr_count => EADV.eGFR.DT.COUNT();
+--            
 --            sbp140cnt => EADV.[SYSTOLIC].VAL.COUNT().WHERE(VAL>140);
 --            
 --            
@@ -77,7 +74,7 @@ BEGIN
 --            hhd => EADV.[U59J99].DT.MAX();
 --            hhdld => EADV.[U59J99].DT.MAX();
 --            
---            dmfd => EADV.[icd_E08%,icd_E09%,icd_E10%,icd_E11%,icd_E14%,T89%,T90%].DT.EXISTS();
+--            dmfdex => EADV.[icd_E08%,icd_E09%,icd_E10%,icd_E11%,icd_E14%,T89%,T90%].DT.EXISTS();
 --            dmfd => EADV.[icd_E08%,icd_E09%,icd_E10%,icd_E11%,icd_E14%,T89%,T90%].DT.MIN();
 --            htnfd => EADV.[icd_T89%,K85%,K86%,K87%].DT.MIN();
 --            cabgfd => EADV.[icd_Z95_1%,K54007].DT.MIN();
@@ -93,9 +90,11 @@ BEGIN
 --            
 --            cga_g(egfrlv,acrlv):{egfrlv>=90 => `G1`},{egfrlv<90 AND egfrlv>=60 => `G2`},{egfrlv<60 AND egfrlv>=45 => `G3A`},{egfrlv<45 AND egfrlv>=30 => `G3B`},{egfrlv<30 AND egfrlv>=15 => `G4`},{egfrlv<15=> `G5`},{=>`NA`};
 --            cga_a(acrlv):{acrlv<3 => `A1`},{acrlv<30 AND acrlv>=3 => `A2`},{acrlv<300 AND acrlv>=30 => `A3`},{acrlv>300 => `A4`},{=>`NA`};
---
+--            (acrlv):{1=1 => `A1`},{acrlv<30 AND acrlv>=3 => `A2`},{acrlv<300 AND acrlv>=30 => `A3`},{acrlv>300 => `A4`},{=>`NA`};
 --    
 --    ';
+    
+
     
     clb:=rman_pckg.sanitise_clob(clb);
     
@@ -107,8 +106,16 @@ BEGIN
     rman_pckg.parse_ruleblocks(blockid);
     rman_pckg.parse_rpipe(strsql);
     
+--    strsql:=REPLACE(strsql,'''','''''');
+    
     UPDATE rman_ruleblocks SET sqlblock=strsql WHERE blockid=blockid;
     DBMS_OUTPUT.PUT_LINE('--sql block-->' || chr(10) || chr(10) || strsql);
+    
+
+    
+    rman_pckg.exec_dsql(strsql,'rout_ckd_1_1');
+    
+  
     
     
     

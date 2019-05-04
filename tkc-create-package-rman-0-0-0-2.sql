@@ -3,7 +3,7 @@ CLEAR SCREEN;
 
 CREATE OR REPLACE PACKAGE rman_pckg AS
 --Package		rman_pckg
---Version		1.0.0.0
+--Version		0.0.0.2
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -88,13 +88,12 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     rows_added OUT PLS_INTEGER
     ) ;
     
---    PROCEDURE build_scalar_sql_exp(
---    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
---    );
     
     PROCEDURE build_cond_sql_exp(indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);  
     
     PROCEDURE parse_ruleblocks(blockid varchar2);
+    
+    PROCEDURE exec_dsql(sqlstmt clob,tbl_name varchar2) ;
 END;
 /
 
@@ -120,11 +119,7 @@ BEGIN
                 eq_op:=' = ';
             END IF;
             s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';
---            IF eq=' LIKE ' AND INSTR(sanitise_varname(att_tbl(i)),'_') THEN
---                  
---            ELSE
---                s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';  
---            END IF;
+
             IF i<att_tbl.COUNT THEN
                 s:=s || ' OR ';
             END IF;
@@ -321,9 +316,9 @@ BEGIN
             --line break for readability
             cmpstat:=cmpstat || chr(10);
         END IF;
-        IF I=rmanobj.LAST THEN
-            cmpstat :=cmpstat || ';';
-        END IF;
+--        IF I=rmanobj.LAST THEN
+--            cmpstat :=cmpstat || ';';
+--        END IF;
         
         
     END LOOP;
@@ -367,14 +362,11 @@ BEGIN
             
             txt:=SUBSTR(txtin,1,INSTR(txtin,delim)-LENGTH(delim)); 
             
---            IF INSTR(txt,delim)>0  AND INSTR(txt,'(',1,1)>0 THEN
+
             IF INSTR(txt,'(',1,1)>0 THEN
                 avn:=TRIM(SUBSTR(txt, 1, INSTR(txt,'(',1,1)-1));
---                used_vars:=REGEXP_SUBSTR(SUBSTR(txtin,1,INSTR(txtin,delim)-length(delim)), '\((.*)?\)', 1, 1, 'i', 1);
+
                 used_vars:=REGEXP_SUBSTR(txt, '\((.*)?\)', 1, 1, 'i', 1);
---                IF INSTR(used_vars,',')>0 THEN
---                                  
---                END IF;            
                 used_vars_tbl:=rman_pckg.splitstr(used_vars,','); 
                 
                 IF used_vars_tbl.COUNT>0 THEN
@@ -394,7 +386,6 @@ BEGIN
                 avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-1));
                 from_clause :=from_clause || left_tbl_name; 
             END IF;
---DBMS_OUTPUT.PUT_LINE('BUILD :: avn -> ' ||  '  used_vars-> ' || used_vars );             
             
 --EXCEPTION
 --    WHEN OTHERS THEN
@@ -438,13 +429,7 @@ BEGIN
     
     -- parse txt string
    
---DBMS_OUTPUT.PUT_LINE('func :::: ' || trim(substr(txtin,instr(txtin,assn_op)+length(assn_op))));
-    --varr:=rman_pckg.splitstr(trim(substr(txtin,instr(txtin,'=>',1,1)+2,length(txtin))),'.','[',']');
     varr:=rman_pckg.splitstr(trim(substr(txtin,instr(txtin,assn_op)+length(assn_op))),'.','[',']');
---    for i in 1..varr.LAST LOOP
---        DBMS_OUTPUT.PUT_LINE ('func :::: ' || i || ')' || varr(i));
---    
---    END LOOP;
     
     IF varr.COUNT=5 THEN
         tbl:=UPPER(varr(1));
@@ -493,7 +478,6 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Syntax error');
     END IF;
     
-    --att:=sanitise_varname(sql_predicate(att));
     
     att:=sql_predicate(att);
     
@@ -503,14 +487,10 @@ BEGIN
     
     assnvar:=avn;
     
---    dbms_output.put_line('BUILD ASSN VAR : txtin ' || txtin || ' :: LEFT TBL :' || left_tbl_name || ' FROM_CLAUSE '  || from_clause || ' ASSNVAR :' || assnvar );
---    assnvar:=trim(substr(txtin,1,instr(txtin,assn_op)-1));
     
     assnvar:=sanitise_varname(assnvar);
     
---    from_clause:=tbl;
-    
-    
+      
     CASE 
         
         
@@ -518,11 +498,8 @@ BEGIN
             
             where_txt:=att || predicate;
             
---            from_txt:= tbl;
             from_txt:= from_clause;
             select_txt:=  tbl || '.' || entity_id_col || ',' || func || '(' || prop || ') AS ' || assnvar || ' ';
-            --groupby_txt:=att_col ||',' || entity_id_col;
---            groupby_txt:=entity_id_col;
             groupby_txt:=tbl || '.' || entity_id_col;
             InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
@@ -545,10 +522,8 @@ BEGIN
                 IF func='FIRST' THEN sortdirection:='';END IF;  
                 ctename:=get_cte_name(indx); 
                 where_txt:=att || predicate;
-                --from_txt:= tbl;
                 from_txt:= from_clause;
                 
-                --select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ',' || att_col ||' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
                 select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
                 groupby_txt:='';
                 is_sub_val:=1;
@@ -576,8 +551,6 @@ BEGIN
             BEGIN
                 where_txt:=att;
                 
---                from_txt:= def_tbl_name;
-                
                 from_txt:= from_clause;
                 select_txt:= entity_id_col || ',1 AS ' || assnvar || ' ';
                 groupby_txt:=entity_id_col || ',' || att_col;
@@ -596,7 +569,6 @@ BEGIN
             BEGIN
                 where_txt:='1=1';
                 
-                --from_txt:= def_tbl_name;
                 from_txt:= from_clause;
                 select_txt:= entity_id_col || ',' || constparam || ' AS ' || assnvar || ' ';
                 groupby_txt:=entity_id_col;
@@ -664,18 +636,14 @@ BEGIN
                        
             expr:= TRIM(SUBSTR(txtin,INSTR(txtin,':')+1));
             
---dbms_output.put_line('......expr..-> '|| avn || ' --> ' ||expr);
-            
             expr_tbl:=rman_pckg.splitstr(expr,',','{','}');
             
             
             --split to expression array
             for i in 1..expr_tbl.COUNT loop
                 --check if properly formed by curly brackets
---dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || '--> expr_tbl(i) ' || expr_tbl(i));
                 expr:=regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1,1,NULL,1);
                 
---dbms_output.put_line('............-> ' || '--> ' || i ||' --> ' || avn || ' --> ' ||expr);
 
                 --split minor assignment
                 expr_elem:=rman_pckg.splitstr(expr,'=>','','');
@@ -749,7 +717,6 @@ BEGIN
             -- loop through each statement in rule line
             FOR j IN 1..statements_tbl.COUNT LOOP
                 ss:=statements_tbl(j);
---DBMS_OUTPUT.put_line('--> statement size --> ' || LENGTH(ss) || ' chars ,' || LENGTHB(ss));
                 IF LENGTH(trim(ss))>0 THEN
                     --aggregate declaration
                     --identified by :
@@ -759,7 +726,6 @@ BEGIN
                         build_func_sql_exp(indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
                         
-                    -- conditional form
                     ELSE
                         rows_added:=0;
                         build_cond_sql_exp(indx,ss,sqlout,rows_added);
@@ -803,7 +769,148 @@ BEGIN
 
 END parse_ruleblocks;
 
+PROCEDURE exec_dsql(sqlstmt clob,tbl_name varchar2) 
+IS
+    colCount            PLS_INTEGER;
+    colValue            VARCHAR2(4000);
+    tbl_desc            dbms_sql.desc_tab2;
+    select_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    insert_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    status              PLS_INTEGER;
+    fetched_rows        PLS_INTEGER;
+    i                   PLS_INTEGER;
+    typ01_val           VARCHAR2(4000); 
+    typ02_val           NUMBER;
+    typ12_val           DATE;
+    typ96_val           VARCHAR2(4);
+    typ00_val           VARCHAR2(4000);
+    
+   
 
+    create_tbl_sql_str  VARCHAR2(4000);
+    insert_tbl_sql_str  VARCHAR2(4000);
+
+    tbl_exists_val      PLS_INTEGER;
+    
+BEGIN
+
+    create_tbl_sql_str:='CREATE TABLE ' || tbl_name || ' (';
+    
+    
+    --analyse query
+    dbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
+    
+    dbms_sql.describe_columns2(select_cursor,colCount,tbl_desc);
+    
+    For I In 1..tbl_desc.Count Loop
+--        DBMS_OUTPUT.PUT_LINE ('exec_dsql ::: COLNAME->' || tbl_desc(i).col_name || ' COLTYPE->' || tbl_desc(i).col_type || ' COL LEN->' || tbl_desc(i).col_max_len);
+        
+        
+        CASE tbl_desc(i).col_type
+            WHEN 1  THEN --varchar2
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len ||') ' || CHR(10);
+            WHEN 2 THEN --number
+                    dbms_sql.define_column(select_cursor,i,1);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' NUMBER ' || CHR(10);
+            WHEN 12 THEN --date
+                    dbms_sql.define_column(select_cursor,i,SYSDATE);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' DATE ' || CHR(10);
+            WHEN 96 THEN --char
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len || ')' || CHR(10);
+            ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
+        END CASE;
+        IF i<tbl_desc.LAST THEN
+            create_tbl_sql_str:=create_tbl_sql_str || ',';
+        ELSE
+            create_tbl_sql_str:=create_tbl_sql_str || ')';
+        END IF;
+    END LOOP;
+    
+    --DBMS_OUTPUT.PUT_LINE('SQL SYNTAX  -> ' || create_tbl_sql_str );
+    
+   
+    
+    
+    --Create Table
+    SELECT COUNT(*) INTO tbl_exists_val FROM user_tables WHERE table_name = UPPER(tbl_name);
+    IF tbl_exists_val>0 THEN
+        EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name ;
+    END IF;
+    EXECUTE IMMEDIATE create_tbl_sql_str;
+    
+    --Assemble insert statement
+    insert_tbl_sql_str := 'INSERT INTO ' || tbl_name || ' VALUES(';
+    FOR i IN 1..tbl_desc.COUNT LOOP
+        insert_tbl_sql_str := insert_tbl_sql_str || ':' || tbl_desc(i).col_name; 
+        IF i<tbl_desc.COUNT THEN
+            insert_tbl_sql_str:=insert_tbl_sql_str || ', ';
+        END IF;
+    END LOOP;
+    insert_tbl_sql_str:=insert_tbl_sql_str || ')';
+    
+--DBMS_OUTPUT.PUT_LINE('INSERT STATEMENT ->' || CHR(10) || insert_tbl_sql_str);
+    
+    status:=dbms_sql.EXECUTE(select_cursor);
+    
+    --copy each column to array
+    FOR i IN 1..tbl_desc.COUNT LOOP
+         
+
+         CASE tbl_desc(i).col_type
+            WHEN 1  THEN --varchar2
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+                    
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len ||') ' || CHR(10);
+            WHEN 2 THEN --number
+                    dbms_sql.define_column(select_cursor,i,1);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' NUMBER ' || CHR(10);
+            WHEN 12 THEN --date
+                    dbms_sql.define_column(select_cursor,i,SYSDATE);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' DATE ' || CHR(10);
+            WHEN 96 THEN --char
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+                    create_tbl_sql_str:=create_tbl_sql_str || tbl_desc(i).col_name || ' VARCHAR2(' || tbl_desc(i).col_max_len || ')' || CHR(10);
+            ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
+        END CASE;
+    END LOOP;
+
+    LOOP
+    
+        fetched_rows:=dbms_sql.fetch_rows(select_cursor);
+        EXIT WHEN fetched_rows=0;
+        
+        i:=tbl_desc.FIRST;
+        
+    
+        dbms_sql.parse(insert_cursor,insert_tbl_sql_str,dbms_sql.native);
+        
+        WHILE (i IS NOT NULL) LOOP
+            CASE tbl_desc(i).col_type
+                WHEN 1  THEN --varchar2
+                        dbms_sql.column_value(select_cursor,i,typ01_val);
+                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ01_val); 
+                        
+                WHEN 2 THEN --number
+                        dbms_sql.column_value(select_cursor,i,typ02_val);
+                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ02_val); 
+                WHEN 12 THEN --date
+                        dbms_sql.column_value(select_cursor,i,typ12_val);
+                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ12_val); 
+                WHEN 96 THEN --char
+                        dbms_sql.column_value(select_cursor,i,typ96_val);
+                        dbms_sql.bind_variable(insert_cursor, ':' || tbl_desc(i).col_name, typ96_val); 
+                ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
+            END CASE;
+        i:=tbl_desc.NEXT(i);
+        END LOOP;
+        
+        status:=dbms_sql.execute(insert_cursor);
+    END LOOP;
+    dbms_sql.close_cursor(insert_cursor);
+    dbms_sql.close_cursor(select_cursor);
+END exec_dsql;
 
 END;
 
