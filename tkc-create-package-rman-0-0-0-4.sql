@@ -53,6 +53,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     dt_col              CONSTANT VARCHAR2(32):='DT';
     def_tbl_name        CONSTANT VARCHAR2(32):='EADV';
     
+    
     PROCEDURE parse_rpipe (sqlout OUT varchar2);
     
     PROCEDURE getcomposite(cmpstat OUT NVARCHAR2); 
@@ -72,7 +73,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     
     FUNCTION trim_comments(txtin clob) RETURN clob;
     
-    PROCEDURE InsertIntoRman
+    PROCEDURE insert_rman
     (
      indx INT,
     where_clause NVARCHAR2,
@@ -127,7 +128,7 @@ BEGIN
             ELSE 
                 eq_op:=' = ';
             END IF;
-            --s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_tbl(i)) || '`)';
+            
             s:=s || '(' || att_col || eq_op || '`' || att_tbl(i) || '`)';
             IF i<att_tbl.COUNT THEN
                 s:=s || ' OR ';
@@ -139,7 +140,6 @@ BEGIN
             ELSE 
                 eq_op:=' = ';
             END IF;
---            s:=s || '(' || att_col || eq_op || '`' || sanitise_varname(att_str) || '`)';  
             s:=s || '(' || att_col || eq_op || '`' || att_str0 || '`)';  
     END IF;
     
@@ -317,6 +317,18 @@ BEGIN
     RETURN txtout;
 END;
 
+FUNCTION is_tempvar(txtin varchar2) RETURN BOOLEAN
+AS
+retval              BOOLEAN:=false;
+tempvar_char        VARCHAR2(1):='_';    
+BEGIN
+IF SUBSTR(TRIM(LEADING '"' FROM txtin),-1*(LENGTH(tempvar_char)))=tempvar_char THEN 
+    retval:=true;
+END IF;
+RETURN retval;
+
+END  is_tempvar;
+
 PROCEDURE getcomposite (cmpstat OUT NVARCHAR2) IS
     rmanobj rman_tbl_type;
     ctename nvarchar2(20);
@@ -324,7 +336,6 @@ BEGIN
     SELECT ID, where_clause, from_clause, select_clause, groupby_clause,varid, is_sub
     BULK COLLECT INTO rmanobj
     FROM rman;
-    
     
     cmpstat := 'WITH ' ||  get_cte_name(0) || ' AS (SELECT ' || entity_id_col || ' FROM EADV GROUP BY ' || entity_id_col || '),';
 
@@ -349,46 +360,43 @@ BEGIN
         cmpstat:=cmpstat || chr(10);
     END LOOP;
     
-
+    --Add select 
     cmpstat :=cmpstat || ' SELECT '|| get_cte_name(0) || '.' || entity_id_col || ', ';
     
-   
     
     FOR I IN rmanobj.FIRST..rmanobj.LAST
     LOOP
         ctename:=get_cte_name(i);
         IF rmanobj(I).is_sub=0 THEN
-
-            cmpstat := cmpstat || ctename || '.' || rmanobj(i).varid || ' ';
-                    
-            --line break for readability
-            
-            cmpstat:=cmpstat || chr(10);
+            IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+                cmpstat := cmpstat || ctename || '.' || rmanobj(i).varid || ' ';                        
+                --line break for readability
+                cmpstat:=cmpstat || chr(10);
+                
+                IF I<rmanobj.LAST AND rmanobj(i).is_sub=0 THEN
+                    cmpstat :=cmpstat || ',';
+                END IF;
+            END IF;
         END IF;
         
-        IF I<rmanobj.LAST AND rmanobj(i).is_sub=0 THEN
-            cmpstat :=cmpstat || ',';
-        END IF;
+
 
     END LOOP;
     
     cmpstat := cmpstat || 'FROM ' || get_cte_name(0);
 
-    
+    -- Add the left outer joins
     FOR I IN rmanobj.FIRST..rmanobj.LAST
     LOOP
 
         ctename:=get_cte_name(i);
         IF rmanobj(I).is_sub=0 THEN
-            cmpstat := cmpstat || ' LEFT OUTER JOIN ' || ctename || ' ON ' || ctename || '.' || entity_id_col || '=' || get_cte_name(0)||'.' || entity_id_col || ' ';
-            --line break for readability
-            cmpstat:=cmpstat || chr(10);
+                IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+                    cmpstat := cmpstat || ' LEFT OUTER JOIN ' || ctename || ' ON ' || ctename || '.' || entity_id_col || '=' || get_cte_name(0)||'.' || entity_id_col || ' ';
+                    --line break for readability
+                    cmpstat:=cmpstat || chr(10);
+                END IF;
         END IF;
---        IF I=rmanobj.LAST THEN
---            cmpstat :=cmpstat || ';';
---        END IF;
-        
-        
     END LOOP;
     
     
@@ -397,7 +405,7 @@ END getcomposite;
 
 
 
-PROCEDURE InsertIntoRman(
+PROCEDURE insert_rman(
     indx INT,
     where_clause NVARCHAR2,
     from_clause  NVARCHAR2,
@@ -412,7 +420,7 @@ BEGIN
     INSERT INTO rman (ID, where_clause,from_clause, select_clause,groupby_clause, varid, is_sub)
             VALUES (indx,where_clause,from_clause,select_clause,groupby_clause,varid,is_sub);
             sqlstat:='rows added :' || SQL%ROWCOUNT;
-END InsertIntoRman;
+END insert_rman;
 
 PROCEDURE build_assn_var
 (
@@ -529,11 +537,9 @@ BEGIN
         funcparam:=0;
     ELSIF varr.COUNT=1 THEN
         IF UPPER(SUBSTR(varr(1),1,5))='CONST' THEN
-            --tbl:='DUAL';
-            --att:='1=1';
-            --prop:=val_col;
+
             func:='CONST';
-            --funcparam:=0;
+
             constparam:=REGEXP_SUBSTR(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
         ELSE
             tbl:=def_tbl_name;
@@ -554,10 +560,10 @@ BEGIN
     
     build_assn_var(txtin,'=>',left_tbl_name,from_clause,avn);
     
-    assnvar:=avn;
+    --assnvar:=avn;
     
     
-    assnvar:=sanitise_varname(assnvar);
+    assnvar:=sanitise_varname(avn);
     
       
     CASE 
@@ -570,7 +576,7 @@ BEGIN
             from_txt:= from_clause;
             select_txt:=  tbl || '.' || entity_id_col || ',' || func || '(' || prop || ') AS ' || assnvar || ' ';
             groupby_txt:=tbl || '.' || entity_id_col;
-            InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
+            insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
             rows_added:= 1;
             
@@ -598,7 +604,7 @@ BEGIN
                 is_sub_val:=1;
                 
                 
-                InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,NULL, is_sub_val,sqlstat);
+                insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,NULL, is_sub_val,sqlstat);
                 
                 where_txt:= 'rank=' || rankindx;
                 from_txt:= ctename;
@@ -607,7 +613,7 @@ BEGIN
                 groupby_txt:='';
                 is_sub_val:=0;   
                 
-                InsertIntoRman(indx+1,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
+                insert_rman(indx+1,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
                 
                 rows_added:= 2;
                 
@@ -625,7 +631,7 @@ BEGIN
                 groupby_txt:=entity_id_col || ',' || att_col;
                 is_sub_val:=0;
             
-                InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
+                insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
                 rows_added:= 1;
             
@@ -644,7 +650,7 @@ BEGIN
                 
                 is_sub_val:=0;
             
-                InsertIntoRman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
+                insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
                 rows_added:= 1;
             
@@ -697,7 +703,11 @@ BEGIN
     -- found form of avn() :
     left_tbl_name := get_cte_name(0);
     
+    
+    
     build_assn_var(txtin,':',left_tbl_name,from_clause,avn);
+    
+    --avn:=sanitise_varname(avn);
     
     -- split at major assignment
     
@@ -732,7 +742,7 @@ BEGIN
             vstack(avn):=indx;
             
 
-            InsertIntoRman(indx,'',from_clause,select_text,'',avn,0,sqlstat);
+            insert_rman(indx,'',from_clause,select_text,'',avn,0,sqlstat);
         
             rows_added:= 1;
         
