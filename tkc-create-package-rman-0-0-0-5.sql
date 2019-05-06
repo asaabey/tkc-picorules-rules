@@ -11,6 +11,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
 --Dynamic rules engine, which converts 'picorules' script to ANSI SQL script. Source table needs to conform to EADV format (entity,attribute,date,value).
 --Rules are inserted into RPIPE table which is parsed by PARSE_RPIPE procedure to create RMAN table. The GETCOMPOSITE procedure forms the final SQL statement with recursive CTE's.
 --Picorules grammar
+
 --Functional declaration, usually for aggregate function
 --varname=> object.attribute.property.function(param)
 
@@ -27,9 +28,30 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
 --EADV.[att].VAL.LAST() implied
 --varname=> attribute
 
+--Attribute predicates
+-- [att1,att2,att3%]
+-- is compiled to
+-- (ATT = 'att1') OR (ATT = 'att2') OR (ATT LIKE 'att3%')
+
+--Commenting
+-- /* comment */
+
+--Intermediate variables
+-- if the assigned name is terminated with an underscore , it will not be displayed in the final ROUT table
+--  var_
+
+
 
 --Conditional declaration
 --varname(dependent var,..): { sql_case_when_expr => sql_case_then_expr},..,{=> sq_case_else_then_expr}
+--This can be used to derive any SQL scalar function
+--varname(dependent var,..):{1=1 => sql_scalar_func()}
+
+--Externtal table binding
+--tbl.att.val.bind()
+--should only be used were eid->att is 1:1
+
+
 
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
     
