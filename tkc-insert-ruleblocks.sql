@@ -100,6 +100,53 @@ BEGIN
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
+        
+    rb.blockid:='ckd-qa-dx-iq-1-1';
+    rb.target_table:='rout_ckd_qa_dx_iq_1_1';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.picoruleblock:='
+    
+        /* Rule block to calculate dx information quantity*/
+
+        egfr2_c => EADV.eGFR.VAL.COUNT().WHERE(DT>SYSDATE-365*2);
+        
+        egfr2_1_dt => EADV.eGFR.DT.MIN().WHERE(DT>SYSDATE-365*2);
+        
+        egfr2_2_dt => EADV.eGFR.DT.MAX().WHERE(DT>SYSDATE-365*2);
+        
+        hba1c_c => EADV.[HBA1C_DFCC].VAL.COUNT().WHERE(DT>SYSDATE-365*5);
+        
+        sbp_c => EADV.[SYSTOLIC].VAL.COUNT().WHERE(DT>SYSDATE-365*5);
+        
+        lab_ua_rbc_c => EADV.[lab_ua_rbc].DT.COUNT();
+        
+        icd_n18_c => EADV.[U99034,U99035,U99036,U99037,U99038,U99039,icd_N18%].DT.COUNT();
+        
+        /* gap between first and last at least 6 months */
+        
+        egfr6m_gap(egfr2_1_dt,egfr2_2_dt):{(egfr2_2_dt-egfr2_1_dt>182)=>1};
+        
+        uacr2 => EADV.ACR.VAL.COUNT().WHERE(DT>SYSDATE-365*2);
+        
+        tier1_grade(egfr2_c,uacr2,egfr6m_gap):{egfr2_c>2 AND uacr2>1 AND egfr6m_gap=1 => 3},
+                        {egfr2_c>1 AND uacr2>1 => 2},
+                        {egfr2_c>0 OR uacr2>0 => 1};
+                        
+        tier2_grade(sbp_c,hba1c_c):{sbp_c>2 AND hba1c_c>0 => 3},
+                        {sbp_c>1 AND hba1c_c>0 => 2},
+                        {sbp_c>0 OR hba1c_c>0=> 1};
+              
+                    
+        tier3_grade(lab_ua_rbc_c,icd_n18_c):{lab_ua_rbc_c>0 OR icd_n18_c>0 => 1};
+                        
+                        
+        
+            
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
 
   
     

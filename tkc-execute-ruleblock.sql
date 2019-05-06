@@ -18,7 +18,7 @@ BEGIN
     DELETE FROM rman_rpipe;
     DELETE FROM rman_stack;
     
-    bid:='rrt-1-1';
+    bid:='ckd-qa-dx-iq-1-1';
     
     rman_pckg.parse_ruleblocks(bid);
     
