@@ -7,22 +7,26 @@ DECLARE
     
     strsql      CLOB;
     
-    blockid     varchar2(100);
+    
     
     rb          RMAN_RULEBLOCKS%ROWTYPE;
+    
+    bid         RMAN_RULEBLOCKS.blockid%TYPE;
 
 BEGIN
    
+    DELETE FROM rman_rpipe;
+    DELETE FROM rman_stack;
     
-    blockid:='ckd-1-2';
+    bid:='rrt-1-1';
     
-    rman_pckg.parse_ruleblocks(blockid);
+    rman_pckg.parse_ruleblocks(bid);
     
     rman_pckg.parse_rpipe(strsql);
     
-    UPDATE rman_ruleblocks SET sqlblock=strsql WHERE blockid=blockid;
+    UPDATE rman_ruleblocks SET sqlblock=strsql WHERE blockid=bid;
     
-    SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=blockid AND ROWNUM<2;
+    SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid;
    
     DBMS_OUTPUT.PUT_LINE('RMAN execution -->' || chr(10));
     DBMS_OUTPUT.PUT_LINE('Rule block id : ' || rb.blockid || chr(10));

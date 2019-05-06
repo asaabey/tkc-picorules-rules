@@ -31,7 +31,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
 --Conditional declaration
 --varname(dependent var,..): { sql_case_when_expr => sql_case_then_expr},..,{=> sq_case_else_then_expr}
 
-    TYPE rman_tbl_type IS TABLE OF rman%ROWTYPE;
+    TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
     
     TYPE rpipe_tbl_type IS TABLE OF rman_rpipe%ROWTYPE;
     
@@ -152,8 +152,8 @@ AS
 BEGIN
     -- trim bounding parantheses
     s:= TRANSLATE(varname, '1-+{}[] ', '1');
-    -- surround with double quotes if full stop and spaces found in var from varnames
-    IF instr(varname,'.')>0 OR instr(varname,' ')>0 THEN 
+    -- surround with double quotes if full stop and spaces found in var from varnames if not already there
+    IF instr(varname,'"')<>1 AND instr(varname,'.')>0 OR instr(varname,' ')>0 THEN 
         s:= '"' || s || '"';
     END IF;
     return s;
@@ -335,7 +335,7 @@ PROCEDURE getcomposite (cmpstat OUT NVARCHAR2) IS
 BEGIN
     SELECT ID, where_clause, from_clause, select_clause, groupby_clause,varid, is_sub
     BULK COLLECT INTO rmanobj
-    FROM rman;
+    FROM rman_stack;
     
     cmpstat := 'WITH ' ||  get_cte_name(0) || ' AS (SELECT ' || entity_id_col || ' FROM EADV GROUP BY ' || entity_id_col || '),';
 
@@ -369,7 +369,7 @@ BEGIN
         ctename:=get_cte_name(i);
         IF rmanobj(I).is_sub=0 THEN
             IF is_tempvar(rmanobj(I).varid)=FALSE THEN
-                cmpstat := cmpstat || ctename || '.' || rmanobj(i).varid || ' ';                        
+                cmpstat := cmpstat || ctename || '.' || sanitise_varname(rmanobj(i).varid) || ' ';                        
                 --line break for readability
                 cmpstat:=cmpstat || chr(10);
                 
@@ -417,7 +417,7 @@ PROCEDURE insert_rman(
 )
 IS
 BEGIN
-    INSERT INTO rman (ID, where_clause,from_clause, select_clause,groupby_clause, varid, is_sub)
+    INSERT INTO rman_stack (ID, where_clause,from_clause, select_clause,groupby_clause, varid, is_sub)
             VALUES (indx,where_clause,from_clause,select_clause,groupby_clause,varid,is_sub);
             sqlstat:='rows added :' || SQL%ROWCOUNT;
 END insert_rman;
@@ -738,7 +738,7 @@ BEGIN
                 end if;
             end loop;
             
-            select_text:=select_text || 'END AS ' || UPPER(avn) || ',' || left_tbl_name ||'.' || entity_id_col || ' ';
+            select_text:=select_text || 'END AS ' || sanitise_varname(avn) || ',' || left_tbl_name ||'.' || entity_id_col || ' ';
             vstack(avn):=indx;
             
 
@@ -774,7 +774,7 @@ BEGIN
     BULK COLLECT INTO rpipe_col
     FROM rman_rpipe;
     
-    DELETE FROM rman;
+    DELETE FROM rman_stack;
     
     indx:=1;
     
@@ -827,15 +827,19 @@ rbtbl               tbl_type2;
 comment_open_pos    PLS_INTEGER;
 comment_close_pos   PLS_INTEGER;
 rb                  CLOB;
+blockid_predicate   RMAN_RULEBLOCKS.blockid%TYPE:=blockid;
 BEGIN
+    
     SELECT blockid,picoruleblock 
     INTO rbt.blockid, rbt.picoruleblock
     FROM rman_ruleblocks
-    WHERE blockid = blockid AND ROWNUM=1;
+    WHERE blockid = blockid_predicate;
+    
+
     
     DELETE FROM rman_rpipe;
     
---DBMS_OUTPUT.put_line('rec ' || rbt.blockid || ' --> ' || rbt.picoruleblock || '<-- END');
+
     --split at semicolon except when commented
     rbtbl:=splitclob(rbt.picoruleblock,';',comment_open_chars,comment_close_chars);
     FOR i in 1..rbtbl.COUNT LOOP
