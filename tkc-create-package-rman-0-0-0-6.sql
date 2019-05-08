@@ -3,7 +3,7 @@ CLEAR SCREEN;
 
 CREATE OR REPLACE PACKAGE rman_pckg AS
 --Package		rman_pckg
---Version		0.0.0.3
+--Version		0.0.0.6
 --Creation date	07/04/2019
 --Author		ASAABEY
 --

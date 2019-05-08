@@ -13,7 +13,7 @@ BEGIN
     
     
     rb.blockid:='ckd-1-2';
-    rb.target_table:='rout_ckd_1_3';
+    rb.target_table:='rout_ckd';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.picoruleblock:='
@@ -24,15 +24,17 @@ BEGIN
         egfr_count_6m(egfrld) => EADV.eGFR.DT.COUNT().WHERE(DT>egfrld-180);
         egfr_count => EADV.eGFR.DT.COUNT();
         
+        rrt => ROUT_RRT.RRT.VAL.BIND();
+        
         acrlv => ACR;
         
-        cga_g(egfrlv,acrlv):
-            {egfrlv>=90 => `G1`},
-            {egfrlv<90 AND egfrlv>=60 => `G2`},
-            {egfrlv<60 AND egfrlv>=45 => `G3A`},
-            {egfrlv<45 AND egfrlv>=30 => `G3B`},
-            {egfrlv<30 AND egfrlv>=15 => `G4`},
-            {egfrlv<15=> `G5`},
+        cga_g(egfrlv,acrlv,rrt):
+            {egfrlv>=90 AND rrt=0 => `G1`},
+            {egfrlv<90 AND egfrlv>=60  AND rrt=0 => `G2`},
+            {egfrlv<60 AND egfrlv>=45  AND rrt=0 => `G3A`},
+            {egfrlv<45 AND egfrlv>=30  AND rrt=0 => `G3B`},
+            {egfrlv<30 AND egfrlv>=15  AND rrt=0 => `G4`},
+            {egfrlv<15 OR rrt=1 => `G5`},
             {=>`NA`};
             
         cga_a(acrlv):
@@ -47,7 +49,7 @@ BEGIN
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
     
     rb.blockid:='comorb-1-1';
-    rb.target_table:='rout_comorb_1_3';
+    rb.target_table:='rout_comorb';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.picoruleblock:='
@@ -72,7 +74,7 @@ BEGIN
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
     
     rb.blockid:='rrt-1-1';
-    rb.target_table:='rout_rrt_1_1';
+    rb.target_table:='rout_rrt';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.picoruleblock:='
@@ -81,28 +83,36 @@ BEGIN
             hd_icd => EADV.[icd_Z49_1].DT.MAX();
             hd_icpc => EADV.[U59001,U59008].DT.MAX();
             hd_proc => EADV.[13100-00].DT.MAX();
-            hdld => EADV.[13100-00,U59001,U59008,icd_Z49_1].DT.MAX();
+            
+            hd_dt => EADV.[13100-00,U59001,U59008,icd_Z49_1].DT.MAX();
+                       
             
             pd_icpc => EADV.[U59007,U59009].DT.MAX();
             pd_icd => EADV.[icd_Z49_2].DT.MAX();
             pd_proc => EADV.[13100-06,13100-07,13100-08].DT.MAX();
-            pdld => EADV.[13100-06,13100-07,13100-08,U59007,U59009,icd_Z49_2].DT.MAX();
+            
+            pd_dt => EADV.[13100-06,13100-07,13100-08,U59007,U59009,icd_Z49_2].DT.MAX();
              
             tx_icpc => EADV.[U28001].DT.MAX();
             tx_icd => EADV.[icd_Z94%].DT.MAX();
             tx_proc => EADV.[13100-06,13100-07,13100-08].DT.MAX();
-            txld => EADV.[U28001,icd_Z94%].DT.MAX();
             
+            tx_dt => EADV.[U28001,icd_Z94%].DT.MAX();
             
             hhd => EADV.[U59J99].DT.MAX();
-            hhdld => EADV.[U59J99].DT.MAX();
+            
+            hhd_dt => EADV.[U59J99].DT.MAX();
+            
+            rrt(hd_dt,pd_dt,tx_dt,hhd_dt):{COALESCE(hd_dt,pd_dt,tx_dt,hhd_dt) IS NULL=>0},
+                                            {=>1};
+            
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
         
     rb.blockid:='ckd-qa-dx-iq-1-1';
-    rb.target_table:='rout_ckd_qa_dx_iq_1_1';
+    rb.target_table:='rout_ckd_qa_dx_iq';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.picoruleblock:='
