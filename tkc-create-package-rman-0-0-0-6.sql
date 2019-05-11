@@ -3,7 +3,7 @@ CLEAR SCREEN;
 
 CREATE OR REPLACE PACKAGE rman_pckg AS
 --Package		rman_pckg
---Version		0.0.0.6
+--Version		0.0.0.7
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -625,7 +625,7 @@ BEGIN
                 vstack(assnvar):=indx;
             END IF;
             
-        WHEN FUNC='LAST' OR FUNC='FIRST' THEN
+        WHEN FUNC='LAST' OR FUNC='FIRST' OR FUNC='EXISTS' THEN
             DECLARE
                 rankindx NUMBER;
                 sortdirection NVARCHAR2(4):='DESC';
@@ -650,7 +650,12 @@ BEGIN
                 where_txt:= 'rank=' || rankindx;
                 from_txt:= ctename;
                 
-                select_txt:= entity_id_col || ',' || prop || ' AS ' || assnvar;
+                IF FUNC='EXISTS' THEN
+                    select_txt:= entity_id_col || ',' || ' 1 AS ' || assnvar;
+                ELSE
+                    select_txt:= entity_id_col || ',' || prop || ' AS ' || assnvar;
+                END IF;
+                
                 groupby_txt:='';
                 is_sub_val:=0;   
                 
@@ -662,24 +667,7 @@ BEGIN
                     vstack(assnvar):=indx+1;
             END IF;
             END;
-        WHEN FUNC='EXISTS' THEN
-            DECLARE 
-            BEGIN
-                where_txt:=att;
-                
-                from_txt:= from_clause;
-                select_txt:= entity_id_col || ',1 AS ' || assnvar || ' ';
-                groupby_txt:=entity_id_col || ',' || att_col;
-                is_sub_val:=0;
-            
-                insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
-            
-                rows_added:= 1;
-            
-                IF assnvar IS NOT NULL THEN
-                    vstack(assnvar):=indx;
-                END IF;
-            END;
+
         WHEN FUNC='CONST' THEN
             DECLARE
             BEGIN
