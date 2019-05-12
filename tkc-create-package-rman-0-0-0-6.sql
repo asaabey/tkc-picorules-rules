@@ -3,7 +3,7 @@ CLEAR SCREEN;
 
 CREATE OR REPLACE PACKAGE rman_pckg AS
 --Package		rman_pckg
---Version		0.0.0.7
+--Version		0.0.0.8
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -58,7 +58,8 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     TYPE rpipe_tbl_type IS TABLE OF rman_rpipe%ROWTYPE;
     
     TYPE vstack_type IS TABLE OF PLS_INTEGER INDEX BY VARCHAR2(100);
-    vstack  vstack_type;
+    vstack          vstack_type;
+    vstack_dep      vstack_type;
     
     cmpstat NVARCHAR2(4000);
     
@@ -109,6 +110,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AS
     
     PROCEDURE build_func_sql_exp
     (
+    blockid     in varchar2,
     indx        IN INT,
     txtin       varchar2,
     sqlstat     OUT VARCHAR2,
@@ -445,6 +447,20 @@ BEGIN
             sqlstat:='rows added :' || SQL%ROWCOUNT;
 END insert_rman;
 
+PROCEDURE insert_ruleblocks_dep(
+    blockid_s     in    varchar2, 
+    dep_table_s   in    varchar2,
+    dep_column_s  in    varchar2,
+    dep_att_s     in    varchar2,
+    dep_func_s    in    varchar2
+)
+IS
+BEGIN
+    INSERT INTO rman_ruleblocks_dep (blockid, dep_table,dep_column,dep_att,dep_func)
+            VALUES (blockid_s, dep_table_s,dep_column_s,dep_att_s,dep_func_s);
+            
+END insert_ruleblocks_dep;
+
 PROCEDURE build_assn_var
 (
     txtin IN VARCHAR2,
@@ -493,13 +509,27 @@ BEGIN
 
 END build_assn_var;
 
+PROCEDURE push_vstack(
+    varname          IN  VARCHAR2,
+    indx             IN  INTEGER,
+    calling_proc     IN  INTEGER    
+)
+AS
+BEGIN
+    IF varname IS NOT NULL THEN
+        vstack(varname):=indx;       
+    END IF;
+    
+END push_vstack;
+
 
 PROCEDURE build_func_sql_exp
 (
+    blockid     in varchar2,
     indx        IN INT,
     txtin       varchar2,
     sqlstat     OUT VARCHAR2,
-    rows_added OUT PLS_INTEGER
+    rows_added  OUT PLS_INTEGER
 ) 
 IS
     func        varchar2(32);
@@ -599,11 +629,15 @@ BEGIN
             groupby_txt:='';
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
+            insert_ruleblocks_dep(blockid,tbl,ext_col_name,NULL,func);
+            
             rows_added:= 1;
             
-            IF assnvar IS NOT NULL THEN
-                vstack(assnvar):=indx;
-            END IF;
+            push_vstack(assnvar,indx,2);
+            
+--            IF assnvar IS NOT NULL THEN
+--                vstack(assnvar):=indx;
+--            END IF;
     
     ELSE
     
@@ -619,11 +653,14 @@ BEGIN
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
+            insert_ruleblocks_dep(blockid,tbl,att_col,att,func);
+            
             rows_added:= 1;
             
-            IF assnvar IS NOT NULL THEN
-                vstack(assnvar):=indx;
-            END IF;
+            push_vstack(assnvar,indx,2);
+--            IF assnvar IS NOT NULL THEN
+--                vstack(assnvar):=indx;
+--            END IF;
             
         WHEN FUNC='LAST' OR FUNC='FIRST' OR FUNC='EXISTS' THEN
             DECLARE
@@ -647,6 +684,8 @@ BEGIN
                 
                 insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,NULL, is_sub_val,sqlstat);
                 
+                insert_ruleblocks_dep(blockid,tbl,att_col,att,func);
+                
                 where_txt:= 'rank=' || rankindx;
                 from_txt:= ctename;
                 
@@ -663,9 +702,11 @@ BEGIN
                 
                 rows_added:= 2;
                 
-                IF assnvar IS NOT NULL THEN
-                    vstack(assnvar):=indx+1;
-            END IF;
+                push_vstack(assnvar,indx+1,2);
+                
+--                IF assnvar IS NOT NULL THEN
+--                    vstack(assnvar):=indx+1;
+--            END IF;
             END;
 
         WHEN FUNC='CONST' THEN
@@ -683,9 +724,11 @@ BEGIN
             
                 rows_added:= 1;
             
-                IF assnvar IS NOT NULL THEN
-                    vstack(assnvar):=indx;
-                END IF;
+                push_vstack(assnvar,indx,2);
+                
+--                IF assnvar IS NOT NULL THEN
+--                    vstack(assnvar):=indx;
+--                END IF;
             END;
         ELSE 
             RAISE ude_function_undefined;
@@ -772,7 +815,9 @@ BEGIN
             end loop;
             
             select_text:=select_text || 'END AS ' || sanitise_varname(avn) || ',' || left_tbl_name ||'.' || entity_id_col || ' ';
-            vstack(avn):=indx;
+            
+            push_vstack(avn,indx,1);
+--            vstack(avn):=indx;
             
 
             insert_rman(indx,'',from_clause,select_text,'',avn,0,sqlstat);
@@ -803,7 +848,7 @@ PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
     rs VARCHAR2(4000);
     ss VARCHAR2(4000);
 BEGIN
-    SELECT ruleid, rulebody 
+    SELECT ruleid, rulebody,blockid 
     BULK COLLECT INTO rpipe_col
     FROM rman_rpipe;
     
@@ -835,7 +880,7 @@ BEGIN
                 
                     IF INSTR(ss, ':')=0 THEN
                         rows_added:=0;
-                        build_func_sql_exp(indx,ss,sqlout,rows_added);
+                        build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
                         
                     ELSE
@@ -872,6 +917,7 @@ BEGIN
     
     DELETE FROM rman_rpipe;
     
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
 
     --split at semicolon except when commented
     rbtbl:=splitclob(rbt.picoruleblock,';',comment_open_chars,comment_close_chars);
@@ -883,7 +929,7 @@ BEGIN
         
 --dbms_output.put_line('block '|| i || '-- ' || rb);
 
-            INSERT INTO rman_rpipe VALUES(blockid || lpad(i,5,0), rb);
+            INSERT INTO rman_rpipe VALUES(blockid || lpad(i,5,0), rb,blockid);
         END IF;
     END LOOP;
 

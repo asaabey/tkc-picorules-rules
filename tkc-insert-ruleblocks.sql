@@ -73,37 +73,37 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
     
-    rb.blockid:='rrt-1-1';
+    rb.blockid:='rrt-1';
     rb.target_table:='rout_rrt';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.picoruleblock:='
     
         
-            hd_icd => EADV.[icd_Z49_1].DT.MAX();
-            hd_icpc => EADV.[U59001,U59008].DT.MAX();
-            hd_proc => EADV.[13100-00].DT.MAX();
+            hd_icd => eadv.[icd_z49_1].dt.max();
+            hd_icpc => eadv.[icpc_u59001,icpc_u59008].dt.MAX();
+            hd_proc => eadv.[13100-00].dt.MAX();
             
-            hd_dt => EADV.[13100-00,U59001,U59008,icd_Z49_1].DT.MAX();
+            hd_dt => Eadv.[13100-00,Icpc_U59001,Icpc_U59008,Icd_Z49_1].Dt.Max();
                        
             
-            pd_icpc => EADV.[U59007,U59009].DT.MAX();
-            pd_icd => EADV.[icd_Z49_2].DT.MAX();
-            pd_proc => EADV.[13100-06,13100-07,13100-08].DT.MAX();
+            pd_icpc => eadv.[icpc_u59007,icpc_u59009].dt.max();
+            pd_icd => eadv.[icd_z49_2].dt.max();
+            pd_proc => eadv.[13100-06,13100-07,13100-08].dt.max();
             
-            pd_dt => EADV.[13100-06,13100-07,13100-08,U59007,U59009,icd_Z49_2].DT.MAX();
+            pd_dt => eadv.[13100-06,13100-07,13100-08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
              
-            tx_icpc => EADV.[U28001].DT.MAX();
-            tx_icd => EADV.[icd_Z94%].DT.MAX();
-            tx_proc => EADV.[13100-06,13100-07,13100-08].DT.MAX();
+            tx_icpc => eadv.[icpc_u28001].dt.max();
+            tx_icd => eadv.[icd_z94%].dt.max();
+            tx_proc => eadv.[13100-06,13100-07,13100-08].dt.max();
             
-            tx_dt => EADV.[U28001,icd_Z94%].DT.MAX();
+            tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max();
             
-            hhd => EADV.[U59J99].DT.MAX();
+            hhd => eadv.[icpc_u59j99].dt.max();
             
-            hhd_dt => EADV.[U59J99].DT.MAX();
+            hhd_dt => eadv.[icpc_u59j99].dt.max();
             
-            rrt(hd_dt,pd_dt,tx_dt,hhd_dt):{COALESCE(hd_dt,pd_dt,tx_dt,hhd_dt) IS NULL=>0},
+            rrt(hd_dt,pd_dt,tx_dt,hhd_dt):{coalesce(hd_dt,pd_dt,tx_dt,hhd_dt) is null=>0},
                                             {=>1};
             
     ';

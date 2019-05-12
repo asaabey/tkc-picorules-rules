@@ -16,6 +16,7 @@ CREATE TABLE rman_rpipe
 (
     ruleid varchar2(100),
     rulebody varchar2(4000),
+    blockid varchar2(100),
     CONSTRAINT pk_rpipe PRIMARY KEY(ruleid)
 );
 
@@ -29,6 +30,18 @@ CREATE TABLE rman_ruleblocks
     environment     VARCHAR2(30),
     rule_owner      VARCHAR2(30),
     CONSTRAINT pk_ruleblocks PRIMARY KEY(blockid)
+);
+/
+
+DROP TABLE rman_ruleblocks_dep;
+CREATE TABLE rman_ruleblocks_dep
+(
+    blockid varchar2(100),
+    dep_table   VARCHAR2(30),
+    dep_column  VARCHAR2(100),
+    dep_att     VARCHAR2(100),
+    dep_func    VARCHAR2(100),
+    CONSTRAINT fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
 );
 /
 
