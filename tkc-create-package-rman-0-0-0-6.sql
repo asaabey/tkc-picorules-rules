@@ -1,7 +1,9 @@
 CLEAR SCREEN;
 
 
-CREATE OR REPLACE PACKAGE rman_pckg AS
+CREATE OR REPLACE PACKAGE rman_pckg 
+AUTHID CURRENT_USER
+AS
 --Package		rman_pckg
 --Version		0.0.0.8
 --Creation date	07/04/2019
@@ -535,6 +537,7 @@ IS
     func        varchar2(32);
     funcparam   PLS_INTEGER;
     att         varchar2(4000);
+    att0        varchar2(4000);
     att_str     varchar2(256);
     tbl         varchar2(100);
     prop        varchar2(100);
@@ -608,6 +611,7 @@ BEGIN
         DBMS_OUTPUT.PUT_LINE('Syntax error');
     END IF;
     
+    att0:=att;
     
     att:=sql_predicate(att);
     
@@ -635,9 +639,7 @@ BEGIN
             
             push_vstack(assnvar,indx,2);
             
---            IF assnvar IS NOT NULL THEN
---                vstack(assnvar):=indx;
---            END IF;
+
     
     ELSE
     
@@ -653,14 +655,12 @@ BEGIN
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat);
             
-            insert_ruleblocks_dep(blockid,tbl,att_col,att,func);
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
             
             rows_added:= 1;
             
             push_vstack(assnvar,indx,2);
---            IF assnvar IS NOT NULL THEN
---                vstack(assnvar):=indx;
---            END IF;
+
             
         WHEN FUNC='LAST' OR FUNC='FIRST' OR FUNC='EXISTS' THEN
             DECLARE
@@ -684,7 +684,7 @@ BEGIN
                 
                 insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,NULL, is_sub_val,sqlstat);
                 
-                insert_ruleblocks_dep(blockid,tbl,att_col,att,func);
+                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
                 
                 where_txt:= 'rank=' || rankindx;
                 from_txt:= ctename;
@@ -704,9 +704,7 @@ BEGIN
                 
                 push_vstack(assnvar,indx+1,2);
                 
---                IF assnvar IS NOT NULL THEN
---                    vstack(assnvar):=indx+1;
---            END IF;
+
             END;
 
         WHEN FUNC='CONST' THEN
