@@ -9,7 +9,7 @@ DECLARE
     
 
 BEGIN
-    DELETE FROM rman_ruleblocks;
+    
     
     
     rb.blockid:='ckd-1-2';
@@ -44,6 +44,9 @@ BEGIN
             {acrlv>300 => `A4`},{=>`NA`};
         
     ';
+    
+    DELETE FROM rman_ruleblocks_dep where blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks where blockid=rb.blockid;
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
@@ -69,6 +72,9 @@ BEGIN
             ctifd => EADV.[icd_L00%,icd_L01%,icd_L02%,icd_L03%,icd_L04%,icd_L05%,icd_L06%,icd_L07%,icd_L08%,icd_L09%,icd_M86%,S76%].DT.MIN();
         
     ';
+    
+    DELETE FROM rman_ruleblocks_dep where blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks where blockid=rb.blockid;
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
@@ -107,6 +113,9 @@ BEGIN
                                             {=>1};
             
     ';
+    
+    DELETE FROM rman_ruleblocks_dep where blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks where blockid=rb.blockid;
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
@@ -154,10 +163,42 @@ BEGIN
         
             
     ';
+    DELETE FROM rman_ruleblocks_dep where blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks where blockid=rb.blockid;
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
 
+
+    rb.blockid:='aarray1';
+    rb.target_table:='rout_tmp_aarray1';
+    rb.environment:='TEST';
+    rb.rule_owner:='TKCADMIN';
+    rb.picoruleblock:='
+    
+        
+
+        egfr2_c => EADV.eGFR.VAL.COUNT().WHERE(DT>SYSDATE-365*2);
+        
+        egfr2_1_dt => EADV.eGFR.DT.MIN().WHERE(DT>SYSDATE-365*2);
+        
+        egfr2_2_dt => EADV.eGFR.DT.MAX().WHERE(DT>SYSDATE-365*2);
+        
+                
+        egfr6m_gap:{(egfr2_2_dt- egfr2_1_dt >182)=>1};
+        
+       
+        
+                        
+                        
+        
+            
+    ';
+    DELETE FROM rman_ruleblocks_dep where blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks where blockid=rb.blockid;
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
   
     
     

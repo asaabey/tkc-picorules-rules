@@ -356,6 +356,19 @@ RETURN retval;
 
 END  is_tempvar;
 
+FUNCTION match_varname(txtbody varchar2,elem varchar2) RETURN BOOLEAN
+AS
+ret BOOLEAN:=false;
+rgx varchar2(100);
+BEGIN
+    
+     rgx:= '\W' || elem || '\W';   
+     IF REGEXP_INSTR(txtbody,rgx,1,1)>0 THEN
+        ret:=true;
+    END IF;
+    RETURN ret;
+END match_varname;
+
 PROCEDURE getcomposite (cmpstat OUT NVARCHAR2) IS
     rmanobj rman_tbl_type;
     ctename nvarchar2(20);
@@ -511,6 +524,49 @@ BEGIN
 
 END build_assn_var;
 
+PROCEDURE build_assn_var2
+(
+    txtin IN VARCHAR2,
+    delim IN VARCHAR2,
+    left_tbl_name IN VARCHAR2,
+    from_clause OUT VARCHAR2,
+    avn OUT VARCHAR2
+
+) IS
+    
+    txt VARCHAR2(4000);
+    vsi VARCHAR2(100);
+BEGIN
+            
+
+            txt:=SUBSTR(txtin,INSTR(txtin,delim)+LENGTH(delim),LENGTH(txtin)); 
+            
+            from_clause :=from_clause || left_tbl_name;  
+            
+            vsi:=vstack.FIRST;
+            
+            WHILE vsi IS NOT NULL LOOP   
+                
+                IF match_varname(txt,vsi) AND vsi is not null THEN
+                     from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(vsi))
+                                        || ' ON ' || get_cte_name(vstack(vsi)) || '.' || entity_id_col || '=' 
+                                        || left_tbl_name || '.' || entity_id_col || ' ';
+                              
+                END IF;
+                
+                vsi := vstack.NEXT(vsi);
+            END LOOP; 
+            
+            
+            avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-LENGTH(delim)));            
+
+
+--EXCEPTION
+--    WHEN OTHERS THEN
+--    DBMS_OUTPUT.PUT_LINE('BUILD ASSN VAR FAILED ');
+
+END build_assn_var2;
+
 PROCEDURE push_vstack(
     varname          IN  VARCHAR2,
     indx             IN  INTEGER,
@@ -619,7 +675,7 @@ BEGIN
     
     left_tbl_name := tbl;
     
-    build_assn_var(txtin,'=>',left_tbl_name,from_clause,avn);
+    build_assn_var2(txtin,'=>',left_tbl_name,from_clause,avn);
     
     --assnvar:=avn;
     
@@ -779,7 +835,7 @@ BEGIN
     
     
     
-    build_assn_var(txtin,':',left_tbl_name,from_clause,avn);
+    build_assn_var2(txtin,':',left_tbl_name,from_clause,avn);
     
     --avn:=sanitise_varname(avn);
     
@@ -893,6 +949,15 @@ BEGIN
             END LOOP;
         END IF;
     END LOOP;
+    
+   
+    
+    indxtmp := vstack.FIRST; 
+   
+    WHILE indxtmp IS NOT NULL LOOP   
+        DBMS_Output.PUT_LINE('index -> ' || indxtmp || ' is ' || vstack(indxtmp));   
+        indxtmp := vstack.NEXT(indxtmp); 
+    END LOOP; 
     getcomposite(sqlout);
     
 END parse_rpipe;
@@ -931,7 +996,8 @@ BEGIN
         END IF;
     END LOOP;
 
-    
+dbms_output.put_line('FUNC-AARAY VSTACK : ' || vstack.COUNT);
+
 
 END parse_ruleblocks;
 
