@@ -8,7 +8,9 @@ CREATE TABLE rman_stack
     select_clause VARCHAR2(4000),
     groupby_clause VARCHAR2(100),
     varid VARCHAR2(100),
-    is_sub NUMBER(1,0)
+    is_sub NUMBER(1,0),
+    agg_func VARCHAR2(100),
+    func_param  VARCHAR2(100)
 );
 
 DROP TABLE rman_rpipe;

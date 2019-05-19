@@ -200,6 +200,33 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
   
+  
+  rb.blockid:='nvl';
+    rb.target_table:='rout_tmp_nvl';
+    rb.environment:='TEST';
+    rb.rule_owner:='TKCADMIN';
+    rb.picoruleblock:='
+    
+        
+
+        egfr1 => eadv.lab_bld_egfr.dt.count(0).where(val<30);
+        
+        egfr2 => eadv.lab_bld_egfr.dt.count().where(val>30 and val<60);
+        
+        egfr_w : {1=1 => greatest(egfr1,egfr2)};
+        
+       
+        
+                        
+                        
+        
+            
+    ';
+    DELETE FROM rman_ruleblocks_dep where blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks where blockid=rb.blockid;
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
     
     
     

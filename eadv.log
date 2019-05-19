@@ -1,0 +1,60 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on Sat May 18 14:12:11 2019
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   C:\Users\abeya\Documents\Oracle11g\eadv\eadv.ctl
+Data File:      C:\Users\abeya\Documents\Oracle11g\eadv\export.csv
+  Bad File:     C:\Users\abeya\Documents\Oracle11g\eadv\export.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table EADV2, loaded from every logical record.
+Insert option in effect for this table: INSERT
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+ID                                  FIRST     *   ,       CHARACTER            
+  (FILLER FIELD)
+EID                                  NEXT     *   ,       CHARACTER            
+ATT                                  NEXT     *   ,       CHARACTER            
+    SQL string for column : "LTRIM(RTRIM(:att,chr(34)),chr(34))"
+DT                                   NEXT     *   ,       CHARACTER            
+VAL                                  NEXT     *   ,       CHARACTER            
+
+Record 1: Rejected - Error on table EADV2, column EID.
+ORA-01722: invalid number
+
+ORA-01654: unable to extend index TKC1.EADV2_PK by 128 in tablespace SYSTEM
+
+SQL*Loader-605: Non-data dependent ORACLE error occurred -- load discontinued.
+
+Specify SKIP=2554990 when continuing the load.
+
+Table EADV2:
+  2554989 Rows successfully loaded.
+  1 Row not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                  66048 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records rejected:         1
+Total logical records discarded:        0
+
+Run began on Sat May 18 14:12:11 2019
+Run ended on Sat May 18 14:13:40 2019
+
+Elapsed time was:     00:01:28.70
+CPU time was:         00:00:07.89

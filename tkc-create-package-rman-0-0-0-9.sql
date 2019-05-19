@@ -562,7 +562,7 @@ BEGIN
                         DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED LOOP ' || vstack_func(vsi) || ' --> ' || vstack_func_param(vsi));
                 --case select
                         CASE
-                            WHEN vstack_func(vsi)='COUNT' AND vstack_func_param(vsi)='0' THEN
+                            WHEN vstack_func(vsi) IN ('COUNT','LAST','FIRST') AND vstack_func_param(vsi)='0' THEN
                         DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED CASE');
                                 rep_str:='NVL(' || vsi || ',0)';
                                 txtout:=REPLACE(txtout,vsi,rep_str);    
@@ -698,7 +698,7 @@ BEGIN
         att:=varr(2);
         prop:=varr(3);
         func:=UPPER(SUBSTR(varr(4), 1, INSTR(varr(4),'(',1,1)-1));
-        funcparam:=NVL(REGEXP_SUBSTR(varr(4), '\((.*)?\)', 1, 1, 'i', 1),null);
+        funcparam:=NVL(REGEXP_SUBSTR(varr(4), '\((.*)?\)', 1, 1, 'i', 1),0);
         IF UPPER(SUBSTR(varr(5),1,5))='WHERE' THEN
             predicate:=' AND '|| REGEXP_SUBSTR(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
         END IF;
@@ -707,7 +707,7 @@ BEGIN
         att:=varr(2);
         prop:=varr(3);
         func:=UPPER(SUBSTR(varr(4), 1, INSTR(varr(4),'(',1,1)-1));
-        funcparam:=NVL(REGEXP_SUBSTR(varr(4), '\((.*)?\)', 1, 1, 'i', 1),null);
+        funcparam:=NVL(REGEXP_SUBSTR(varr(4), '\((.*)?\)', 1, 1, 'i', 1),0);
         ext_col_name:=varr(2);
     ELSIF varr.COUNT=3 THEN
         tbl:=UPPER(varr(1));
