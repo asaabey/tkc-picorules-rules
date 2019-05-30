@@ -141,6 +141,9 @@ AS
     PROCEDURE parse_ruleblocks(blockid varchar2);
     
     PROCEDURE exec_dsql(sqlstmt clob,tbl_name varchar2) ;
+    
+    PROCEDURE exec_dsql_dstore(sqlstmt clob,tbl_name varchar2) ;
+    
     PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) ;
 END;
 /
@@ -1195,6 +1198,158 @@ BEGIN
     dbms_sql.close_cursor(insert_cursor);
     dbms_sql.close_cursor(select_cursor);
 END exec_dsql;
+
+
+PROCEDURE exec_dsql_dstore(sqlstmt clob,tbl_name varchar2) 
+IS
+    colCount            PLS_INTEGER;
+    colValue            VARCHAR2(4000);
+    tbl_desc            dbms_sql.desc_tab2;
+    select_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    insert_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    status              PLS_INTEGER;
+    fetched_rows        PLS_INTEGER;
+    i                   PLS_INTEGER;
+    typ01_val           VARCHAR2(4000); 
+    typ02_val           NUMBER;
+    typ12_val           DATE;
+    typ96_val           VARCHAR2(4);
+    typ00_val           VARCHAR2(4000);
+    row_eid             NUMBER;
+    
+   
+
+    create_tbl_sql_str  VARCHAR2(4000);
+    insert_tbl_sql_str  VARCHAR2(4000);
+
+    tbl_exists_val      PLS_INTEGER;
+    
+BEGIN
+
+    --create_tbl_sql_str:='CREATE TABLE ' || tbl_name || ' (';
+    
+    
+    --analyse query
+    dbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
+    
+    dbms_sql.describe_columns2(select_cursor,colCount,tbl_desc);
+    
+    For I In 1..tbl_desc.Count Loop
+--        DBMS_OUTPUT.PUT_LINE ('exec_dsql ::: COLNAME->' || tbl_desc(i).col_name || ' COLTYPE->' || tbl_desc(i).col_type || ' COL LEN->' || tbl_desc(i).col_max_len);
+        
+        
+        CASE tbl_desc(i).col_type
+            WHEN 1  THEN --varchar2
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' VARCHAR2(' || tbl_desc(i).col_max_len ||') ' || CHR(10);
+            WHEN 2 THEN --number
+                    dbms_sql.define_column(select_cursor,i,1);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' NUMBER ' || CHR(10);
+            WHEN 12 THEN --date
+                    dbms_sql.define_column(select_cursor,i,SYSDATE);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' DATE ' || CHR(10);
+            WHEN 96 THEN --char
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+                    create_tbl_sql_str:=create_tbl_sql_str || format_column_name(tbl_desc(i).col_name) || ' VARCHAR2(' || tbl_desc(i).col_max_len || ')' || CHR(10);
+            ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
+        END CASE;
+        IF i<tbl_desc.LAST THEN
+            create_tbl_sql_str:=create_tbl_sql_str || ',';
+        ELSE
+            create_tbl_sql_str:=create_tbl_sql_str || ')';
+        END IF;
+    END LOOP;
+    
+    --DBMS_OUTPUT.PUT_LINE('SQL SYNTAX  -> ' || create_tbl_sql_str );
+    
+
+    
+    
+--    --First col eid
+--    tbl_desc(1)
+--    
+--    
+--    
+--    FOR i IN 1..tbl_desc.COUNT LOOP
+--        
+--        insert_tbl_sql_str := insert_tbl_sql_str || ':' || format_bindvar_name(tbl_desc(i).col_name); 
+--        IF i<tbl_desc.COUNT THEN
+--            insert_tbl_sql_str:=insert_tbl_sql_str || ', ';
+--        END IF;
+--    END LOOP;
+--    insert_tbl_sql_str:=insert_tbl_sql_str || ')';
+--    
+--    END IF;
+    
+    
+--DBMS_OUTPUT.PUT_LINE('INSERT STATEMENT ->' || CHR(10) || insert_tbl_sql_str);
+    
+    status:=dbms_sql.EXECUTE(select_cursor);
+    
+    --Binding
+    --for each row
+    LOOP
+    
+        fetched_rows:=dbms_sql.fetch_rows(select_cursor);
+        EXIT WHEN fetched_rows=0;
+        
+        i:=tbl_desc.FIRST;
+        
+        --Assemble insert statementdbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
+        insert_tbl_sql_str := 'INSERT INTO ' || tbl_name || '(eid, att, dt, val) VALUES(:eid, :att, :dt, :val)';
+        dbms_output.put_line('dbms_sql fnc --> ' || insert_tbl_sql_str);
+    
+        dbms_sql.parse(insert_cursor,insert_tbl_sql_str,dbms_sql.native);
+        
+    
+        
+        --for each col
+        WHILE (i IS NOT NULL) LOOP
+        IF lower(tbl_desc(i).col_name)='eid' THEN
+            dbms_sql.column_value(select_cursor,i,row_eid);
+            dbms_output.put_line('dbms_sql fnc --> ' || row_eid);
+        END IF;
+        
+            CASE tbl_desc(i).col_type
+--                WHEN 1  THEN --varchar2
+--                        dbms_sql.column_value(select_cursor,i,typ01_val);
+--                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ01_val);                                                 
+                WHEN 2 THEN --number
+                        
+                        dbms_sql.column_value(select_cursor,i,typ02_val);
+                        
+                        IF typ02_val IS NOT NULL THEN
+                        
+--                        dbms_output.put_line('dsql_dstore --> eid '|| row_eid ||'
+--                         att ' || format_bindvar_name(tbl_desc(i).col_name) || '
+--                         dt '  || sysdate || '
+--                         val '  || typ02_val || '
+--                        ');
+                            dbms_sql.bind_variable(insert_cursor, ':eid' ,row_eid); 
+                            dbms_sql.bind_variable(insert_cursor, ':att' ,format_bindvar_name(tbl_desc(i).col_name)); 
+                            dbms_sql.bind_variable(insert_cursor, ':dt' ,sysdate); 
+                            dbms_sql.bind_variable(insert_cursor, ':val', typ02_val);
+                            
+                            
+                            
+                        END iF;
+                        
+--                WHEN 12 THEN --date
+--                        dbms_sql.column_value(select_cursor,i,typ12_val);
+--                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ12_val); 
+--                WHEN 96 THEN --char
+--                        dbms_sql.column_value(select_cursor,i,typ96_val);
+--                        dbms_sql.bind_variable(insert_cursor, ':' || format_bindvar_name(tbl_desc(i).col_name), typ96_val); 
+                ELSE DBMS_OUTPUT.PUT_LINE('Undefined type');
+            END CASE;
+        i:=tbl_desc.NEXT(i);
+        END LOOP;
+--        
+        status:=dbms_sql.execute(insert_cursor);
+    END LOOP;
+    dbms_sql.close_cursor(insert_cursor);
+    dbms_sql.close_cursor(select_cursor);
+END exec_dsql_dstore;
 
 PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) 
 IS
