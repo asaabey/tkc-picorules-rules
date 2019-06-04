@@ -111,6 +111,8 @@ AS
     
     FUNCTION trim_comments(txtin clob) RETURN clob;
     
+    FUNCTION modify_ps_on_funcparam(txtin varchar2) return varchar2;
+    
     PROCEDURE insert_rman
     (
      indx INT,
@@ -142,7 +144,9 @@ AS
     
     PROCEDURE exec_dsql(sqlstmt clob,tbl_name varchar2) ;
     
-    PROCEDURE exec_dsql_dstore_multicol(sqlstmt clob,tbl_name varchar2,blockid varchar2);
+    PROCEDURE exec_dsql_dstore_multicol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2); 
+    
+    PROCEDURE exec_dsql_dstore_singlecol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2);
     
     PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) ;
 END;
@@ -388,6 +392,18 @@ BEGIN
     RETURN ret;
 END match_varname;
 
+FUNCTION get_hash(inclob clob) RETURN VARCHAR2
+AS
+ret VARCHAR2(32);
+BEGIN
+    IF length(inclob)>0 THEN 
+        ret:=dbms_crypto.hash(inclob, dbms_crypto.HASH_MD5 );
+    END IF; 
+    RETURN ret;
+END get_hash;
+
+
+
 PROCEDURE getcomposite (cmpstat OUT NVARCHAR2) IS
     rmanobj rman_tbl_type;
     ctename nvarchar2(20);
@@ -566,10 +582,14 @@ BEGIN
                 --case select
                         CASE
                             WHEN vstack_func(vsi) IN ('COUNT','LAST','FIRST') AND vstack_func_param(vsi)='0' THEN
-                        DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED CASE');
+                        --DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED CASE');
                                 rep_str:='NVL(' || vsi || ',0)';
                                 txtout:=REPLACE(txtout,vsi,rep_str);    
-                                DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> VSI : ' || vsi || ' REP_STR :' || rep_str || chr(10) || 'TXTOUT : ' || txtout);
+                            --    DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> VSI : ' || vsi || ' REP_STR :' || rep_str || chr(10) || 'TXTOUT : ' || txtout);
+                            WHEN vstack_func(vsi) IN ('MIN','MAX','FIRST','LAST') AND vstack_func_param(vsi)='1900' THEN
+                        --DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED CASE');
+                                rep_str:='NVL(' || vsi || ',TO_DATE(''19000101'',''YYYYMMDD''))';
+                                txtout:=REPLACE(txtout,vsi,rep_str);    
                             ELSE
                                 txtout:=txtout;
                         END CASE;
@@ -584,6 +604,34 @@ BEGIN
     RETURN txtout;
 
 END modify_ps_on_funcparam;
+
+FUNCTION map_to_tmplt(jstr varchar2,tmplt varchar2 ) RETURN VARCHAR2
+AS
+key_tbl tbl_type;
+t varchar2(4000);
+tkey varchar2(100);
+tval varchar2(100);
+html_tkey varchar2(100);
+ret_tmplt varchar2(4000):=tmplt;
+BEGIN
+--jstr into collection
+    
+    t:=regexp_substr(jstr,'\{(.*?)\}', 1, 1, 'i', 1);
+    key_tbl:=rman_pckg.splitstr(t,',');
+    FOR i IN 1..key_tbl.COUNT LOOP
+            tkey:=regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
+            tval:=regexp_substr(substr(key_tbl(i),instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
+            
+            html_tkey:='<' || tkey || '></' || tkey || '>';
+            
+            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey,tval);
+            
+          dbms_output.put_line('func --> key ' || tkey || '  val ' || tval || '  html ' || html_tkey );
+    END LOOP;
+    RETURN ret_tmplt;
+
+END map_to_tmplt;
+
 
 PROCEDURE build_assn_var2
 (
@@ -1200,7 +1248,7 @@ BEGIN
 END exec_dsql;
 
 
-PROCEDURE exec_dsql_dstore_multicol(sqlstmt clob,tbl_name varchar2,blockid varchar2) 
+PROCEDURE exec_dsql_dstore_multicol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2) 
 IS
     colCount            PLS_INTEGER;
     colValue            VARCHAR2(4000);
@@ -1218,7 +1266,7 @@ IS
     row_eid             NUMBER;
     
    
-
+    select_tbl_sql_str  VARCHAR2(4000):=sqlstmt;
     create_tbl_sql_str  VARCHAR2(4000);
     insert_tbl_sql_str  VARCHAR2(4000);
     insert_jstr         VARCHAR2(4000);
@@ -1234,7 +1282,15 @@ BEGIN
         src_id:='undefined';
     END IF;
     --analyse query
-    dbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
+    IF disc_col is not null and predicate is not null then
+        select_tbl_sql_str:=select_tbl_sql_str || ' WHERE ' || UPPER(disc_col) || ' ' || predicate;
+    end if;
+    
+    dbms_output.put_line('-->'  || select_tbl_sql_str);
+        
+    dbms_sql.parse(select_cursor,select_tbl_sql_str,dbms_sql.native);
+    
+    --dbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
     
     dbms_sql.describe_columns2(select_cursor,colCount,tbl_desc);
     
@@ -1304,7 +1360,7 @@ BEGIN
                             dbms_sql.bind_variable(insert_cursor, ':src', src_id);
                             
                         END iF;                                                
-                WHEN 2 THEN 
+                WHEN 2 THEN -- number
                 
                         
                         dbms_sql.column_value(select_cursor,i,typ02_val);
@@ -1358,7 +1414,7 @@ BEGIN
                         dbms_sql.column_value(select_cursor,i,typ96_val);
                         
                         IF typ96_val IS NOT NULL THEN
-                            insert_tbl_sql_str := 'INSERT INTO ' || tbl_name || '(eid, att, dt, valn,typ,src) VALUES(:eid, :att, :dt, :val,:typ,:src)';
+                            insert_tbl_sql_str := 'INSERT INTO ' || tbl_name || '(eid, att, dt, valc,typ,src) VALUES(:eid, :att, :dt, :val,:typ,:src)';
                             
                             insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ96_val)|| '"'; 
                             
@@ -1411,6 +1467,193 @@ BEGIN
     dbms_sql.close_cursor(insert_cursor);
     dbms_sql.close_cursor(select_cursor);
 END exec_dsql_dstore_multicol;
+
+PROCEDURE exec_dsql_dstore_singlecol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2) 
+IS
+    colCount            PLS_INTEGER;
+    colValue            VARCHAR2(4000);
+    tbl_desc            dbms_sql.desc_tab2;
+    select_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    insert_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    status              PLS_INTEGER;
+    fetched_rows        PLS_INTEGER;
+    i                   PLS_INTEGER;
+    typ01_val           VARCHAR2(4000); 
+    typ02_val           NUMBER;
+    typ12_val           DATE;
+    typ96_val           VARCHAR2(4);
+    typ00_val           VARCHAR2(4000);
+    row_eid             NUMBER;
+    
+   
+    select_tbl_sql_str  CLOB:=sqlstmt;
+    create_tbl_sql_str  VARCHAR2(4000);
+    insert_tbl_sql_str  VARCHAR2(4000);
+    insert_jstr         CLOB;
+    insert_sql_jstr     VARCHAR2(4000);
+    tbl_exists_val      PLS_INTEGER;
+    
+    
+    src_id                 VARCHAR2(32):=blockid;
+        
+BEGIN
+    
+    IF src_id is null then
+        src_id:='undefined';
+    END IF;
+    --analyse query
+    IF disc_col is not null and predicate is not null then
+        select_tbl_sql_str:=select_tbl_sql_str || ' WHERE ' || UPPER(disc_col) || ' ' || predicate;
+    end if;
+    
+   
+        
+    dbms_sql.parse(select_cursor,select_tbl_sql_str,dbms_sql.native);
+    
+   
+    
+    dbms_sql.describe_columns2(select_cursor,colCount,tbl_desc);
+    
+    For I In 1..tbl_desc.Count Loop
+        
+        
+        CASE tbl_desc(i).col_type
+            WHEN 1  THEN --varchar2
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+
+            WHEN 2 THEN --number
+                    dbms_sql.define_column(select_cursor,i,1);
+
+            WHEN 12 THEN --date
+                    dbms_sql.define_column(select_cursor,i,SYSDATE);
+
+            WHEN 96 THEN --char
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+
+            ELSE DBMS_OUTPUT.PUT_LINE('Undefined type ->' || tbl_desc(i).col_type);
+        END CASE;
+    END LOOP;
+
+    
+    status:=dbms_sql.EXECUTE(select_cursor);
+    
+    --Binding
+    
+    --for each row loop
+    LOOP
+    
+        fetched_rows:=dbms_sql.fetch_rows(select_cursor);
+        EXIT WHEN fetched_rows=0;
+        
+        i:=tbl_desc.FIRST;
+
+        insert_jstr:='{';
+
+        --for each col loop
+        WHILE (i IS NOT NULL) LOOP
+        IF lower(tbl_desc(i).col_name)='eid' THEN
+            dbms_sql.column_value(select_cursor,i,row_eid);
+
+        END IF;
+        
+            CASE tbl_desc(i).col_type
+                WHEN 1  THEN --varchar2
+                        dbms_sql.column_value(select_cursor,i,typ01_val);
+                        
+                        IF typ01_val IS NOT NULL THEN
+
+                            
+                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ01_val)|| '"'; 
+                            
+                            IF i<tbl_desc.COUNT THEN
+                                insert_jstr:=insert_jstr || ',';    
+                            END IF;
+                            
+
+                            
+                        END iF;                                                
+                WHEN 2 THEN -- number
+                
+                        
+                        dbms_sql.column_value(select_cursor,i,typ02_val);
+                        
+                        IF typ02_val IS NOT NULL THEN
+
+                            
+                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ02_val)|| '"'; 
+                            
+                            IF i<tbl_desc.COUNT THEN
+                                insert_jstr:=insert_jstr || ',';    
+                            END IF;
+                        
+                        END iF;
+                        
+                WHEN 12 THEN --date
+                         dbms_sql.column_value(select_cursor,i,typ12_val);
+                        
+                        IF typ12_val IS NOT NULL THEN
+
+                            
+                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ12_val,'DD/MM/YYYY')|| '"'; 
+                            
+                            IF i<tbl_desc.COUNT THEN
+                                    insert_jstr:=insert_jstr || ',';    
+                            END IF;
+                            
+
+--                                
+                        END iF;
+                        
+                WHEN 96 THEN --char
+                        dbms_sql.column_value(select_cursor,i,typ96_val);
+                        
+                        IF typ96_val IS NOT NULL THEN
+
+                            
+                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ96_val)|| '"'; 
+                            
+                            IF i<tbl_desc.COUNT THEN
+                                insert_jstr:=insert_jstr || ',';    
+                            END IF;
+                        
+                         
+                        END iF;
+                ELSE DBMS_OUTPUT.PUT_LINE('Undefined type ' || tbl_desc(i).col_type);
+            END CASE;
+        i:=tbl_desc.NEXT(i);
+        
+      
+        
+        END LOOP;
+        insert_jstr:=insert_jstr || '}';
+        
+
+        
+        insert_sql_jstr:='INSERT /*+ ignore_row_on_dupkey_index(eadvx,EADVX_UC) */ INTO ' || tbl_name || '(eid, att, dt, valc,typ,src,evhash) VALUES(:eid, :att, :dt, :val,:typ,:src,:evhash)';
+        
+        
+        
+        dbms_sql.parse(insert_cursor,insert_sql_jstr,dbms_sql.native);   
+        
+                            dbms_sql.bind_variable(insert_cursor, ':eid' ,row_eid); 
+                            dbms_sql.bind_variable(insert_cursor, ':att' ,disc_col); 
+                            dbms_sql.bind_variable(insert_cursor, ':dt' ,sysdate); 
+                            dbms_sql.bind_variable(insert_cursor, ':val', insert_jstr);
+                            dbms_sql.bind_variable(insert_cursor, ':typ', 2);
+                            dbms_sql.bind_variable(insert_cursor, ':src', src_id);
+                            dbms_sql.bind_variable(insert_cursor, ':evhash',get_hash(insert_jstr));
+        status:=dbms_sql.execute(insert_cursor);
+        
+        
+        
+        insert_sql_jstr:='';
+        insert_jstr:='';
+        
+    END LOOP;
+    dbms_sql.close_cursor(insert_cursor);
+    dbms_sql.close_cursor(select_cursor);
+
+END exec_dsql_dstore_singlecol;
 
 PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) 
 IS

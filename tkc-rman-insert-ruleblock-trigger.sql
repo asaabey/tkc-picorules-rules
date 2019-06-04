@@ -454,16 +454,22 @@ BEGIN
         /*  Diabetes diagnosis*/
         /*  Code criteria   */
         dm_icd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.count(0);
+        
         dm_icpc => eadv.[icpc_t89%,icpc_t90%].dt.count(0);
+        
         
         /*  Lab criteria   */
         dm_lab => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>65/10);
+        dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min().where(val>65/10);
         
         /*  Rxn cirteria   */
         dm_rxn => eadv.[rxn_cls_atc_a10%].dt.count(0).where(val=1);
         
         
+               
         dm_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
+        
+        
         
         dm_type_1 => eadv.[icpc_t89%].dt.count(0);
         
@@ -484,7 +490,15 @@ BEGIN
                             { dm_vintage_yr_>=10 and dm_vintage_yr_ <20 => 2 },
                             { dm_vintage_yr_>=20=> 3 },{=>0};
         
+        dm_longstanding_t : {dm_vintage_cat>=2 => ` longstanding `},{=>` `};   
+        
+        
+        
         dm : {greatest(dm_icd,dm_icpc,dm_lab,dm_rxn)>0 =>1},{=>0};
+        
+        dm_dx_code_flag : {dm >=1 and greatest(dm_icd,dm_icpc)>=1 => 1},{dm >=1 and greatest(dm_lab,dm_rxn)>0 =>0};
+        
+        dm_dx_code_t : {dm_dx_code_flag=1 => `Diagnosed`},{dm_dx_code_flag=0 =>`Undiagnosed`};
         
         dm_type : {dm=1 and dm_type_1>0 => 1},{dm=1 and dm_type_1=0 => 2},{=>0};
         

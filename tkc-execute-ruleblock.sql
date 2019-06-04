@@ -18,7 +18,7 @@ BEGIN
     DELETE FROM rman_rpipe;
     DELETE FROM rman_stack;
     
-    bid:='nvl';
+    bid:='cd_dm_2';
     
     rman_pckg.parse_ruleblocks(bid);
     
@@ -37,6 +37,8 @@ BEGIN
     
     rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
     
+    
+    rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', 'dm','>0') ;
   
     
     
