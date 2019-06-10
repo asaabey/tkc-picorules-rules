@@ -113,6 +113,8 @@ AS
     
     FUNCTION modify_ps_on_funcparam(txtin varchar2) return varchar2;
     
+    FUNCTION map_to_tmplt(jstr varchar2,tmplt varchar2 ) RETURN VARCHAR2;
+    
     PROCEDURE insert_rman
     (
      indx INT,
@@ -397,10 +399,13 @@ AS
 ret VARCHAR2(32);
 BEGIN
     IF length(inclob)>0 THEN 
-        ret:=dbms_crypto.hash(inclob, dbms_crypto.HASH_MD5 );
+        --ret:=dbms_crypto.hash(inclob, dbms_crypto.HASH_MD5 );
+        ret:=DBMS_OBFUSCATION_TOOLKIT.md5(input => UTL_I18N.STRING_TO_RAW (inclob, 'AL32UTF8'));
     END IF; 
     RETURN ret;
 END get_hash;
+
+
 
 
 
@@ -619,14 +624,14 @@ BEGIN
     t:=regexp_substr(jstr,'\{(.*?)\}', 1, 1, 'i', 1);
     key_tbl:=rman_pckg.splitstr(t,',');
     FOR i IN 1..key_tbl.COUNT LOOP
-            tkey:=regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
+            tkey:=lower(regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1));
             tval:=regexp_substr(substr(key_tbl(i),instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
             
             html_tkey:='<' || tkey || '></' || tkey || '>';
             
             ret_tmplt:=regexp_replace(ret_tmplt,html_tkey,tval);
             
-          dbms_output.put_line('func --> key ' || tkey || '  val ' || tval || '  html ' || html_tkey );
+         -- dbms_output.put_line('func --> key ' || tkey || '  val ' || tval || '  html ' || html_tkey );
     END LOOP;
     RETURN ret_tmplt;
 

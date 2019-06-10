@@ -315,6 +315,19 @@ BEGIN
         egfrlv => eadv.lab_bld_egfr_c.val.last().where(dt>sysdate-730);
         egfrld => eadv.lab_bld_egfr_c.dt.max().where(dt>sysdate-730);
         
+        acrlv => eadv.lab_ua_acr.val.last().where(dt>sysdate-730);
+        acrld => eadv.lab_ua_acr.dt.max().where(dt>sysdate-730);
+        
+        
+        /*  Check for persistence*/
+        
+        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfrld-90 and val<60);
+        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt>acrld-90 and val>3);
+        
+        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1};
+        
+        
+        
         /*  check for egfr assumption violation */
         egfr_3m_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfrld-30);
         
@@ -326,11 +339,13 @@ BEGIN
         egfrfd => eadv.lab_bld_egfr_c.dt.min();
         
         /* egfr slope */
+        egfr_max_v => eadv.lab_bld_egfr_c.val.max();
+        egfr_max_fd => eadv.lab_bld_egfr_c.dt.min().where(val=egfr_max_v);
+        
         
         egfr_slope : {egfrld-egfrfd>=365 => round((egfrlv-egfrfv)/((egfrld-egfrfd)/365),2)};
         
-        acrlv => eadv.lab_ua_acr.val.last().where(dt>sysdate-730);
-        acrld => eadv.lab_ua_acr.dt.max().where(dt>sysdate-730);
+       
         
                 
         /*  Apply KDIGO 2012 staging    */
@@ -350,11 +365,15 @@ BEGIN
         
         asm_viol_3m_n : {egfr_3m_n>2 => 1},{=> 0};
         
+        ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
+                {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => `2`},
+                {cga_g=`G3A` => `3A`},
+                {cga_g=`G3B` => `3B`},
+                {cga_g=`G4` => `4`},
+                {cga_g=`G5` => `5`},
+                {=> null};
         
         
-        /*  Generate Trigger flag    */
-        
-        /*  Generate Trigger Payload   */
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -457,6 +476,8 @@ BEGIN
         
         dm_icpc => eadv.[icpc_t89%,icpc_t90%].dt.count(0);
         
+        dm_code_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
+        
         
         /*  Lab criteria   */
         dm_lab => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>65/10);
@@ -466,14 +487,14 @@ BEGIN
         dm_rxn => eadv.[rxn_cls_atc_a10%].dt.count(0).where(val=1);
         
         
-               
-        dm_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
         
+        dm_fd :{coalesce(dm_code_fd,dm_lab_fd) is not null => 
+                    (least(nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
+                    nvl(dm_lab_fd,to_date(`29991231`,`YYYYMMDD`))))};
         
-        
+        dm_fd_t :{ 1=1 => to_char(dm_fd,`YYYY`)};
+
         dm_type_1 => eadv.[icpc_t89%].dt.count(0);
-        
-        
         
         /*  Diabetic complications */
         /* Diabetic retinopathy */
@@ -484,13 +505,15 @@ BEGIN
         
         dm_micvas :{ greatest(dm_micvas_neuro_,dm_micvas_retino_)>0 => 1},{=>0};
         
+        dm_micvas_t :{ dm_micvas=0 => `no`},{dm_micvas=1=>`documented`};
+        
         dm_vintage_yr_ : { dm_fd is not null => round((sysdate-dm_fd)/365,0)},{=>0};
         
         dm_vintage_cat : { dm_vintage_yr_>=0 and dm_vintage_yr_ <10 => 1 },
                             { dm_vintage_yr_>=10 and dm_vintage_yr_ <20 => 2 },
                             { dm_vintage_yr_>=20=> 3 },{=>0};
         
-        dm_longstanding_t : {dm_vintage_cat>=2 => ` longstanding `},{=>` `};   
+        dm_longstanding_t : {dm_vintage_cat>=2 => `longstanding`},{=>` `};   
         
         
         
@@ -505,11 +528,28 @@ BEGIN
         dm_dx_code : {dm=1 => (dm*1000 + dm_type*100 + dm_vintage_cat*10 + dm_micvas)},{=>0};
         
         /*  Diabetic glycaemic control */
+        hba1c_n_tot => eadv.lab_bld_hba1c_ngsp.dt.count(0);
+        hba1c_n_opt => eadv.lab_bld_hba1c_ngsp.dt.count(0).where(val>=6 and val<8);
+        
+        n_opt_qt :{hba1c_n_tot>0 => round((hba1c_n_opt/hba1c_n_tot),2)*100};
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.last();
-        hba1c_n1 => eadv.lab_bld_hba1c_ngsp.val.last(1);
+        hba1c_n0_dt => eadv.lab_bld_hba1c_ngsp.dt.max();
         
-        hba1c_trend :{nvl(hba1c_n0,0)>nvl(hba1c_n1,0)=> 1},{nvl(hba1c_n0,0)<nvl(hba1c_n1,0)=> -1},{=>0};
+        /*hba1c_n1 => eadv.lab_bld_hba1c_ngsp.val.last(1);*/
+        
+        n0_st : { hba1c_n0 <6 => 1},
+                            { hba1c_n0 >=6 and hba1c_n0 <8 => 2},
+                            { hba1c_n0 >=8 and hba1c_n0 <10 => 3},
+                            { hba1c_n0 >=10 4};
+                            
+        n0_st_t : { n0_st=1 => `too tight (<6)`},
+                            { n0_st=2 => `optimal (6-8)`},
+                            { n0_st=3 => `sub-optimal (8-10)`},
+                            { n0_st=4 => `very sub-optimal (>10)`};
+                            
+        /*hba1c_trend :{nvl(hba1c_n0,0)>nvl(hba1c_n1,0)=> 1},{nvl(hba1c_n0,0)<nvl(hba1c_n1,0)=> -1},{=>0};*/
+        
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
