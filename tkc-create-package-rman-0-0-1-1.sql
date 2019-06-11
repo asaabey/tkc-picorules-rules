@@ -617,6 +617,8 @@ t varchar2(4000);
 tkey varchar2(100);
 tval varchar2(100);
 html_tkey varchar2(100);
+html_tkey_left varchar2(100);
+html_tkey_right varchar2(100);
 ret_tmplt varchar2(4000):=tmplt;
 BEGIN
 --jstr into collection
@@ -624,14 +626,40 @@ BEGIN
     t:=regexp_substr(jstr,'\{(.*?)\}', 1, 1, 'i', 1);
     key_tbl:=rman_pckg.splitstr(t,',');
     FOR i IN 1..key_tbl.COUNT LOOP
+    
+            
             tkey:=lower(regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1));
             tval:=regexp_substr(substr(key_tbl(i),instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
             
-            html_tkey:='<' || tkey || '></' || tkey || '>';
+            html_tkey_left:='<' ||  tkey || '>';
+            html_tkey_right:='</' ||  tkey || '>';
             
-            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey,tval);
+            -- opening and closing tags found
+            IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',0) IS NOT NULL THEN
             
-         -- dbms_output.put_line('func --> key ' || tkey || '  val ' || tval || '  html ' || html_tkey );
+                -- text found between tags
+                IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1) IS NOT NULL THEN
+                    
+                    --if val is not null, show text between tags, and remove tags
+                    IF nvl(length(tval),0)>0 THEN
+                        
+                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+                        
+                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+                        
+                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+                    --if val null, remove text between tags, and tags
+                    ELSE
+                        
+                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
+                        
+                    END IF;
+                -- no text found. replace tags with tval    
+                ELSE            
+                    ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+                END IF;
+            END IF;
+            
     END LOOP;
     RETURN ret_tmplt;
 

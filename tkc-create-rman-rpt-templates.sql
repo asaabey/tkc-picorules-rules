@@ -27,6 +27,13 @@ INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,t
     The glycaemic control is <n0_st_t></n0_st_t> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
     '
     );
+    
+INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('cd_dm_rec_1','cd_dm_2',702100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Suggest optimizing glycaemic control
+    '
+    );
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('cd_htn_syn_1','cd_htn_2',603100,'dev','tkc',TO_DATE(SYSDATE),
     '

@@ -372,7 +372,7 @@ BEGIN
                 {cga_g=`G4` => `4`},
                 {cga_g=`G5` => `5`},
                 {=> null};
-        
+        ckd_b: {ckd_stage is null => false},{=> true};
         
             
     ';
