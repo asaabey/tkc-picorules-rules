@@ -619,6 +619,8 @@ tval varchar2(100);
 html_tkey varchar2(100);
 html_tkey_left varchar2(100);
 html_tkey_right varchar2(100);
+tag_param   varchar2(100);
+tag_operator       varchar(2);
 ret_tmplt varchar2(4000):=tmplt;
 BEGIN
 --jstr into collection
@@ -631,24 +633,43 @@ BEGIN
             tkey:=lower(regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1));
             tval:=regexp_substr(substr(key_tbl(i),instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
             
-            html_tkey_left:='<' ||  tkey || '>';
+            html_tkey_left:='<' ||  tkey || '(=[a-z0-9]+)?' ||'>';
             html_tkey_right:='</' ||  tkey || '>';
             
             -- opening and closing tags found
             IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',0) IS NOT NULL THEN
             
                 -- text found between tags
-                IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1) IS NOT NULL THEN
+                IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',2) IS NOT NULL THEN
                     
                     --if val is not null, show text between tags, and remove tags
-                    IF nvl(length(tval),0)>0 THEN
+                    IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
+                    
+                        --if tag parameter is specified
+                        IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1) IS NOT NULL THEN
+                            
+                            tag_param:=regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1);
+                            tag_param:=substr(tag_param,instr(tag_param,'=')+1);
+                            DBMS_OUTPUT.PUT_LINE('----> TAG PARAM -->' || tag_param);
+                            
+                            IF tag_param=tval THEN
+                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
                         
-                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
                         
-                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+                            END IF;
+                            
+                        ELSE
+                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
                         
-                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
-                    --if val null, remove text between tags, and tags
+                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+                        
+                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+                        END IF;
+                        
+                        
+                    --if val null or zero, remove tags and text
                     ELSE
                         
                         ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
@@ -661,6 +682,9 @@ BEGIN
             END IF;
             
     END LOOP;
+    --remove extra white space
+--    ret_tmplt:=regexp_replace(ret_tmplt,'\s\s+',' ',1,0,'i');
+    
     RETURN ret_tmplt;
 
 END map_to_tmplt;

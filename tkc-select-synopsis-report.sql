@@ -13,7 +13,7 @@ FROM(
 ) t0
 JOIN rman_rpt_templates tmp on tmp.ruleblockid=t0.src
 WHERE t0.rn=1
-and eid=701)
+and eid=223)
 select eid
 ,LISTAGG(body, '') WITHIN GROUP(ORDER BY placementid) into eid,composition
 FROM cte1
@@ -24,6 +24,7 @@ DBMS_OUTPUT.put_line('EID:' || eid);
 
 DBMS_OUTPUT.put_line(composition);
 end;
+
 
 
 

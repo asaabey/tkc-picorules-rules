@@ -35,10 +35,10 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('SQL statement : ' || rb.sqlblock || chr(10));
     
     
-    --rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
+    rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
     
     
-    rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', '','') ;
+    rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', 'ckd','>0') ;
   
   
     

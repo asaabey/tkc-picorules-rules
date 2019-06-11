@@ -300,8 +300,8 @@ BEGIN
         rrt => rout_rrt.rrt.val.bind();
         
         /* calculate dx information quantity*/
-        iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-730);
-        iq_egfr => eadv.lab_bld_egfr_c.val.count(0).where(dt>sysdate-730);
+        iq_uacr => eadv.lab_ua_acr.val.count(0);
+        iq_egfr => eadv.lab_bld_egfr_c.val.count(0);
         iq_coding => eadv.[icd_%,icpc_%].dt.count(0);
         
         iq_tier: {iq_coding>1 and least(iq_egfr,iq_uacr)>=2 => 4},
@@ -311,37 +311,46 @@ BEGIN
                 {=>0};
         
         
-        /*  egfr  uacr metrics */
-        egfrlv => eadv.lab_bld_egfr_c.val.last().where(dt>sysdate-730);
-        egfrld => eadv.lab_bld_egfr_c.dt.max().where(dt>sysdate-730);
+        /*  egfr metrics */
+        egfrlv => eadv.lab_bld_egfr_c.val.last();
+        egfrld => eadv.lab_bld_egfr_c.dt.max();
         
-        acrlv => eadv.lab_ua_acr.val.last().where(dt>sysdate-730);
-        acrld => eadv.lab_ua_acr.dt.max().where(dt>sysdate-730);
+        egfrfv => eadv.lab_bld_egfr_c.val.first();
+        egfrfd => eadv.lab_bld_egfr_c.dt.min();
         
+        egfr_single:{ iq_egfr=1 =>1},{=>0};
+        egfr_multiple:{ iq_egfr>1 =>1},{=>0};
+        egfr_outdated:{ (sysdate-egfrld>730) =>1},{=>0};
+        
+        
+        /*  uacr metrics */
+        acrlv => eadv.lab_ua_acr.val.last();
+        acrld => eadv.lab_ua_acr.dt.max();
+        acr_outdated : {sysdate-acrld > 730 =>1},{=>0};
         
         /*  Check for persistence*/
         
         egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfrld-90 and val<60);
         acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt>acrld-90 and val>3);
         
-        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1};
+        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
         
         
         
-        /*  check for egfr assumption violation */
+        /*  check for egfr assumption violation 
         egfr_3m_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfrld-30);
         
         egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfrld-30);
         
         egfr_3m_qt : {egfr_3m_n>2 => round(egfrlv/egfr_3m_mu,2)};
         
-        egfrfv => eadv.lab_bld_egfr_c.val.first();
-        egfrfd => eadv.lab_bld_egfr_c.dt.min();
+        */
         
         /* egfr slope */
         egfr_max_v => eadv.lab_bld_egfr_c.val.max();
-        egfr_max_fd => eadv.lab_bld_egfr_c.dt.min().where(val=egfr_max_v);
+        egfr_max_ld => eadv.lab_bld_egfr_c.dt.max().where(val=egfr_max_v);
         
+        egfr_slope2 : {egfrld-egfr_max_ld>=365 => round((egfrlv-egfr_max_v)/((egfrld-egfr_max_ld)/365),2)};
         
         egfr_slope : {egfrld-egfrfd>=365 => round((egfrlv-egfrfv)/((egfrld-egfrfd)/365),2)};
         
@@ -372,7 +381,17 @@ BEGIN
                 {cga_g=`G4` => `4`},
                 {cga_g=`G5` => `5`},
                 {=> null};
-        ckd_b: {ckd_stage is null => false},{=> true};
+        
+        ckd :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => 1},
+                {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => 2},
+                {cga_g=`G3A` => 3},
+                {cga_g=`G3B` => 4},
+                {cga_g=`G4` => 5},
+                {cga_g=`G5` => 6},
+                {=> 0};
+                
+                
+        
         
             
     ';
