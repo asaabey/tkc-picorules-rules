@@ -633,53 +633,129 @@ BEGIN
             tkey:=lower(regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1));
             tval:=regexp_substr(substr(key_tbl(i),instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
             
-            html_tkey_left:='<' ||  tkey || '(=[a-z0-9]+)?' ||'>';
+            html_tkey_left:='<' ||  tkey || '>';
             html_tkey_right:='</' ||  tkey || '>';
             
-            -- opening and closing tags found
-            IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',0) IS NOT NULL THEN
+
+            -- insertions
+            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
             
-                -- text found between tags
-                IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',2) IS NOT NULL THEN
-                    
-                    --if val is not null, show text between tags, and remove tags
-                    IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
-                    
-                        --if tag parameter is specified
-                        IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1) IS NOT NULL THEN
-                            
-                            tag_param:=regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1);
-                            tag_param:=substr(tag_param,instr(tag_param,'=')+1);
-                            DBMS_OUTPUT.PUT_LINE('----> TAG PARAM -->' || tag_param);
-                            
-                            IF tag_param=tval THEN
-                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+            -- toggle on
+            IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
+                -- without tag param
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,0,'i');
                         
-                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,0,'i');
+                
+                -- with tag param
+                
+                html_tkey_left:='<' ||  tkey || '='|| tval ||'>';
+                html_tkey_right:='</' ||  tkey || '='|| tval ||'>';
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,0,'i');
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,0,'i');
+                
+                
+                html_tkey_left:='<' ||  tkey || '(=[a-z0-9]+)?' ||'>';
+                html_tkey_right:='</' ||  tkey || '(=[a-z0-9]+)?' ||'>';
+                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
+                
+                
+            ELSE
+                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
                         
-                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
-                            END IF;
-                            
-                        ELSE
-                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
-                        
-                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
-                        
-                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
-                        END IF;
-                        
-                        
-                    --if val null or zero, remove tags and text
-                    ELSE
-                        
-                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
-                        
-                    END IF;
-                -- no text found. replace tags with tval    
-                ELSE            
-                    ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
-                END IF;
             END IF;
+            
+            -- with tag param
+            
+            
+--            IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
+--                --remove tags revealing text
+--                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+--                        
+--                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+--                        
+--            END IF;
+--            
+--            
+--            
+--            
+--            -- opening and closing tags found
+--            IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',0) IS NOT NULL THEN
+--            
+--                -- text found between tags
+--                IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',2) IS NOT NULL THEN
+--                    
+--                    --if val is not null or zero , show text between tags, and remove tags
+--                    IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
+--                    
+--                        --match tags without eq parameters 
+--                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+--                        
+--                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+--                        
+--                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+--                    
+--                    
+--                        --if tag parameter is specified
+--                        
+--                        html_tkey_left:='<' ||  tkey || '=' || tval ||'>';
+--                        html_tkey_righ:='</' ||  tkey || '=' || tval ||'>';
+--                        
+--                        IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1) IS NOT NULL THEN
+--                            
+--                            
+--                            
+--                            -- remove tags with matching param and reveal text
+--                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,0,'i');
+--                            
+--                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+--                            
+--                            -- remove  remaining existing tags with non-matching param with text
+--                            
+--                            html_tkey_left:='<' ||  tkey || '(=[a-z0-9]+)?' ||'>';
+--                            html_tkey_right:='</' ||  tkey || '(=[a-z0-9]+)?' ||'>';
+--                            
+--                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'',1,0,'i');
+--                            
+----                            tag_param:=regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1);
+----                            tag_param:=substr(tag_param,instr(tag_param,'=')+1);
+----                            DBMS_OUTPUT.PUT_LINE('----> TAG PARAM -->' || tag_param);
+----                            
+----                            
+----                            IF tag_param=tval THEN
+----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+----                        
+----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+----                        
+----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+----                                
+----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
+----                            END IF;
+----                            
+--                        ELSE
+--                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
+--                        
+--                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
+--                        
+--                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+--                        END IF;
+--                        
+--                        
+--                    --if val null or zero, remove tags and text
+--                    ELSE
+--                        
+--                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
+--                        
+--                    END IF;
+--                
+--                -- no text found. insert tval and remove tags    
+--                ELSE            
+--                    ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+--                END IF;
+--            END IF;
             
     END LOOP;
     --remove extra white space
