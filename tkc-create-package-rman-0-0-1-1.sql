@@ -5,7 +5,7 @@ CREATE OR REPLACE PACKAGE rman_pckg
 AUTHID CURRENT_USER
 AS
 --Package		rman_pckg
---Version		0.0.1.1
+--Version		0.0.1.2
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -60,6 +60,7 @@ AS
 --tbl.att.val.bind()
 --should only be used were eid->att is 1:1
 
+--Template engine
 
 
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
@@ -114,6 +115,8 @@ AS
     FUNCTION modify_ps_on_funcparam(txtin varchar2) return varchar2;
     
     FUNCTION map_to_tmplt(jstr varchar2,tmplt varchar2 ) RETURN VARCHAR2;
+    
+    FUNCTION get_composition_by_eid(eid_in int,nlc_id varchar2) RETURN CLOB;
     
     PROCEDURE insert_rman
     (
@@ -617,8 +620,7 @@ t varchar2(4000);
 tkey varchar2(100);
 tval varchar2(100);
 html_tkey varchar2(100);
-html_tkey_left varchar2(100);
-html_tkey_right varchar2(100);
+
 tag_param   varchar2(100);
 tag_operator       varchar(2);
 ret_tmplt varchar2(4000):=tmplt;
@@ -632,139 +634,72 @@ BEGIN
             
             tkey:=lower(regexp_substr(substr(key_tbl(i),1,instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1));
             tval:=regexp_substr(substr(key_tbl(i),instr(key_tbl(i),':')),'\"(.*?)\"', 1, 1, 'i', 1);
-            
-            html_tkey_left:='<' ||  tkey || '>';
-            html_tkey_right:='</' ||  tkey || '>';
-            
 
             -- insertions
-            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
+
+            html_tkey :=  tkey || '>';
+
+            ret_tmplt:=regexp_replace(ret_tmplt,'<' ||  html_tkey || '</' || html_tkey,tval);
             
             -- toggle on
             IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
                 -- without tag param
                 
-                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,0,'i');
+                
+                html_tkey:=tkey || '>';
+                ret_tmplt:=regexp_replace(ret_tmplt,'<' ||  html_tkey,'',1,0,'i');
+                
                         
-                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,0,'i');
-                
-                -- with tag param
-                
-                html_tkey_left:='<' ||  tkey || '='|| tval ||'>';
-                html_tkey_right:='</' ||  tkey || '='|| tval ||'>';
-                
-                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,0,'i');
-                
-                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,0,'i');
+                ret_tmplt:=regexp_replace(ret_tmplt,'</' ||  html_tkey,'',1,0,'i');
                 
                 
-                html_tkey_left:='<' ||  tkey || '(=[a-z0-9]+)?' ||'>';
-                html_tkey_right:='</' ||  tkey || '(=[a-z0-9]+)?' ||'>';
-                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
+                html_tkey:=tkey || '='|| tval ||'>';
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,'<' ||  html_tkey,'',1,0,'i');
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,'</' ||  html_tkey,'',1,0,'i');
                 
                 
+                html_tkey:= tkey || '(=[a-z0-9]+)?' ||'>';
+
+
+                ret_tmplt:=regexp_replace(ret_tmplt,'<' || html_tkey || '(.*?)' || '</' || html_tkey,'');
+
             ELSE
-                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
+                                
+                ret_tmplt:=regexp_replace(ret_tmplt,'<' || html_tkey || '(.*?)' || '</' || html_tkey,'');
                         
             END IF;
-            
-            -- with tag param
-            
-            
---            IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
---                --remove tags revealing text
---                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
---                        
---                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
---                        
---            END IF;
---            
---            
---            
---            
---            -- opening and closing tags found
---            IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',0) IS NOT NULL THEN
---            
---                -- text found between tags
---                IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',2) IS NOT NULL THEN
---                    
---                    --if val is not null or zero , show text between tags, and remove tags
---                    IF nvl(length(tval),0)>0 AND nvl(tval,'0')<>'0' THEN
---                    
---                        --match tags without eq parameters 
---                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
---                        
---                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
---                        
---                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
---                    
---                    
---                        --if tag parameter is specified
---                        
---                        html_tkey_left:='<' ||  tkey || '=' || tval ||'>';
---                        html_tkey_righ:='</' ||  tkey || '=' || tval ||'>';
---                        
---                        IF regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1) IS NOT NULL THEN
---                            
---                            
---                            
---                            -- remove tags with matching param and reveal text
---                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,0,'i');
---                            
---                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
---                            
---                            -- remove  remaining existing tags with non-matching param with text
---                            
---                            html_tkey_left:='<' ||  tkey || '(=[a-z0-9]+)?' ||'>';
---                            html_tkey_right:='</' ||  tkey || '(=[a-z0-9]+)?' ||'>';
---                            
---                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'',1,0,'i');
---                            
-----                            tag_param:=regexp_substr(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,1,1,'i',1);
-----                            tag_param:=substr(tag_param,instr(tag_param,'=')+1);
-----                            DBMS_OUTPUT.PUT_LINE('----> TAG PARAM -->' || tag_param);
-----                            
-----                            
-----                            IF tag_param=tval THEN
-----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
-----                        
-----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
-----                        
-----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
-----                                
-----                                ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
-----                            END IF;
-----                            
---                        ELSE
---                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left,'',1,1,'i');
---                        
---                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_right,'',1,1,'i');
---                        
---                            ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
---                        END IF;
---                        
---                        
---                    --if val null or zero, remove tags and text
---                    ELSE
---                        
---                        ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || '(.*?)' || html_tkey_right,'');
---                        
---                    END IF;
---                
---                -- no text found. insert tval and remove tags    
---                ELSE            
---                    ret_tmplt:=regexp_replace(ret_tmplt,html_tkey_left || html_tkey_right,tval);
---                END IF;
---            END IF;
+           
             
     END LOOP;
-    --remove extra white space
---    ret_tmplt:=regexp_replace(ret_tmplt,'\s\s+',' ',1,0,'i');
+    
     
     RETURN ret_tmplt;
 
 END map_to_tmplt;
 
+function get_composition_by_eid(eid_in int,nlc_id varchar2) return clob
+as
+composition clob;    
+begin
+with cte1 as (
+SELECT eid, att, dt,rman_pckg.map_to_tmplt(t0.valc,tmp.templatehtml) as body,tmp.placementid
+FROM(
+    SELECT
+        eid,dt,att,valc,src,ROW_NUMBER() OVER (PARTITION BY eid,att ORDER BY dt) AS rn
+    FROM eadvx
+) t0
+JOIN rman_rpt_templates tmp on tmp.ruleblockid=t0.src
+WHERE t0.rn=1
+and eid=eid_in)
+select LISTAGG(body, '') WITHIN GROUP(ORDER BY placementid) into composition
+FROM cte1
+GROUP BY eid;
+
+return composition;
+
+end get_composition_by_eid;
 
 PROCEDURE build_assn_var2
 (

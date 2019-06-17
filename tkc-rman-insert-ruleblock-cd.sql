@@ -259,14 +259,14 @@ BEGIN
         
         /*  Diabetic complications */
         /* Diabetic retinopathy */
-        dm_micvas_retino_ => eadv.[icd_e11_3%,icpc_f83002].dt.count(0);
+        dm_micvas_retino => eadv.[icd_e11_3%,icpc_f83002].dt.count(0);
         
         /* Diabetic neuropathy,includes ulcer */
-        dm_micvas_neuro_ => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.count(0);
+        dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.count(0);
         
-        dm_micvas :{ greatest(dm_micvas_neuro_,dm_micvas_retino_)>0 => 1},{=>0};
+        dm_micvas :{ greatest(dm_micvas_neuro,dm_micvas_retino)>0 => 1},{=>0};
         
-        dm_micvas_t :{ dm_micvas=0 => `no`},{dm_micvas=1=>`documented`};
+        
         
         dm_vintage_yr_ : { dm_fd is not null => round((sysdate-dm_fd)/365,0)},{=>0};
         
@@ -274,7 +274,7 @@ BEGIN
                             { dm_vintage_yr_>=10 and dm_vintage_yr_ <20 => 2 },
                             { dm_vintage_yr_>=20=> 3 },{=>0};
         
-        dm_longstanding_t : {dm_vintage_cat>=2 => `longstanding`},{=>` `};   
+        dm_longstanding : {dm_vintage_cat>=2 => 1},{=>0};   
         
         
         
@@ -282,7 +282,7 @@ BEGIN
         
         dm_dx_code_flag : {dm >=1 and greatest(dm_icd,dm_icpc)>=1 => 1},{dm >=1 and greatest(dm_lab,dm_rxn)>0 =>0};
         
-        dm_dx_code_t : {dm_dx_code_flag=1 => `Diagnosed`},{dm_dx_code_flag=0 =>`Undiagnosed`};
+        dm_dx_undiagnosed : {dm_dx_code_flag=0 => 1},{=>0};
         
         dm_type : {dm=1 and dm_type_1>0 => 1},{dm=1 and dm_type_1=0 => 2},{=>0};
         
@@ -290,7 +290,9 @@ BEGIN
         
         /*  Diabetic glycaemic control */
         hba1c_n_tot => eadv.lab_bld_hba1c_ngsp.dt.count(0);
-        hba1c_n_opt => eadv.lab_bld_hba1c_ngsp.dt.count(0).where(val>=6 and val<8);
+        hba1c_n_opt0 => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8);
+        
+        hba1c_n_opt :{hba1c_n_opt0 is not null => hba1c_n_opt0},{=>0};
         
         n_opt_qt :{hba1c_n_tot>0 => round((hba1c_n_opt/hba1c_n_tot),2)*100};
         
@@ -304,10 +306,7 @@ BEGIN
                             { hba1c_n0 >=8 and hba1c_n0 <10 => 3},
                             { hba1c_n0 >=10 4};
                             
-        n0_st_t : { n0_st=1 => `too tight (<6)`},
-                            { n0_st=2 => `optimal (6-8)`},
-                            { n0_st=3 => `sub-optimal (8-10)`},
-                            { n0_st=4 => `very sub-optimal (>10)`};
+      
                             
         /*hba1c_trend :{nvl(hba1c_n0,0)>nvl(hba1c_n1,0)=> 1},{nvl(hba1c_n0,0)<nvl(hba1c_n1,0)=> -1},{=>0};*/
         

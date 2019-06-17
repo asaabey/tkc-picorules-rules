@@ -1,8 +1,11 @@
 clear screen
 declare
-    composition nvarchar2(4000);
+    composition clob;
     eid         integer;
 
+function get_composition_by_eid(eid_in int,nlc_id varchar2) return clob
+as
+composition clob;    
 begin
 with cte1 as (
 SELECT eid, att, dt,rman_pckg.map_to_tmplt(t0.valc,tmp.templatehtml) as body,tmp.placementid
@@ -13,16 +16,21 @@ FROM(
 ) t0
 JOIN rman_rpt_templates tmp on tmp.ruleblockid=t0.src
 WHERE t0.rn=1
-and eid=40860)
-select eid
-,LISTAGG(body, '') WITHIN GROUP(ORDER BY placementid) into eid,composition
+and eid=eid_in)
+select LISTAGG(body, '') WITHIN GROUP(ORDER BY placementid) into composition
 FROM cte1
-GROUP BY eid
-;
+GROUP BY eid;
 
-DBMS_OUTPUT.put_line('EID:' || eid);
+return composition;
 
-DBMS_OUTPUT.put_line(composition);
+end get_composition_by_eid;
+
+begin
+    eid:=6053;
+    composition:=get_composition_by_eid(eid,'neph001');
+    DBMS_OUTPUT.put_line('EID:' || eid);
+
+    DBMS_OUTPUT.put_line(composition);
 end;
 
 

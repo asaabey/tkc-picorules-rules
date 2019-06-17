@@ -18,8 +18,9 @@ BEGIN
     DELETE FROM rman_rpipe;
     DELETE FROM rman_stack;
     
-    bid:='ckd-2-1';
---    bid:='cd_htn_2';
+--    bid:='ckd-2-1';
+    bid:='cd_htn_2';
+--    bid:='cd_dm_2';
     rman_pckg.parse_ruleblocks(bid);
     
     rman_pckg.parse_rpipe(strsql);
@@ -38,7 +39,7 @@ BEGIN
     rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
     
     
-    rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', 'ckd','>0') ;
+    rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', 'htn','>0') ;
   
   
     

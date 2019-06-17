@@ -22,10 +22,8 @@ CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('cd_dm_syn_1','cd_dm_2',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <dm_dx_code_t></dm_dx_code_t> <dm_longstanding_t></dm_longstanding_t> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
-    There are <dm_micvas_t></dm_micvas_t> non-renal microvascular complications. 
-    The glycaemic control is <n0_st_t></n0_st_t> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
-    The glycaemic control is <n0_st=2>optimal (6-8)</n0_st><n0_st=1>too tight(<6)</n0_st><n0_st=3>sub-optimal (8-10)</n0_st><n0_st=4>very sub-optimal (>10)</n0_st> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
+    <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_undiagnosed>Uniagnosed</dm_dx_undiagnosed><dm_longstanding>long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
+    <dm_micvas>There are non-renal microvascular complications.</dm_micvas>The glycaemic control is <n0_st=2>optimal (6-8)</n0_st=2><n0_st=1>too tight(<6)</n0_st=1><n0_st=3>sub-optimal (8-10)</n0_st=3><n0_st=4>very sub-optimal (>10)</n0_st=4> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
     with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
     '
     );
@@ -33,7 +31,7 @@ INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,t
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('cd_dm_rec_1','cd_dm_2',702100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Suggest optimizing glycaemic control
+    Recommendation [2.3] Suggest optimizing glycaemic control
     '
     );
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
