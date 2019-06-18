@@ -5,7 +5,7 @@ CREATE OR REPLACE PACKAGE rman_pckg
 AUTHID CURRENT_USER
 AS
 --Package		rman_pckg
---Version		0.0.1.2
+--Version		0.0.1.3
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -60,7 +60,9 @@ AS
 --tbl.att.val.bind()
 --should only be used were eid->att is 1:1
 
---Template engine
+--Implemented Template engine
+
+--Implemented execute_ruleblock
 
 
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
@@ -70,7 +72,6 @@ AS
     TYPE vstack_type IS TABLE OF PLS_INTEGER INDEX BY VARCHAR2(100);
     vstack          vstack_type;
     vstack_empty    vstack_type;
---    vstack_dep      vstack_type;
     TYPE vstack_func_type IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
     vstack_func      vstack_func_type;
     TYPE vstack_func_param_type IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
@@ -154,6 +155,8 @@ AS
     PROCEDURE exec_dsql_dstore_singlecol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2);
     
     PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) ;
+    
+    PROCEDURE execute_ruleblock(bid_in IN varchar2);
 END;
 /
 
@@ -666,14 +669,45 @@ BEGIN
                 ret_tmplt:=regexp_replace(ret_tmplt,'<' || html_tkey || '(.*?)' || '</' || html_tkey,'');
 
             ELSE
+                
+                -- tval null or 0
+                 
+                -- if param is 0 then toggle text on 
+                html_tkey:= tkey || '=0' ||'>';
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,'<' ||  html_tkey,'',1,0,'i');
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,'</' ||  html_tkey,'',1,0,'i');
+                
+                -- if param<>0 then toggle text off 
+                html_tkey:= tkey || '(=[a-z0-9]+)?' ||'>';
+                
+                ret_tmplt:=regexp_replace(ret_tmplt,'<' || html_tkey || '(.*?)' || '</' || html_tkey,'');
+                
+                -- if no parameter toggle off other tags
+                
+                html_tkey:=tkey || '>';
                                 
                 ret_tmplt:=regexp_replace(ret_tmplt,'<' || html_tkey || '(.*?)' || '</' || html_tkey,'');
                         
             END IF;
-           
-            
+                   
     END LOOP;
+    -- if param is 0 then toggle text on 
+    html_tkey:= '\w+=0' ||'>';
+                
+    ret_tmplt:=regexp_replace(ret_tmplt,'<' ||  html_tkey,'',1,0,'i');
+                
+    ret_tmplt:=regexp_replace(ret_tmplt,'</' ||  html_tkey,'',1,0,'i');
     
+    --if no param specified text is toggled off
+    
+    html_tkey:= '\w+' ||'>';
+    
+    ret_tmplt:=regexp_replace(ret_tmplt,'<' || html_tkey || '(.*?)' || '</' || html_tkey,'');
+    
+    -- remove excess space and line feeds
+    ret_tmplt:=regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', null, 1, 0, 'm'),chr(10)||'{2,}',chr(10));
     
     RETURN ret_tmplt;
 
@@ -1436,8 +1470,8 @@ BEGIN
                         IF typ02_val IS NOT NULL THEN
                             insert_tbl_sql_str := 'INSERT INTO ' || tbl_name || '(eid, att, dt, valn,typ,src) VALUES(:eid, :att, :dt, :val,:typ,:src)';
                             
-                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ02_val)|| '"'; 
-                            
+--                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ02_val)|| '"'; 
+                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(ROUND(typ02_val,2))|| '"';
                             IF i<tbl_desc.COUNT THEN
                                 insert_jstr:=insert_jstr || ',';    
                             END IF;
@@ -1648,7 +1682,7 @@ BEGIN
                         IF typ02_val IS NOT NULL THEN
 
                             
-                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(typ02_val)|| '"'; 
+                            insert_jstr:=insert_jstr || '"' || format_bindvar_name(tbl_desc(i).col_name) || '":"' || TO_CHAR(ROUND(typ02_val,2))|| '"'; 
                             
                             IF i<tbl_desc.COUNT THEN
                                 insert_jstr:=insert_jstr || ',';    
@@ -1747,6 +1781,43 @@ BEGIN
     
    
 END exec_ndsql;
+PROCEDURE execute_ruleblock(bid_in IN varchar2)
+IS   
+    strsql      CLOB;
+    
+    
+    
+    rb          RMAN_RULEBLOCKS%ROWTYPE;
+    
+    bid         RMAN_RULEBLOCKS.blockid%TYPE;
+
+
+BEGIN
+   
+    DELETE FROM rman_rpipe;
+    DELETE FROM rman_stack;
+    
+    rman_pckg.parse_ruleblocks(bid_in);
+    
+    rman_pckg.parse_rpipe(strsql);
+    
+    UPDATE rman_ruleblocks SET sqlblock=strsql WHERE blockid=bid_in;
+    
+    SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid_in;
+   
+    DBMS_OUTPUT.PUT_LINE('RMAN execution -->' || chr(10));
+    DBMS_OUTPUT.PUT_LINE('Rule block id : ' || rb.blockid || chr(10));
+    DBMS_OUTPUT.PUT_LINE('Target tbl    : ' || rb.target_table || chr(10));
+    DBMS_OUTPUT.PUT_LINE('Environment   : ' || rb.environment || chr(10));
+    DBMS_OUTPUT.PUT_LINE('SQL statement : ' || rb.sqlblock || chr(10));
+    
+    
+    rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
+    
+    
+    rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
+
+END execute_ruleblock;
 END;
 
 

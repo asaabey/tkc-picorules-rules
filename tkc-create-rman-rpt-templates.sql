@@ -22,9 +22,8 @@ CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('cd_dm_syn_1','cd_dm_2',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_undiagnosed>Uniagnosed</dm_dx_undiagnosed><dm_longstanding>long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
+    <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_undiagnosed>Undiagnosed</dm_dx_undiagnosed><dm_longstanding> long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
     <dm_micvas>There are non-renal microvascular complications.</dm_micvas>The glycaemic control is <n0_st=2>optimal (6-8)</n0_st=2><n0_st=1>too tight(<6)</n0_st=1><n0_st=3>sub-optimal (8-10)</n0_st=3><n0_st=4>very sub-optimal (>10)</n0_st=4> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
-    with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
     '
     );
     
@@ -37,7 +36,12 @@ INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,t
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('cd_htn_syn_1','cd_htn_2',603100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Hypertension type <htn_type></htn_type> for <htn_vintage_cat></htn_vintage_cat> decade(s).
+    <htn_icpc>Diagnosed</htn_icpc> Hypertension type <htn_type></htn_type> for <htn_vintage_cat></htn_vintage_cat> decade(s),since <htn_fd_yr></htn_fd_yr>.
+    <mu_1>The average systolic BP during last year was </mu_1><mu_1></mu_1><mu_1> mmHg</mu_1><mu_2> and the year before was </mu_2><mu_2></mu_2><mu_2> mmHg.</mu_2>
+    <slice140_1_n></slice140_1_n> <slice140_1_n> out of  <sigma_1></sigma_1> are above 140mmHg</slice140_1_n>
+    <bp_trend=1>Hypertension control appears to have improved compared to last year</bp_trend=1>
+    <bp_trend=2>Hypertension control appears to have worsened compared to last year</bp_trend=2>
+    BP control <bp_control=3>appears to be adequate</bp_control=3><bp_control=2>can be optimized</bp_control=2><bp_control=1>appears to sub-optimal</bp_control=1><bp_control=0>could not be determined</bp_control=0>[3.3]
     '
     );
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -69,7 +73,13 @@ INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,t
     <iq_tier=3>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). </iq_tier=3>
     <iq_tier=2>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3). </iq_tier=2>
     <iq_tier=1>Note [1.0] This was based on at least one eGFR or uACR value (Tier 4). </iq_tier=1>
+    '
+    );
+INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('cd_htn_footnote_1','cd_htn_2',801100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <iq_tier>Note [3.1] This is based on <iq_sbp></iq_sbp> blood pressure readings within the last 2 years</iq_tier>
+    <bp_control>Note [3.3] Based on time in therapeutic range (TITR)</bp_control>
 
-    
     '
     );

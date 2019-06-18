@@ -1,3 +1,4 @@
+set serveroutput on;
 clear screen
 declare
     composition clob;
@@ -6,6 +7,8 @@ declare
 
 begin
     eid:=6053;
+--    eid:=18289;
+    eid:=44074;
     composition:=rman_pckg.get_composition_by_eid(eid,'neph001');
     DBMS_OUTPUT.put_line('EID:' || eid);
 

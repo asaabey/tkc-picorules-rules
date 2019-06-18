@@ -1,4 +1,7 @@
 DROP TABLE rman_stack;
+DROP TABLE rman_rpipe;
+DROP TABLE rman_ruleblocks_dep;
+DROP TABLE rman_ruleblocks;
 
 CREATE TABLE rman_stack
 (
@@ -12,8 +15,8 @@ CREATE TABLE rman_stack
     agg_func VARCHAR2(100),
     func_param  VARCHAR2(100)
 );
+/
 
-DROP TABLE rman_rpipe;
 CREATE TABLE rman_rpipe
 (
     ruleid varchar2(100),
@@ -21,21 +24,25 @@ CREATE TABLE rman_rpipe
     blockid varchar2(100),
     CONSTRAINT pk_rpipe PRIMARY KEY(ruleid)
 );
+/
 
-DROP TABLE rman_ruleblocks;
+
+
+
 CREATE TABLE rman_ruleblocks
 (
-    blockid varchar2(100),
-    picoruleblock clob,
-    sqlblock clob,
-    target_table    VARCHAR2(100),
-    environment     VARCHAR2(30),
-    rule_owner      VARCHAR2(30),
+    blockid             VARCHAR2(100),
+    picoruleblock       CLOB,
+    sqlblock            CLOB,
+    target_table        VARCHAR2(100),
+    environment         VARCHAR2(30),
+    rule_owner          VARCHAR2(30),
+    is_active           NUMBER(1,0),
+    def_exit_prop       VARCHAR2(30),
+    def_predicate       VARCHAR2(100),
     CONSTRAINT pk_ruleblocks PRIMARY KEY(blockid)
 );
 /
-
-DROP TABLE rman_ruleblocks_dep;
 CREATE TABLE rman_ruleblocks_dep
 (
     blockid varchar2(100),

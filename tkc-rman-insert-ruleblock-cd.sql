@@ -13,10 +13,13 @@ BEGIN
 
     -- BEGINNING OF RULEBLOCK --
     
-    rb.blockid:='comorb-1-1';
+    rb.blockid:='comorb_1_1';
     rb.target_table:='rout_comorb';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
+    rb.is_active:=0 ;
+    rb.def_exit_prop:='';
+    rb.def_predicate:='';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
@@ -45,17 +48,20 @@ BEGIN
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
-        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
         
     -- END OF RULEBLOCK --
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='rrt-2-1';
+    rb.blockid:='rrt_2_1';
     rb.target_table:='rout_rrt';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='rrt';
+    rb.def_predicate:='>0';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
@@ -74,17 +80,20 @@ BEGIN
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
-        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
-
+   INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
     -- END OF RULEBLOCK --
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd-2-1';
+    rb.blockid:='ckd_2_1';
     rb.target_table:='rout_ckd';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='ckd';
+    rb.def_predicate:='>0';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
@@ -208,16 +217,71 @@ BEGIN
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
-        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
-
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
     -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_cause_2_1';
+    rb.target_table:='rout_ckd_cause';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='aet_code';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+     /* Rule block to determine causality for CKD */ 
+     
+     /* External bindings */ 
+     dm => rout_cd_dm.dm.val.bind(); 
+     htn => rout_cd_htn.htn.val.bind(); 
+     ckd => rout_ckd.ckd.val.bind(); 
+     
+     /* calculate dx information quantity 
+     iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-730); 
+     iq_egfr => eadv.lab_bld_egfr_c.val.count(0).where(dt>sysdate-730); 
+     iq_coding => eadv.[icd_%,icpc_%].dt.count(0); 
+     iq_tier: {iq_coding>1 and least(iq_egfr,iq_uacr)>=2 => 4}, {least(iq_egfr,iq_uacr)>=2 => 3}, {least(iq_egfr,iq_uacr)>=1 => 2}, {iq_egfr>0 or iq_uacr>0 => 1}, {=>0}; 
+     */ 
+     
+     gn_ln => eadv.icd_m32_14.dt.count(0); 
+     gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
+     
+     aet_dm : {dm>0 =>1},{=>0};
+     aet_htn : {htn>0 =>1},{=>0};
+     aet_gn_ln : {gn_ln>0 =>1},{=>0};
+     aet_gn_x : {gn_x>0 =>1},{=>0};
+
+     aet_cardinality : { 1=1 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
+     
+     aet_multiple : { aet_cardinality >1 => 1},{=>0};
+     
+     aet_code : { 1=1 => ( aet_dm * 1000000)+(aet_htn * 100000)+(aet_gn_ln * 10000)+(aet_gn * 1000) };
+     
+     
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
+    -- END OF RULEBLOCK --
+    
     -- BEGINNING OF RULEBLOCK --
 
     rb.blockid:='cd_dm_2';
     rb.target_table:='rout_cd_dm';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='dm';
+    rb.def_predicate:='>0';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
@@ -313,9 +377,9 @@ BEGIN
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
-        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
-
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
     -- END OF RULEBLOCK 
     
      -- BEGINNING OF RULEBLOCK --
@@ -324,6 +388,9 @@ BEGIN
     rb.target_table:='rout_cd_htn';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='htn';
+    rb.def_predicate:='>0';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
@@ -340,7 +407,8 @@ BEGIN
         /*  Hypertension diagnosis*/
         /*  Code criteria   */
         htn_icd => eadv.[icd_i10_%,icd_i15_%].dt.count(0);
-        htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count(0);
+        htn_icpc0 => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count();
+        htn_icpc : {htn_icpc0 is not null=>1},{=>0};
         
         /*  Observation criteria    */
         htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140);
@@ -354,7 +422,12 @@ BEGIN
         htn_rxn : { least(htn_rxn_acei,htn_rxn_bb,htn_rxn_ccb,htn_rxn_c02)>0 =>1 },{=>0};
         
         /*  Vintage */
-        htn_fd => eadv.[icd_i10_%,icd_i15_%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
+        htn_fd_code => eadv.[icd_i10_%,icd_i15_%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
+        htn_fd_obs => eadv.obs_bp_systolic.dt.min().where(val>140);
+        
+        htn_fd : {coalesce(htn_fd_code,htn_fd_obs) is not null => least(nvl(htn_fd_code,to_date(`01012999`,`DDMMYYYY`)),nvl(htn_fd_obs,to_date(`01012999`,`DDMMYYYY`)))};
+        
+        htn_fd_yr : { htn_fd is not null => to_char(htn_fd,`YYYY`) };
         
         htn_type_2 => eadv.[icd_i15_%].dt.count(0);
         
@@ -375,26 +448,33 @@ BEGIN
         
         /*  Bp control */
         sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365); 
+        mu_2 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
         
         sigma_1 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-365); 
+        mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
         slice140_1_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-365);
         slice140_1_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-365);
         
-        n_qt_2 : {sigma_2>0 => round(slice140_2_n/sigma_2,1)};
-        n_qt_1 : {sigma_1>0 => round(slice140_1_n/sigma_1,1)};
+        
+        /* Time in therapeutic range */
+        n_qt_1 : {sigma_1>0 => 1-round(slice140_1_n/sigma_1,1)};
         
         mu_qt : {slice140_2_mu>0 =>round(slice140_1_mu/slice140_2_mu,2)};
+        
+        bp_trend : { mu_qt <0.9 => 1 },{ mu_qt > 1.1 => 2},{=>0};
+        
+        bp_control : { n_qt_1 >=0.75 => 3},{ n_qt_1<0.75 and n_qt_1>=0.25 => 2 },{ n_qt_1<0.25 => 1},{=>0};
         
         
         
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock) 
-        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock);
-
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
     -- END OF RULEBLOCK --
     
     
