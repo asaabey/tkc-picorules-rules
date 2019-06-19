@@ -213,6 +213,13 @@ BEGIN
         
         dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
         
+        /* Encounters with specialist services */
+        enc_n => eadv.enc_op_renal.dt.count();
+        enc_ld => eadv.enc_op_renal.dt.max();
+        enc_fd => eadv.enc_op_renal.dt.min();
+        enc_null : {enc_n is null => 0},{=>1};
+        
+        
         
             
     ';
@@ -254,16 +261,16 @@ BEGIN
      gn_ln => eadv.icd_m32_14.dt.count(0); 
      gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
      
-     aet_dm : {dm>0 =>1},{=>0};
-     aet_htn : {htn>0 =>1},{=>0};
-     aet_gn_ln : {gn_ln>0 =>1},{=>0};
-     aet_gn_x : {gn_x>0 =>1},{=>0};
+     aet_dm : {ckd>0 and dm>0 =>1},{=>0};
+     aet_htn : {ckd>0 and htn>0 =>1},{=>0};
+     aet_gn_ln : {ckd>0 and gn_ln>0 =>1},{=>0};
+     aet_gn_x : {ckd>0 and gn_x>0 =>1},{=>0};
 
-     aet_cardinality : { 1=1 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
+     aet_cardinality : { ckd>0 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
      
-     aet_multiple : { aet_cardinality >1 => 1},{=>0};
+     aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
-     aet_code : { 1=1 => ( aet_dm * 1000000)+(aet_htn * 100000)+(aet_gn_ln * 10000)+(aet_gn * 1000) };
+     aet_code : { ckd>0 => ( aet_dm * 1000000)+(aet_htn * 100000)+(aet_gn_ln * 10000)+(aet_gn_x * 1000) },{=>0};
      
      
     ';
@@ -309,9 +316,18 @@ BEGIN
         dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min().where(val>65/10);
         
         /*  Rxn cirteria   */
-        dm_rxn => eadv.[rxn_cls_atc_a10%].dt.count(0).where(val=1);
         
-        
+        dm_rxn => eadv.[rxnc_a10%].dt.count(0).where(val=1);
+        dm_rxn_su => eadv.[rxnc_a10bb].dt.count(0).where(val=1);
+        dm_rxn_ins_long => eadv.[rxnc_a10ae].dt.count(0).where(val=1);
+        dm_rxn_ins_int => eadv.[rxnc_a10ac].dt.count(0).where(val=1);
+        dm_rxn_ins_mix => eadv.[rxnc_a10ad].dt.count(0).where(val=1);
+        dm_rxn_ins_short => eadv.[rxnc_a10ab].dt.count(0).where(val=1);
+        dm_rxn_bg => eadv.[rxnc_a10ba].dt.count(0).where(val=1);
+        dm_rxn_dpp4 => eadv.[rxnc_a10bh].dt.count(0).where(val=1);
+        dm_rxn_glp1 => eadv.[rxnc_a10bj].dt.count(0).where(val=1);
+        dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
+               
         
         dm_fd :{coalesce(dm_code_fd,dm_lab_fd) is not null => 
                     (least(nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
@@ -368,7 +384,7 @@ BEGIN
         n0_st : { hba1c_n0 <6 => 1},
                             { hba1c_n0 >=6 and hba1c_n0 <8 => 2},
                             { hba1c_n0 >=8 and hba1c_n0 <10 => 3},
-                            { hba1c_n0 >=10 4};
+                            { hba1c_n0 >=10 4},{=>0};
                             
       
                             
@@ -414,12 +430,15 @@ BEGIN
         htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140);
         
         /*  Rxn cirteria   */
-        htn_rxn_acei => eadv.[rxn_cls_atc_c09%].dt.count(0).where(val=1);
-        htn_rxn_bb => eadv.[rxn_cls_atc_c07%].dt.count(0).where(val=1);
-        htn_rxn_ccb => eadv.[rxn_cls_atc_c08%].dt.count(0).where(val=1);
-        htn_rxn_c02 => eadv.[rxn_cls_atc_c02%].dt.count(0).where(val=1);
+        htn_rxn_acei => eadv.[rxnc_c09aa].dt.count().where(val=1);
+        htn_rxn_arb => eadv.[rxnc_c09ca].dt.count().where(val=1);
+        htn_rxn_bb => eadv.[rxnc_c07%].dt.count().where(val=1);
+        htn_rxn_ccb => eadv.[rxnc_c08%].dt.count().where(val=1);
+        htn_rxn_c02 => eadv.[rxnc_c02%].dt.count().where(val=1);
+        htn_rxn_diuretic_thiaz => eadv.[rxnc_c03aa].dt.count().where(val=1);
+        htn_rxn_diuretic_loop => eadv.[rxnc_c03c%].dt.count().where(val=1);
         
-        htn_rxn : { least(htn_rxn_acei,htn_rxn_bb,htn_rxn_ccb,htn_rxn_c02)>0 =>1 },{=>0};
+        htn_rxn : { coalesce(htn_rxn_acei, htn_rxn_arb, htn_rxn_bb, htn_rxn_ccb , htn_rxn_c02 , htn_rxn_diuretic_thiaz , htn_rxn_diuretic_loop) is not null =>1 },{=>0};
         
         /*  Vintage */
         htn_fd_code => eadv.[icd_i10_%,icd_i15_%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
