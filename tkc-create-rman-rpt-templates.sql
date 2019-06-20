@@ -1,3 +1,24 @@
+--TKC Natural Language Composition(NLC) engine 
+--Version 	0.0.1.0
+--Creation date	17/06/2019
+--Authour		ASAABEY
+--
+--Purpose
+--
+--PlacementId : 6 digit code that is used to anchor the template in the composition
+--
+--Placement Codebook
+--30	Alert
+--60	Synthesis
+--70	Recommendations 
+--80	Notes
+--
+--Disease codes
+--11	Chronic disease : CKD
+--21	Chronic disease : DM2
+--31	Chronic disease : HTN
+
+
 DROP TABLE rman_rpt_templates;
 /
 CREATE TABLE rman_rpt_templates
@@ -17,7 +38,14 @@ DROP INDEX rman_rpt_templates_ruleblockid;
 /
 CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
 /
-
+INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('alert_tg4620','tg4620_1_1',304620,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Unmanaged advanced CKD with rapid progression (Trigger 4620)
+    --------------------------------------------------------------------
+    There is CKD stage <ckd></ckd> disease with an annual decline of <eb></eb> ml/min/yr without a recent specialist encounter
+    '
+    );
 
 INSERT INTO rman_rpt_templates (templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('cd_dm_syn_1','cd_dm_2',602100,'dev','tkc',TO_DATE(SYSDATE),
