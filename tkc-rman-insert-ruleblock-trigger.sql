@@ -292,8 +292,6 @@ BEGIN
         
         aki_icd => eadv.[icd_n17%].dt.count(0).where(dt>sysdate-180);
           
-          
-          
         tg4110 : {aki_icd>0 => 1},{=>0};
           
         tg4110_code : {1=1=> 1};
@@ -324,13 +322,24 @@ BEGIN
     
         /*  Algorithm to generate CKD23 10 pa   */
         
-        ckd_stage => rout_ckd.cga_g.val.bind();
+        cga_g => rout_ckd.cga_g.val.bind();
+        
+        ckd => rout_ckd.ckd.val.bind();
         
         eb => rout_ckd.egfr_slope2.val.bind();
         
+        egfr_max_v => rout_ckd.egfr_max_v.val.bind();
+        
+        egfr_max_ld => rout_ckd.egfr_max_ld.val.bind();
+        
+        egfrld => rout_ckd.egfrld.val.bind();
+        egfrlv => rout_ckd.egfrlv.val.bind();
+        
+        ckd_null : { nvl(ckd,0)=0 =>1},{=0};
+        
         enc => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
           
-        tg4610 : {ckd_stage in (`G2`,`G1`) and nvl(eb,0)<-5 and enc=0 =>=> 1},{=>0};
+        tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null=> 1},{=>0};
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

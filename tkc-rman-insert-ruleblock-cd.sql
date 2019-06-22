@@ -104,6 +104,9 @@ BEGIN
 
         /*  External bindings    */
         rrt => rout_rrt.rrt.val.bind();
+        cp_ckd => rout_careplan.cp_ckd.val.bind();
+        
+        cp_ckd_ld => rout_careplan.cp_ld.val.bind();
         
         /* calculate dx information quantity*/
         iq_uacr => eadv.lab_ua_acr.val.count(0);
@@ -217,8 +220,13 @@ BEGIN
         enc_n => eadv.enc_op_renal.dt.count();
         enc_ld => eadv.enc_op_renal.dt.max();
         enc_fd => eadv.enc_op_renal.dt.min();
-        enc_null : {enc_n is null => 0},{=>1};
         
+        enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
+        
+        /*  AVF creation    */
+        avf => eadv.caresys_3450901.dt.max();
+        
+        cp_mis :{cp_ckd>0 and (ckd - cp_ckd)>=2 => 1},{=>0};
         
         
             
@@ -296,6 +304,12 @@ BEGIN
     rb.picoruleblock:='
     
         /* Algorithm to detect chronic disease entities */
+        
+        /*  External bindings*/
+        
+        cp_dm => rout_careplan.cp_dm.val.bind();
+        
+        cp_dm_ld => rout_careplan.cp_ld.val.bind();
         
         /*  Calculate iq    */
         iq_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(dt>sysdate-730);
@@ -494,6 +508,46 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
     
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+    
+    rb.blockid:='careplan';
+    rb.target_table:='rout_' || rb.blockid;
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=0 ;
+    rb.def_exit_prop:='careplan';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+        /*  Careplan analyser */
+        
+        cp_lv => eadv.careplan_h9_v1.val.last();
+        
+        cp_ld => eadv.careplan_h9_v1.dt.max();
+        
+        
+        cp_cs : {cp_lv is not null => to_number(substr(to_char(cp_lv),-1,1))},{=>0};
+        
+        cp_ckd : {cp_lv is not null => to_number(substr(to_char(cp_lv),-5,1))},{=>0};
+        
+        cp_dm : {cp_lv is not null => to_number(substr(to_char(cp_lv),-6,1))},{=>0};
+        
+        cp_cvd : {cp_lv is not null => to_number(substr(to_char(cp_lv),-7,1))},{=>0};
+        
+        cp_hicvr : {cp_lv is not null => to_number(substr(to_char(cp_lv),-8,1))},{=>0};
+        
+        careplan : {1=1 => cp_cs};
+        
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+        
     -- END OF RULEBLOCK --
     
     

@@ -5,7 +5,7 @@ CREATE OR REPLACE PACKAGE rman_pckg
 AUTHID CURRENT_USER
 AS
 --Package		rman_pckg
---Version		0.0.1.3
+--Version		0.0.1.4
 --Creation date	07/04/2019
 --Author		ASAABEY
 --
@@ -715,7 +715,9 @@ END map_to_tmplt;
 
 function get_composition_by_eid(eid_in int,nlc_id varchar2) return clob
 as
-composition clob;    
+composition         clob; 
+--compositionid_in    varchar2(100):=nlc_id;
+compositionid_in    varchar2(100):='neph001';
 begin
 with cte1 as (
 SELECT eid, att, dt,rman_pckg.map_to_tmplt(t0.valc,tmp.templatehtml) as body,tmp.placementid
@@ -725,8 +727,9 @@ FROM(
     FROM eadvx
 ) t0
 JOIN rman_rpt_templates tmp on tmp.ruleblockid=t0.src
-WHERE t0.rn=1
-and eid=eid_in)
+WHERE t0.rn=1 and eid=eid_in 
+and tmp.compositionid=compositionid_in
+)
 select LISTAGG(body, '') WITHIN GROUP(ORDER BY placementid) into composition
 FROM cte1
 GROUP BY eid;
