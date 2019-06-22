@@ -879,7 +879,7 @@ BEGIN
         funcparam:=0;
     ELSIF varr.COUNT=1 THEN
         IF UPPER(SUBSTR(varr(1),1,5))='CONST' THEN
-
+            tbl:=def_tbl_name;
             func:='CONST';
 
             constparam:=REGEXP_SUBSTR(varr(1), '\((.*)?\)', 1, 1, 'i', 1);

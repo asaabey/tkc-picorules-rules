@@ -105,6 +105,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_htn_footnote_1','cd_htn_2',801100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <iq_tier>Note [3.1] This is based on <iq_sbp></iq_sbp> blood pressure readings within the last 2 years</iq_tier>
+    <bp_control>Note [3.3] Based on time in therapeutic range (TITR)</bp_control>
+
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_ckd_syn_1','ckd_2_1',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
     CKD Rubric
@@ -152,18 +160,37 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <iq_tier=1>Note [1.0] This was based on at least one eGFR or uACR value (Tier 4). </iq_tier=1>
     '
     );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_htn_footnote_1','cd_htn_2',801100,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    <iq_tier>Note [3.1] This is based on <iq_sbp></iq_sbp> blood pressure readings within the last 2 years</iq_tier>
-    <bp_control>Note [3.3] Based on time in therapeutic range (TITR)</bp_control>
 
-    '
-    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001_1','cd_htn_footnote_1_1','cd_htn_2',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Test msg
+
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_cvra_syn_1','cvra_1_1',604100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Cardiovascular risk (CVR) Rubric
+    -------------------------------
+    <risk_high_ovr=0>The CVR status was calculated using FRE [4.1]</risk_high_ovr=0><risk_5>The composite 5 year CVD risk is </risk_5><risk_5></risk_5><risk_5> ,which is </risk_5><cvra=3> high risk</cvra=3><cvra=2> moderate risk</cvra=2><cvra=1> low risk</cvra=1> 
+    <risk_high_ovr>The patient meets criteria for high CVR without calculation, which are </risk_high_ovr><cvd_prev> previous documented CVD event </cvd_prev><dm60>Diabetes and age more than 60 </dm60><dmckd1> Diabetes and albuminuria </dmckd1><ckd3> CKD 3b or above </ckd3><tc7> total cholesterol more than 7.5 </tc7><sbp180> systolic bp more than 180mmHg </sbp180><age74> age more than 74 and ATSI.</age74>
+    
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_cvra_rec_1','cvra_1_1',704100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <htn_icpc=0>Recommendation [3.1] Update diagnosis to hypertension</htn_icpc=0>
+    <bp_control=2>Recommendation [3.4] Optimize BP control</bp_control=2>
+    <bp_control=1>Recommendation [3.14] Optimize BP control</bp_control=1>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_cvra_footnote_1','cvra_1_1',804100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <iq_tier>Note [3.1] This is based on <iq_sbp></iq_sbp> blood pressure readings within the last 2 years</iq_tier>
+    <bp_control>Note [3.3] Based on time in therapeutic range (TITR)</bp_control>
 
     '
     );

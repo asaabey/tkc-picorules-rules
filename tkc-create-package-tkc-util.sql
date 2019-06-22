@@ -6,7 +6,7 @@ AUTHID CURRENT_USER
 AS
 function careplantxt_codify(txt_in varchar2) return varchar2;
 function transform_h9_careplantxt(txt_in varchar2) return integer; 
-function transform_h1_smokingstatus(txt_in varchar2) return integer;
+function transform_h2_smokingstatus(txt_in varchar2) return integer;
 END;
 /
 
@@ -89,39 +89,43 @@ begin
 end transform_h9_careplantxt;
 
 
-function transform_h1_smokingstatus(txt_in varchar2) return integer
+function transform_h2_smokingstatus(txt_in varchar2) return integer
 as
 ret integer:=0;
 
 
 begin
     case (txt_in)
-    when 'Current smoker - intends to quit later' then ret:=3;
+    when 'Current smoker - intends to quit later' then ret:=30;
 
-    when 'Current smoker - intends to quit later' then ret:=3;
+    when 'Current smoker - intends to quit later' then ret:=30;
     
-    when 'Current smoker - no intention to quit' then ret:=3;
+    when 'Current smoker - no intention to quit' then ret:=30;
     
-    when 'Current smoker - wants to quit now' then ret:=3;
+    when 'Current smoker - wants to quit now' then ret:=30;
     
-    when 'Tobacco Smoking Status : Current (Less than 10 smokes a day)' then ret:=3;
+    when 'Tobacco Smoking Status : Current (Less than 10 smokes a day)' then ret:=30;
     
-    when 'Tobacco Smoking Status : Current (More than 10 smokes a day)' then ret:=3;
+    when 'Tobacco Smoking Status : Current (More than 10 smokes a day)' then ret:=30;
     
-    when 'Ex-smoker' then ret:=2;
+    when 'Ex-smoker' then ret:=20;
     
-    when 'Ex-smoker quit 12 months or more ago' then ret:=2;
+    when 'Ex-smoker quit 12 months or more ago' then ret:=20;
     
-    when 'Ex-smoker quit less than 12 months ago' then ret:=2;
+    when 'Ex-smoker quit less than 12 months ago' then ret:=29;
     
-    when 'Non-smoker (never smoked)' then ret:=1;
+    when 'Tobacco Smoking Status : Ex-Smoker (Less than 1 year)' then ret:=29;
     
-    when 'Tobacco Smoking Status : Never Smoked' then ret:=1;
+    when 'Tobacco Smoking Status : Ex-Smoker (More than 1 year)' then ret:=20;
+    
+    when 'Non-smoker (never smoked)' then ret:=10;
+    
+    when 'Tobacco Smoking Status : Never Smoked' then ret:=10;
     
     else ret:=0;
     end case;
     
     return ret;
-end transform_h1_smokingstatus;
+end transform_h2_smokingstatus;
 END;
 /
