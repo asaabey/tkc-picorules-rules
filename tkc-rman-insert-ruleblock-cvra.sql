@@ -71,7 +71,7 @@ BEGIN
         age74 : {age>74 => 1},{=>0};
         
       
-        risk_high_ovr : { greatest(dm60,dmckd1,ckd3,tc7,sbp180,age74)>0 =>1},{=>0};
+        risk_high_ovr : { coalesce(dm60,dmckd1,ckd3,tc7,sbp180,age74) is not null =>1},{=>0};
         
         risk_5_chd : {risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
             (-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+(-0.2767*smoke)+(-0.7181*LN(tc/hdl))+

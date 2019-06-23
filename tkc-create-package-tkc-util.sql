@@ -4,9 +4,9 @@ set serveroutput on;
 CREATE OR REPLACE PACKAGE tkc_util
 AUTHID CURRENT_USER
 AS
-function careplantxt_codify(txt_in varchar2) return varchar2;
 function transform_h9_careplantxt(txt_in varchar2) return integer; 
 function transform_h2_smokingstatus(txt_in varchar2) return integer;
+function transform_h2_ua_cells(txt_in varchar2) return integer;
 END;
 /
 
@@ -14,33 +14,7 @@ END;
 
 CREATE OR REPLACE PACKAGE BODY tkc_util
 AS
-function careplantxt_codify(txt_in varchar2) return varchar2
-as
-ret varchar2(100):='CVR0CVD0DM0CKD0';
-begin
-    if instr(lower(txt_in),'hicvr')>0 then ret:=regexp_replace(ret,'CVR0','CVR1',1,1,'i');end if;
-    
-    if instr(lower(txt_in),'diab')>0 then ret:=regexp_replace(ret,'DM0','DM1',1,1,'i');end if;
-    
-    if instr(lower(txt_in),'cvd')>0 then ret:=regexp_replace(ret,'CVD0','CVD1',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('CKD 1-3a Mild Risk'))>0 then ret:=regexp_replace(ret,'CKD0','CKD1',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('CKD 1-3a Moderate-Severe Risk'))>0 then ret:=regexp_replace(ret,'CKD0','CKD3',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('CKD 3b-4 High-Severe Risk'))>0 then ret:=regexp_replace(ret,'CKD0','CKD4',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('CKD 5 Severe Risk'))>0 then ret:=regexp_replace(ret,'CKD0','CKD5',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('Renal3'))>0 then ret:=regexp_replace(ret,'CKD0','CKD3',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('Renal4'))>0 then ret:=regexp_replace(ret,'CKD0','CKD4',1,1,'i');end if;
-    
-    if instr(lower(txt_in),lower('Renal5'))>0 then ret:=regexp_replace(ret,'CKD0','CKD5',1,1,'i');end if;
-    
-    return ret;
-    
-end careplantxt_codify;
+
 
 function transform_h9_careplantxt(txt_in varchar2) return integer 
 as
@@ -127,5 +101,77 @@ begin
     
     return ret;
 end transform_h2_smokingstatus;
+
+function transform_h2_ua_cells(txt_in varchar2) return integer
+as
+ret integer:=0;
+txt_in_num integer:=0;
+
+--  Maps from 
+--  patient_results_text.[Urinalysis: Blood]                    id:71
+--  patient_results_text.[Urinalysis: Leukocytes]               id:72
+--  patient_results_text.[Leucocytes in Urine]                  id:37
+--  patient_results_numeric.[Erythrocytes in Urine sediment]    id:58
+--  patient_results_numeric.[Leucocytes in Urine]               id:37
+
+--  Maps to 
+--  eadv.lab_ua_rbc
+--  eadv.lab_ua_leucocytes
+
+
+begin
+    
+    txt_in_num := to_number(regexp_substr(txt_in,'^\d+'));
+    case (txt_in)
+    when 'Moderate' then ret:=30;
+
+    when 'Moderate non-haemolyzed' then ret:=30;
+    
+    when 'Trace non-haemolyzed' then ret:=22;
+    
+    when 'Trace haemolyzed' then ret:=21;
+    
+    when 'Trace' then ret:=20;
+    
+    when 'Small' then ret:=20;
+    
+    when 'Negative' then ret:=0;
+    
+    when 'Large' then ret:=40;
+    
+    when '+' then ret:=20;
+    
+    when '++' then ret:=20;
+    
+    when '+++' then ret:=30;
+    
+    when '++++' then ret:=40;
+    
+    when '10-40' then ret:=30;
+    when '20 - 100 /uL' then ret:=30;
+    when '40-100' then ret:=30;
+    when 'N' then ret:=0;
+    
+    
+    
+    
+    else 
+        case
+        when txt_in_num=0 then ret:=0;
+        
+        when txt_in_num>0 and txt_in_num<=10 then ret:=20;
+        
+        when txt_in_num>10 and txt_in_num<=100 then ret:=30;
+        
+        when txt_in_num>100 then ret:=40;
+        
+        else ret:=0;
+        end case;
+        
+    end case;
+    
+    return ret;
+end transform_h2_ua_cells;
 END;
 /
+
