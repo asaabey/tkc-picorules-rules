@@ -549,7 +549,55 @@ BEGIN
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
         
     -- END OF RULEBLOCK --
+    -- BEGINNING OF RULEBLOCK --
     
+        
+    rb.blockid:='ckd_journey_2_1';
+    rb.target_table:='rout_ckd_journey';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='ckdj';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine journey of CKD */
+
+        /*  External bindings    */
+        ckd => rout_ckd.ckd.val.bind();
+        cp_ckd => rout_careplan.cp_ckd.val.bind();
+        
+        cp_ckd_ld => rout_careplan.cp_ld.val.bind();
+        
+        /*  Nursing and allied health encounters    */
+        
+        edu_init => eadv.enc_op_renal_edu.dt.min().where(val=31);
+        
+        edu_rv => eadv.enc_op_renal_edu.dt.max().where(val=32);
+        
+        edu_n => eadv.enc_op_renal_edu.dt.count().where(val=31 or val=32);
+        
+        /* edu_plan => eadv.enc_op_renal_edu.val.first().where(val=35); */
+        
+        dietn => eadv.enc_op_renal_edu.dt.max().where(val=61);
+        
+        sw => eadv.enc_op_renal_edu.dt.max().where(val=51);
+        
+        ckdj : { coalesce(edu_init, edu_rv) is not null => 1},{=>0};
+        
+        
+        
+            
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
+    -- END OF RULEBLOCK --
     
 END;
 

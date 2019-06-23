@@ -7,6 +7,7 @@ AS
 function transform_h9_careplantxt(txt_in varchar2) return integer; 
 function transform_h2_smokingstatus(txt_in varchar2) return integer;
 function transform_h2_ua_cells(txt_in varchar2) return integer;
+function transform_h2_education(txt_in varchar2) return integer;
 END;
 /
 
@@ -172,6 +173,32 @@ begin
     
     return ret;
 end transform_h2_ua_cells;
+
+function transform_h2_education(txt_in varchar2) return integer
+as
+ret integer:=0;
+
+
+begin
+    case (txt_in)
+    when 'Advice/Education;Nutritional' then ret:=61;
+
+    when 'NT Renal Services - CKD Education' then ret:=31;
+    
+    when 'NT Renal Services - CKD Education Review' then ret:=32;
+    
+    when 'NT Renal Services - CKD Plan' then ret:=35;
+    
+    when 'NT Renal Services - CKD Referrals' then ret:=38;
+    
+    when 'Social Work Consult (Renal)' then ret:=51;
+    
+    else ret:=0;
+    end case;
+    
+    return ret;
+end transform_h2_education;
+
 END;
 /
 
