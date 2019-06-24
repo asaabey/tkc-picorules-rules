@@ -62,7 +62,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_dm_syn_1','cd_dm_2',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Diabetes Rubric
+    Diabetes rubric
     -------------------
     <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_undiagnosed>Undiagnosed</dm_dx_undiagnosed><dm_longstanding> long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
     <dm_micvas>There are non-renal microvascular complications.</dm_micvas>The glycaemic control is <n0_st=0> unknown </n0_st=0><n0_st=2>optimal (6-8)</n0_st=2><n0_st=1>too tight(<6)</n0_st=1><n0_st=3>sub-optimal (8-10)</n0_st=3><n0_st=4>very sub-optimal (>10)</n0_st=4> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
@@ -84,7 +84,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_htn_syn_1','cd_htn_2',603100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Hypertension Rubric
+    Hypertension rubric
     -------------------
     <htn_icpc>Diagnosed</htn_icpc> Hypertension <htn_fd_yr> since </htn_fd_yr><htn_fd_yr></htn_fd_yr>.
     <mu_1>The average systolic BP during last year was </mu_1><mu_1></mu_1><mu_1> mmHg</mu_1><mu_2> and the year before was </mu_2><mu_2></mu_2><mu_2> mmHg.</mu_2>
@@ -115,11 +115,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_ckd_syn_1','ckd_2_1',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    CKD Rubric
-    -------------------
+    CKD rubric
+    ----------
     <dx_ckd>Diagnosed </dx_ckd><pers>Persistent </pers>CKD stage <ckd_stage></ckd_stage> (<cga_g></cga_g><cga_a></cga_a>) [1.1]. 
     <dx_ckd=0>There is no coded diagnosis on the EHR [1.2]</dx_ckd=0>
-    <dx_ckd>The diagnosis on the EHR is CKD stage [1.2]<dx_ckd_stage></dx_ckd_stage></dx_ckd>
+    <dx_ckd>The diagnosis on the EHR is CKD stage <dx_ckd_stage></dx_ckd_stage> [1.2] </dx_ckd>
     The last eGFR is <egfrlv></egfrlv> ml/min/1.73m2 (<egfrld></egfrld>)<egfr_outdated> and is outdated [1.3].</egfr_outdated>
     <egfr_decline>There is <egfr_rapid_decline>rapid </egfr_rapid_decline>progressive decline of renal function with an annual decline of <egfr_slope2></egfr_slope2>ml/min/yr [1.3]</egfr_decline> 
     <enc_null=0>There are no captured encounters with renal services.</enc_null=0>
@@ -171,26 +171,54 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_cvra_syn_1','cvra_1_1',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Cardiovascular risk (CVR) Rubric
-    -------------------------------
-    <risk_high_ovr=0>The CVR status was calculated using FRE [4.1]</risk_high_ovr=0><risk_5>The composite 5 year CVD risk is </risk_5><risk_5></risk_5><risk_5> ,which is </risk_5><cvra=3> high risk</cvra=3><cvra=2> moderate risk</cvra=2><cvra=1> low risk</cvra=1> 
+    Cardiovascular risk (CVR) rubric
+    --------------------------------
+    <risk_high_ovr=0>The CVR status was calculated using FRE [4.1]</risk_high_ovr=0><risk_5>The composite 5 year CVD risk is </risk_5><risk_5></risk_5><risk_5> ,which is </risk_5><risk_high_ovr=1>The composite 5 year CVD risk is</risk_high_ovr=1><cvra=3> high </cvra=3><cvra=2> moderate risk</cvra=2><cvra=1> low risk</cvra=1> 
     <risk_high_ovr>The patient meets criteria for high CVR without calculation, which are </risk_high_ovr><cvd_prev> previous documented CVD event </cvd_prev><dm60>Diabetes and age more than 60 </dm60><dmckd1> Diabetes and albuminuria </dmckd1><ckd3> CKD 3b or above </ckd3><tc7> total cholesterol more than 7.5 </tc7><sbp180> systolic bp more than 180mmHg </sbp180><age74> age more than 74 and ATSI.</age74>
-    
+    <cp_hicvr=0>There is no cv careplan.</cp_hicvr=0><cp_hicvr=1>A high CVR careplan is already in place.</cp_hicvr=1>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_cvra_rec_1','cvra_1_1',704100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <htn_icpc=0>Recommendation [3.1] Update diagnosis to hypertension</htn_icpc=0>
-    <bp_control=2>Recommendation [3.4] Optimize BP control</bp_control=2>
-    <bp_control=1>Recommendation [3.14] Optimize BP control</bp_control=1>
+    <cvra=3><cp_hicvr=0>Recommendation [4.1]  Update care plan to include High CVR </cp_hicvr=0></cvra=3>
+
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_cvra_footnote_1','cvra_1_1',804100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <iq_tier>Note [3.1] This is based on <iq_sbp></iq_sbp> blood pressure readings within the last 2 years</iq_tier>
-    <bp_control>Note [3.3] Based on time in therapeutic range (TITR)</bp_control>
-
+    <risk_high_ovr=0>Note [4.1] The Framigham risk equation was used as per heart foundation guidelines. The CARPA 7th STM uses the same methodology</risk_high_ovr=0>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_ckd_journey_1','ckd_journey_2_1',601200,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    CKD : Renal services engagement rubric
+    --------------------------------------
+    <enc_multi=0><enc_ld>Nephrologist review :               </enc_ld><enc_ld></enc_ld></enc_multi=0>
+    <enc_multi>Nephrologist reviews :              <enc_fd></enc_fd>-<enc_ld></enc_ld> [<enc_n></enc_n>] </enc_multi>
+    <edu_init>CKD Education (initial) :           </edu_init><edu_init></edu_init>
+    <edu_rv>CKD Education review (last) :       </edu_rv><edu_rv></edu_rv>
+    <dietn>Renal Dietician review (last) :     </dietn><dietn></dietn>
+    <sw>Renal social work review) :         </sw><sw></sw>
+    
+    <avf_ld>CKD Access (AVF) formation date :   </avf_ld><avf_ld></avf_ld>
+    
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_ckd_dx_1','ckd_diagnostics_2_1',601300,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    CKD : Diagnostics rubric
+    ------------------------
+    Basic urinalysis    :       <ua_null=1>dipstick nor msu have been performed</ua_null=1><ua_rbc_ld>last performed on </ua_rbc_ld><ua_rbc_ld></ua_rbc_ld><ua_rbc_ld> and is </ua_rbc_ld><ua_null=0><ua_pos=0> not significant</ua_pos=0><ua_pos=1> haematuria with leucocyturia </ua_pos=1><ua_pos=2> haematuria without leucocyturia </ua_pos=2></ua_null=0>
+    ANA Serology        :       <dsdna_null=1>not performed </dsdna_null=1><dsdna_null=0><dsdna_ld>last performed on </dsdna_ld><dsdna_ld></dsdna_ld><dsdna_ld> and is </dsdna_ld><dsdna_pos=1>SIGNIFICANT </dsdna_pos=1></dsdna_null=0>
+    ANCA Serology       :       <anca_null=1>not performed </anca_null=1><anca_null=0><pr3_ld>last performed on </pr3_ld><pr3_ld></pr3_ld></anca_null=0>
+    Complements         :       <c3c4_null=1>not performed </c3c4_null=1><c3c4_null=0><c3_ld>last performed on </c3_ld><c3_ld></c3_ld></c3c4_null=0>
+    Serum PEP           :       <spep_null=1>not performed </spep_null=1><spep_null=0><paraprot_ld>last performed on </paraprot_ld><paraprot_ld></paraprot_ld></spep_null=0>
+    SFLC assay          :       <sflc_null=1>not performed </sflc_null=1><sflc_null=0><sflc_kappa_ld>last performed on </sflc_kappa_ld><sflc_kappa_ld></sflc_kappa_ld></sflc_null=0>
+    
+    Renal tract imaging : RIS encounters not mapped yet
     '
     );

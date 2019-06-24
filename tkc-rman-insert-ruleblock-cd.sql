@@ -571,6 +571,14 @@ BEGIN
         ckd => rout_ckd.ckd.val.bind();
         cp_ckd => rout_careplan.cp_ckd.val.bind();
         
+        enc_ld => rout_ckd.enc_ld.val.bind();
+        
+        enc_fd => rout_ckd.enc_fd.val.bind();
+        
+        enc_n => rout_ckd.enc_n.val.bind();
+        
+        avf_ld => rout_ckd.avf.val.bind();
+        
         cp_ckd_ld => rout_careplan.cp_ld.val.bind();
         
         /*  Nursing and allied health encounters    */
@@ -587,7 +595,101 @@ BEGIN
         
         sw => eadv.enc_op_renal_edu.dt.max().where(val=51);
         
-        ckdj : { coalesce(edu_init, edu_rv) is not null => 1},{=>0};
+        enc_multi : { nvl(enc_n,0)>1 =>1},{=>0};
+        
+        ckdj : { coalesce(edu_init, edu_rv,enc_fd) is not null => 1},{=>0};
+        
+        
+        
+        
+        
+            
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
+    -- END OF RULEBLOCK --
+    
+     -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_diagnostics_2_1';
+    rb.target_table:='rout_ckd_diagnostics';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='ckd_dx';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine diagnostics */
+
+        /*  External bindings    */
+        ckd => rout_ckd.ckd.val.bind();
+        acr_lv => rout_ckd.acrlv.val.bind();
+        
+        
+        
+        ua_rbc_lv => eadv.[lab_ua_rbc,lab_ua_poc_rbc].val.last();
+        ua_rbc_ld => eadv.[lab_ua_rbc,lab_ua_poc_rbc].val.last();
+        
+        ua_wcc_lv => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].val.last();
+        ua_wcc_ld => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].val.last();
+                
+        sflc_kappa_lv => eadv.lab_bld_sflc_kappa.val.last();
+        sflc_lambda_lv => eadv.lab_bld_sflc_lambda.val.last();
+        sflc_kappa_ld => eadv.lab_bld_sflc_kappa.dt.max();
+        sflc_lambda_ld => eadv.lab_bld_sflc_lambda.dt.max();
+        
+        paraprot_lv => eadv.lab_bld_spep_paraprotein.val.last();
+        paraprot_ld => eadv.lab_bld_spep_paraprotein.dt.max();
+        
+        pr3_lv => eadv.lab_bld_anca_pr3.val.last();
+        mpo_lv => eadv.lab_bld_anca_mpo.val.last();
+        pr3_ld => eadv.lab_bld_anca_pr3.dt.max();
+        mpo_ld => eadv.lab_bld_anca_mpo.dt.max();
+        
+        dsdna_lv => eadv.lab_bld_dsdna.val.last();
+        dsdna_ld => eadv.lab_bld_dsdna.dt.max();
+        
+        c3_lv => eadv.lab_bld_complement_c3.val.last();
+        c4_lv => eadv.lab_bld_complement_c4.val.last();
+        
+        c3_ld => eadv.lab_bld_complement_c3.dt.max();
+        c4_ld => eadv.lab_bld_complement_c4.dt.max();
+        
+        c3_pos : { nvl(c3_lv,0)<0.2 and nvl(c3_lv,0)>0 => 1},{=>0};
+        c4_pos : { nvl(c4_lv,0)<0.2 and nvl(c4_lv,0)>0 => 1},{=>0};
+        
+        dsdna_pos : { nvl(dsdna_lv,0)>6 => 1},{=>0};
+        sflc_ratio : { nvl(sflc_lambda_lv,0)>0 => round(nvl(sflc_kappa_lv,0)/sflc_lambda_lv,2)},{=1};
+        
+        sflc_ratio_abn : {sflc_ratio<0.26 or sflc_ratio>1.65 =>1 },{=>0};
+        
+        ua_rbc_pos : {nvl(ua_rbc_lv,0)>=30 =>1},{=>0};
+        ua_wcc_pos : {nvl(ua_wcc_lv,0)>=30 =>1},{=>0};
+        ua_acr_pos : {nvl(acr_lv,0)>30 =>1},{=>0};
+        
+        ua_null : { ua_rbc_ld is null => 1},{=>0};
+        sflc_null : { sflc_kappa_ld is null =>1},{=>0};
+        spep_null : { paraprot_ld is null =>1},{=>0};
+        dsdna_null : { dsdna_ld is null =>1},{=>0};
+        anca_null : {  pr3_ld is null =>1},{=>0};
+        c3c4_null : {  c3_ld is null =>1},{=>0};
+        
+        
+        ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
+                { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
+                {=>0};
+        
+        ckd_dx : {ckd>=1 => 1},{=>0};
+        
+        
         
         
         
