@@ -126,7 +126,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <enc_ld>The last encounter with renal services was on </enc_ld><enc_ld></enc_ld><enc_n> and there have been </enc_n><enc_n></enc_n><enc_n> encounters since </enc_n><enc_fd></enc_fd>
     <avf>An arterio-venous fistula has been created on </avf><avf></avf>
     <cp_ckd=0>There is no current careplan for CKD</cp_ckd=0>
-    <cp_ckd>The CKD current careplan is </cp_ckd><cp_ckd></cp_ckd><cp_ckd> update on </cp_ckd><cp_ckd_ld></cp_ckd_ld>
+    <cp_ckd>The CKD current careplan is </cp_ckd><cp_ckd></cp_ckd><cp_ckd> updated on </cp_ckd><cp_ckd_ld></cp_ckd_ld>
     <cp_mis>The existing care plan may not be adequate [1.8]</cp_mis>
     '
     );
@@ -182,6 +182,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph001','cd_cvra_rec_1','cvra_1_1',704100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <cvra=3><cp_hicvr=0>Recommendation [4.1]  Update care plan to include High CVR </cp_hicvr=0></cvra=3>
+    <cvra=3><smoke0=30>Recommendation [4.2]  Given high cvr status the smoking cessation is strongly advised </smoke0=30></cvra=3>
+    <cvra=2><smoke0=30>Recommendation [4.2]  Given moderate cvr status the smoking cessation is advised </smoke0=30></cvra=2>
 
     '
     );
@@ -201,7 +203,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <edu_init>CKD Education (initial) :           </edu_init><edu_init></edu_init>
     <edu_rv>CKD Education review (last) :       </edu_rv><edu_rv></edu_rv>
     <dietn>Renal Dietician review (last) :     </dietn><dietn></dietn>
-    <sw>Renal social work review) :         </sw><sw></sw>
+    <sw>Renal social work review (last) :         </sw><sw></sw>
     
     <avf_ld>CKD Access (AVF) formation date :   </avf_ld><avf_ld></avf_ld>
     
@@ -212,13 +214,29 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     CKD : Diagnostics rubric
     ------------------------
-    Basic urinalysis    :       <ua_null=1>dipstick nor msu have been performed</ua_null=1><ua_rbc_ld>last performed on </ua_rbc_ld><ua_rbc_ld></ua_rbc_ld><ua_rbc_ld> and is </ua_rbc_ld><ua_null=0><ua_pos=0> not significant</ua_pos=0><ua_pos=1> haematuria with leucocyturia </ua_pos=1><ua_pos=2> haematuria without leucocyturia </ua_pos=2></ua_null=0>
+    Basic urinalysis    :       <ua_null=1>dipstick nor msu have been performed</ua_null=1><ua_rbc_ld>last performed on </ua_rbc_ld><ua_rbc_ld></ua_rbc_ld><ua_rbc_ld> and shows </ua_rbc_ld><ua_null=0><ua_pos=0>no significance</ua_pos=0><ua_pos=1> haematuria with leucocyturia </ua_pos=1><ua_pos=2> haematuria without leucocyturia </ua_pos=2></ua_null=0>
     ANA Serology        :       <dsdna_null=1>not performed </dsdna_null=1><dsdna_null=0><dsdna_ld>last performed on </dsdna_ld><dsdna_ld></dsdna_ld><dsdna_ld> and is </dsdna_ld><dsdna_pos=1>SIGNIFICANT </dsdna_pos=1></dsdna_null=0>
     ANCA Serology       :       <anca_null=1>not performed </anca_null=1><anca_null=0><pr3_ld>last performed on </pr3_ld><pr3_ld></pr3_ld></anca_null=0>
     Complements         :       <c3c4_null=1>not performed </c3c4_null=1><c3c4_null=0><c3_ld>last performed on </c3_ld><c3_ld></c3_ld></c3c4_null=0>
     Serum PEP           :       <spep_null=1>not performed </spep_null=1><spep_null=0><paraprot_ld>last performed on </paraprot_ld><paraprot_ld></paraprot_ld></spep_null=0>
     SFLC assay          :       <sflc_null=1>not performed </sflc_null=1><sflc_null=0><sflc_kappa_ld>last performed on </sflc_kappa_ld><sflc_kappa_ld></sflc_kappa_ld></sflc_null=0>
     
-    Renal tract imaging : RIS encounters not mapped yet
+    Renal tract imaging :       [RIS encounters not mapped yet]
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_ckd_compx_1','ckd_complications_2_1',601400,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    CKD : Complications rubric
+    --------------------------
+    Haemopoetic function
+    --------------------
+    <hb_lv>The last haemoglobin on <hb_ld></hb_ld> is </hb_lv><hb_lv></hb_lv> g/L and is consistent a <hb_state=2> with an acceptable range</hb_state=2>
+    <hb_state=1><mcv_state=11> severe microcytic </mcv_state=11><mcv_state=12> microcytic </mcv_state=12><mcv_state=20> normocytic </mcv_state=20><mcv_state=31> macrocytic </mcv_state=31> anaemia</hb_state=1>
+    <esa_state=0>There is no ESA use</esa_state=0><esa_state=1>There is current ESA use</esa_state=1><esa_state=2>There is past ESA use but not current</esa_state=2>
+    <iron_low>Iron store are low</iron_low>
+    
+    
     '
     );

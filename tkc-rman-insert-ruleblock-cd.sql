@@ -636,10 +636,10 @@ BEGIN
         
         
         ua_rbc_lv => eadv.[lab_ua_rbc,lab_ua_poc_rbc].val.last();
-        ua_rbc_ld => eadv.[lab_ua_rbc,lab_ua_poc_rbc].val.last();
+        ua_rbc_ld => eadv.[lab_ua_rbc,lab_ua_poc_rbc].dt.max();
         
         ua_wcc_lv => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].val.last();
-        ua_wcc_ld => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].val.last();
+        ua_wcc_ld => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].dt.max();
                 
         sflc_kappa_lv => eadv.lab_bld_sflc_kappa.val.last();
         sflc_lambda_lv => eadv.lab_bld_sflc_lambda.val.last();
@@ -688,12 +688,7 @@ BEGIN
                 {=>0};
         
         ckd_dx : {ckd>=1 => 1},{=>0};
-        
-        
-        
-        
-        
-            
+     
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
@@ -701,6 +696,101 @@ BEGIN
     
     -- END OF RULEBLOCK --
     
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_complications_2_1';
+    rb.target_table:='rout_ckd_complications';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='ckd_compx';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine diagnostics */
+
+        /*  External bindings    */
+        ckd => rout_ckd.ckd.val.bind();
+        
+        
+        hb_lv => eadv.lab_bld_hb.val.last();
+        hb_ld => eadv.lab_bld_hb.dt.max();
+        
+        plt_lv => eadv.lab_bld_platelets.val.last();
+        
+        wcc_neut_lv => eadv.lab_bld_wcc_neutrophils.val.last();
+        wcc_eos_lv => eadv.lab_bld_wcc_eosinophils.val.last();
+        
+        rbc_mcv_lv => eadv.lab_bld_rbc_mcv.val.last();
+        
+        esa_lv => eadv.rxnc_b03xa.val.last();
+        esa_ld => eadv.rxnc_b03xa.dt.max();
+        
+        k_lv => eadv.lab_bld_potassium.val.last();
+        k_ld => eadv.lab_bld_potassium.dt.max();
+        
+        
+        ca_lv => eadv.lab_bld_calcium_corrected.val.last();
+        ca_ld => eadv.lab_bld_calcium_corrected.val.last();
+        
+        phos_lv => eadv.lab_bld_phosphate.val.last();
+        hco3_lv => eadv.lab_bld_bicarbonate.val.last();
+        
+        alb_lv => eadv.lab_bld_albumin.val.last();
+        
+        pth_lv => eadv.lab_bld_pth.val.last();
+        pth_ld => eadv.lab_bld_pth.val.last();
+        
+        fer_lv => eadv.lab_bld_ferritin.val.last();
+        fer_ld => eadv.lab_bld_ferritin.dt.max();
+        
+        /*  Haematenics */
+        
+        hb_state : { nvl(hb_lv,0)>0 and nvl(hb_lv,0)<100 =>1},
+                    { nvl(hb_lv,0)>=100 and nvl(hb_lv,0)<180 =>2},
+                    { nvl(hb_lv,0)>180 =>3},
+                    {=>0};
+                    
+        mcv_state : { hb_state=1 and nvl(rbc_mcv_lv,0)>0 and nvl(rbc_mcv_lv,0)<70 => 11 },
+                    { hb_state=1 and nvl(rbc_mcv_lv,0)>=70 and nvl(rbc_mcv_lv,0)<80 => 12 },
+                    { hb_state=1 and nvl(rbc_mcv_lv,0)>=80 and nvl(rbc_mcv_lv,0)<=100 => 20 },
+                    { hb_state=1 and nvl(rbc_mcv_lv,0)>=100 => 31 },{ =>0};
+                    
+        iron_low : { hb_state=1 and nvl(fer_lv,0)>0 and nvl(fer_lv,0)<250 => 1},{=>0};
+        
+        thal_sig : {mcv_state=11 =>1 },{=>0};
+        
+        esa_null : { esa_lv is null=>1},{=>0};
+        
+        esa_state : { esa_null=0 and esa_lv=1 => 1},{ esa_null=0 and esa_lv=0 => 2},{=>0};
+        
+        /*  CKD-MBD */
+        
+        phos_null : {phos_lv is null =>1},{=>0};
+        phos_high : {phos_null=0 and phos_lv>=2 =>1},{=>0};
+        
+        k_null : {k_lv is null =>1},{=>0};
+        k_high : {k_null=0 and k_lv>=6 =>1},{=>0};
+        
+        pth_null : {pth_lv is null =>1},{=>0};
+        pth_high : {pth_null=0 and pth_lv>=72 =>1},{=>0};
+        
+        hco3_null : {hco3_lv is null =>1},{=>0};
+        hco3_low : {hco3_null=0 and hco3_lv<22 =>1},{=>0};
+        
+        ckd_compx : {ckd>=3 => 1},{=>0};
+     
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
+    -- END OF RULEBLOCK --
 END;
 
 
