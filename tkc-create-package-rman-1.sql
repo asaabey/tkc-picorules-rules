@@ -157,6 +157,8 @@ AS
     PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) ;
     
     PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER);
+    
+    PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
 END;
 /
 
@@ -1787,7 +1789,7 @@ END exec_ndsql;
 PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER)
 IS   
     strsql      CLOB;
-    
+    t0          INTEGER:=dbms_utility.get_time;
     
     
     rb          RMAN_RULEBLOCKS%ROWTYPE;
@@ -1797,8 +1799,10 @@ IS
 
 BEGIN
    
+    commit_log('Execute ruleblock',bid_in,'compiling');
     DELETE FROM rman_rpipe;
     DELETE FROM rman_stack;
+    
     
     rman_pckg.parse_ruleblocks(bid_in);
     
@@ -1808,6 +1812,8 @@ BEGIN
     
     SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid_in;
    
+    commit_log('Execute ruleblock',rb.blockid,'initialised');
+    
     DBMS_OUTPUT.PUT_LINE('RMAN execution -->' || chr(10));
     DBMS_OUTPUT.PUT_LINE('Rule block id : ' || rb.blockid || chr(10));
     DBMS_OUTPUT.PUT_LINE('Target tbl    : ' || rb.target_table || chr(10));
@@ -1815,17 +1821,25 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('SQL statement : ' || rb.sqlblock || chr(10));
     
     IF create_wide_tbl=1 THEN  
+        commit_log('Execute ruleblock',rb.blockid,'exec_ndsql');
         rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
     END IF;
     
     IF push_to_long_tbl=1 THEN  
+        commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore');
         rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
     END IF;
     
 
 END execute_ruleblock;
-END;
 
+procedure commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2)
+as
+begin
+    insert into rman_ruleblocks_log(moduleid,blockid,log_msg,log_time) values (moduleid, blockid,log_msg,current_timestamp);
+end commit_log;
+
+END;
 
 
 

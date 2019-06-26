@@ -1,5 +1,6 @@
 DROP TABLE rman_stack;
 DROP TABLE rman_rpipe;
+DROP TABLE rman_ruleblocks_log;
 DROP TABLE rman_ruleblocks_dep;
 DROP TABLE rman_ruleblocks;
 
@@ -50,7 +51,18 @@ CREATE TABLE rman_ruleblocks_dep
     dep_column  VARCHAR2(100),
     dep_att     VARCHAR2(100),
     dep_func    VARCHAR2(100),
-    CONSTRAINT fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
+    CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
+);
+/
+
+CREATE TABLE rman_ruleblocks_log
+(
+    id          raw(16) default sys_guid() primary key,
+    moduleid    varchar2(100),
+    blockid     varchar2(100),
+    log_msg     varchar2(100),
+    log_time    TIMESTAMP (2) NOT NULL
+    --CONSTRAINT log_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
 );
 /
 

@@ -70,14 +70,16 @@ BEGIN
     
         /* Rule block to calculate dx information quantity*/
 
-        hd_dt => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(); 
-        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
-        tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max();
-        hhd_dt => eadv.[icpc_u59j99].dt.max();
+        hd_dt => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
+        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
+        tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
+        homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
         
-        rrt:{coalesce(hd_dt,pd_dt,tx_dt,hhd_dt) is null=>0},{=>1};
-        
-            
+        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) => 1},
+            {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
+            {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
+            {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
+            {=>0};
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 

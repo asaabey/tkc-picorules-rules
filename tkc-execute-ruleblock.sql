@@ -18,6 +18,7 @@ BEGIN
 --    rman_pckg.execute_ruleblock('ckd_journey_2_1',0,1);
 --    rman_pckg.execute_ruleblock('ckd_diagnostics_2_1',1,1);
     
-    rman_pckg.execute_ruleblock('ckd_complications_2_1',0,1);
+--    rman_pckg.execute_ruleblock('ckd_complications_2_1',0,1);
+    rman_pckg.execute_ruleblock('rrt_2_1',1,1);
 END;
 
