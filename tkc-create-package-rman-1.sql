@@ -931,7 +931,7 @@ BEGIN
     CASE 
         
         
-        WHEN FUNC IN ('MAX','MIN','COUNT','SUM','AVG','MEDIAN') THEN
+        WHEN FUNC IN ('MAX','MIN','COUNT','SUM','AVG','MEDIAN','STATS_MODE') THEN
             
             where_txt:=att || predicate;
             
@@ -1009,10 +1009,21 @@ BEGIN
             
                 push_vstack(assnvar,indx,2,null,null);
                 
---                IF assnvar IS NOT NULL THEN
---                    vstack(assnvar):=indx;
---                END IF;
+
             END;
+        WHEN FUNC IN ('REGR_SLOPE','REGR_INTERCEPT','REGR_COUNT','REGR_R2','REGR_AVGX','REGR_AVGY','REGR_SXX','REGR_SYY','REGR_SXY') THEN
+            where_txt:=att || predicate;
+            
+            from_txt:= from_clause;
+            select_txt:=  tbl || '.' || entity_id_col || ',' || func || '(' || prop || ', SYSDATE-' || dt_col || ') AS ' || assnvar || ' ';
+            groupby_txt:=tbl || '.' || entity_id_col;
+            insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
+            
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
+            
+            rows_added:= 1;
+            
+            push_vstack(assnvar,indx,2,func,to_char(funcparam));
         ELSE 
             RAISE ude_function_undefined;
             
