@@ -221,7 +221,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Serum PEP           :       <spep_null=1>not performed </spep_null=1><spep_null=0><paraprot_ld>last performed on </paraprot_ld><paraprot_ld></paraprot_ld></spep_null=0>
     SFLC assay          :       <sflc_null=1>not performed </sflc_null=1><sflc_null=0><sflc_kappa_ld>last performed on </sflc_kappa_ld><sflc_kappa_ld></sflc_kappa_ld></sflc_null=0>
     
-    Renal tract imaging :       [RIS encounters not mapped yet]
+    Renal tract imaging :       <usk_null=1>not performed </usk_null=1><usk_null=0>Most recent ultrasound kidney on <ris_usk_ld></ris_usk_ld></usk_null=0>
+    Kidney biopsy       :       <bxk_null=1>not performed </bxk_null=1><bxk_null=0>Kidney biopsy on <ris_bxk_ld></ris_bxk_ld></bxk_null=0>
     '
     );
 

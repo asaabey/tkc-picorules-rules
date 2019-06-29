@@ -105,7 +105,60 @@ BEGIN
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
     
     -- END OF RULEBLOCK --
+    -- BEGINNING OF RULEBLOCK --
     
+        
+    rb.blockid:='kfre_2_1';
+    rb.target_table:='rout_' || 'kfre';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='kfre4v';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  KFRE */
+        
+        /*  External bindings*/
+        ckd => rout_ckd.ckd.val.bind();
+        
+        /*  Gather variables */
+        dob => vw_patient_reg_dmg.dmg_dob.dt.max();
+        
+        male => vw_patient_reg_dmg.dmg_gender.val.max();
+        
+        egfr_lv => eadv.lab_bld_egfr_c.val.last();
+        
+        egfr_ld => eadv.lab_bld_egfr_c.dt.max();
+        
+        uacr_lv => eadv.lab_ua_acr.val.last();
+        
+        uacr_ld => eadv.lab_ua_acr.dt.max();
+        
+        kfre4v_ap : { least(dob,egfr_ld,uacr_ld) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
+        
+        egfr_1 : { 1=1 => egfr_lv};
+        
+        ln_uacr_1 : { nvl(uacr_lv,0)>0  => ln(uacr_lv * 8.84)};
+        
+        age : { 1=1 => round(((egfr_ld-dob)/365.25),0)};
+        
+        kfre4v_exp : { kfre4v_ap =1 => exp((-0.5567*(egfr_1/5-7.222))+(0.2467*(male - 0.5642))+(0.451*(ln_uacr_1-5.137))-(0.2201*(age/10-7.036)))},{=>0};
+        
+        kfre4v_2yr : { kfre4v_ap =1 => round(1-power(0.9832,kfre4v_exp) ,2)};
+        
+        kfre4v_5yr : { kfre4v_ap =1 => round(1-power(0.9365,kfre4v_exp) ,2)};
+                  
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+   INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
+    -- END OF RULEBLOCK --
     
 END;
 

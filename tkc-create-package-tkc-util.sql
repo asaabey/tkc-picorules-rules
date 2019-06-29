@@ -8,6 +8,7 @@ function transform_h9_careplantxt(txt_in varchar2) return integer;
 function transform_h2_smokingstatus(txt_in varchar2) return integer;
 function transform_h2_ua_cells(txt_in varchar2) return integer;
 function transform_h2_education(txt_in varchar2) return integer;
+function transform_att_imaging(txt_in varchar2) return varchar2;
 END;
 /
 
@@ -198,6 +199,23 @@ begin
     
     return ret;
 end transform_h2_education;
+
+function transform_att_imaging(txt_in varchar2) return varchar2
+as
+ret varchar2(12);
+
+begin
+    case 
+    
+    when (regexp_substr(txt_in, '^[A-Z]+',1,1)) in ('USKIDNEY','USKIDPEL','USABKID') then ret:='usk';
+
+    when (regexp_substr(txt_in, '^[A-Z]+',1,1)) in ('USBIOKIDNEY','CTBIOREN') then ret:='bxk';
+    
+    else ret:='nos';
+    end case;
+    
+    return ret;
+end transform_att_imaging;
 
 END;
 /

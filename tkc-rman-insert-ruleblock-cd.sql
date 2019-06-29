@@ -665,6 +665,9 @@ BEGIN
         c3_ld => eadv.lab_bld_complement_c3.dt.max();
         c4_ld => eadv.lab_bld_complement_c4.dt.max();
         
+        ris_usk_ld => eadv.enc_ris_usk.dt.max();
+        ris_bxk_ld => eadv.enc_ris_bxk.dt.max();
+        
         c3_pos : { nvl(c3_lv,0)<0.2 and nvl(c3_lv,0)>0 => 1},{=>0};
         c4_pos : { nvl(c4_lv,0)<0.2 and nvl(c4_lv,0)>0 => 1},{=>0};
         
@@ -688,6 +691,10 @@ BEGIN
         ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
                 { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
                 {=>0};
+        
+        usk_null : { ris_usk_ld is null =>1},{=>0};
+        bxk_null : { ris_bxk_ld is null =>1},{=>0};
+        
         
         ckd_dx : {ckd>=1 => 1},{=>0};
      
