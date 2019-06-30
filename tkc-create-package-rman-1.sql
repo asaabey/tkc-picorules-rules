@@ -433,7 +433,7 @@ BEGIN
      
         ctename:=get_cte_name(i);        
         
-        cmpstat := cmpstat || ctename || ' AS (SELECT ' || REPLACE(rmanobj(I).select_clause,'`','''') || ' FROM ' || rmanobj(I).from_clause ;
+        cmpstat := cmpstat || ctename || ' AS (SELECT ' || REPLACE(rmanobj(I).select_clause,'`','''') || ' FROM ' || REPLACE(rmanobj(I).from_clause,'`','''') ;
                 
         IF rmanobj(I).where_clause IS NOT NULL THEN cmpstat:=cmpstat ||' WHERE ' || REPLACE(rmanobj(I).where_clause,'`',''''); END IF;
         
@@ -465,6 +465,18 @@ BEGIN
                     cmpstat :=cmpstat || ',';
                 END IF;
             END IF;
+        ELSIF rmanobj(I).is_sub=2 THEN
+            IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+                cmpstat := cmpstat || ctename || '.' || sanitise_varname(rmanobj(i).varid) || '_DT';                        
+                cmpstat:=cmpstat || chr(10);
+                cmpstat := cmpstat || ',';
+                cmpstat := cmpstat || ctename || '.' || sanitise_varname(rmanobj(i).varid) || '_VAL';                        
+                cmpstat:=cmpstat || chr(10);
+                
+                IF I<rmanobj.LAST THEN
+                    cmpstat :=cmpstat || ',';
+                END IF;
+            END IF;
         END IF;
         
 
@@ -478,7 +490,7 @@ BEGIN
     LOOP
 
         ctename:=get_cte_name(i);
-        IF rmanobj(I).is_sub=0 THEN
+        IF rmanobj(I).is_sub=0 OR rmanobj(I).is_sub=2 THEN
                 IF is_tempvar(rmanobj(I).varid)=FALSE THEN
                     cmpstat := cmpstat || ' LEFT OUTER JOIN ' || ctename || ' ON ' || ctename || '.' || entity_id_col || '=' || get_cte_name(0)||'.' || entity_id_col || ' ';
                     --line break for readability
@@ -840,10 +852,14 @@ IS
     from_clause VARCHAR(2000);
     select_txt VARCHAR(2000);
     groupby_txt VARCHAR(2000);
+    orderby_windfunc_txt    VARCHAR2(100);
     is_sub_val INT:=0;
     varr tbl_type;
     att_tbl tbl_type;
+    
     ude_function_undefined EXCEPTION;
+    
+    
 BEGIN
     
     
@@ -991,6 +1007,51 @@ BEGIN
                 
 
             END;
+        WHEN FUNC IN ('LASTDV','FIRSTDV','MAXLDV','MAXFDV','MINLDV','MINFDV') THEN
+            DECLARE
+                rankindx NUMBER;
+--                sortdirection NVARCHAR2(4):='DESC';
+                ctename nvarchar2(20);
+            BEGIN
+                CASE FUNC
+                WHEN 'FIRSTDV' THEN
+                    orderby_windfunc_txt := dt_col ||  ' ASC';
+                WHEN 'LASTDV' THEN
+                    orderby_windfunc_txt := dt_col ||  ' DESC';
+                WHEN 'MAXLDV' THEN
+                    orderby_windfunc_txt := val_col ||  ' DESC, ' || dt_col ||  ' DESC';
+                WHEN 'MAXFDV' THEN
+                    orderby_windfunc_txt := val_col ||  ' DESC, ' || dt_col ||  ' ASC';
+                WHEN 'MINLDV' THEN
+                    orderby_windfunc_txt := val_col ||  ' ASC, ' || dt_col ||  ' DESC';
+                WHEN 'MINFDV' THEN
+                    orderby_windfunc_txt := val_col ||  ' ASC, ' || dt_col ||  ' ASC';    
+                END CASE;
+                
+                IF funcparam=0 THEN rankindx:=1;
+                ELSE rankindx := funcparam + 1;
+                END IF;
+--                IF func='FIRSTDV' THEN sortdirection:='';END IF;  
+                ctename:=get_cte_name(indx); 
+                where_txt:=' RANK=' || rankindx;
+                from_txt:= '(SELECT ' || entity_id_col || ',' || val_col || ',' || dt_col ||
+                                ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ' ORDER BY ' || orderby_windfunc_txt ||') AS rank ' ||
+                                ' FROM ' || from_clause || ' WHERE ' || att || predicate || ')';
+                select_txt:= entity_id_col || ',' || val_col || ' AS ' || assnvar ||'_VAL ,' || dt_col || ' AS ' || assnvar ||'_DT ' ;
+                groupby_txt:='';
+                is_sub_val:=2;
+                
+                
+                insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar, is_sub_val,sqlstat,func,funcparam);
+                
+                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
+                
+                rows_added:= 1;
+                
+                push_vstack(assnvar || '_val',indx,2,null,null);
+                push_vstack(assnvar || '_dt',indx+1,2,null,null);
+
+            END;
 
         WHEN FUNC='CONST' THEN
             DECLARE
@@ -1032,11 +1093,6 @@ BEGIN
     END IF;
       
        
---EXCEPTION
---    WHEN ude_function_undefined THEN
---        DBMS_OUTPUT.PUT_LINE('RMAN EXCEPTION: PROC build_func_sql_exp : Undefined function');
---    WHEN OTHERS THEN
---        DBMS_OUTPUT.PUT_LINE('RMAN EXCEPTION: PROC build_func_sql_exp :Undefined error');
 END build_func_sql_exp;
 
 PROCEDURE build_cond_sql_exp(
