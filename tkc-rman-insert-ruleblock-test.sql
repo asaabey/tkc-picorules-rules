@@ -72,17 +72,17 @@ BEGIN
     rb.picoruleblock:='
     
         /*  Last2 functions*/
-        
+        hb_ => eadv.lab_bld_hb.val.last();
          
-        egfr_last2 => eadv.lab_bld_egfr_c.val.lastdv();
+        /* 
+        "hb last" => eadv.lab_bld_hb.val.lastdv();
+        */
         
-        egfr_first2 => eadv.lab_bld_egfr_c.val.firstdv();
-        
-        egfr_max2 => eadv.lab_bld_egfr_c.val.maxldv();
-        
-        egfr_n => eadv.lab_bld_egfr_c.dt.count();
-        
-        test :  { egfr_last2_val > 90 => 1},{=>0};
+        is_anaemic : { hb_ <110 => `anaemic`},
+                    {=> `no anaemia`};
+        /*
+        is_outdate : { "hb last_dt" < sysdate-365 => `outdated`},{=> `current`};
+          */          
         
             
     ';

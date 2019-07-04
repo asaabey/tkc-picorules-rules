@@ -36,9 +36,12 @@ BEGIN
         cp_hicvr => rout_careplan.cp_hicvr.val.bind();
         
         /*  Gather variables */
-        dob => vw_patient_reg_dmg.dmg_dob.dt.max();
         
-        male => vw_patient_reg_dmg.dmg_gender.val.max();
+        /*  on basic */
+        
+        dob => eadv.dmg_dob.dt.max();
+        
+        male => eadv.dmg_gender.val.max();
         
         cabg => eadv.[icd_z95_1%,icpc_k54007].dt.count(0);
             
@@ -57,7 +60,7 @@ BEGIN
         smoke0 => eadv.status_smoking_h2_v1.val.last();
         
         
-        age : {1=1 => round(((sysdate-dob)/365.25),0)};
+        age : { dob<sysdate => round(((sysdate-dob)/365.25),0)};
         
         smoke : {smoke0>=29 =>1},{0};
         
@@ -72,6 +75,7 @@ BEGIN
         
       
         risk_high_ovr : { greatest(dm60,dmckd1,ckd3,tc7,sbp180,age74,cvd_prev)>0 =>1},{=>0};
+        
         
         risk_5_chd : {risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
             (-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+(-0.2767*smoke)+(-0.7181*LN(tc/hdl))+
@@ -160,6 +164,68 @@ BEGIN
     
     -- END OF RULEBLOCK --
     
+    
+     -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='pcd_2_1';
+    rb.target_table:='rout_' || 'pcd';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=1 ;
+    rb.def_exit_prop:='pcd';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  PCD Traffic light report */
+        
+        /*  External bindings*/
+        ckd => rout_ckd.ckd.val.bind();
+        
+        dm => rout_cd_dm.dm.val.bind();
+        
+        cvra_calc => rout_cvra.cvra.val.bind();
+        
+        /*  Gather variables */
+        dob => eadv.dmg_dob.dt.max();
+        
+        male => eadv.dmg_gender.val.max();
+        
+        pcd_dt => eadv.mbs_721.dt.max();
+        
+        cvra => eadv.asm_cvra.val.lastdv();
+        
+        tc => eadv.lab_bld_cholesterol_tot.va.lastdv();
+        
+        hba => eadv.lab_bld_hba1c.val.lastdv();
+        
+        acr => eadv.lab_ua_acr.val.lastdv();
+        
+        smoke0 => eadv.status_smoking_h2_v1.val.lastdv();
+        
+        gpmp_dt => eadv.mbs_721.dt.max();
+        
+        ahc_dt => eadv.mbs_715.dt.max();
+        
+        
+        
+        pcd12m : { pcd_dt < sysdate-365 => 1 },{=>0};
+        
+        cvra12m : { cvra_dt < sysdate-365 =>1},{=>0};
+        
+        age : { dob< sysdate => (sysdate-dob)/365.25};
+        
+        pcd : { pcd_dt is not null =>1},{=>0};       
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+   INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate);
+    
+    -- END OF RULEBLOCK --
 END;
 
 

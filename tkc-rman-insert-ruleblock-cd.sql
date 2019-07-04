@@ -155,8 +155,10 @@ BEGIN
         
         n_opt_qt :{hba1c_n_tot>0 => round((hba1c_n_opt/hba1c_n_tot),2)*100};
         
+        /*
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.last();
         hba1c_n0_dt => eadv.lab_bld_hba1c_ngsp.dt.max();
+        */
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
         

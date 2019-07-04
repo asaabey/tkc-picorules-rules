@@ -1113,7 +1113,7 @@ BEGIN
                 rows_added:= 1;
                 
                 push_vstack(assnvar || '_val',indx,2,null,null);
-                push_vstack(assnvar || '_dt',indx+1,2,null,null);
+                push_vstack(assnvar || '_dt',indx,2,null,null);
 
             END;
 

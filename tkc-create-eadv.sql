@@ -2,31 +2,19 @@ DROP TABLE EADV;
 /
 CREATE TABLE EADV
 (
---    id INT NOT NULL,
     eid NUMBER(12,0) NOT NULL,
     att VARCHAR2(32) NOT NULL,
     dt DATE NOT NULL,
-    val NUMBER(15,2),
-    CONSTRAINT EADV_PK PRIMARY KEY (eid,att,dt)
-    --CONSTRAINT EADV_UC UNIQUE (eid,att,dt)
+    val NUMBER(15,2)
+
 );
-/
---DROP SEQUENCE EADV2_seq;
---CREATE SEQUENCE EADV2_seq
---  MINVALUE 1
---  START WITH 1
---  INCREMENT BY 1
---  CACHE 20;
---/
---DROP TRIGGER EADV2_tg;
---CREATE TRIGGER EADV2_tg
---BEFORE INSERT ON EADV2
---FOR EACH ROW
---WHEN (new.id IS NULL)
---BEGIN
---   SELECT EADV2_seq.NEXTVAL
---   INTO   :new.id
---   FROM   dual;
---END;
---/
-CREATE INDEX att_idx ON EADV(att);
+DROP INDEX eadv_att_idx;
+DROP INDEX eadv_eid_idx;
+
+CREATE INDEX eadv_att_idx ON EADV(att) compute statistics ;
+CREATE INDEX eadv_eid_idx ON EADV(eid) compute statistics;
+
+ANALYZE TABLE EADV COMPUTE STATISTICS;
+
+ALTER INDEX eadv_att_idx rebuild;
+ALTER INDEX eadv_eid_idx rebuild;
