@@ -8,9 +8,9 @@ AS
 /*
 
 Package		    rman_pckg
-Version		    0.0.1.6
+Version		    0.0.1.8
 Creation date	07/04/2019
-update on date  01/07/2019
+update on date  05/07/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -27,6 +27,8 @@ creating wide tables. Long tables /Datastore (EADV) are generated using exec_dsq
     |  ruleblock  |
     +------+------+
            |
+           |  execute_active_ruleblocks()
+           |  
            |  execute_ruleblock()
            |
            |  parse_ruleblocks()
@@ -121,18 +123,23 @@ varname(dependent var,..): { sql_case_when_expr => sql_case_then_expr},..,{=> sq
 This can be used to derive any SQL scalar function
 varname(dependent var,..):{1=1 => sql_scalar_func()}
 
-Externtal table binding
+External table binding
 tbl.att.val.bind()
 should only be used were eid->att is 1:1
 
-Implemented Template engine
-
-Implemented execute_ruleblock
+Change Log
+----------
+22/06/2019  Implemented Template engine
+23/06/2019  Added execute_ruleblock
+05/07/2019  Added execute_active_ruleblocks
+05/07/2019  Added Exception handling 
 
 */
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
     
     TYPE rpipe_tbl_type IS TABLE OF rman_rpipe%ROWTYPE;
+    
+    TYPE rman_ruleblocks_type IS TABLE OF rman_ruleblocks%ROWTYPE;
     
     TYPE vstack_type IS TABLE OF PLS_INTEGER INDEX BY VARCHAR2(100);
     vstack          vstack_type;
@@ -222,6 +229,8 @@ Implemented execute_ruleblock
     PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) ;
     
     PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER);
+    
+    PROCEDURE execute_active_ruleblocks;
     
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
 END;
@@ -668,7 +677,7 @@ BEGIN
                 
                 IF vstack_func.exists(vsi) AND vstack_func_param.exists(vsi) AND match_varname(txtout,vsi) THEN
                     IF vstack_func(vsi) IS NOT NULL AND vstack_func_param(vsi) IS NOT NULL  THEN
-                        DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED LOOP ' || vstack_func(vsi) || ' --> ' || vstack_func_param(vsi));
+--                        DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED LOOP ' || vstack_func(vsi) || ' --> ' || vstack_func_param(vsi));
                 --case select
                         CASE
                             WHEN vstack_func(vsi) IN ('COUNT','LAST','FIRST') AND vstack_func_param(vsi)='0' THEN
@@ -854,9 +863,6 @@ BEGIN
             avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-LENGTH(delim)));            
 
 
---EXCEPTION
---    WHEN OTHERS THEN
---    DBMS_OUTPUT.PUT_LINE('BUILD ASSN VAR FAILED ');
 
 END build_assn_var2;
 
@@ -974,8 +980,7 @@ BEGIN
             funcparam:=0;
         END IF;
         
-    ELSE
-        DBMS_OUTPUT.PUT_LINE('Syntax error');
+   
     END IF;
     
     att0:=att;
@@ -1233,7 +1238,7 @@ BEGIN
             select_text:=select_text || 'END AS ' || sanitise_varname(avn) || ',' || left_tbl_name ||'.' || entity_id_col || ' ';
             
             push_vstack(avn,indx,1,null,null);
---            vstack(avn):=indx;
+
             
 
             insert_rman(indx,'',from_clause,select_text,'',avn,0,sqlstat,'','');
@@ -1243,12 +1248,7 @@ BEGIN
        
     END IF;
     
---EXCEPTION
---    WHEN NO_DATA_FOUND THEN
---          DBMS_OUTPUT.PUT_LINE ('no conditional assignment'); 
---        
---    WHEN OTHERS THEN
---        dbms_output.put_line('exc other');
+
 END build_cond_sql_exp;
 
 
@@ -1318,7 +1318,7 @@ BEGIN
     indxtmp := vstack.FIRST; 
    
     WHILE indxtmp IS NOT NULL LOOP   
-        DBMS_Output.PUT_LINE('index -> ' || indxtmp || ' is ' || vstack(indxtmp));   
+--        DBMS_Output.PUT_LINE('index -> ' || indxtmp || ' is ' || vstack(indxtmp));   
         indxtmp := vstack.NEXT(indxtmp); 
     END LOOP; 
     get_composite_sql(sqlout);
@@ -1359,7 +1359,7 @@ BEGIN
         END IF;
     END LOOP;
 
-dbms_output.put_line('FUNC-AARAY VSTACK : ' || vstack.COUNT);
+--dbms_output.put_line('FUNC-AARAY VSTACK : ' || vstack.COUNT);
 
 
 END parse_ruleblocks;
@@ -1523,6 +1523,7 @@ BEGIN
     IF disc_col is not null and predicate is not null then
         select_tbl_sql_str:=select_tbl_sql_str || ' WHERE ' || UPPER(disc_col) || ' ' || predicate;
     end if;
+    
     
     dbms_output.put_line('-->'  || select_tbl_sql_str);
         
@@ -1913,7 +1914,7 @@ BEGIN
     
     EXECUTE IMMEDIATE create_tbl_sql_str;
     
-    DBMS_OUTPUT.PUT_LINE('SQL Block ->' || CHR(10) || create_tbl_sql_str);
+--    DBMS_OUTPUT.PUT_LINE('SQL Block ->' || CHR(10) || create_tbl_sql_str);
     
    
 END exec_ndsql;
@@ -1945,12 +1946,7 @@ BEGIN
    
     commit_log('Execute ruleblock',rb.blockid,'initialised');
     
-    DBMS_OUTPUT.PUT_LINE('RMAN execution -->' || chr(10));
-    DBMS_OUTPUT.PUT_LINE('Rule block id : ' || rb.blockid || chr(10));
-    DBMS_OUTPUT.PUT_LINE('Target tbl    : ' || rb.target_table || chr(10));
-    DBMS_OUTPUT.PUT_LINE('Environment   : ' || rb.environment || chr(10));
-    DBMS_OUTPUT.PUT_LINE('SQL statement : ' || rb.sqlblock || chr(10));
-    
+   
     IF create_wide_tbl=1 THEN  
         commit_log('Execute ruleblock',rb.blockid,'exec_ndsql');
         rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
@@ -1961,13 +1957,61 @@ BEGIN
         rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
     END IF;
     
+    commit_log('Execute ruleblock',rb.blockid,'Succeded');
+    
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 
 END execute_ruleblock;
 
+PROCEDURE execute_active_ruleblocks
+IS
+    rbs rman_ruleblocks_type;
+    bid     varchar2(100);
+BEGIN
+    commit_log('execute_active_ruleblocks','','Started');
+    SELECT * BULK COLLECT INTO rbs 
+    FROM rman_ruleblocks WHERE IS_ACTIVE=1 ORDER BY exec_order;
+    
+    IF rbs.COUNT>0 THEN 
+        commit_log('execute_active_ruleblocks','',rbs.COUNT || ' Ruleblocks added to stack');
+    
+        FOR i IN rbs.FIRST..rbs.LAST LOOP
+            bid:=rbs(i).blockid;
+            execute_ruleblock(bid,1,0);
+            DBMS_OUTPUT.put_line('rb: ' || bid);
+        END LOOP;
+    ELSE
+        commit_log('execute_active_ruleblocks','','Exiting with NULL Ruleblocks');
+    END IF;
+    
+EXCEPTION
+    WHEN OTHERS
+        THEN 
+        commit_log('execute_active_ruleblocks',bid,'Error:');
+        commit_log('execute_active_ruleblocks',bid,'FAILED');
+        DBMS_OUTPUT.put_line('FAILED::' || bid || ' and errors logged to rman_ruleblocks_log !');
+END execute_active_ruleblocks;
+
+
+
+
 procedure commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2)
-as
+is
+    msg     varchar2(100):=log_msg;
+    PRAGMA AUTONOMOUS_TRANSACTION;
 begin
-    insert into rman_ruleblocks_log(moduleid,blockid,log_msg,log_time) values (moduleid, blockid,log_msg,current_timestamp);
+    
+    IF msg='Error:' THEN
+        msg:=msg || dbms_utility.format_error_stack;
+    END IF;
+    
+    insert into rman_ruleblocks_log(moduleid,blockid,log_msg,log_time) values (moduleid, blockid,msg,current_timestamp);
+    COMMIT;
 end commit_log;
 
 END;

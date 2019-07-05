@@ -38,9 +38,10 @@ CREATE TABLE rman_ruleblocks
     target_table        VARCHAR2(100),
     environment         VARCHAR2(30),
     rule_owner          VARCHAR2(30),
-    is_active           NUMBER(1,0),
+    is_active           NUMBER(1,0) DEFAULT 0,
     def_exit_prop       VARCHAR2(30),
     def_predicate       VARCHAR2(100),
+    exec_order          NUMBER DEFAULT 1,
     CONSTRAINT pk_ruleblocks PRIMARY KEY(blockid)
 );
 /
