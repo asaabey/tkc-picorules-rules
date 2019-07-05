@@ -217,6 +217,44 @@ begin
     return ret;
 end transform_att_imaging;
 
+
+function transform_h2_cvra(txt_in varchar2) return varchar2
+as
+ret integer;
+/*
+
+High Risk: >15%	11
+High Risk: >=30%	1
+High Risk: 25-29%	1
+High Risk: 20-24%	2
+High Risk: 16-19%	1
+CVR Status : High Risk	17555
+
+Moderate Risk: 10-15%	8
+CVR Status : Mod Risk	7001
+
+CVR Status : Low Risk	36431
+Low Risk: 5-9%	7
+Low Risk: <5%	2
+
+Unknown Risk	1
+*/
+begin
+    case 
+    
+    when txt_in in ('CVR Status : High Risk','High Risk: 16-19%','High Risk: 20-24%','High Risk: 25-29%','High Risk: >=30%','High Risk: >15%') then ret:=3;
+    
+    when txt_in in ('Moderate Risk: 10-15%','CVR Status : Mod Risk') then ret:=2;
+
+    when txt_in in ('Low Risk: 5-9%','Low Risk: <5%','CVR Status : Low Risk') then ret:=1;
+    
+    
+    else ret:=0;
+    end case;
+    
+    return ret;
+end transform_h2_cvra;
+
 END;
 /
 
