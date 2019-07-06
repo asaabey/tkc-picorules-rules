@@ -117,7 +117,7 @@ BEGIN
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.is_active:=1 ;
-    rb.def_exit_prop:='kfre4v';
+    rb.def_exit_prop:='kfre4v_ap';
     rb.def_predicate:='>0';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
@@ -131,9 +131,9 @@ BEGIN
         ckd => rout_ckd.ckd.val.bind();
         
         /*  Gather variables */
-        dob => vw_patient_reg_dmg.dmg_dob.dt.max();
+        dob => eadv.dmg_dob.dt.max();
         
-        male => vw_patient_reg_dmg.dmg_gender.val.max();
+        male => eadv.dmg_gender.val.max();
         
         egfr_lv => eadv.lab_bld_egfr_c.val.last();
         

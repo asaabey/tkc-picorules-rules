@@ -228,9 +228,14 @@ Change Log
     
     PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) ;
     
-    PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER);
+    PROCEDURE compile_ruleblock(bid_in IN varchar2);
     
-    PROCEDURE execute_active_ruleblocks;
+    PROCEDURE compile_active_ruleblocks;
+    
+    
+    PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER,recompile IN PLS_INTEGER);
+    
+    PROCEDURE execute_active_ruleblocks(recompile IN NUMBER);
     
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
 END;
@@ -497,7 +502,7 @@ PROCEDURE get_composite_sql (cmpstat OUT NVARCHAR2) IS
 BEGIN
     SELECT ID, where_clause, from_clause, select_clause, groupby_clause,varid, is_sub, agg_func,func_param
     BULK COLLECT INTO rmanobj
-    FROM rman_stack;
+    FROM rman_stack ORDER BY ID;
     
     cmpstat := 'WITH ' ||  get_cte_name(0) || ' AS (SELECT ' || entity_id_col || ' FROM EADV GROUP BY ' || entity_id_col || '),';
 
@@ -654,9 +659,7 @@ BEGIN
                 from_clause :=from_clause || left_tbl_name; 
             END IF;
             
---EXCEPTION
---    WHEN OTHERS THEN
---    DBMS_OUTPUT.PUT_LINE('BUILD ASSN VAR FAILED ');
+
 
 END build_assn_var;
 
@@ -1894,6 +1897,9 @@ BEGIN
 
 END exec_dsql_dstore_singlecol;
 
+
+
+
 PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) 
 IS
     status              PLS_INTEGER;
@@ -1918,7 +1924,8 @@ BEGIN
     
    
 END exec_ndsql;
-PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER)
+
+PROCEDURE compile_ruleblock(bid_in IN varchar2)
 IS   
     strsql      CLOB;
     t0          INTEGER:=dbms_utility.get_time;
@@ -1931,10 +1938,11 @@ IS
 
 BEGIN
    
-    commit_log('Execute ruleblock',bid_in,'compiling');
+    commit_log('Compile ruleblock',bid_in,'compiling');
     DELETE FROM rman_rpipe;
     DELETE FROM rman_stack;
     
+    vstack:=vstack_empty;
     
     rman_pckg.parse_ruleblocks(bid_in);
     
@@ -1944,20 +1952,8 @@ BEGIN
     
     SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid_in;
    
-    commit_log('Execute ruleblock',rb.blockid,'initialised');
+    commit_log('Compile ruleblock',rb.blockid,'compiled to sql');
     
-   
-    IF create_wide_tbl=1 THEN  
-        commit_log('Execute ruleblock',rb.blockid,'exec_ndsql');
-        rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
-    END IF;
-    
-    IF push_to_long_tbl=1 THEN  
-        commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore');
-        rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
-    END IF;
-    
-    commit_log('Execute ruleblock',rb.blockid,'Succeded');
     
 EXCEPTION
     WHEN OTHERS
@@ -1966,9 +1962,98 @@ EXCEPTION
             dbms_output.put_line(dbms_utility.format_error_stack);
             RAISE;
 
+END compile_ruleblock;
+
+PROCEDURE compile_active_ruleblocks
+IS      
+    rbs rman_ruleblocks_type;
+    bid     varchar2(100);
+
+
+BEGIN
+    commit_log('compile_active_ruleblocks','','Started');
+    SELECT * BULK COLLECT INTO rbs 
+    FROM rman_ruleblocks WHERE IS_ACTIVE=1 ORDER BY exec_order;
+    
+    IF rbs.COUNT>0 THEN 
+        commit_log('compile_active_ruleblocks','',rbs.COUNT || ' Ruleblocks added to stack');
+    
+        FOR i IN rbs.FIRST..rbs.LAST LOOP
+            bid:=rbs(i).blockid;
+            compile_ruleblock(bid);
+            DBMS_OUTPUT.put_line('rb: ' || bid);
+        END LOOP;
+    ELSE
+        commit_log('compile_active_ruleblocks','','Exiting with NULL Ruleblocks');
+    END IF;
+    
+    
+    
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
+
+END compile_active_ruleblocks;
+
+PROCEDURE execute_ruleblock(
+    bid_in              IN varchar2, 
+    create_wide_tbl     IN PLS_INTEGER, 
+    push_to_long_tbl    IN PLS_INTEGER,
+    recompile           IN PLS_INTEGER
+)
+IS   
+    strsql      CLOB;
+    t0          INTEGER:=dbms_utility.get_time;
+    
+    
+    rb          RMAN_RULEBLOCKS%ROWTYPE;
+    
+    bid         RMAN_RULEBLOCKS.blockid%TYPE;
+
+
+BEGIN
+
+    IF recompile=1 THEN
+        compile_ruleblock(bid_in);
+    END IF;
+    
+    
+    SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid_in;
+   
+    commit_log('Execute ruleblock',rb.blockid,'initialised');
+    
+    --SAVEPOINT dsql;
+    
+    IF create_wide_tbl=1 THEN  
+        commit_log('Execute ruleblock',rb.blockid,'exec_ndsql');
+        rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
+    END IF;
+    
+--    SAVEPOINT dsql;
+    COMMIT;
+    
+    IF push_to_long_tbl=1 THEN  
+        commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore');
+        rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
+    END IF;
+    
+    COMMIT;
+    commit_log('Execute ruleblock',rb.blockid,'Succeded');
+    
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+--            ROLLBACK TO dsql;
+            RAISE;
+
 END execute_ruleblock;
 
-PROCEDURE execute_active_ruleblocks
+PROCEDURE execute_active_ruleblocks(recompile IN NUMBER)
 IS
     rbs rman_ruleblocks_type;
     bid     varchar2(100);
@@ -1982,7 +2067,10 @@ BEGIN
     
         FOR i IN rbs.FIRST..rbs.LAST LOOP
             bid:=rbs(i).blockid;
-            execute_ruleblock(bid,1,0);
+            IF recompile=1 THEN
+                compile_ruleblock(bid);
+            END IF;
+            execute_ruleblock(bid,1,1,recompile);
             DBMS_OUTPUT.put_line('rb: ' || bid);
         END LOOP;
     ELSE

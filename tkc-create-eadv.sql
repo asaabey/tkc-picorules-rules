@@ -11,10 +11,11 @@ CREATE TABLE EADV
 DROP INDEX eadv_att_idx;
 DROP INDEX eadv_eid_idx;
 
-CREATE INDEX eadv_att_idx ON EADV(att) compute statistics ;
-CREATE INDEX eadv_eid_idx ON EADV(eid) compute statistics;
+
+
+/*  Valid for XE 18c and 12.1 EE*/
+CREATE BITMAP INDEX eadv_att_idx ON EADV(att) compute statistics ;
+CREATE BITMAP INDEX eadv_eid_idx ON EADV(eid) compute statistics;
 
 ANALYZE TABLE EADV COMPUTE STATISTICS;
 
-ALTER INDEX eadv_att_idx rebuild;
-ALTER INDEX eadv_eid_idx rebuild;

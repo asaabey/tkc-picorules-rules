@@ -285,7 +285,7 @@ BEGIN
     rb.target_table:='rout_' || rb.blockid;
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=1 ;
     rb.def_exit_prop:='careplan';
     rb.def_predicate:='>0';
     
