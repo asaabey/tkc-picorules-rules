@@ -65,8 +65,8 @@ BEGIN
 
         /*  External bindings    */
         
+        rrt0 => rout_rrt.rrt.val.bind();
         
-        rrt0 => eadv2.rrt_rrt.val.last();
                 
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
@@ -225,9 +225,9 @@ BEGIN
      /* External bindings */ 
      
      
-     dm => eadv2.cd_dm_dm.val.last(); 
-     htn => eadv2.cd_htn_htn.val.last(); 
-     ckd => eadv2.ckd_ckd.val.last();  
+     dm => rout_cd_dm.dm.val.bind(); 
+     htn => rout_cd_htn.htn.val.bind();
+     ckd => rout_ckd.ckd.val.bind();
      
      
     
@@ -281,7 +281,8 @@ BEGIN
 
         /*  External bindings    */
                
-        ckd => eadv2.ckd_ckd.val.last();  
+        ckd => rout_ckd.ckd.val.bind();       
+          
         enc_n => eadv.enc_op_renal.dt.count();
         enc_ld => eadv.enc_op_renal.dt.max();
         enc_fd => eadv.enc_op_renal.dt.min();
@@ -332,7 +333,7 @@ BEGIN
     rb.target_table:='rout_ckd_diagnostics';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='ckd_dx';
     rb.def_predicate:='>0';
     
@@ -345,7 +346,8 @@ BEGIN
 
         /*  External bindings    */
       
-        ckd => eadv2.ckd_ckd.val.last();  
+        
+        ckd => rout_ckd.ckd.val.bind();
         
         acr_lv => eadv.lab_ua_acr.val.last();
         
@@ -437,7 +439,8 @@ BEGIN
         /* Rule block to determine diagnostics */
 
         /*  External bindings    */
-        ckd => eadv2.ckd_ckd.val.last();  
+        
+        ckd => rout_ckd.ckd.val.bind(); 
         
         hb_lv => eadv.lab_bld_hb.val.last();
         hb_ld => eadv.lab_bld_hb.dt.max();

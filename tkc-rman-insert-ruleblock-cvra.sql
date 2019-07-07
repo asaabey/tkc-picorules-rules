@@ -31,17 +31,12 @@ BEGIN
         /*  Framingham equation*/
         
         /*  External bindings*/
-        /*
+        
         ckd0 => rout_ckd.ckd.val.bind();
         dm => rout_cd_dm.dm.val.bind();
         cp_hicvr => rout_careplan.cp_hicvr.val.bind();
-        */
-        ckd0 => eadv2.ckd_ckd.val.last();  
-        dm => eadv2.cd_dm_dm.val.last(); 
         
-        cp_l => eadv.careplan_h9_v1.val.lastdv();
         
-        cp_hicvr : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-8,1))},{=>0};
         
         /*  Gather variables */
         
@@ -136,10 +131,8 @@ BEGIN
         /*  KFRE */
         
         /*  External bindings*/
-        /*
+        
         ckd => rout_ckd.ckd.val.bind();
-        */
-        ckd0 => eadv2.ckd_ckd.val.last();
         
         /*  Gather variables */
         dob => eadv.dmg_dob.dt.max();
@@ -195,18 +188,15 @@ BEGIN
         /*  PCD Traffic light report */
         
         /*  External bindings*/
-        /*
+        
         ckd => rout_ckd.ckd.val.bind();
         
         dm => rout_cd_dm.dm.val.bind();
         
         cvra_calc => rout_cvra.cvra.val.bind();
-        */
         
         
-        ckd => eadv2.ckd_ckd.val.last();  
-        dm => eadv2.cd_dm_dm.val.last(); 
-        cvra_calc => eadv2.cvra_cvra.val.last();
+        
         
         /*  Gather variables */
         dob => eadv.dmg_dob.dt.max();

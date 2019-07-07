@@ -40,7 +40,7 @@ DROP INDEX rman_rpt_templates_ruleblockid;
 CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
 /
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','alert_tg4620','tg4620_1_1',304620,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','alert_tg4620','tg4620',304620,'dev','tkc',TO_DATE(SYSDATE),
     '
     Alert : Unmanaged advanced CKD with rapid progression (Trigger 4620)
     --------------------------------------------------------------------
@@ -49,7 +49,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','alert_tg4610','tg4610_1_1',304610,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','alert_tg4610','tg4610',304610,'dev','tkc',TO_DATE(SYSDATE),
     '
     Alert : Unmanaged possible early CKD with rapid progression (Trigger 4610)
     --------------------------------------------------------------------------
@@ -60,7 +60,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_dm_syn_1','cd_dm_2',602100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Diabetes rubric
     -------------------
@@ -82,7 +82,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_htn_syn_1','cd_htn_2',603100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_htn_syn_1','cd_htn',603100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Hypertension rubric
     -------------------
@@ -105,7 +105,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_htn_footnote_1','cd_htn_2',801100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_htn_footnote_1','cd_htn',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <iq_tier>Note [3.1] This is based on <iq_sbp></iq_sbp> blood pressure readings within the last 2 years</iq_tier>
     <bp_control>Note [3.3] Based on time in therapeutic range (TITR)</bp_control>
@@ -113,7 +113,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_syn_1','ckd_2_1',601100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_syn_1','ckd',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
     CKD rubric
     ----------
@@ -131,14 +131,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_cause_syn_1','ckd_cause_2_1',601101,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
     '
     <aet_multiple=1>Multiple aetiology is suggested by presence of </aet_multiple=1><aet_dm=1>diabetes mellitus </aet_dm=1><aet_htn=1>,hypertension </aet_htn=1><aet_gn_ln=1>,lupus nephritis </aet_gn_ln=1><aet_gn_x=1>,glomerulopathy NOS</aet_gn_x=1>
     <aet_multiple=0>The likely cause is <aet_dm>diabetic kidney disease (DKD)</aet_dm><aet_htn>,hypertensive kidney disease</aet_htn><aet_gn_ln>,lupus nephritis</aet_gn_ln><aet_gn_x>,glomerulopathy NOS</aet_gn_x></aet_multiple=0>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_recm_1','ckd_2_1',701100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_recm_1','ckd',701100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <dx_ckd_diff>Recommendation [1.2] Update diagnosis to CKD stage <ckd_stage></ckd_stage></dx_ckd_diff>
     <egfr_outdated>Recommendation [1.3] Repeat renal function tests.</egfr_outdated>
@@ -146,7 +146,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_footnote_1','ckd_2_1',801100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_footnote_1','ckd',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <egfr_single>Note [1.1] This is based on a single egfr value on <egfrld></egfrld></egfr_single>
     <egfr_multiple>Note [1.1] This is based on <iq_egfr></iq_egfr> egfr values between <egfrfd></egfrfd> and <egfrld></egfrld></egfr_multiple>
@@ -162,14 +162,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001_1','cd_htn_footnote_1_1','cd_htn_2',801100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001_1','cd_htn_footnote_1_1','cd_htn',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Test msg
 
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_cvra_syn_1','cvra_1_1',604100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_cvra_syn_1','cvra',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Cardiovascular risk (CVR) rubric
     --------------------------------
@@ -179,7 +179,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_cvra_rec_1','cvra_1_1',704100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_cvra_rec_1','cvra',704100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <cvra=3><cp_hicvr=0>Recommendation [4.1]  Update care plan to include High CVR </cp_hicvr=0></cvra=3>
     <cvra=3><smoke0=30>Recommendation [4.2]  Given high cvr status the smoking cessation is strongly advised </smoke0=30></cvra=3>
@@ -188,13 +188,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_cvra_footnote_1','cvra_1_1',804100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_cvra_footnote_1','cvra',804100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <risk_high_ovr=0>Note [4.1] The Framigham risk equation was used as per heart foundation guidelines. The CARPA 7th STM uses the same methodology</risk_high_ovr=0>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_journey_1','ckd_journey_2_1',601200,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_journey_1','ckd_journey',601200,'dev','tkc',TO_DATE(SYSDATE),
     '
     CKD : Renal services engagement rubric
     --------------------------------------
@@ -210,7 +210,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_dx_1','ckd_diagnostics_2_1',601300,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_dx_1','ckd_diagnostics',601300,'dev','tkc',TO_DATE(SYSDATE),
     '
     CKD : Diagnostics rubric
     ------------------------
@@ -227,7 +227,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_ckd_compx_1','ckd_complications_2_1',601400,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_ckd_compx_1','ckd_complications',601400,'dev','tkc',TO_DATE(SYSDATE),
     '
     CKD : Complications rubric
     --------------------------

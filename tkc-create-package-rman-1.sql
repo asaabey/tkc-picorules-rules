@@ -134,6 +134,7 @@ Change Log
 05/07/2019  Added execute_active_ruleblocks
 05/07/2019  Added Exception handling 
 07/07/2019  Added Logging
+08/07/2019  Performance boosts using rout tables
 
 */
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
@@ -145,11 +146,16 @@ Change Log
     TYPE vstack_type IS TABLE OF PLS_INTEGER INDEX BY VARCHAR2(100);
     vstack          vstack_type;
     vstack_empty    vstack_type;
+    
     TYPE vstack_func_type IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
     vstack_func      vstack_func_type;
+    
     TYPE vstack_func_param_type IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
     vstack_func_param      vstack_func_param_type;
     
+    TYPE tstack_type IS TABLE OF VARCHAR2(30);
+    tstack          tstack_type:=tstack_type();
+    tstack_empty    tstack_type:=tstack_type();
     
     cmpstat NVARCHAR2(4000);
     
@@ -239,6 +245,8 @@ Change Log
     PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER,push_to_long_tbl2 IN PLS_INTEGER,recompile IN PLS_INTEGER);
     
     PROCEDURE execute_active_ruleblocks(recompile IN NUMBER);
+    
+    PROCEDURE drop_rout_tables;
     
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
 END;
@@ -1575,7 +1583,7 @@ BEGIN
     status:=dbms_sql.EXECUTE(select_cursor);
     
     --Binding
-    insert_tbl_sql_str:='BEGIN' || chr(13);
+--    insert_tbl_sql_str:='BEGIN' || chr(13);
     
     --for each row loop
     LOOP
@@ -1607,12 +1615,17 @@ BEGIN
                             dt :='TO_DATE(''' || sysdate || ''')';
                             
                                             
-                            insert_tbl_sql_str := insert_tbl_sql_str || ' INSERT INTO ' || tbl_name || '(eid, att, dt, val) VALUES('
+--                            insert_tbl_sql_str := insert_tbl_sql_str || ' INSERT INTO ' || tbl_name || '(eid, att, dt, val) VALUES('
+--                                            || TO_CHAR(row_eid) || ', ''' || att ||''','
+--                                            || dt || ',' 
+--                                            || TO_CHAR(typ02_val) 
+--                                            || ');' || chr(13);                
+
+                            insert_tbl_sql_str :=  ' INSERT INTO ' || tbl_name || '(eid, att, dt, val) VALUES('
                                             || TO_CHAR(row_eid) || ', ''' || att ||''','
                                             || dt || ',' 
                                             || TO_CHAR(typ02_val) 
-                                            || ');' || chr(13);                
-
+                                            || ');' || chr(13);  
                         END iF;
                 ELSE NULL;        
 
@@ -1624,15 +1637,16 @@ BEGIN
         
         END LOOP;
         
-          
+            dbms_sql.parse(insert_cursor,insert_tbl_sql_str,dbms_sql.native);
+            status:=dbms_sql.execute(insert_cursor);
     END LOOP;
     
-    insert_tbl_sql_str := insert_tbl_sql_str || 'COMMIT;END;' || chr(13);
+--    insert_tbl_sql_str := insert_tbl_sql_str || 'COMMIT;END;' || chr(13);
     
     
     
-    dbms_sql.parse(insert_cursor,insert_tbl_sql_str,dbms_sql.native);
-    status:=dbms_sql.execute(insert_cursor);
+--    dbms_sql.parse(insert_cursor,insert_tbl_sql_str,dbms_sql.native);
+--    status:=dbms_sql.execute(insert_cursor);
         
     dbms_sql.close_cursor(insert_cursor);
     dbms_sql.close_cursor(select_cursor);
@@ -2069,7 +2083,10 @@ BEGIN
     
     EXECUTE IMMEDIATE create_tbl_sql_str;
     
---    DBMS_OUTPUT.PUT_LINE('SQL Block ->' || CHR(10) || create_tbl_sql_str);
+    tstack.EXTEND;
+    
+    tstack(tstack.COUNT):=tbl_name;
+
     
    
 END exec_ndsql;
@@ -2187,15 +2204,19 @@ BEGIN
     
     IF push_to_long_tbl=1 THEN  
         commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore');
-        rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
+        
+--        rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
+        
+        rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,'SELECT * FROM ' || rb.target_table ,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
     END IF;
     
     COMMIT;
     
-    IF push_to_long_tbl2=1 THEN  
-        commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore2');
-        rman_pckg.exec_dsql_dstore2(rb.blockid,rb.sqlblock,'eadv2', rb.def_exit_prop,rb.def_predicate) ;
-    END IF;
+    -- Needs more work, do not use
+--    IF push_to_long_tbl2=1 THEN  
+--        commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore2');
+--        rman_pckg.exec_dsql_dstore2(rb.blockid,rb.sqlblock,'eadv2', rb.def_exit_prop,rb.def_predicate) ;
+--    END IF;
     
     COMMIT;
     commit_log('Execute ruleblock',rb.blockid,'Succeded');
@@ -2205,7 +2226,7 @@ EXCEPTION
         
         THEN 
             dbms_output.put_line(dbms_utility.format_error_stack);
---            ROLLBACK TO dsql;
+
             RAISE;
 
 END execute_ruleblock;
@@ -2215,7 +2236,10 @@ IS
     rbs rman_ruleblocks_type;
     bid     varchar2(100);
 BEGIN
+    tstack:=tstack_empty;
+    
     commit_log('execute_active_ruleblocks','','Started');
+    
     SELECT * BULK COLLECT INTO rbs 
     FROM rman_ruleblocks WHERE IS_ACTIVE=2 ORDER BY exec_order;
     
@@ -2227,9 +2251,11 @@ BEGIN
             IF recompile=1 THEN
                 compile_ruleblock(bid);
             END IF;
-            execute_ruleblock(bid,0,0,1,recompile);
+            execute_ruleblock(bid,1,1,0,recompile);
             DBMS_OUTPUT.put_line('rb: ' || bid);
         END LOOP;
+        
+        drop_rout_tables;
     ELSE
         commit_log('execute_active_ruleblocks','','Exiting with NULL Ruleblocks');
     END IF;
@@ -2243,7 +2269,23 @@ EXCEPTION
 END execute_active_ruleblocks;
 
 
+procedure drop_rout_tables is
+status              PLS_INTEGER;
+tbl_exists_val      PLS_INTEGER;
+    
+BEGIN
 
+        FOR i IN tstack.FIRST..tstack.LAST LOOP
+            dbms_output.put_line('ROUT TABLE->' || tstack(i));
+            
+             --DROP CREATE Table
+            SELECT COUNT(*) INTO tbl_exists_val FROM user_tables WHERE table_name = UPPER(tstack(i));
+            IF tbl_exists_val>0 THEN
+                EXECUTE IMMEDIATE 'DROP TABLE ' || tstack(i) ;
+            END IF;
+                    
+        END LOOP;
+end drop_rout_tables;
 
 procedure commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2)
 is
@@ -2258,6 +2300,8 @@ begin
     insert into rman_ruleblocks_log(moduleid,blockid,log_msg,log_time) values (moduleid, blockid,msg,current_timestamp);
     COMMIT;
 end commit_log;
+
+
 
 END;
 
