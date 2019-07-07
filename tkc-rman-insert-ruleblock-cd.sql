@@ -55,11 +55,11 @@ BEGIN
     
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='cd_dm_2';
+    rb.blockid:='cd_dm';
     rb.target_table:='rout_cd_dm';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='dm';
     rb.def_predicate:='>0';
     
@@ -70,11 +70,14 @@ BEGIN
     
         /* Algorithm to detect chronic disease entities */
         
-        /*  External bindings*/
         
-        cp_dm => rout_careplan.cp_dm.val.bind();
+        cp_lv => eadv.careplan_h9_v1.val.last();
         
-        cp_dm_ld => rout_careplan.cp_ld.val.bind();
+        cp_ld => eadv.careplan_h9_v1.dt.max();
+        
+        cp_dm : {cp_lv is not null => to_number(substr(to_char(cp_lv),-6,1))},{=>0};
+        
+        cp_dm_ld : {cp_dm>0 => cp_ld};
         
         /*  Calculate iq    */
         iq_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(dt>sysdate-730);
@@ -183,11 +186,11 @@ BEGIN
     
      -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='cd_htn_2';
+    rb.blockid:='cd_htn';
     rb.target_table:='rout_cd_htn';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='htn';
     rb.def_predicate:='>0';
     
@@ -279,13 +282,14 @@ BEGIN
     
     -- END OF RULEBLOCK --
     
-    -- BEGINNING OF RULEBLOCK --
+
+   -- BEGINNING OF RULEBLOCK --
     
     rb.blockid:='careplan';
     rb.target_table:='rout_' || rb.blockid;
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='careplan';
     rb.def_predicate:='>0';
     
@@ -295,20 +299,18 @@ BEGIN
     rb.picoruleblock:='
         /*  Careplan analyser */
         
-        cp_lv => eadv.careplan_h9_v1.val.last();
         
-        cp_ld => eadv.careplan_h9_v1.dt.max();
+        cp_l => eadv.careplan_h9_v1.val.lastdv();
         
+        cp_cs : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-1,1))},{=>0};
         
-        cp_cs : {cp_lv is not null => to_number(substr(to_char(cp_lv),-1,1))},{=>0};
+        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
-        cp_ckd : {cp_lv is not null => to_number(substr(to_char(cp_lv),-5,1))},{=>0};
+        cp_dm : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-6,1))},{=>0};
         
-        cp_dm : {cp_lv is not null => to_number(substr(to_char(cp_lv),-6,1))},{=>0};
+        cp_cvd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-7,1))},{=>0};
         
-        cp_cvd : {cp_lv is not null => to_number(substr(to_char(cp_lv),-7,1))},{=>0};
-        
-        cp_hicvr : {cp_lv is not null => to_number(substr(to_char(cp_lv),-8,1))},{=>0};
+        cp_hicvr : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-8,1))},{=>0};
         
         careplan : {1=1 => cp_cs};
         

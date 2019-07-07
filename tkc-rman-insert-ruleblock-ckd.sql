@@ -14,11 +14,11 @@ BEGIN
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='rrt_2_1';
+    rb.blockid:='rrt';
     rb.target_table:='rout_rrt';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='rrt';
     rb.def_predicate:='>0';
     
@@ -48,11 +48,11 @@ BEGIN
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_2_1';
+    rb.blockid:='ckd';
     rb.target_table:='rout_ckd';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='ckd';
     rb.def_predicate:='>0';
     
@@ -64,10 +64,15 @@ BEGIN
         /* Rule block to stage CKD */
 
         /*  External bindings    */
-        rrt => rout_rrt.rrt.val.bind();
-        cp_ckd => rout_careplan.cp_ckd.val.bind();
         
-        cp_ckd_ld => rout_careplan.cp_ld.val.bind();
+        
+        rrt0 => eadv2.rrt_rrt.val.last();
+                
+        cp_l => eadv.careplan_h9_v1.val.lastdv();
+        
+        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
+        
+        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
         /* calculate dx information quantity*/
         iq_uacr => eadv.lab_ua_acr.val.count(0);
@@ -131,6 +136,8 @@ BEGIN
         
                 
         /*  Apply KDIGO 2012 staging    */
+        
+        rrt : {rrt0 is null =>0},{=>rrt0};
         
         cga_g:  {egfrlv>=90 AND rrt=0 => `G1`},
                 {egfrlv<90 AND egfrlv>=60  AND rrt=0 => `G2`},
@@ -201,11 +208,11 @@ BEGIN
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_cause_2_1';
+    rb.blockid:='ckd_cause';
     rb.target_table:='rout_ckd_cause';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='aet_code';
     rb.def_predicate:='>0';
     
@@ -216,9 +223,14 @@ BEGIN
      /* Rule block to determine causality for CKD */ 
      
      /* External bindings */ 
-     dm => rout_cd_dm.dm.val.bind(); 
-     htn => rout_cd_htn.htn.val.bind(); 
-     ckd => rout_ckd.ckd.val.bind(); 
+     
+     
+     dm => eadv2.cd_dm_dm.val.last(); 
+     htn => eadv2.cd_htn_htn.val.last(); 
+     ckd => eadv2.ckd_ckd.val.last();  
+     
+     
+    
      
      /* calculate dx information quantity 
      iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-730); 
@@ -252,11 +264,11 @@ BEGIN
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_journey_2_1';
+    rb.blockid:='ckd_journey';
     rb.target_table:='rout_ckd_journey';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='ckdj';
     rb.def_predicate:='>0';
     
@@ -268,18 +280,20 @@ BEGIN
         /* Rule block to determine journey of CKD */
 
         /*  External bindings    */
-        ckd => rout_ckd.ckd.val.bind();
-        cp_ckd => rout_careplan.cp_ckd.val.bind();
+               
+        ckd => eadv2.ckd_ckd.val.last();  
+        enc_n => eadv.enc_op_renal.dt.count();
+        enc_ld => eadv.enc_op_renal.dt.max();
+        enc_fd => eadv.enc_op_renal.dt.min();
+        avf => eadv.caresys_3450901.dt.max();
         
-        enc_ld => rout_ckd.enc_ld.val.bind();
+        cp_l => eadv.careplan_h9_v1.val.lastdv();
         
-        enc_fd => rout_ckd.enc_fd.val.bind();
+        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
-        enc_n => rout_ckd.enc_n.val.bind();
+        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
-        avf_ld => rout_ckd.avf.val.bind();
         
-        cp_ckd_ld => rout_careplan.cp_ld.val.bind();
         
         /*  Nursing and allied health encounters    */
         
@@ -314,7 +328,7 @@ BEGIN
      -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_diagnostics_2_1';
+    rb.blockid:='ckd_diagnostics';
     rb.target_table:='rout_ckd_diagnostics';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
@@ -330,9 +344,10 @@ BEGIN
         /* Rule block to determine diagnostics */
 
         /*  External bindings    */
-        ckd => rout_ckd.ckd.val.bind();
-        acr_lv => rout_ckd.acrlv.val.bind();
+      
+        ckd => eadv2.ckd_ckd.val.last();  
         
+        acr_lv => eadv.lab_ua_acr.val.last();
         
         
         ua_rbc_lv => eadv.[lab_ua_rbc,lab_ua_poc_rbc].val.last();
@@ -406,11 +421,11 @@ BEGIN
     -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_complications_2_1';
+    rb.blockid:='ckd_complications';
     rb.target_table:='rout_ckd_complications';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='ckd_compx';
     rb.def_predicate:='>0';
     
@@ -422,8 +437,7 @@ BEGIN
         /* Rule block to determine diagnostics */
 
         /*  External bindings    */
-        ckd => rout_ckd.ckd.val.bind();
-        
+        ckd => eadv2.ckd_ckd.val.last();  
         
         hb_lv => eadv.lab_bld_hb.val.last();
         hb_ld => eadv.lab_bld_hb.dt.max();

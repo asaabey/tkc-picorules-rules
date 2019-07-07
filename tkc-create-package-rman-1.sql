@@ -133,6 +133,7 @@ Change Log
 23/06/2019  Added execute_ruleblock
 05/07/2019  Added execute_active_ruleblocks
 05/07/2019  Added Exception handling 
+07/07/2019  Added Logging
 
 */
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
@@ -222,6 +223,8 @@ Change Log
     
     PROCEDURE exec_dsql(sqlstmt clob,tbl_name varchar2) ;
     
+    PROCEDURE exec_dsql_dstore2(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2);
+    
     PROCEDURE exec_dsql_dstore_multicol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2); 
     
     PROCEDURE exec_dsql_dstore_singlecol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2);
@@ -233,7 +236,7 @@ Change Log
     PROCEDURE compile_active_ruleblocks;
     
     
-    PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER,recompile IN PLS_INTEGER);
+    PROCEDURE execute_ruleblock(bid_in IN varchar2, create_wide_tbl IN PLS_INTEGER, push_to_long_tbl IN PLS_INTEGER,push_to_long_tbl2 IN PLS_INTEGER,recompile IN PLS_INTEGER);
     
     PROCEDURE execute_active_ruleblocks(recompile IN NUMBER);
     
@@ -453,7 +456,7 @@ BEGIN
     IF INSTR(txtout,'.')>0  OR INSTR(txtout,' ')>0 THEN
         txtout:=TRANSLATE(txtout,'. ','_');
     END IF;
-    RETURN txtout;
+    RETURN lower(txtout);
 END;
 
 FUNCTION is_tempvar(txtin varchar2) RETURN BOOLEAN
@@ -809,6 +812,9 @@ as
 composition         clob; 
 --compositionid_in    varchar2(100):=nlc_id;
 compositionid_in    varchar2(100):='neph001';
+eid_not_found       exception;
+PRAGMA  EXCEPTION_INIT(eid_not_found,100);
+
 begin
 with cte1 as (
 SELECT eid, att, dt,rman_pckg.map_to_tmplt(t0.valc,tmp.templatehtml) as body,tmp.placementid
@@ -826,6 +832,14 @@ FROM cte1
 GROUP BY eid;
 
 return composition;
+EXCEPTION  
+    WHEN eid_not_found  THEN
+        dbms_output.put_line('Error: eid not found');
+        RETURN '';
+    WHEN OTHERS THEN
+        commit_log('get_composition_by_eid','','Error:');
+        DBMS_OUTPUT.put_line('FAILED:: and errors logged to rman_ruleblocks_log !');
+        RETURN '';
 
 end get_composition_by_eid;
 
@@ -1488,6 +1502,141 @@ BEGIN
     dbms_sql.close_cursor(select_cursor);
 END exec_dsql;
 
+PROCEDURE exec_dsql_dstore2(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2) 
+IS
+    colCount            PLS_INTEGER;
+    colValue            VARCHAR2(4000);
+    tbl_desc            dbms_sql.desc_tab2;
+    select_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    insert_cursor       PLS_INTEGER:=dbms_sql.open_cursor;
+    status              PLS_INTEGER;
+    fetched_rows        PLS_INTEGER;
+    i                   PLS_INTEGER;
+    
+    
+    typ01_val           VARCHAR2(4000); 
+    typ02_val           NUMBER(15,2);
+    typ12_val           DATE;
+    typ96_val           VARCHAR2(4);
+    typ00_val           VARCHAR2(4000);
+    row_eid             NUMBER(12,0);
+    
+   
+    select_tbl_sql_str  VARCHAR2(32767):=sqlstmt;
+    create_tbl_sql_str  VARCHAR2(4000);
+
+    
+    att                 VARCHAR2(100);
+    dt                  VARCHAR2(30);
+    
+    insert_tbl_sql_str  CLOB;
+    tbl_exists_val      PLS_INTEGER;
+    
+    
+    src_id                 VARCHAR2(32):=blockid;
+        
+BEGIN
+    
+    IF src_id is null then
+        src_id:='undefined';
+    END IF;
+    --analyse query
+    IF disc_col is not null and predicate is not null then
+        select_tbl_sql_str:=select_tbl_sql_str || ' WHERE ' || UPPER(disc_col) || ' ' || predicate;
+    end if;
+    
+        
+    dbms_sql.parse(select_cursor,select_tbl_sql_str,dbms_sql.native);
+    
+    
+    
+    dbms_sql.describe_columns2(select_cursor,colCount,tbl_desc);
+    
+    For I In 1..tbl_desc.Count Loop
+        
+        
+        CASE tbl_desc(i).col_type
+            WHEN 1  THEN --varchar2
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+
+            WHEN 2 THEN --number
+                    dbms_sql.define_column(select_cursor,i,1); 
+
+            WHEN 12 THEN --date
+                    dbms_sql.define_column(select_cursor,i,SYSDATE);
+
+            WHEN 96 THEN --char
+                    dbms_sql.define_column(select_cursor,i,'a',32);
+            ELSE NULL;
+        END CASE;
+    END LOOP;
+
+    
+    status:=dbms_sql.EXECUTE(select_cursor);
+    
+    --Binding
+    insert_tbl_sql_str:='BEGIN' || chr(13);
+    
+    --for each row loop
+    LOOP
+    
+        fetched_rows:=dbms_sql.fetch_rows(select_cursor);
+        EXIT WHEN fetched_rows=0;
+        
+        i:=tbl_desc.FIRST;
+
+        
+
+        --for each col loop
+        WHILE (i IS NOT NULL) LOOP
+        
+        IF lower(tbl_desc(i).col_name)='eid' THEN
+            dbms_sql.column_value(select_cursor,i,row_eid);
+
+        END IF;
+        
+            CASE 
+                                           
+                WHEN tbl_desc(i).col_type=2 and lower(tbl_desc(i).col_name)=lower(disc_col) THEN -- number
+
+                        dbms_sql.column_value(select_cursor,i,typ02_val);
+                        
+                        IF typ02_val IS NOT NULL THEN
+                            
+                            att:=format_bindvar_name(src_id || '_' || tbl_desc(i).col_name);
+                            dt :='TO_DATE(''' || sysdate || ''')';
+                            
+                                            
+                            insert_tbl_sql_str := insert_tbl_sql_str || ' INSERT INTO ' || tbl_name || '(eid, att, dt, val) VALUES('
+                                            || TO_CHAR(row_eid) || ', ''' || att ||''','
+                                            || dt || ',' 
+                                            || TO_CHAR(typ02_val) 
+                                            || ');' || chr(13);                
+
+                        END iF;
+                ELSE NULL;        
+
+            END CASE;
+        i:=tbl_desc.NEXT(i);
+        
+        
+      
+        
+        END LOOP;
+        
+          
+    END LOOP;
+    
+    insert_tbl_sql_str := insert_tbl_sql_str || 'COMMIT;END;' || chr(13);
+    
+    
+    
+    dbms_sql.parse(insert_cursor,insert_tbl_sql_str,dbms_sql.native);
+    status:=dbms_sql.execute(insert_cursor);
+        
+    dbms_sql.close_cursor(insert_cursor);
+    dbms_sql.close_cursor(select_cursor);
+END exec_dsql_dstore2;
 
 PROCEDURE exec_dsql_dstore_multicol(blockid varchar2,sqlstmt clob,tbl_name varchar2,disc_col varchar2, predicate varchar2) 
 IS
@@ -2002,6 +2151,7 @@ PROCEDURE execute_ruleblock(
     bid_in              IN varchar2, 
     create_wide_tbl     IN PLS_INTEGER, 
     push_to_long_tbl    IN PLS_INTEGER,
+    push_to_long_tbl2   IN PLS_INTEGER,
     recompile           IN PLS_INTEGER
 )
 IS   
@@ -2025,19 +2175,26 @@ BEGIN
    
     commit_log('Execute ruleblock',rb.blockid,'initialised');
     
-    --SAVEPOINT dsql;
+    
     
     IF create_wide_tbl=1 THEN  
         commit_log('Execute ruleblock',rb.blockid,'exec_ndsql');
         rman_pckg.exec_ndsql(rb.sqlblock,rb.target_table);
     END IF;
     
---    SAVEPOINT dsql;
+
     COMMIT;
     
     IF push_to_long_tbl=1 THEN  
         commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore');
         rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
+    END IF;
+    
+    COMMIT;
+    
+    IF push_to_long_tbl2=1 THEN  
+        commit_log('Execute ruleblock',rb.blockid,'exec_dsql_dstore2');
+        rman_pckg.exec_dsql_dstore2(rb.blockid,rb.sqlblock,'eadv2', rb.def_exit_prop,rb.def_predicate) ;
     END IF;
     
     COMMIT;
@@ -2060,7 +2217,7 @@ IS
 BEGIN
     commit_log('execute_active_ruleblocks','','Started');
     SELECT * BULK COLLECT INTO rbs 
-    FROM rman_ruleblocks WHERE IS_ACTIVE=1 ORDER BY exec_order;
+    FROM rman_ruleblocks WHERE IS_ACTIVE=2 ORDER BY exec_order;
     
     IF rbs.COUNT>0 THEN 
         commit_log('execute_active_ruleblocks','',rbs.COUNT || ' Ruleblocks added to stack');
@@ -2070,7 +2227,7 @@ BEGIN
             IF recompile=1 THEN
                 compile_ruleblock(bid);
             END IF;
-            execute_ruleblock(bid,1,1,recompile);
+            execute_ruleblock(bid,0,0,1,recompile);
             DBMS_OUTPUT.put_line('rb: ' || bid);
         END LOOP;
     ELSE

@@ -1,6 +1,7 @@
 cd C:\Users\abeya\Documents\Oracle11g\tkc;
 
 @"tkc-create-eadvx.sql";
+@"tkc-create-eadv2.sql";
 @"tkc-create-rman.sql";
 @"tkc-create-rman-rpt-templates.sql";
 @"tkc-create-package-rman-1.sql";

@@ -48,17 +48,13 @@ BEGIN
                 {=>0};
         
         
-        /*  Exclusions */
+        /*  External bindings   */
+        rrt => rout_rrt.
+        
+        
         /*  Exclude rrt */
         
-        hd_dt => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(); 
-        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
-        tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max();
-        hhd_dt => eadv.[icpc_u59j99].dt.max();
         
-        egfr => eadv.lab_bld_egfr.val.last().where(dt>sysdate-365);
-        
-        rrt : {coalesce(hd_dt,pd_dt,tx_dt,hhd_dt) is null=>0},{=>1};
         
         /*  Exclude dm */
         
