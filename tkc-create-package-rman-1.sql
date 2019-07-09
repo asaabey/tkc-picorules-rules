@@ -893,7 +893,12 @@ BEGIN
             
             
             avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-LENGTH(delim)));            
-
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 
 
 END build_assn_var2;
@@ -1192,7 +1197,17 @@ BEGIN
     END CASE; 
     
     END IF;
-      
+EXCEPTION
+    WHEN ude_function_undefined THEN
+        commit_log('build_func_sql_exp_undef',blockid,'Error:');
+            dbms_output.put_line(dbms_utility.format_error_stack);
+       
+    WHEN OTHERS
+        
+        THEN 
+            commit_log('build_func_sql_exp',blockid,'Error:');
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
        
 END build_func_sql_exp;
 
@@ -1279,7 +1294,12 @@ BEGIN
         
        
     END IF;
-    
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 
 END build_cond_sql_exp;
 
@@ -1354,7 +1374,12 @@ BEGIN
         indxtmp := vstack.NEXT(indxtmp); 
     END LOOP; 
     get_composite_sql(sqlout);
-    
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 END parse_rpipe;
 
 PROCEDURE parse_ruleblocks(blockid varchar2) IS
@@ -1392,7 +1417,12 @@ BEGIN
     END LOOP;
 
 --dbms_output.put_line('FUNC-AARAY VSTACK : ' || vstack.COUNT);
-
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 
 END parse_ruleblocks;
 
@@ -2130,10 +2160,10 @@ BEGIN
     
 EXCEPTION
     WHEN OTHERS
-        
         THEN 
-            dbms_output.put_line(dbms_utility.format_error_stack);
-            RAISE;
+        commit_log('compile_ruleblocks',bid_in,'Error:');
+        commit_log('compile_ruleblocks',bid_in,'FAILED');
+        DBMS_OUTPUT.put_line('FAILED::' || bid || ' and errors logged to rman_ruleblocks_log !');
 
 END compile_ruleblock;
 
@@ -2301,7 +2331,7 @@ is
 begin
     
     IF msg='Error:' THEN
-        msg:=msg || dbms_utility.format_error_stack;
+        msg:=substr(msg || dbms_utility.format_error_stack,1,99);
     END IF;
     
     insert into rman_ruleblocks_log(moduleid,blockid,log_msg,log_time) values (moduleid, blockid,msg,current_timestamp);
@@ -2311,8 +2341,7 @@ end commit_log;
 procedure gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2)
 as
     
---    ruleblockid varchar2(100):='rrt';
---    slices_str  varchar2(400):='01012019,01122018,01112018';
+
     slice_tbl   tbl_type;
     obj_tbl     tbl_type;
 

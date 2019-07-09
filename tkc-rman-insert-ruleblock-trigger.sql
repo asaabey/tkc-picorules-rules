@@ -15,11 +15,11 @@ BEGIN
     
  -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='tg4410_1_1';
+    rb.blockid:='tg4410';
     rb.target_table:='rout_tg4410';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='tg4410';
     rb.def_predicate:='>0';
     
@@ -49,18 +49,11 @@ BEGIN
         
         
         /*  External bindings   */
-        rrt => rout_rrt.
-        
-        
-        /*  Exclude rrt */
-        
-        
-        
-        /*  Exclude dm */
-        
-        
-        
+        rrt => rout_rrt.rrt.val.bind();
         dm => rout_cd_dm.dm.val.bind();
+       
+          
+        
         
         /*  Exclude previously diagnosed nephrotic syndromes from coding */
         
@@ -89,32 +82,15 @@ BEGIN
         
         chol1 => eadv.lab_bld_cholesterol_total.val.last(1).where(dt>sysdate-365);
         
-        /*alb_delta(alb1,alb2):{}*/
+        
         
         low_alb : {nvl(alb1,0)<30=>1},{=>0};
         high_chol : {nvl(chol1,0)>7=>1},{=>0};
         
         
                 
-        tg4410 : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 };
+        tg4410 : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 },{=>0};
         
-        
-        pl_para1 : {uacr1>300 and uacr2>300 and uacr_log_delta>-0.1=>1},{=>0};
-        
-        
-        pl_para2:
-                {pl_para1=1 and low_alb=1 and high_chol=0 => 1},
-                {pl_para1=1 and low_alb=1 and high_chol=1 => 2},
-                {=>0};
-        
-        pl_para3 :{pl_para1=1 and iq_tier>=3 => 2},{pl_para1=1 and iq_tier>=2 => 1},{=>0};
-        
-        
-        tg4100_code :
-                    {pl_para1=1 and pl_para2=1 and pl_para3=1 => `de31001.de31011.de31031`},
-                    {pl_para1=1 and pl_para2=2 and pl_para3=1 => `de31001.de31012.de31031`},
-                    {pl_para1=1 and pl_para2=1 and pl_para3=2 => `de31001.de31011.de31032` },
-                    {pl_para1=1 and pl_para2=2 and pl_para3=2 => `de31001.de31012.de31032` };
         
         
     ';
@@ -126,11 +102,11 @@ BEGIN
    
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='tg4420_1_1';
+    rb.blockid:='tg4420';
     rb.target_table:='rout_tg4420';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='tg4420';
     rb.def_predicate:='>0';
     
@@ -200,11 +176,11 @@ BEGIN
    
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='tg4100_1_1';
+    rb.blockid:='tg4100';
     rb.target_table:='rout_tg4100';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='tg4100';
     rb.def_predicate:='>0';
     
@@ -258,7 +234,7 @@ BEGIN
           
           tg4100 : {akin_stage>=2 and aki_outcome>=2 => 1},{=>0};
           
-          tg4100_code : {tg4100=1 => (akin_stage*1000)+(aki_outcome*100)};
+          
                         
           
         
@@ -271,11 +247,11 @@ BEGIN
     
      -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='tg4110_1_1';
+    rb.blockid:='tg4110';
     rb.target_table:='rout_tg4110';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='tg4110';
     rb.def_predicate:='>0';
     
@@ -303,11 +279,11 @@ BEGIN
     
      -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='tg4610_1_1';
+    rb.blockid:='tg4610';
     rb.target_table:='rout_tg4610';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='tg4610';
     rb.def_predicate:='>0';
     
@@ -346,11 +322,11 @@ BEGIN
     
       -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='tg4620_1_1';
+    rb.blockid:='tg4620';
     rb.target_table:='rout_tg4620';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=0 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='tg4620';
     rb.def_predicate:='>0';
     
