@@ -2142,7 +2142,7 @@ IS
 BEGIN
     commit_log('compile_active_ruleblocks','','Started');
     SELECT * BULK COLLECT INTO rbs 
-    FROM rman_ruleblocks WHERE IS_ACTIVE=1 ORDER BY exec_order;
+    FROM rman_ruleblocks WHERE IS_ACTIVE=2 ORDER BY exec_order;
     
     IF rbs.COUNT>0 THEN 
         commit_log('compile_active_ruleblocks','',rbs.COUNT || ' Ruleblocks added to stack');

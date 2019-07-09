@@ -19,7 +19,7 @@ BEGIN
     rb.target_table:='rout_' || 'cvra';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='cvra';
     rb.def_predicate:='>0';
     
@@ -176,7 +176,7 @@ BEGIN
     rb.target_table:='rout_' || 'pcd';
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
-    rb.is_active:=1 ;
+    rb.is_active:=2 ;
     rb.def_exit_prop:='pcd';
     rb.def_predicate:='>0';
     
@@ -208,6 +208,18 @@ BEGIN
         cvra => eadv.asm_cvra.val.lastdv();
         
         tc => eadv.lab_bld_cholesterol_tot.va.lastdv();
+        
+        sbp130 => eadv.obs_bp_systolic.val.last();
+        
+        rx_raas => eadv.[rxnc_c09%].val.last().where(val=1);
+        
+        rx_bb => eadv.[rxnc_c07%].val.last().where(val=1);
+        
+        rx_ccb => eadv.[rxnc_c08%].val.last().where(val=1);
+        
+        rx_htn2 => eadv.[rxnc_c02%].val.last().where(val=1);
+        
+        rx_statin => eadv.[rxnc_c10aa].val.last().where(val=1);
         
         hba => eadv.lab_bld_hba1c.val.lastdv();
         
