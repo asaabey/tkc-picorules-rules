@@ -58,6 +58,20 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ckd_null>Please note the absence of CKD staging as this does not currently fullfill criteria.</ckd_null>
     '
     );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','alert_tg4100','tg4100',304190,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Acute kidney injury in community (Trigger 4100)
+    --------------------------------------------------------------------------
+    Baseline creatinine is estimated to be <cr_base></cr_base> umol/l and the maxima is <cr_max_1y></cr_max_1y> umol/l on <cr_max_ld_1y></cr_max_ld_1y>
+    This is consistent with an acute kidney injury (AKIN stage 2 or above).
+    <aki_outcome=3>There is no resoltion </aki_outcome=3>
+    <aki_outcome=2>There appears to be partial resolution</aki_outcome=2>
+    <aki_outcome=1>There appears to be complete resolution</aki_outcome=1>
+    last recored creatinine is <cr_lv></cr_lv>umol/l on <cr_ld></cr_ld>.
+    '
+    );
+    
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),

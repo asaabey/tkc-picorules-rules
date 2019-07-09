@@ -162,7 +162,7 @@ BEGIN
                     {ua_rbc>100 and ua_leu<40 => 1},    
                     {=>0};
         
-        t4410 : {t4420_code>=2 => 1},{=>0};            
+        tg4420 : {t4420_code>=2 => 1},{=>0};            
         
         
         
@@ -226,7 +226,7 @@ BEGIN
           cr_max_lv_1y_qt : {cr_lv is not null => round(cr_max_1y/cr_lv,1) };
           
           
-          akin_stage : {cr_base_max_1y_qt>2 => 3 },{cr_base_max_1y_qt>1.5 => 2 };
+          akin_stage : {rrt=0 and cr_base_max_1y_qt>2 => 3 },{rrt=0 and cr_base_max_1y_qt>1.5 => 2 },{=>0};
           
           aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
@@ -300,12 +300,16 @@ BEGIN
         
         eb => rout_ckd.egfr_slope2.val.bind();
         
-        egfr_max_v => rout_ckd.egfr_max_v.val.bind();
+        egfr_max_v => rout_ckd.egfr_max_val.val.bind();
         
-        egfr_max_ld => rout_ckd.egfr_max_ld.val.bind();
+        egfr_max_ld => rout_ckd.egfr_max_dt.val.bind();
         
-        egfrld => rout_ckd.egfrld.val.bind();
-        egfrlv => rout_ckd.egfrlv.val.bind();
+        
+        
+        
+        
+        egfrld => rout_ckd.egfr_last_dt.val.bind();
+        egfrlv => rout_ckd.egfr_last_val.val.bind();
         
         ckd_null : { nvl(ckd,0)=0 =>1},{=0};
         
@@ -335,7 +339,8 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate CKD45 10 pa   */
+        /*  Algorithm to generate CKD45 10 pa without AVF   */
+        
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -349,7 +354,7 @@ BEGIN
           
         
           
-        tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 => 1},{=>0};
+        tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null=> 1},{=>0};
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
