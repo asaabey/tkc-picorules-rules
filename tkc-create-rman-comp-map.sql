@@ -7,7 +7,7 @@ CREATE TABLE "RMAN_COMP_MAP"
    ) ;
 
 SET DEFINE OFF;
-Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('CVR5F','Cardiovascular Risk: 5 Year (Framingham)',11,null);
+Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('CVR5F','Cardiovascular Risk: 5 Year (Framingham)',11,'asm_cvra');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('SmokingStatus','Smoking Status',62,null);
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Referral','Referral',60,null);
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Education','CKD Education',22,'enc_op_renal_edu');
@@ -81,13 +81,14 @@ Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Procedure','Procedure',53
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('C3 SerPl-mCnc','Complement C3 in Serum',8,'lab_bld_complement_c3');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('C4 SerPl-mCnc','Complement C4 in Serum',9,'lab_bld_complement_c4');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('MBS','Medical Benefits Scheme',39,null);
-Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Outpatient Episode','Outpatient Episode',47,null);
+Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Outpatient Episode','Outpatient Episode',47,'enc_op_renal');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('DSDNA AB SER-ACNC','DNA double Strand Anti-body [UNITS/VOLUME] in serum',20,'lab_bld_dsdna');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('MYELOPEROXIDASE IGG SER-ACNC','Myeloperoxidase IgG Ab [Units/volume] in Serum',42,'lab_bld_anca_mpo');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('ASO AB SERPL-ACNC','Streptolysin O Ab [Units/volume] in Serum or Plasma',2,'lab_bld_asot');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Nuclear Ab','Nuclear Ab [Titer] in Serum by Immunofluorescence',46,'lab_bld_ana');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('Imaging Episode','Patient has attended an imaging/radiology session',80,'enc_ris_');
 Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('BMI','Body mass index kg/m2',170,'obs_bmi');
+Insert into RMAN_COMP_MAP (KEY,NAME,ID,NCOMP) values ('eGFR KDIGO','eGFR KDIGO',200,'lab_bld_egfr_c');
 --------------------------------------------------------
 --  Constraints for Table RMAN_COMP_MAP
 --------------------------------------------------------

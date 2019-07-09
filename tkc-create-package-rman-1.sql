@@ -249,6 +249,8 @@ Change Log
     PROCEDURE drop_rout_tables;
     
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
+    
+    PROCEDURE gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2);
 END;
 /
 
@@ -2301,7 +2303,180 @@ begin
     COMMIT;
 end commit_log;
 
+procedure gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2)
+as
+    
+--    ruleblockid varchar2(100):='rrt';
+--    slices_str  varchar2(400):='01012019,01122018,01112018';
+    slice_tbl   tbl_type;
+    obj_tbl     tbl_type;
 
+    function get_object_name(prefix varchar2, ruleblockid varchar2, slice varchar2) return varchar2
+    as
+    begin
+        return prefix || '_' || substr(ruleblockid,1,15) || '_' || slice;
+    end get_object_name;
+    
+    
+    function get_sql_stmt_from_ruleblock(ruleblockid varchar2) return varchar2
+    as
+    sql_stmt    varchar2(32767):='';
+    begin
+        select sqlblock into sql_stmt from rman_ruleblocks where blockid=ruleblockid;
+        return sql_stmt;
+    end get_sql_stmt_from_ruleblock;
+    
+    procedure get_slices(slices_str varchar2)
+    as
+    begin
+            slice_tbl:=rman_pckg.splitstr(slices_str,',');
+    end get_slices;
+    
+    procedure create_temp_views
+    as
+    vw_name varchar2(30);
+    obj_exists  binary_integer;
+    begin
+        for i in 1..slice_tbl.count loop
+            vw_name:=get_object_name('vw',ruleblockid,slice_tbl(i));
+            
+            select count(*) into obj_exists from user_views where upper(view_name)=upper(vw_name);
+            
+            if obj_exists > 0 then 
+                execute immediate 'DROP VIEW ' || vw_name;
+                DBMS_OUTPUT.PUT_LINE('create_view-> dropping view ' || vw_name);
+            end if;
+                                
+            execute immediate 'CREATE VIEW ' || vw_name || ' AS (' ||
+                                'SELECT * FROM EADV WHERE DT<TO_DATE(''' || slice_tbl(i) || ''',''ddmmyyyy''))';  
+            
+            
+        end loop;
+    end create_temp_views; 
+    
+    procedure execute_ndsql_temp_tbls
+    as
+    tbl_name    varchar2(30);
+    sql_stmt    varchar2(32767);
+    obj_exists  binary_integer;
+    begin
+        sql_stmt:=get_sql_stmt_from_ruleblock(ruleblockid);
+        
+        for i in 1..slice_tbl.count loop
+            tbl_name:=get_object_name('rt',ruleblockid,slice_tbl(i));
+            
+            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+            
+            if obj_exists>0 then 
+                execute immediate 'DROP TABLE ' || tbl_name;
+                DBMS_OUTPUT.PUT_LINE('create_tbl-> dropping tbl ' || tbl_name);
+            end if;
+            
+            sql_stmt:=regexp_replace(sql_stmt,'eadv',get_object_name('vw',ruleblockid,slice_tbl(i)),1,0,'i');
+            
+            
+            execute immediate 'CREATE TABLE ' || tbl_name || ' AS ' || sql_stmt || '';  
+            
+            
+        end loop;
+    end execute_ndsql_temp_tbls;
+    
+    procedure union_temp_tbls
+    as
+    union_sql_stmt  clob:='';
+    obj_exists      binary_integer:=0;
+    tbl_name    varchar2(30);
+    begin
+        
+        for i in 1..slice_tbl.count loop
+            
+            if i < slice_tbl.count then
+            
+                union_sql_stmt:= union_sql_stmt || ' SELECT * FROM ' || get_object_name('rt',ruleblockid,slice_tbl(i)) || ' UNION ';
+            else
+                union_sql_stmt:= union_sql_stmt || ' SELECT * FROM ' || get_object_name('rt',ruleblockid,slice_tbl(i));
+                
+            end if;
+            
+        end loop;
+        
+        tbl_name:=get_object_name('rt_cube',ruleblockid,'0');
+        
+        select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+            
+        if obj_exists>0 then 
+                execute immediate 'DROP TABLE ' || tbl_name;
+                DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblockid,'0'));
+        end if;
+        
+        execute immediate 'CREATE TABLE ' || tbl_name || ' AS (' || union_sql_stmt || ')';  
+        DBMS_OUTPUT.PUT_LINE('union -> creating tbl ' || get_object_name('rt',ruleblockid,'0'));
+    end;
+    
+    procedure cleanup_objects
+    as
+    tbl_name    varchar2(30);
+    vw_name    varchar2(30);
+    obj_exists  binary_integer:=0;
+    
+    begin
+        for i in 1..slice_tbl.count loop
+            tbl_name:=get_object_name('rt',ruleblockid,slice_tbl(i));
+            
+            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+            
+            if obj_exists>0 then 
+                execute immediate 'DROP TABLE ' || tbl_name;
+                DBMS_OUTPUT.PUT_LINE('cleanup-> dropping tbl ' || tbl_name);
+            end if;
+            
+            obj_exists:=0;
+            
+            vw_name:=get_object_name('vw',ruleblockid,slice_tbl(i));
+            
+            select count(*) into obj_exists from user_views where upper(view_name)=upper(vw_name);
+            
+            if obj_exists > 0 then 
+                execute immediate 'DROP VIEW ' || vw_name;
+                DBMS_OUTPUT.PUT_LINE('cleanup-> dropping view ' || vw_name);
+            end if;
+            
+        end loop;
+    end cleanup_objects;
+    
+    procedure modify_temp_tbls
+    as
+    tbl_name    varchar2(30);
+    obj_exists  binary_integer:=0;
+    begin
+        for i in 1..slice_tbl.count loop
+            tbl_name:=get_object_name('rt',ruleblockid,slice_tbl(i));
+            
+            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+            
+            if obj_exists>0 then 
+                execute immediate 'ALTER TABLE ' || tbl_name || ' ADD DIM_COL CHAR(30) DEFAULT ''SLC' || slice_tbl(i) || ''' NOT NULL';
+                DBMS_OUTPUT.PUT_LINE('modifying -> alter tbl tbl ' || tbl_name);
+            end if;
+            
+            
+        end loop;
+    end modify_temp_tbls;
+begin
+    
+    get_slices(slices_str);
+    
+    create_temp_views;
+    
+    execute_ndsql_temp_tbls;
+
+    modify_temp_tbls;
+    
+    union_temp_tbls;
+
+    cleanup_objects;
+
+end gen_cube_from_ruleblock;
 
 END;
 

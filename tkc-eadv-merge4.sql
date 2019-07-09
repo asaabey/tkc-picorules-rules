@@ -1,19 +1,12 @@
 clear screen;
 
-DROP TABLE EADV;
-/
-CREATE TABLE EADV
-(
-    eid NUMBER(12,0) NOT NULL,
-    att VARCHAR2(32) NOT NULL,
-    dt DATE NOT NULL,
-    val NUMBER(15,2)
-);
-/
-
--- Insert patient result numeric
-INSERT INTO EADV(EID,ATT,DT,VAL)
-SELECT
+DROP INDEX eadv_att_idx;
+DROP INDEX eadv_eid_idx;
+-- Merge patient result numeric
+-- 9 sec
+MERGE INTO eadv t1
+USING (
+SELECT 
     lr.linked_registrations_id as eid,
     rcm.ncomp as att,
     rn.date_recorded as dt,
@@ -22,11 +15,19 @@ FROM    patient_results_numeric rn
 JOIN    patient_registrations pr on pr.id=rn.patient_registration_id 
 JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
 JOIN    rman_comp_map rcm on rcm.id=rn.component_id
-WHERE rcm.ncomp is not null;
+WHERE rcm.ncomp is not null
+) t2 
+ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val);
 /
 
+
+
 --Insert patient result coded, icpc,icd, caresys
-INSERT INTO EADV(EID,ATT,DT,VAL)
+--16 s
+MERGE INTO eadv t1
+USING (
 SELECT
     lr.linked_registrations_id as eid,
     CAST((lower(rc.classification) || '_' ||lower(translate(rc.code,'.- ','_'))) AS VARCHAR2(30)) as att,
@@ -35,6 +36,10 @@ SELECT
 FROM    patient_results_coded rc
 JOIN    patient_registrations pr on pr.id=rc.patient_registration_id 
 JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+) t2 
+ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val);
 /
 
 --update value for certain icpc codes for performance
@@ -47,25 +52,13 @@ update eadv set val=5 where att = 'icpc_u99038';
 update eadv set val=6 where att = 'icpc_u99039';
 
 
---insert  Derived results eGFR
-INSERT INTO EADV(EID,ATT,DT,VAL)
-SELECT
-    lr.linked_registrations_id as eid,
-    'lab_bld_egfr_c' as att,
-    date_recorded as dt,
-    round(result,0) as val
-FROM
-    patient_results_derived prd
-JOIN    patient_registrations pr on pr.id=prd.patient_registration_id 
-JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
-WHERE prd.derivedresultname='eGFR KDIGO';
-/
+--insert  Derived results 
 
---insert  Derived results bmi
-INSERT INTO EADV(EID,ATT,DT,VAL)
+MERGE INTO eadv t1
+USING (
 SELECT
     lr.linked_registrations_id as eid,
-    rcm.ncomp as att,
+    rcm.ncomp  as att,
     date_recorded as dt,
     round(result,0) as val
 FROM
@@ -73,22 +66,32 @@ FROM
 JOIN    patient_registrations pr on pr.id=prd.patient_registration_id 
 JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
 JOIN    rman_comp_map rcm on rcm.key=prd.derivedresultname
-WHERE prd.derivedresultname='BMI';
+WHERE   prd.derivedresultname in ('eGFR KDIGO','BMI')
+) t2 
+ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val);
+/
 
 --OP encounters
-INSERT INTO EADV(EID,ATT,DT,VAL)
+MERGE INTO eadv t1
+USING (
 SELECT
     lr.linked_registrations_id   as eid,
-    'enc_op_renal'               as att,
+    rcm.ncomp                    as att,
     date_recorded                as dt,
     null as                       val
 FROM
     patient_results_text prt
 JOIN    patient_registrations pr on pr.id=prt.patient_registration_id 
 JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
-WHERE prt.component_id=47
+JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+WHERE   prt.component_id=47
 AND regexp_substr(text_result,'(TEAM: )([A-Z]{3})',1,1,'i',2)='REN'
-;
+) t2 
+ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val);
 /
 
 -- RxClass
@@ -276,13 +279,30 @@ where rowid in (select rowid from
 
 
 
--- Build Indexes
+-- Expose demographics from patient_registrations as eadv
 
+MERGE INTO eadv t1
+USING (
+SELECT distinct
+    lr.linked_registrations_id as eid,
+    'dmg_dob' as att,
+    date_of_birth as dt,
+    NULL as val
+FROM    patient_registrations pr 
+JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+UNION ALL
+SELECT distinct
+    lr.linked_registrations_id as eid,
+    'dmg_gender' as att,
+    sysdate as dt,
+    case pr.sex when 1 then 1 else 0 end as val
+FROM    patient_registrations pr 
+JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+) t2 
+ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val);
 
-create bitmap index eadv_att_idx on eadv(att) compute STATISTICS;
-create bitmap index eadv_eid_idx on eadv(eid) compute STATISTICS;
-
-analyze table eadv compute STATISTICS;
 
 --location
 DROP VIEW vw_eadv_locality;
@@ -301,25 +321,9 @@ JOIN    system_health_centre_metadata shcm on shcm.health_centre_name=prn.locati
 
 /
 
-DROP VIEW vw_eadv_dmg;
--- Expose demographics from patient_registrations as eadv
-CREATE VIEW vw_eadv_dmg as 
-(SELECT distinct
-    lr.linked_registrations_id as eid,
-    'dmg_dob' as att,
-    date_of_birth as dt,
-    NULL as val
-FROM    patient_registrations pr 
-JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
-UNION ALL
-SELECT distinct
-    lr.linked_registrations_id as eid,
-    'dmg_gender' as att,
-    sysdate as dt,
-    case pr.sex when 1 then 1 else 0 end as val
-FROM    patient_registrations pr 
-JOIN    linked_registrations lr on lr.patient_registration_id=pr.id); 
+/*  Valid for XE 18c and 12.1 EE*/
+CREATE BITMAP INDEX eadv_att_idx ON EADV(att) compute statistics ;
+CREATE BITMAP INDEX eadv_eid_idx ON EADV(eid) compute statistics;
 
-
-
+ANALYZE TABLE EADV COMPUTE STATISTICS;
 
