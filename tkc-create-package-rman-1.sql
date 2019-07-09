@@ -8,7 +8,7 @@ AS
 /*
 
 Package		    rman_pckg
-Version		    0.0.1.8
+Version		    0.0.1.9
 Creation date	07/04/2019
 update on date  05/07/2019
 Author		    asaabey@gmail.com
@@ -135,6 +135,7 @@ Change Log
 05/07/2019  Added Exception handling 
 07/07/2019  Added Logging
 08/07/2019  Performance boosts using rout tables
+09/07/2019  Added Gen Datacubes
 
 */
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
@@ -2357,7 +2358,9 @@ as
     procedure execute_ndsql_temp_tbls
     as
     tbl_name    varchar2(30);
-    sql_stmt    varchar2(32767);
+    vw_name     varchar2(30);
+    sql_stmt    clob;
+    sql_stmt_mod clob;
     obj_exists  binary_integer;
     begin
         sql_stmt:=get_sql_stmt_from_ruleblock(ruleblockid);
@@ -2372,10 +2375,15 @@ as
                 DBMS_OUTPUT.PUT_LINE('create_tbl-> dropping tbl ' || tbl_name);
             end if;
             
-            sql_stmt:=regexp_replace(sql_stmt,'eadv',get_object_name('vw',ruleblockid,slice_tbl(i)),1,0,'i');
+            vw_name:=get_object_name('vw',ruleblockid,slice_tbl(i));
             
+            dbms_output.put_line(i || '->' || vw_name);
+                       
+            sql_stmt_mod:=replace(sql_stmt,'EADV',UPPER(vw_name));
             
-            execute immediate 'CREATE TABLE ' || tbl_name || ' AS ' || sql_stmt || '';  
+            dbms_output.put_line(i || '->' || sql_stmt_mod);
+            
+            execute immediate 'CREATE TABLE ' || tbl_name || ' AS ' || sql_stmt_mod || '';  
             
             
         end loop;
