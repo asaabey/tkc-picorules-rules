@@ -136,6 +136,8 @@ Change Log
 07/07/2019  Added Logging
 08/07/2019  Performance boosts using rout tables
 09/07/2019  Added Gen Datacubes
+10/07/2019  Bug fix: dv functions introduced multiple variable return, which caused multiple same name cte joins. this is fixed now
+
 
 */
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
@@ -866,6 +868,7 @@ PROCEDURE build_assn_var2
     
     txt VARCHAR2(4000);
     vsi VARCHAR2(100);
+    already_joined varchar2(100):='.';
 BEGIN
             
 
@@ -877,10 +880,11 @@ BEGIN
             
             WHILE vsi IS NOT NULL LOOP   
                 
-                IF match_varname(txt,vsi) AND vsi is not null THEN
+                IF match_varname(txt,vsi) AND vsi is not null and already_joined != get_cte_name(vstack(vsi)) THEN
                      from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(vsi))
                                         || ' ON ' || get_cte_name(vstack(vsi)) || '.' || entity_id_col || '=' 
                                         || left_tbl_name || '.' || entity_id_col || ' ';
+                     already_joined:=get_cte_name(vstack(vsi));
                               
                 END IF;
                 

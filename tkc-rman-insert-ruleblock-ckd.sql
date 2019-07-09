@@ -87,11 +87,16 @@ BEGIN
         
         
         /*  egfr metrics */
-        egfrlv => eadv.lab_bld_egfr_c.val.last();
-        egfrld => eadv.lab_bld_egfr_c.dt.max();
         
-        egfrfv => eadv.lab_bld_egfr_c.val.first();
-        egfrfd => eadv.lab_bld_egfr_c.dt.min();
+        egfr_last => eadv.lab_bld_egfr_c.val.lastdv();
+        
+        egfrlv : {1=1 => egfr_last_val};
+        egfrld : {1=1 => egfr_last_dt};
+        
+        egfr_first => eadv.lab_bld_egfr_c.val.firstdv();
+        
+        egfrfv : {1=1 => egfr_first_val};
+        egfrfd : {1=1 => egfr_first_dt};
         
         egfr_single:{ iq_egfr=1 =>1},{=>0};
         egfr_multiple:{ iq_egfr>1 =>1},{=>0};
@@ -124,13 +129,14 @@ BEGIN
         
         
         /* egfr slope */
-        egfr_max_v => eadv.lab_bld_egfr_c.val.max();
-        egfr_max_ld => eadv.lab_bld_egfr_c.dt.max().where(val=egfr_max_v);
-        egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_ld and dt<egfrld);
         
-        egfr_slope2 : {egfrld>egfr_max_ld => round((egfrlv-egfr_max_v)/((egfrld-egfr_max_ld)/365),2)};
+        egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
         
-        egfr_decline : {egfrld - egfr_max_ld>365 and egfr_ld_max_n>2 and egfr_max_v-egfrlv>=20 => 1},{=>0};
+        egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfrld);
+        
+        egfr_slope2 : {egfrld > egfr_max_dt => round((egfrlv-egfr_max_val)/((egfrld-egfr_max_dt)/365),2)};
+        
+        egfr_decline : {egfrld - egfr_max_dt >365 and egfr_ld_max_n >2 and egfr_max_val - egfrlv>=20 => 1},{=>0};
         
         egfr_rapid_decline : { egfr_decline=1 and egfr_slope2<-10 =>1},{=>0};
         
