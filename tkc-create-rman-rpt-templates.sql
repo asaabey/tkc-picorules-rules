@@ -85,12 +85,44 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','alert_tg4720','tg4720',304720,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : New commencement on Renal replacement therapy (Trigger 4720)
+    --------------------------------------------------------------------
+    <hd_start>Patient has been commenced on haemodialysis on <hd_dt_min></hd_dt_min><hd_start>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','alert_tg4660','tg4660',304660,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Contra-indicated medication (Trigger 4660)
+    --------------------------------------------------------------------
+    This patient is on <dm_rxn_bg>a biguanide,</dm_rxn_bg><dm_rxn_sglt2> SGLT2 inhibitor,</dm_rxn_sglt2><rx_nsaids> NSAIDS,</rx_nsaids> which is inconsistent with the current renal function.
+    <dm_rxn_bg>Biguanides may be rarely associated with lactic acidosis at this level of renal function</dm_rxn_bg>
+    <dm_rxn_sglt2>SGLT2 inhibitors are relatively contra-indicated at this level of renal function</dm_rxn_sglt2>
+    <rx_nsaids>NSAIDS may cause additional renal injury</rx_nsaids>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','alert_tg2610','tg2610',302610,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Potentially untreated chronic disease (Trigger 2610)
+    ------------------------------------------------------------
+    <dm_untreat>Likely to require pharmacotherapy for glycaemic control. No active medications are detected.</dm_untreat>
+    <ckd_untreat>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease</ckd_untreat>
+    <ckd_untreat>Last systolic BP is <sbp_val></sbp_val> mmHg ( <sbp_dt></sbp_dt>) and serum potassium is <k_val></k_val> mmol/l (<k_dt></k_dt>)</ckd_untreat>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Diabetes rubric
     -------------------
     <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_undiagnosed>Undiagnosed</dm_dx_undiagnosed><dm_longstanding> long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
-    <dm_micvas>There are non-renal microvascular complications.</dm_micvas>The glycaemic control is <n0_st=0> unknown </n0_st=0><n0_st=2>optimal (6-8)</n0_st=2><n0_st=1>too tight(<6)</n0_st=1><n0_st=3>sub-optimal (8-10)</n0_st=3><n0_st=4>very sub-optimal (>10)</n0_st=4> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
+    <dm_micvas>There are non-renal microvascular complications.</dm_micvas>
+    <hba1c_n_tot>The last recorded HbA1c (NGSP) is <hba1c_n0_val></hba1c_n0_val> % (<hba1c_n0_dt></hba1c_n0_dt>).</hba1c_n_tot>
+    The glycaemic control is <n0_st=0> unknown </n0_st=0><n0_st=2>optimal (6-8)</n0_st=2><n0_st=1>too tight(<6)</n0_st=1><n0_st=3>sub-optimal (8-10)</n0_st=3><n0_st=4>very sub-optimal (>10)</n0_st=4> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.
     <dm_rxn=0>No medications were detected.</dm_rxn=0>
     <dm_rxn>Medications used currently include</dm_rxn><dm_rxn_su> ,a sulphonylurea </dm_rxn_su><dm_rxn_ins_long>, a long-acting insulin</dm_rxn_ins_long><dm_rxn_glp1>, a GLP1 analogue</dm_rxn_glp1><dm_rxn_dpp4>, a DPP4 inhibitor</dm_rxn_dpp4><dm_rxn_sglt2>, a SGLT2 inhibitor</dm_rxn_sglt2>
     <cp_dm=0>Diabetes careplan was not detected [2.4]</cp_dm=0>
@@ -146,6 +178,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <dx_ckd=0>There is no coded diagnosis on the EHR [1.2]</dx_ckd=0>
     <dx_ckd>The diagnosis on the EHR is CKD stage <dx_ckd_stage></dx_ckd_stage> [1.2] </dx_ckd>
     The last eGFR is <egfrlv></egfrlv> ml/min/1.73m2 (<egfrld></egfrld>)<egfr_outdated> and is outdated [1.3].</egfr_outdated>
+    The last uACR is <acrlv></acrlv> mg/mmol (<acrld></acrld>)<acr_outdated> and is outdated [1.3].</acr_outdated>
     <egfr_decline>There is <egfr_rapid_decline>rapid </egfr_rapid_decline>progressive decline of renal function with an annual decline of <egfr_slope2></egfr_slope2>ml/min/yr [1.3]</egfr_decline> 
     <enc_null=0>There are no captured encounters with renal services.</enc_null=0>
     <enc_ld>The last encounter with renal services was on </enc_ld><enc_ld></enc_ld><enc_n> and there have been </enc_n><enc_n></enc_n><enc_n> encounters since </enc_n><enc_fd></enc_fd>
@@ -221,7 +254,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_ckd_journey_1','ckd_journey',601200,'dev','tkc',TO_DATE(SYSDATE),
     '
-    CKD : Renal services engagement rubric
+    Renal services engagement rubric
     --------------------------------------
     <enc_multi=0><enc_ld>Nephrologist review :               </enc_ld><enc_ld></enc_ld></enc_multi=0>
     <enc_multi>Nephrologist reviews :              <enc_fd></enc_fd>-<enc_ld></enc_ld> [<enc_n></enc_n>] </enc_multi>
@@ -239,7 +272,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     CKD : Diagnostics rubric
     ------------------------
-    Basic urinalysis    :       <ua_null=1>dipstick nor msu have been performed</ua_null=1><ua_rbc_ld>last performed on </ua_rbc_ld><ua_rbc_ld></ua_rbc_ld><ua_rbc_ld> and shows </ua_rbc_ld><ua_null=0><ua_pos=0>no significance</ua_pos=0><ua_pos=1> haematuria with leucocyturia </ua_pos=1><ua_pos=2> haematuria without leucocyturia </ua_pos=2></ua_null=0>
+    Basic urinalysis    :       <ua_null=1>not performed</ua_null=1><ua_rbc_ld>last performed on </ua_rbc_ld><ua_rbc_ld></ua_rbc_ld><ua_rbc_ld> and shows </ua_rbc_ld><ua_null=0><ua_pos=0>no significance</ua_pos=0><ua_pos=1> haematuria with leucocyturia </ua_pos=1><ua_pos=2> haematuria without leucocyturia </ua_pos=2></ua_null=0>
     ANA Serology        :       <dsdna_null=1>not performed </dsdna_null=1><dsdna_null=0><dsdna_ld>last performed on </dsdna_ld><dsdna_ld></dsdna_ld><dsdna_ld> and is </dsdna_ld><dsdna_pos=1>SIGNIFICANT </dsdna_pos=1></dsdna_null=0>
     ANCA Serology       :       <anca_null=1>not performed </anca_null=1><anca_null=0><pr3_ld>last performed on </pr3_ld><pr3_ld></pr3_ld></anca_null=0>
     Complements         :       <c3c4_null=1>not performed </c3c4_null=1><c3c4_null=0><c3_ld>last performed on </c3_ld><c3_ld></c3_ld></c3c4_null=0>

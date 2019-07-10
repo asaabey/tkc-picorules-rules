@@ -1369,11 +1369,13 @@ BEGIN
     
     indxtmp := vstack.FIRST; 
    
-    WHILE indxtmp IS NOT NULL LOOP   
---        DBMS_Output.PUT_LINE('index -> ' || indxtmp || ' is ' || vstack(indxtmp));   
-        indxtmp := vstack.NEXT(indxtmp); 
-    END LOOP; 
+--    WHILE indxtmp IS NOT NULL LOOP   
+----        DBMS_Output.PUT_LINE('index -> ' || indxtmp || ' is ' || vstack(indxtmp));   
+--        indxtmp := vstack.NEXT(indxtmp); 
+--    END LOOP; 
     get_composite_sql(sqlout);
+    
+    dbms_output.put_line('sqlout ->' || chr(10) || sqlout);
 EXCEPTION
     WHEN OTHERS
         

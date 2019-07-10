@@ -157,6 +157,11 @@ BEGIN
                 {acrlv<30 AND acrlv>=3 => `A2`},
                 {acrlv<300 AND acrlv>=30 => `A3`},
                 {acrlv>300 => `A4`},{=>`NA`};
+                
+        cga_a_val: {acrlv<3 => 1},
+                {acrlv<30 AND acrlv>=3 => 2},
+                {acrlv<300 AND acrlv>=30 => 3},
+                {acrlv>300 => 4},{=>0};
         
         asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
         

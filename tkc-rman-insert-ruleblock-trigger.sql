@@ -362,6 +362,151 @@ BEGIN
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate,5);
 
     -- END OF RULEBLOCK --
+    
+      -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg4720';
+    rb.target_table:='rout_tg4720';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=2 ;
+    rb.def_exit_prop:='tg4720';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Algorithm to detect new RRT   */
+        
+        
+        hd_dt_min => eadv.icd_z49_1.dt.min();
+        hd_n => eadv.icd_z49_1.dt.count(0);
+        hd_dt_max => eadv.icd_z49_1.dt.max();
+        
+        pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
+        
+        
+        hd_start : {hd_dt_min>sysdate-90 and hd_n>=10 => 1},{=>0};
+          
+        pd_start : {pd_dt_min > sysdate-9 => 1},{=>0};
+        
+        
+          
+        tg4720 : { hd_start=1 or pd_start=1 => 1},{=>0};
+
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate,exec_order) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate,1);
+        
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg4660';
+    rb.target_table:='rout_tg4660';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=2 ;
+    rb.def_exit_prop:='tg4660';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Algorithm to detect new RRT   */
+        
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        
+        dm_rxn_bg => rout_cd_dm.dm_rxn_bg.val.bind();
+        
+        dm_rxn_sglt2 => rout_cd_dm.dm_rxn_sglt2.val.bind();
+        
+        rx_nsaids => eadv.[rxnc_m01a%].dt.count();
+        
+          
+        tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2,rx_nsaids) is not null => 1},{=>0};
+
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate,exec_order) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate,5);
+        
+    -- END OF RULEBLOCK --
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg2610';
+    rb.target_table:='rout_tg2610';
+    rb.environment:='DEV';
+    rb.rule_owner:='TKCADMIN';
+    rb.is_active:=2 ;
+    rb.def_exit_prop:='tg2610';
+    rb.def_predicate:='>0';
+    
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Algorithm to detect untreated dm   */
+        
+        
+        dm => rout_cd_dm.dm.val.bind();
+        
+        dm_rxn => rout_cd_dm.dm_rxn.val.bind();
+        
+        hba1c_n0_val => rout_cd_dm.hba1c_n0_val.val.bind();
+        
+        cga_a => rout_ckd.cga_a_val.val.bind();
+        
+        cga_g => rout_ckd.ckd.val.bind();
+        
+        acr_outdt => rout_ckd.acr_outdated.val.bind();
+        
+        egfr_outdt => rout_ckd.egfr_outdated.val.bind();
+        
+        res_outdt : { greatest(acr_outdt,egfr_outdt)>0 =>1},{=>0};
+        
+        ckd_met : { cga_a >= 3 and cga_g >=1 and cga_g<4 and res_outdt=0 =>1},{=>0};
+        
+        raas => eadv.[rxnc_c09%].val.lastdv();
+        
+        
+        raas_cur : { nvl(raas_val,0)=1 =>1},{=>0};
+        raas_past : { raas_dt is not null and raas_val=0 =>1 },{=>0};
+        
+        
+        
+        sbp => eadv.obs_bp_systolic.val.lastdv();
+        
+        k => eadv.lab_bld_potassium.val.lastdv();
+        
+        sbp_safe : { sbp_val> 110 and sbp_dt>sysdate-365 =>1},{=>0};
+        
+        k_safe : { k_val< 5 and k_dt>sysdate-365 => 1},{=>0};
+        
+        
+        ckd_untreat : { ckd_met=1 and sbp_safe=1 and k_safe=1 and raas_cur=0 =>1},{=>0};
+        
+        dm_untreat : {dm=1 and nvl(dm_rxn,0)=0 and nvl(hba1c_n0_val,0)>8 => 1},{=>0};
+        
+        
+          
+        tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 => 1},{=>0};
+
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate,exec_order) 
+        VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate,5);
+        
+    -- END OF RULEBLOCK --
 END;
 
 

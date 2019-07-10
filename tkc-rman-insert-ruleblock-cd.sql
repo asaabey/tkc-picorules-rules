@@ -111,6 +111,7 @@ BEGIN
         dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
                
         
+        
         dm_fd :{coalesce(dm_code_fd,dm_lab_fd) is not null => 
                     (least(nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
                     nvl(dm_lab_fd,to_date(`29991231`,`YYYYMMDD`))))};
@@ -158,10 +159,6 @@ BEGIN
         
         n_opt_qt :{hba1c_n_tot>0 => round((hba1c_n_opt/hba1c_n_tot),2)*100};
         
-        /*
-        hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.last();
-        hba1c_n0_dt => eadv.lab_bld_hba1c_ngsp.dt.max();
-        */
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
         
@@ -170,7 +167,7 @@ BEGIN
         n0_st : { hba1c_n0_val <6 => 1},
                             { hba1c_n0_val >=6 and hba1c_n0_val <8 => 2},
                             { hba1c_n0_val >=8 and hba1c_n0_val <10 => 3},
-                            { hba1c_n0_val >=10 4},{=>0};
+                            { hba1c_n0_val >=10 =>4},{=>0};
                             
       
                             
