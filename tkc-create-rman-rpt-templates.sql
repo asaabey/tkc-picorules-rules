@@ -59,7 +59,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','alert_tg4100','tg4100',304190,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','alert_tg4100','tg4100',304100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Alert : Acute kidney injury in community (Trigger 4100)
     --------------------------------------------------------------------------
@@ -71,7 +71,18 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     last recored creatinine is <cr_lv></cr_lv>umol/l on <cr_ld></cr_ld>.
     '
     );
-    
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','alert_tg4410','tg4410',304410,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
+    -----------------------------------------------------------------------------
+    The last uACR was <uacr1></uacr1> mg/mmol and the one before was <uacr2></uacr2> mg/mmol.
+    <iq_tier=3>Serum Albumin and Cholesterol have been checked <low_alb> and there is hypoalbuminaemia</low_alb><higl_chol> and hypercholesterolaemia</higl_chol></iq_tier=3>
+    This is consistent with a primary nephrotic syndrome
+    <iq_tier=4>It is noted that autoimmune and other relevant serological tests have been performed</iq_tier=4>
+    '
+    );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
