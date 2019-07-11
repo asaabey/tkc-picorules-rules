@@ -10,7 +10,7 @@ BEGIN
 --        rman_pckg.execute_active_ruleblocks(1);
 --            rman_pckg.execute_ruleblock('rrt',1,0,0,1);
 --            rman_pckg.execute_ruleblock('ckd',1,1,0,1);        
---            rman_pckg.execute_ruleblock('cd_dm',1,1,0,1);        
+            rman_pckg.execute_ruleblock('cd_dm',1,1,0,1);        
 --
 --            rman_pckg.execute_ruleblock('tg4410',1,1,0,1);  
 --          rman_pckg.execute_ruleblock('tg4420',1,1,0,1);    
@@ -19,8 +19,8 @@ BEGIN
 --          rman_pckg.execute_ruleblock('tg4660',1,1,0,1); 
 --          rman_pckg.execute_ruleblock('test1',1,0,0,1); 
 
-rman_pckg.execute_ruleblock('qa_data_geom',1,1,0,1); 
---            rman_pckg.compile_ruleblock('tg4410');
+--rman_pckg.execute_ruleblock('qa_data_geom',1,1,0,1); 
+--            rman_pckg.compile_ruleblock('cd_cardiac');
 END;
 
 

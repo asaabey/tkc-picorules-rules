@@ -14,9 +14,11 @@
 --80	Notes
 --
 --Disease codes
+--10	Chronic disease : RRT
 --11	Chronic disease : CKD
 --21	Chronic disease : DM2
 --31	Chronic disease : HTN
+--41	Chronic disease : HTN
 
 
 DROP TABLE rman_rpt_templates;
@@ -169,6 +171,32 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 
     '
     );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','cd_cardiac_syn','cd_cardiac',604100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Cardiac disease rubric
+    ----------------------
+    <cad>Coronary artery disease :</cad><cabg>Cornoary artery bypass grafting <cabg></cabg></cabg>
+    <cad_mi_icd>First myocardial infarction <cad_mi_icd></cad_mi_icd></cad_mi_icd>
+    <vhd>Valvular heart disease :</vhd><vhd_mv_icd>Mitral valve disease </vhd_mv_icd><vhd_mv_icd></vhd_mv_icd><vhd_av_icd>Aortic valve disease </vhd_av_icd><vhd_av_icd></vhd_av_icd><vhd_ov_icd>Non aortic-mitral valve disease </vhd_ov_icd><vhd_ov_icd></vhd_ov_icd><vhd_ie_icd>Infective endocarditis </vhd_ie_icd><vhd_ie_icd></vhd_ie_icd><vhd_icpc>Valvular disease NOS</vhd_icpc><vhd_icpc></vhd_icpc>
+    <rxn>Currently used classes : <rxn_ap>Anti-platelet agents,</rxn_ap><rxn_statin>Statins,</rxn_statin><rxn_anticoag>Anti-coagulation (Warfarin or NOAC)</rxn_anticoag></rxn>
+    <rxn><rxn_diu_loop>Loop diuretics,</rxn_diu_loop><rxn_diu_low_ceil>Low-ceiling diuretics,</rxn_diu_low_ceil><rxn_diu_k_sp>Low-ceiling diuretics,</rxn_diu_k_sp></rxn>
+    <rxn><rxn_chrono>Anti-arrhythmic agent</rxn_chrono></rxn>
+    
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','rrt_syn','rrt',601000,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    End-stage renal failure (ESRD)
+    ------------------------------
+    <rrt=1>Currently on haemodialysis, since <hd_dt></hd_dt></rrt=1>
+    <rrt=2>Currently on peritoneal dialysis, since <pd_dt></pd_dt></rrt=2>
+    <rrt=3>Active renal transplant, <tx_dt></tx_dt></rrt=3>
+    <rrt=4>Currently on home-haemodialysis, <homedx_dt></homedx_dt></rrt=4>
+    '
+    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_ckd_syn_1','ckd',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -299,3 +327,4 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     
     '
     );
+@"tkc-create-package-rman-1.sql";

@@ -49,6 +49,10 @@ BEGIN
         
         dt_max => eadv.lab_bld_creatinine.dt.max();
         
+        dt_span : {dt_min is not null => dt_max-dt_min};
+        
+        
+        
         qa_data_geom : {coalesce(dmg,lab,obs,enc,icd,icpc,rxn,mbs) is not null =>1},{=>0};
 
     ';
