@@ -2485,29 +2485,32 @@ as
         
         for j in 1..ruleblock_tbl.count loop
         
-        --unfinished
+            tbl_name:=get_object_name('rt_cube',ruleblock_tbl(j),'0');
         
-            if i < ruleblock_tbl.count then
+        
+            if j = 1 then
                 
-                    join_sql_stmt:= union_sql_stmt || ' SELECT * FROM ' || get_object_name('rt_cube',ruleblock_tbl(j),'0') || ' INNER  JOIN ';
+                    join_sql_stmt:= join_sql_stmt || ' SELECT * FROM ' || tbl_name  || ' ';
             else
-                    join_sql_stmt:= union_sql_stmt || ' SELECT * FROM ' || get_object_name('rt_cube',ruleblock_tbl(j),'0');
+                    join_sql_stmt:= join_sql_stmt || ' INNER JOIN ' || tbl_name ||
+                        ' ON ' || tbl_name || '.EID=' || get_object_name('rt_cube',ruleblock_tbl(1),'0') || '.EID '
+                    ;
                     
             end if;
             
             
             
-            tbl_name:=get_object_name('rt_cube',ruleblock_tbl(j),'0');
+            tbl_name:=get_object_name('rt_xcube_0');
             
-            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
-                
-            if obj_exists>0 then 
-                    execute immediate 'DROP TABLE ' || tbl_name;
-                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblockid,'0'));
-            end if;
+--            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+--                
+--            if obj_exists>0 then 
+--                    execute immediate 'DROP TABLE ' || tbl_name;
+--                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblockid,'0'));
+--            end if;
             
-            execute immediate 'CREATE TABLE ' || tbl_name || ' AS (' || union_sql_stmt || ')';  
-            DBMS_OUTPUT.PUT_LINE('union -> creating tbl ' || get_object_name('rt',ruleblockid,'0'));
+            execute immediate 'CREATE TABLE ' || tbl_name || ' AS (' || join_sql_stmt || ')';  
+            DBMS_OUTPUT.PUT_LINE('join-> creating tbl rt_xcube_0 ');
         
         
         end loop;
