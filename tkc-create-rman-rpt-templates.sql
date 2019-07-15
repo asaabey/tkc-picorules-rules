@@ -177,8 +177,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     Cardiac disease rubric
     ----------------------
-    <cad>Coronary artery disease :</cad><cabg>Cornoary artery bypass grafting <cabg></cabg></cabg>
-    <cad_mi_icd>First myocardial infarction <cad_mi_icd></cad_mi_icd></cad_mi_icd>
+    <cad>Coronary artery disease :</cad><cabg>Cornoary artery bypass grafting </cabg><cabg></cabg>
+    <cad_mi_icd>First myocardial infarction </cad_mi_icd><cad_mi_icd></cad_mi_icd>
     <vhd>Valvular heart disease :</vhd><vhd_mv_icd>Mitral valve disease </vhd_mv_icd><vhd_mv_icd></vhd_mv_icd><vhd_av_icd>Aortic valve disease </vhd_av_icd><vhd_av_icd></vhd_av_icd><vhd_ov_icd>Non aortic-mitral valve disease </vhd_ov_icd><vhd_ov_icd></vhd_ov_icd><vhd_ie_icd>Infective endocarditis </vhd_ie_icd><vhd_ie_icd></vhd_ie_icd><vhd_icpc>Valvular disease NOS</vhd_icpc><vhd_icpc></vhd_icpc>
     <rxn>Currently used classes : <rxn_ap>Anti-platelet agents,</rxn_ap><rxn_statin>Statins,</rxn_statin><rxn_anticoag>Anti-coagulation (Warfarin or NOAC)</rxn_anticoag></rxn>
     <rxn><rxn_diu_loop>Loop diuretics,</rxn_diu_loop><rxn_diu_low_ceil>Low-ceiling diuretics,</rxn_diu_low_ceil><rxn_diu_k_sp>Low-ceiling diuretics,</rxn_diu_k_sp></rxn>
