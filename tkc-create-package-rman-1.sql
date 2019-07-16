@@ -2347,6 +2347,7 @@ as
     slice_tbl       tbl_type;
     obj_tbl         tbl_type;
     ruleblock_tbl   tbl_type;
+    col_stack       vstack_type;
 
     function get_object_name(prefix varchar2, ruleblockid varchar2, slice varchar2) return varchar2
     as
@@ -2364,6 +2365,15 @@ as
         select sqlblock into sql_stmt from rman_ruleblocks where blockid=ruleblockid;
         return sql_stmt;
     end get_sql_stmt_from_ruleblock;
+    
+    function get_target_tbl_from_ruleblock(ruleblockid varchar2) return varchar2
+    as
+    ret    varchar2(128):='';
+    begin
+        
+        select target_table into ret from rman_ruleblocks where blockid=ruleblockid;
+        return ret;
+    end get_target_tbl_from_ruleblock;
     
     procedure get_slices(slices_str varchar2)
     as
@@ -2399,6 +2409,21 @@ as
         end loop;
     end create_temp_eadv_views; 
     
+    function modify_dep_tbls(sql_in clob,ruleblockid varchar2,slice varchar2) return clob
+    as
+    dep_tbls    tbl_type:=null;
+    ret         clob:=sql_in;
+    tbl_name    varchar2(30);
+    begin
+        select dep_table bulk collect into dep_tbls from rman_ruleblocks_dep where dep_table!='EADV' and blockid=ruleblockid;
+        
+        for i in 1..dep_tbls.count loop
+            tbl_name:=replace(get_object_name('rt',dep_tbls(i),slice),'ROUT_','');
+            ret:=replace(ret,dep_tbls(i),tbl_name);
+        end loop;
+        return ret;
+    end modify_dep_tbls;
+    
     procedure execute_ndsql_temp_tbls
     as
     tbl_name    varchar2(30);
@@ -2429,6 +2454,8 @@ as
                 dbms_output.put_line(i || '->' || vw_name);
                            
                 sql_stmt_mod:=replace(sql_stmt,'EADV',UPPER(vw_name));
+                
+                sql_stmt_mod:=modify_dep_tbls(sql_stmt_mod,ruleblock_tbl(j),slice_tbl(i));
                 
                 dbms_output.put_line(i || '->' || sql_stmt_mod);
                 
@@ -2486,12 +2513,22 @@ as
     as
     ret         varchar2(4000):='';
     col_tbl     tbl_type;
+    j           pls_integer;
+    
     
     begin
     
         select COLUMN_NAME BULK COLLECT INTO col_tbl from ALL_TAB_COLUMNS where TABLE_NAME=upper(tmp_tbl) and COLUMN_NAME not in ('EID','DIM_COL');
         
         for i in 1..col_tbl.count loop
+            col_stack(col_tbl(i)):=i;
+        end loop;
+        
+        
+        for i in 1..col_tbl.count loop
+            
+            
+            
             if i<col_tbl.count then
                 ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ', ';
             else
@@ -2566,6 +2603,17 @@ as
         for j in 1..ruleblock_tbl.count loop
             for i in 1..slice_tbl.count loop
                 tbl_name:=get_object_name('rt',ruleblock_tbl(j),slice_tbl(i));
+                
+                select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+                
+                if obj_exists>0 then 
+                    execute immediate 'DROP TABLE ' || tbl_name;
+                    DBMS_OUTPUT.PUT_LINE('cleanup-> dropping tbl ' || tbl_name);
+                end if;
+                
+                obj_exists:=0;
+                
+                tbl_name:=get_object_name('rt_cube',ruleblock_tbl(j),'0');
                 
                 select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
                 
