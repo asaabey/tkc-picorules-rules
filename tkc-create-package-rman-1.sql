@@ -253,7 +253,7 @@ Change Log
     
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
     
-    PROCEDURE gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2);
+    PROCEDURE gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2,ret_tbl_name varchar2);
 END;
 /
 
@@ -2340,7 +2340,7 @@ begin
     COMMIT;
 end commit_log;
 
-procedure gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2)
+procedure gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2,ret_tbl_name varchar2)
 as
     
 
@@ -2359,6 +2359,8 @@ as
     as
     sql_stmt    varchar2(32767):='';
     begin
+        compile_ruleblock(ruleblockid);
+        
         select sqlblock into sql_stmt from rman_ruleblocks where blockid=ruleblockid;
         return sql_stmt;
     end get_sql_stmt_from_ruleblock;
@@ -2381,7 +2383,7 @@ as
     obj_exists  binary_integer;
     begin
         for i in 1..slice_tbl.count loop
-            vw_name:=get_object_name('vw',ruleblockid,slice_tbl(i));
+            vw_name:=get_object_name('vw','eadv',slice_tbl(i));
             
             select count(*) into obj_exists from user_views where upper(view_name)=upper(vw_name);
             
@@ -2407,8 +2409,11 @@ as
     begin
         
         for j in 1..ruleblock_tbl.count loop
-            sql_stmt:=get_sql_stmt_from_ruleblock(ruleblock_tbl(j));
-        
+            DBMS_OUTPUT.PUT_LINE('ruleblock_tbl(j)->' || ruleblock_tbl(j));
+            
+            sql_stmt:=get_sql_stmt_from_ruleblock(trim(ruleblock_tbl(j)));
+            
+            DBMS_OUTPUT.PUT_LINE('sql_stmt->' || sql_stmt);
             for i in 1..slice_tbl.count loop
                 tbl_name:=get_object_name('rt',ruleblock_tbl(j),slice_tbl(i));
                 
@@ -2419,7 +2424,7 @@ as
                     DBMS_OUTPUT.PUT_LINE('create_tbl-> dropping tbl ' || tbl_name);
                 end if;
                 
-                vw_name:=get_object_name('vw',ruleblock_tbl(j),slice_tbl(i));
+                vw_name:=get_object_name('vw','eadv',slice_tbl(i));
                 
                 dbms_output.put_line(i || '->' || vw_name);
                            
@@ -2463,18 +2468,40 @@ as
                 
             if obj_exists>0 then 
                     execute immediate 'DROP TABLE ' || tbl_name;
-                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblockid,'0'));
+                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || 'DROP TABLE ' || tbl_name);
+                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblock_tbl(j),'0'));
             end if;
-            
+            DBMS_OUTPUT.PUT_LINE('union -> creating tbl ' ||'CREATE TABLE ' || tbl_name || ' AS (' || union_sql_stmt || ')');
             execute immediate 'CREATE TABLE ' || tbl_name || ' AS (' || union_sql_stmt || ')';  
-            DBMS_OUTPUT.PUT_LINE('union -> creating tbl ' || get_object_name('rt',ruleblockid,'0'));
-        
+            DBMS_OUTPUT.PUT_LINE('union -> creating tbl ' || get_object_name('rt',ruleblock_tbl(j),'0'));
+            
+        union_sql_stmt:='';
         
         end loop;
         
         
     end;
     
+    function get_col_list(tmp_tbl varchar2) return varchar2
+    as
+    ret         varchar2(4000):='';
+    col_tbl     tbl_type;
+    
+    begin
+    
+        select COLUMN_NAME BULK COLLECT INTO col_tbl from ALL_TAB_COLUMNS where TABLE_NAME=upper(tmp_tbl) and COLUMN_NAME not in ('EID','DIM_COL');
+        
+        for i in 1..col_tbl.count loop
+            if i<col_tbl.count then
+                ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ', ';
+            else
+                ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ' ' ;
+            end if;
+            
+        end loop;
+        
+        return ret;
+    end get_col_list;
     
     procedure join_temp_tbls
     as
@@ -2483,37 +2510,48 @@ as
     tbl_name    varchar2(30);
     begin
         
+        tbl_name:=get_object_name('rt_cube',ruleblock_tbl(1),'0');
+        
+        join_sql_stmt:='SELECT ' || tbl_name || '.EID, ' || tbl_name || '.DIM_COL, ';
+        
         for j in 1..ruleblock_tbl.count loop
-        
             tbl_name:=get_object_name('rt_cube',ruleblock_tbl(j),'0');
-        
-        
-            if j = 1 then
-                
-                    join_sql_stmt:= join_sql_stmt || ' SELECT * FROM ' || tbl_name  || ' ';
+            
+            if j<ruleblock_tbl.count then
+            
+                join_sql_stmt:=join_sql_stmt || get_col_list(tbl_name) || ', ';
             else
+                join_sql_stmt:=join_sql_stmt || get_col_list(tbl_name) || ' ';
+            end if;
+        end loop;
+        
+        join_sql_stmt:=join_sql_stmt || ' FROM ' ||  get_object_name('rt_cube',ruleblock_tbl(1),'0') || ' ';
+        
+        if ruleblock_tbl.count>1 then
+            for j in 2..ruleblock_tbl.count loop
+                    tbl_name:=get_object_name('rt_cube',ruleblock_tbl(j),'0');
+        
                     join_sql_stmt:= join_sql_stmt || ' INNER JOIN ' || tbl_name ||
-                        ' ON ' || tbl_name || '.EID=' || get_object_name('rt_cube',ruleblock_tbl(1),'0') || '.EID '
-                    ;
-                    
+                        ' ON ' || tbl_name || '.EID=' || get_object_name('rt_cube',ruleblock_tbl(1),'0') || '.EID ' ||
+                        ' AND ' || tbl_name || '.DIM_COL=' || get_object_name('rt_cube',ruleblock_tbl(1),'0') || '.DIM_COL ';
+        
+            end loop;
+        
+        end if;
+        
+        tbl_name:=ret_tbl_name;
+            
+            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+                
+            if obj_exists>0 then 
+                    execute immediate 'DROP TABLE ' || tbl_name;
+                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblockid,'0'));
             end if;
             
-            
-            
-            tbl_name:=get_object_name('rt_xcube_0');
-            
---            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
---                
---            if obj_exists>0 then 
---                    execute immediate 'DROP TABLE ' || tbl_name;
---                    DBMS_OUTPUT.PUT_LINE('union -> dropping tbl ' || get_object_name('rt',ruleblockid,'0'));
---            end if;
+            DBMS_OUTPUT.PUT_LINE('join-> creating ' || 'CREATE TABLE ' || tbl_name || ' AS (' || join_sql_stmt || ')');
             
             execute immediate 'CREATE TABLE ' || tbl_name || ' AS (' || join_sql_stmt || ')';  
-            DBMS_OUTPUT.PUT_LINE('join-> creating tbl rt_xcube_0 ');
-        
-        
-        end loop;
+            DBMS_OUTPUT.PUT_LINE('join-> creating ' || tbl_name);
         
         
     end;
@@ -2525,28 +2563,32 @@ as
     obj_exists  binary_integer:=0;
     
     begin
-        for i in 1..slice_tbl.count loop
-            tbl_name:=get_object_name('rt',ruleblockid,slice_tbl(i));
-            
-            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
-            
-            if obj_exists>0 then 
-                execute immediate 'DROP TABLE ' || tbl_name;
-                DBMS_OUTPUT.PUT_LINE('cleanup-> dropping tbl ' || tbl_name);
-            end if;
-            
-            obj_exists:=0;
-            
-            vw_name:=get_object_name('vw',ruleblockid,slice_tbl(i));
-            
-            select count(*) into obj_exists from user_views where upper(view_name)=upper(vw_name);
-            
-            if obj_exists > 0 then 
-                execute immediate 'DROP VIEW ' || vw_name;
-                DBMS_OUTPUT.PUT_LINE('cleanup-> dropping view ' || vw_name);
-            end if;
-            
+        for j in 1..ruleblock_tbl.count loop
+            for i in 1..slice_tbl.count loop
+                tbl_name:=get_object_name('rt',ruleblock_tbl(j),slice_tbl(i));
+                
+                select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+                
+                if obj_exists>0 then 
+                    execute immediate 'DROP TABLE ' || tbl_name;
+                    DBMS_OUTPUT.PUT_LINE('cleanup-> dropping tbl ' || tbl_name);
+                end if;
+                
+                obj_exists:=0;
+                
+                vw_name:=get_object_name('vw','eadv',slice_tbl(i));
+                
+                select count(*) into obj_exists from user_views where upper(view_name)=upper(vw_name);
+                
+                if obj_exists > 0 then 
+                    execute immediate 'DROP VIEW ' || vw_name;
+                    DBMS_OUTPUT.PUT_LINE('cleanup-> dropping view ' || vw_name);
+                end if;
+                
+            end loop;
         end loop;
+        
+        
     end cleanup_objects;
     
     procedure modify_temp_tbls
@@ -2554,18 +2596,22 @@ as
     tbl_name    varchar2(30);
     obj_exists  binary_integer:=0;
     begin
-        for i in 1..slice_tbl.count loop
-            tbl_name:=get_object_name('rt',ruleblockid,slice_tbl(i));
+        
+        for j in 1..ruleblock_tbl.count loop
+            for i in 1..slice_tbl.count loop
+                tbl_name:=get_object_name('rt',ruleblock_tbl(j),slice_tbl(i));
+                
+                select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
+                
+                if obj_exists>0 then 
+                    execute immediate 'ALTER TABLE ' || tbl_name || ' ADD DIM_COL CHAR(30) DEFAULT ''SLC' || slice_tbl(i) || ''' NOT NULL';
+                    DBMS_OUTPUT.PUT_LINE('modifying -> alter tbl tbl ' || tbl_name);
+                end if;
             
-            select count(*) into obj_exists from user_tables where upper(table_name)=upper(tbl_name);
             
-            if obj_exists>0 then 
-                execute immediate 'ALTER TABLE ' || tbl_name || ' ADD DIM_COL CHAR(30) DEFAULT ''SLC' || slice_tbl(i) || ''' NOT NULL';
-                DBMS_OUTPUT.PUT_LINE('modifying -> alter tbl tbl ' || tbl_name);
-            end if;
-            
-            
+            end loop;
         end loop;
+        
     end modify_temp_tbls;
 begin
     
