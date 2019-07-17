@@ -12,61 +12,7 @@ The SQL statement can be dynamically executed using exec_dsql (Method 4 dynamic 
 creating wide tables. Long tables /Datastore (EADV) are generated using exec_dsql_dstore_multi/singlecol functions using dbms_sql.
 
 
-*/
-/*
-    +-------------+
-    |  ruleblock  |
-    +------+------+
-           |
-           |  execute_active_ruleblocks()
-           |  
-           |  execute_ruleblock()
-           |
-           |  parse_ruleblocks()
-           |
-           v
-    +------+------+
-    |    rpipe    +------------+-----------+
-    +-------------+            |           |
-                               |           |
-              parse_rpipe()    |           |
-                               |           |
-                               |           |
-         +-----------------+   |  +--------v--------+
-         | func_expression +<--+  | cond_expression |
-         +-----------------+      +-----------------+
-                    |                       |
-  build_func_sql()  +----+        +---------+    build_cond_sql()                   
-                         |        | 
-                    +----v--------v-+
-                    |      rstack   |
-                    +---------------+
-                             +
-                             |
-                             |   get_composite_sql()
-                             |
-                             v
-                     +-------+--------+
-           +---------+  SQL statement +--------+
-           |         +------------+---+        |
-           |                      |            |
-           |                      |            |
-           |  exec_dsql() /       |            |   exec_dsql_dstore_multicol()
-           |                      |            |
-           |  exec_ndsql()        |            |
-           |                      |   exec_dsql_dstore_singlecol()
-           |                      |            |
-           v                      |            v
-    +------+-------+              |   +--------+-------+
-    |  wide table  |              +-->+    long table  |
-    +--------------+                  |      EADV      |
-                                      +----------------+
 
-     
-     
-     
-*/
-/*
 Functional declaration, is a aggregate/analytic function which returns a single row for each entitiy
 This creates a handle/pointer to another table (default is eadv). The declaration is defined by the '=>' operator.
 
