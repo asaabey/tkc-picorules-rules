@@ -2520,19 +2520,19 @@ as
     
         select COLUMN_NAME BULK COLLECT INTO col_tbl from ALL_TAB_COLUMNS where TABLE_NAME=upper(tmp_tbl) and COLUMN_NAME not in ('EID','DIM_COL');
         
-        for i in 1..col_tbl.count loop
-            col_stack(col_tbl(i)):=i;
-        end loop;
         
         
         for i in 1..col_tbl.count loop
             
+            if col_stack.exists(col_tbl(i))=false then 
             
-            
-            if i<col_tbl.count then
-                ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ', ';
-            else
-                ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ' ' ;
+                if i<col_tbl.count then
+                    ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ', ';
+                else
+                    ret:=ret || UPPER(tmp_tbl) || '.' || col_tbl(i) || ' ' ;
+                end if;
+                
+                col_stack(col_tbl(i)):=i;    
             end if;
             
         end loop;
