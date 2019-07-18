@@ -45,13 +45,36 @@ BEGIN
         
         mbs => eadv.[mbs_%].dt.count(0);
                 
-        dt_min => eadv.lab_bld_creatinine.dt.min();
+        dt_min_ => eadv.lab_bld_creatinine.dt.min();
         
-        dt_max => eadv.lab_bld_creatinine.dt.max();
+        dt_max_ => eadv.lab_bld_creatinine.dt.max();
         
-        dt_span : {dt_min is not null => dt_max-dt_min};
+        tn_: {dt_min_ is not null => (dt_max_-dt_min_)/365};
         
+        lab_t_ : {tn_>0 => lab/tn_},{=>0};
         
+        obs_t_ : {tn_>0 => obs/tn_},{=>0};
+        
+        icd_t_ : {tn_>0 => icd/tn_},{=>0};
+        
+        icpc_t_ : {tn_>0 => icpc/tn_},{=>0};
+        
+        rxn_t_ : {tn_>0 => rxn/tn_},{=>0};
+        
+        mbs_t_ : {tn_>0 => mbs/tn_},{=>0};
+        
+            
+        lab_rnk : {nvl(lab_t_,0)> 0 => ceil(log(10,lab_t_))}{=>0};
+        
+        obs_rnk : {nvl(obs_t_,0)> 0 => ceil(log(10,obs_t_))}{=>0};
+        
+        icd_rnk : {nvl(icd_t_,0)> 0 => ceil(log(10,icd_t_))+2}{=>0};
+        
+        icpc_rnk : {nvl(icpc_t_,0)> 0 => ceil(log(10,icpc_t_))+2}{=>0};
+        
+        rxn_rnk : {nvl(rxn_t_,0)> 0 => ceil(log(10,rxn_t_))+1}{=>0};
+        
+        mbs_rnk : {nvl(mbs_t_,0)> 0 => ceil(log(10,mbs_t_))+1}{=>0};
         
         qa_data_geom : {coalesce(dmg,lab,obs,enc,icd,icpc,rxn,mbs) is not null =>1},{=>0};
 
