@@ -1315,31 +1315,13 @@ param_key       varchar2(100);
 param_value     varchar2(100);
 kv              varchar2(200);
 BEGIN
+    dbms_output.put_line('compiler in :' || txtin);
+    
     func_name := regexp_substr(txtin,'(#)(\w+)(\(([^}]+)\))',1,1,'i',2) ;
     func_param:= regexp_substr(txtin,'(\()([^)]+)',1,1,'i',2)  ;
     
     func_param_tbl:=rman_pckg.splitstr(func_param,',');
     
-    for i in 1.. func_param_tbl.count loop
-        kv := func_param_tbl(i);
-        if instr(kv,'=')>0 then
-            param_key:=lower(substr(kv,1,instr(kv,'=')));
-            param_value := substr(kv,instr(kv,'='));
-            
-            case 
-                when param_key='label' then
-                    dbms_output.put_line('build_comp_dir>' ||'label');
-                when param_key='is.trigger' then
-                    dbms_output.put_line('build_comp_dir>' ||'trigger');
-                when param_key='trigger.priorty' then
-                    dbms_output.put_line('build_comp_dir>' ||'priority');
-                when param_key='is.reportable' then
-                    dbms_output.put_line('build_comp_dir>' ||'report');
-            end case;    
-        end if;
-      
-    
-    end loop;
     
     
     
@@ -1387,8 +1369,9 @@ BEGIN
                 IF LENGTH(trim(ss))>0 THEN
                     --aggregate declaration
                     --identified by :
-                
-                    IF INSTR(ss, ':')=0 THEN
+                    dbms_output.put_line('compiler ' || ss);
+                    dbms_output.put_line('compiler #' || instr(ss,'#'));
+                    IF INSTR(ss, '=>')>0 THEN
                         rows_added:=0;
                         build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
@@ -1396,7 +1379,7 @@ BEGIN
                     ELSIF INSTR(ss,'#')=1 THEN
                         -- Compiler directive
                         build_compiler_exp(rpipe_col(i).blockid,indx,ss);
-                    ELSE
+                    ELSIF INSTR(ss,':')>0 THEN
                         rows_added:=0;
                         build_cond_sql_exp(indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
