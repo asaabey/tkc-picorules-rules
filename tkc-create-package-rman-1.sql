@@ -140,6 +140,19 @@ Change Log
 
 
 */
+
+    --Attribute Meta Data Record Definition
+    TYPE attr_meta_record is RECORD  (
+        blockId VARCHAR2(100),  --the block id the the attribute belongs to
+        attr VARCHAR2(100),     --the raw name of the pico attribute
+        label VARCHAR2(100),    --Label meta data: Human readable name of the attribute
+        is_trigger NUMBER(1,0)  --Trigger Indicator: Are the contents of this attribute considered to be trigger for some sort of action ot take place
+    );
+
+    --Attribute Meta Data Table type
+    TYPE attr_meta_table is TABLE of attr_meta_record;
+
+
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
     
     TYPE rpipe_tbl_type IS TABLE OF rman_rpipe%ROWTYPE;
@@ -222,7 +235,8 @@ Change Log
     indx        IN INT,
     txtin       varchar2,
     sqlstat     OUT VARCHAR2,
-    rows_added OUT PLS_INTEGER
+    rows_added  OUT PLS_INTEGER,
+    attr_meta   IN attr_meta_table
     ) ;
     
     
@@ -254,11 +268,16 @@ Change Log
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
     
     PROCEDURE gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2,ret_tbl_name varchar2);
+    
+    /* Truncates and populates the contens of EADV, the primary data source for RMAN */
+    PROCEDURE populate_eadv_tables;
 END;
 /
 
 
 CREATE OR REPLACE PACKAGE BODY rman_pckg AS
+
+
 
 --https://stackoverflow.com/questions/3710589/is-there-a-function-to-split-a-string-in-pl-sql/3710619#3710619
 
@@ -624,12 +643,14 @@ PROCEDURE insert_ruleblocks_dep(
     dep_table_s   in    varchar2,
     dep_column_s  in    varchar2,
     dep_att_s     in    varchar2,
-    dep_func_s    in    varchar2
+    dep_func_s    in    varchar2,
+    att_name_s    in    varchar2,
+    att_label_s    in    varchar2
 )
 IS
 BEGIN
-    INSERT INTO rman_ruleblocks_dep (blockid, dep_table,dep_column,dep_att,dep_func)
-            VALUES (blockid_s, dep_table_s,dep_column_s,dep_att_s,dep_func_s);
+    INSERT INTO rman_ruleblocks_dep (blockid, dep_table,dep_column,dep_att,dep_func,att_name,att_label)
+            VALUES (blockid_s, dep_table_s,dep_column_s,dep_att_s,dep_func_s,att_name_s,att_label_s);
             
 END insert_ruleblocks_dep;
 
@@ -936,14 +957,23 @@ PROCEDURE build_func_sql_exp
     indx        IN INT,
     txtin       varchar2,
     sqlstat     OUT VARCHAR2,
-    rows_added  OUT PLS_INTEGER
+    rows_added  OUT PLS_INTEGER,
+    attr_meta   IN attr_meta_table
 ) 
 IS
+
+    idx_        number;
+
     func        varchar2(32);
     funcparam   PLS_INTEGER;
 
     att         varchar2(4000);
     att0        varchar2(4000);
+
+    attr_meta_rec        attr_meta_record;
+    attr_meta_label      varchar2(4000); --Attributes Label meta data if availabe
+    attr_meta_isTrigger  number(1,0);    --Attributes trigger meta data if availabe
+
     att_str     varchar2(256);
     tbl         varchar2(100);
     prop        varchar2(100);
@@ -1021,18 +1051,46 @@ BEGIN
     END IF;
     
     att0:=att;
-    
     att:=sql_predicate(att);
     
     
     
     left_tbl_name := tbl;
-    
     build_assn_var2(txtin,'=>',left_tbl_name,from_clause,avn);
-    
-    
-    
     assnvar:=sanitise_varname(avn);
+    
+    /*Look up attribute meta data if availables*/
+    attr_meta_label :=  coalesce(assnvar,avn);
+    attr_meta_isTrigger := 0;
+    idx_ := 1;
+    
+    DBMS_OUTPUT.PUT_LINE('ATTR META -> FOUND META FOR: ' || avn ||' in ' || to_char(attr_meta.count) || ' definitions');
+    
+    WHILE idx_ <= attr_meta.count
+    LOOP
+        attr_meta_rec := attr_meta(idx_);
+        
+        if attr_meta_rec.blockId = blockid
+            and
+            attr_meta_rec.attr = avn
+        then 
+            BEGIN
+                DBMS_OUTPUT.PUT_LINE('ATTR META -> FOUND META FOR: ' || assnvar ||' ->' || attr_meta_rec.label);
+                attr_meta_label := coalesce(attr_meta_rec.label,assnvar,avn);
+                attr_meta_isTrigger := 0;
+                idx_ := attr_meta.count+1;
+            END;
+        ELSE 
+            BEGIN
+                DBMS_OUTPUT.PUT_LINE('ATTR META -> COULD NOT FIND META FOR: "' || avn || '" from: ' || txtin);
+                idx_ := idx_ +1;
+            END;
+        END IF;
+            
+
+    
+    END LOOP;
+
     
     IF SUBSTR(tbl,1,5)='ROUT_' AND FUNC='BIND' THEN 
             where_txt:='';
@@ -1041,19 +1099,11 @@ BEGIN
             groupby_txt:='';
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
-            insert_ruleblocks_dep(blockid,tbl,ext_col_name,NULL,func);
-            
+            insert_ruleblocks_dep(blockid,tbl,ext_col_name,NULL,func, assnvar, attr_meta_label );
             rows_added:= 1;
-            
             push_vstack(assnvar,indx,2,null,null);
-            
-
-    
     ELSE
-    
     CASE 
-        
-        
         WHEN FUNC IN ('MAX','MIN','COUNT','SUM','AVG','MEDIAN','STATS_MODE') THEN
             
             where_txt:=att || predicate;
@@ -1063,7 +1113,7 @@ BEGIN
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
-            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
             
             rows_added:= 1;
             
@@ -1088,31 +1138,20 @@ BEGIN
                 select_txt:= entity_id_col || ',' || prop || ',ROW_NUMBER() OVER(PARTITION BY ' || entity_id_col || ' ORDER BY ' || entity_id_col || ',DT ' || sortdirection ||') AS rank ';
                 groupby_txt:='';
                 is_sub_val:=1;
-                
-                
                 insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,NULL, is_sub_val,sqlstat,func,funcparam);
-                
-                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
-                
+                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
                 where_txt:= 'rank=' || rankindx;
                 from_txt:= ctename;
-                
                 IF FUNC='EXISTS' THEN
                     select_txt:= entity_id_col || ',' || ' 1 AS ' || assnvar;
                 ELSE
                     select_txt:= entity_id_col || ',' || prop || ' AS ' || assnvar;
                 END IF;
-                
                 groupby_txt:='';
                 is_sub_val:=0;   
-                
                 insert_rman(indx+1,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
-                
                 rows_added:= 2;
-                
                 push_vstack(assnvar,indx+1,2,null,null);
-                
-
             END;
         WHEN FUNC IN ('LASTDV','FIRSTDV','MAXLDV','MAXFDV','MINLDV','MINFDV') THEN
             DECLARE
@@ -1150,7 +1189,7 @@ BEGIN
                 
                 insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar, is_sub_val,sqlstat,func,funcparam);
                 
-                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
+                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
                 
                 rows_added:= 1;
                 
@@ -1186,7 +1225,7 @@ BEGIN
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
-            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func);
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
             
             rows_added:= 1;
             
@@ -1248,6 +1287,12 @@ BEGIN
     
     
     build_assn_var2(txtin,':',left_tbl_name,from_clause,avn);
+
+                
+    dbms_output.put_line('GOT');
+    dbms_output.put_line(' : left_tbl_name:'||left_tbl_name);
+    dbms_output.put_line(' : from_clause:'||from_clause);
+    dbms_output.put_line(' : avn:'||avn);
     
     txtin2:=modify_ps_on_funcparam(txtin);
     
@@ -1304,8 +1349,44 @@ EXCEPTION
 END build_cond_sql_exp;
 
 
+/*
+Expected format for attribute declraetion is [ATTR]#[NAME](.IS_TRIGGER)
+where
+[ATTR] is the PICO attribute variable name
+[NAME] is the human readable name of the attribute
+.IS_TRIGGER if present is then attribute is a triggert
+
+--Local type 
+TYPE attr_meta_record is RECORD  (
+    blockId  VARCHAR2(100),
+    attr VARCHAR2(100),
+    label VARCHAR2(100),
+    is_trigger NUMBER(1,0)
+);
+
+TYPE attr_meta_table is VARRAY of attr_meta_record;
+
+*/
+PROCEDURE generate_attr_metadata(blockid varchar2,line varchar2, attr_meta out attr_meta_record ) IS 
+    hashIdx number;
+BEGIN
+    dbms_output.put_line('generate_attr_metadata(' ||blockId || ',' || line ||')');
+    
+    hashIdx := INSTR(line,'#');
+    
+    attr_meta.blockId := blockid;
+    attr_meta.attr := substr(line,1,hashIdx-1);
+    attr_meta.label := substr(line,hashIdx+1);
+    attr_meta.is_trigger := 0;
+END;
+
 
 PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
+    --package tables type for attribue meta data
+    attr_meta attr_meta_table;
+    attr_meta_row attr_meta_record;
+
+
     rpipe_col rpipe_tbl_type;
     indx PLS_INTEGER;
     
@@ -1316,6 +1397,10 @@ PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
     rs VARCHAR2(4000);
     ss VARCHAR2(4000);
 BEGIN
+
+    --intialise local meta table in case no meta data supplied
+    attr_meta := attr_meta_table();
+    
     SELECT ruleid, rulebody,blockid 
     BULK COLLECT INTO rpipe_col
     FROM rman_rpipe;
@@ -1347,11 +1432,25 @@ BEGIN
                     --aggregate declaration
                     --identified by :
                 
-                    IF INSTR(ss, ':')=0 THEN
+                    IF INSTR(ss, '#') >0 THEN
+                        generate_attr_metadata(rpipe_col(i).blockid ,ss , attr_meta_row);
+                        attr_meta.extend();
+                        attr_meta(attr_meta.COUNT).blockId := attr_meta_row.blockId ;
+                        attr_meta(attr_meta.COUNT).attr := attr_meta_row.attr ;
+                        attr_meta(attr_meta.COUNT).label := attr_meta_row.label ;
+                        attr_meta(attr_meta.COUNT).is_trigger := attr_meta_row.is_trigger ;
+
+                        --Add the return meta data to our table collection
+                        /*
+                        select attr_meta_row.blockId,
+                          attr_meta_row.attr ,
+                          attr_meta_row.label ,
+                          attr_meta_row.is_trigger  BULK COLLECT INTO attr_meta FROM DUAL  ;
+                        */
+                    ELSIF INSTR(ss, ':')=0 THEN
                         rows_added:=0;
-                        build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added);
+                        build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added,attr_meta);
                         indx:=indx+rows_added;
-                        
                     ELSE
                         rows_added:=0;
                         build_cond_sql_exp(indx,ss,sqlout,rows_added);
@@ -1383,6 +1482,10 @@ EXCEPTION
             dbms_output.put_line(dbms_utility.format_error_stack);
             RAISE;
 END parse_rpipe;
+
+
+
+
 
 PROCEDURE parse_ruleblocks(blockid varchar2) IS
 rbt                 rman_ruleblocks%ROWTYPE;
@@ -2134,13 +2237,8 @@ PROCEDURE compile_ruleblock(bid_in IN varchar2)
 IS   
     strsql      CLOB;
     t0          INTEGER:=dbms_utility.get_time;
-    
-    
     rb          RMAN_RULEBLOCKS%ROWTYPE;
-    
     bid         RMAN_RULEBLOCKS.blockid%TYPE;
-
-
 BEGIN
    
     commit_log('Compile ruleblock',bid_in,'compiling');
@@ -2680,6 +2778,394 @@ begin
     cleanup_objects;
 
 end gen_cube_from_ruleblock;
+
+
+
+/* Truncates and populates the contens of EADV, the primary data source for RMAN */
+PROCEDURE populate_eadv_tables
+IS
+    table_exist INT;
+    schemaName nvarchar2(100);
+BEGIN
+    select user into schemaName from dual;
+
+    --1: Create EADV table if not exists
+    SELECT Count(*) INTO  table_exist FROM  all_tables WHERE  owner = schemaName  AND table_name = 'EADV';
+    IF table_exist = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('creating table: EADV');
+        BEGIN
+            EXECUTE IMMEDIATE '  CREATE TABLE "EADV" (
+                "EID" NUMBER(12,0)      NOT NULL, 
+                "ATT" VARCHAR2(32 BYTE) NOT NULL, 
+                "DT" DATE               NOT NULL,
+                "VAL" NUMBER(15,2)
+           ) ';
+
+            --Developement oracle is version 10
+            IF  (ora_database_name = 'XE') THEN 
+                EXECUTE IMMEDIATE 'CREATE INDEX "EADV_ATT_IDX" ON "EADV" ("ATT")';
+                EXECUTE IMMEDIATE 'CREATE INDEX "EADV_EID_IDX" ON "EADV" ("EID")'; 
+            ELSE 
+                EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADV_ATT_IDX" ON "EADV" ("ATT")';
+                EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADV_EID_IDX" ON "EADV" ("EID")'; 
+            END IF;
+        END;
+    END IF;
+
+    SELECT Count(*) INTO  table_exist FROM  all_views WHERE  owner = schemaName  AND lower(view_name) = 'vw_eadv_locality';
+    IF table_exist = 0 THEN
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('creating view: vw_eadv_locality');
+            EXECUTE IMMEDIATE '
+            CREATE VIEW vw_eadv_locality AS (
+                select distinct
+                        lr.linked_registrations_id as eid,   
+                        ''dmg_location'' as att,
+                        date_recorded as dt,
+                        initcap(shcm.reference_location) as val
+                FROM    patient_results_numeric prn
+                JOIN    patient_registrations pr on pr.id=prn.patient_registration_id
+                JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+                JOIN    system_health_centre_metadata shcm on shcm.health_centre_name=prn.location
+                )';
+        END;
+    END IF;
+    
+    
+    --2: Disable Indexs
+    DBMS_OUTPUT.PUT_LINE('dropping EADV index');
+    BEGIN
+            EXECUTE IMMEDIATE 'DROP INDEX "EADV_ATT_IDX"';
+            EXECUTE IMMEDIATE 'DROP INDEX "EADV_EID_IDX"';
+            EXCEPTION WHEN OTHERS THEN NULL;
+    END;
+    
+    --3: truncate for repopulation
+    DBMS_OUTPUT.PUT_LINE('truncating EADV');
+    EXECUTE IMMEDIATE 'truncate table EADV';
+    
+    --4: Merge patient result numeric
+    DBMS_OUTPUT.PUT_LINE('Merge patient result numeric');
+    EXECUTE IMMEDIATE '    MERGE INTO eadv t1
+    USING (
+        SELECT
+            lr.linked_registrations_id as eid,
+            rcm.ncomp as att,
+            rn.date_recorded as dt,
+            rn.numeric_result as val
+        FROM    patient_results_numeric rn
+        JOIN    patient_registrations pr on pr.id=rn.patient_registration_id
+        JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+        JOIN    rman_comp_map rcm on rcm.id=rn.component_id
+        WHERE rcm.ncomp is not null
+        ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+
+    --5: Insert patient result coded, icpc,icd, caresys
+    DBMS_OUTPUT.PUT_LINE('Merge patient result coded');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id as eid,
+        REPLACE(
+            CAST((lower(rc.classification) || ''_'' ||lower(translate(rc.code,''.- '',''_''))) AS VARCHAR2(30)) 
+            ,''icpc-2 plus_'',''icpc_'') as att,
+        rc.date_recorded as dt,
+        case (CAST((lower(rc.classification) || ''_'' ||lower(translate(rc.code,''.- '',''_'')))  AS VARCHAR2(30)))
+        --update value for certain icpc codes for performance
+            when ''icpc_u99035'' then 1
+            when ''icpc_u99036'' then 2
+            when ''icpc_u99037'' then 3
+            when ''icpc_u99043'' then 3
+            when ''icpc_u99044'' then 4
+            when ''icpc_u99038'' then 5
+            when ''icpc_u99039'' then 6
+        else 
+        NULL end as val
+    FROM    patient_results_coded rc
+    JOIN    patient_registrations pr on pr.id=rc.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    ) t2
+    ON (
+        t1.eid=t2.eid 
+        and t1.att=t2.att 
+        and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+    
+    --6: insert  Derived results
+    DBMS_OUTPUT.PUT_LINE('Merge derived results');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id as eid,
+        rcm.ncomp  as att,
+        date_recorded as dt,
+        round(result,0) as val
+    FROM
+        patient_results_derived prd
+    JOIN    patient_registrations pr on pr.id=prd.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.key=prd.derivedresultname
+    WHERE   prd.derivedresultname in (''eGFR KDIGO'',''BMI'')
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+    INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+     
+    
+    --7: OP encounters
+    DBMS_OUTPUT.PUT_LINE('Merge OP encounters');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id   as eid,
+        rcm.ncomp                    as att,
+        date_recorded                as dt,
+        null as                       val
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+    WHERE   prt.component_id=47
+    AND regexp_substr(text_result,''(TEAM: )([A-Z]{3})'',1,1,''i'',2)=''REN''
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+    
+    --8: RxClass
+    DBMS_OUTPUT.PUT_LINE('Merge RxClass');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    with cte1 as(
+    SELECT distinct
+        lr.linked_registrations_id as eid,
+        ''rxnc_'' || lower(rrm.rxclassid) as att,
+        date_recorded as dt,
+        prescription_end as enddt,
+        case when prescription_end is null then 1 else 0 end val,
+        row_number() over(partition by lr.linked_registrations_id,rrm.rxclassid,date_recorded order by null) as rn
+    FROM
+        patient_results_prescription prp
+    JOIN    patient_registrations pr on pr.id=prp.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    --JOIN    rman_rxmap rmp on rmp.pres=upper(prp.prescription)
+    JOIN    system_rxcui_rxclassid_map rrm on prp.RXCUI=rrm.rxcui
+    WHERE prp.date_recorded> TO_DATE(''01/01/2000'',''DD/MM/YYYY'')
+    )
+    select * from cte1 where rn=1) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN MATCHED THEN
+        UPDATE SET VAL=0 where t2.enddt IS NOT NULL
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+
+    
+    --9: care plan
+    DBMS_OUTPUT.PUT_LINE('Merge Care Plans');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING(
+    WITH CTE1 AS(
+    SELECT
+        lr.linked_registrations_id as eid,
+        ''careplan_h9_v1''    as att,
+        date_recorded                as dt,
+        tkc_util.transform_h9_careplantxt(prt.text_result) as  val
+        ,ROW_NUMBER() over(partition by lr.linked_registrations_id order by date_recorded desc) as rn
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    WHERE prt.component_id=15)
+    SELECT eid,att,dt,val from CTE1 where rn=1
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+     
+    
+    --10: smoking status
+    DBMS_OUTPUT.PUT_LINE('Merge Smoking Status');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING(
+    WITH CTE1 AS(
+    SELECT
+        lr.linked_registrations_id as eid,
+        ''status_smoking_h2_v1''    as att,
+        date_recorded                as dt,
+        tkc_util.transform_h2_smokingstatus (prt.text_result) as  val
+        ,ROW_NUMBER() over(partition by lr.linked_registrations_id order by date_recorded desc) as rn
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    WHERE prt.component_id=62)
+    SELECT eid,att,dt,val from CTE1 where rn=1
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+    
+    --11: Urine sediment
+    DBMS_OUTPUT.PUT_LINE('Merge Urine sediment');
+    EXECUTE IMMEDIATE 'delete from eadv where att=''lab_ua_rbc''';
+    EXECUTE IMMEDIATE 'delete from eadv where att=''lab_ua_leucocytes''';
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id as           eid,
+        rcm.ncomp as                            att,
+        rn.date_recorded as                     dt,
+        tkc_util.transform_h2_ua_cells(to_char(rn.numeric_result)) as val
+    FROM    patient_results_numeric rn
+    JOIN    patient_registrations pr on pr.id=rn.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.id=rn.component_id
+    WHERE rn.component_id in (58, 37)
+    UNION ALL
+    SELECT
+        lr.linked_registrations_id as eid,
+        rcm.ncomp as att,
+        date_recorded                as dt,
+        tkc_util.transform_h2_ua_cells(prt.text_result) as val
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+    WHERE prt.component_id in (37,71,72)
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+    
+    --12: Pcis service items
+    DBMS_OUTPUT.PUT_LINE('Merge Pcis service items');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id as eid,
+        rcm.ncomp as att,
+        date_recorded                as dt,
+        tkc_util.transform_h2_education(prt.text_result) as val
+        --,to_char(prt.text_result) as val0
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+    WHERE prt.component_id in (22)
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+     
+    
+    --13: Ris encounters
+    DBMS_OUTPUT.PUT_LINE('Merge RIS Encounters');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id as eid,
+        rcm.ncomp || tkc_util.transform_att_imaging(prt.text_result) as att,
+        date_recorded                as dt,
+        null as val
+        ,prt.text_result as val0
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+    WHERE prt.component_id in (80)
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+    
+     
+    
+    --14: CVRA
+    DBMS_OUTPUT.PUT_LINE('Merge CVRA ');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT
+        lr.linked_registrations_id as eid,
+        rcm.ncomp as att,
+        date_recorded                as dt,
+        tkc_util.transform_h2_cvra(prt.text_result) as val
+    FROM
+        patient_results_text prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+    WHERE prt.component_id in (11)
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+    
+    --15: Remove duplicates
+    DBMS_OUTPUT.PUT_LINE('Remove duplicates');
+    EXECUTE IMMEDIATE 'delete from eadv
+    where rowid in (select rowid from
+       (select
+         rowid,
+         row_number()  over(partition by eid,att,dt order by null) dup
+        from eadv
+        )
+      where dup > 1
+    )';
+    
+    --16: Expose demographics from patient_registrations as eadv
+    DBMS_OUTPUT.PUT_LINE('Merge demographics');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT distinct
+        lr.linked_registrations_id as eid,
+        ''dmg_dob'' as att,
+        date_of_birth as dt,
+        NULL as val
+    FROM    patient_registrations pr
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    WHERE
+    date_of_birth is not null
+    UNION ALL
+    SELECT distinct
+        lr.linked_registrations_id as eid,
+        ''dmg_gender'' as att,
+        date_of_birth as dt,
+        case pr.sex when 1 then 1 else 0 end as val
+    FROM    patient_registrations pr
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    where 
+    date_of_birth is not null
+    ) t2
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)';
+     
+    
+    --17: Re-create indexs
+    DBMS_OUTPUT.PUT_LINE('Recreate indexs');
+    BEGIN
+        IF  (ora_database_name = 'XE') THEN 
+            EXECUTE IMMEDIATE 'CREATE INDEX "EADV_ATT_IDX" ON "EADV" ("ATT")';
+            EXECUTE IMMEDIATE 'CREATE INDEX "EADV_EID_IDX" ON "EADV" ("EID")'; 
+        ELSE 
+            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADV_ATT_IDX" ON "EADV" ("ATT")';
+            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADV_EID_IDX" ON "EADV" ("EID")'; 
+        END IF;
+    END;
+     
+    --18: rebuild stats
+    EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
+
+END populate_eadv_tables;
+
 
 END;
 

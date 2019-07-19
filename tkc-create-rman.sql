@@ -44,12 +44,17 @@ CREATE TABLE rman_ruleblocks
     exec_order          NUMBER DEFAULT 1,
     CONSTRAINT pk_ruleblocks PRIMARY KEY(blockid)
 );
+
+
+
 /
 CREATE TABLE rman_ruleblocks_dep
 (
     blockid varchar2(100),
     dep_table   VARCHAR2(30),
     dep_column  VARCHAR2(100),
+    att_name    VARCHAR2(100),
+    att_label   VARCHAR2(100),
     dep_att     VARCHAR2(100),
     dep_func    VARCHAR2(100),
     CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
