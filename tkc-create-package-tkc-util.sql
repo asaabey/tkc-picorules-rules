@@ -9,6 +9,7 @@ function transform_h2_smokingstatus(txt_in varchar2) return integer;
 function transform_h2_ua_cells(txt_in varchar2) return integer;
 function transform_h2_education(txt_in varchar2) return integer;
 function transform_att_imaging(txt_in varchar2) return varchar2;
+function transform_h2_cvra(txt_in varchar2) return varchar2;
 END;
 /
 

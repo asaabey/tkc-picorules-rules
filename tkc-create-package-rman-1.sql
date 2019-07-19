@@ -137,6 +137,7 @@ Change Log
 08/07/2019  Performance boosts using rout tables
 09/07/2019  Added Gen Datacubes
 10/07/2019  Bug fix: dv functions introduced multiple variable return, which caused multiple same name cte joins. this is fixed now
+17/07/2019  Gen Datacubes can accept multiple rules
 
 
 */
@@ -254,6 +255,8 @@ Change Log
     PROCEDURE commit_log(moduleid  in varchar2,blockid   in varchar2,log_msg   in varchar2);
     
     PROCEDURE gen_cube_from_ruleblock(ruleblockid varchar2,slices_str  varchar2,ret_tbl_name varchar2);
+    
+    PROCEDURE build_compiler_exp(ruleblockid in varchar2,indx in int,txtin varchar2);
 END;
 /
 
@@ -1303,7 +1306,21 @@ EXCEPTION
 
 END build_cond_sql_exp;
 
-
+PROCEDURE build_compiler_exp(ruleblockid in varchar2,indx in int,txtin varchar2)
+AS
+func_name       varchar2(30);
+func_param      varchar2(4000);
+func_param_tbl  tbl_type;
+BEGIN
+    func_name := regexp_substr(txtin,'(#)(\w+)(\(([^}]+)\))',1,1,'i',2) ;
+    func_param:= regexp_substr(txtin,'(\()([^)]+)',1,1,'i',2)  ;
+    
+    func_param_tbl:=rman_pckg.splitstr(func_param,',');
+    
+    
+    
+    
+END;
 
 PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
     rpipe_col rpipe_tbl_type;
@@ -1352,6 +1369,9 @@ BEGIN
                         build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
                         
+                    ELSIF INSTR(ss,'#')=1 THEN
+                        -- Compiler directive
+                        build_compiler_exp(rpipe_col(i).blockid,indx,ss);
                     ELSE
                         rows_added:=0;
                         build_cond_sql_exp(indx,ss,sqlout,rows_added);
