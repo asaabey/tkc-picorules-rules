@@ -40,7 +40,8 @@ BEGIN
         VALUES(rb.blockid,rb.target_table,rb.environment,rb.rule_owner,rb.picoruleblock,rb.is_active,rb.def_exit_prop,rb.def_predicate,5);
 
     -- END OF RULEBLOCK --
-    
+        COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 
