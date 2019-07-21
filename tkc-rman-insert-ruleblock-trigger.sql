@@ -91,7 +91,16 @@ BEGIN
                 
         tg4410 : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 },{=>0};
         
-        
+        #define_attribute(
+            tg4410,
+            {
+                label:"Alert:Nephrotic range proteinuria in the absence of diabetes",
+                desc:"Integer [0-1] if meets criteria ",
+                is_reportable:0,
+                is_trigger:1,
+                type:2
+            }
+        );
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -164,7 +173,16 @@ BEGIN
         
         tg4420 : {t4420_code>=2 => 1},{=>0};            
         
-        
+        #define_attribute(
+            tg4420,
+            {
+                label:"Alert:Possible nephritic syndrome",
+                desc:"Integer [0-1] if meets criteria ",
+                is_reportable:0,
+                is_trigger:1,
+                type:2
+            }
+        );
         
         
     ';
@@ -234,7 +252,16 @@ BEGIN
           
           tg4100 : {akin_stage>=2 and aki_outcome>=2 => 1},{=>0};
           
-          
+          #define_attribute(
+                tg4100,
+                {
+                    label:"Alert:Acute kidney injury in community",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            );
                         
           
         
@@ -268,7 +295,16 @@ BEGIN
           
         tg4110_code : {1=1=> 1};
                         
-          
+         #define_attribute(
+                tg4110,
+                {
+                    label:"Alert:Acute kidney injury in hospital by coding",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            ); 
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -316,6 +352,17 @@ BEGIN
         enc => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
           
         tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null=> 1},{=>0};
+        
+        #define_attribute(
+                tg4610,
+                {
+                    label:"Alert:Unmanaged possible early CKD with rapid progression",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            ); 
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -355,6 +402,17 @@ BEGIN
         
           
         tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null=> 1},{=>0};
+        
+        #define_attribute(
+                tg4620,
+                {
+                    label:"Alert:Unmanaged advanced CKD with rapid progression",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            ); 
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -395,6 +453,17 @@ BEGIN
         
           
         tg4720 : { hd_start=1 or pd_start=1 => 1},{=>0};
+        
+        #define_attribute(
+                tg4720,
+                {
+                    label:"Alert:New commencement on Renal replacement therapy",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            ); 
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -432,6 +501,17 @@ BEGIN
         
           
         tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2,rx_nsaids) is not null => 1},{=>0};
+        
+        #define_attribute(
+                tg4660,
+                {
+                    label:"Alert:Medication safety concern",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            ); 
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -500,6 +580,17 @@ BEGIN
         
           
         tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 => 1},{=>0};
+        
+        #define_attribute(
+                tg2610,
+                {
+                    label:"Alert:Potentially untreated chronic disease",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:0,
+                    is_trigger:1,
+                    type:2
+                }
+            ); 
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

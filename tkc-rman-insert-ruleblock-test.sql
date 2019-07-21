@@ -31,6 +31,15 @@ BEGIN
         
         uacr0 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-365);
         
+        uacr_done : { uacr0_dt is not null =>1},{=>0};
+        
+        #def(uacr_done,
+            { 
+                label: "This is test variable", 
+                is_trigger:true, 
+                is_reportable:true
+            }
+        );
         
         
 

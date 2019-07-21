@@ -127,6 +127,10 @@ External table binding
 tbl.att.val.bind()
 should only be used were eid->att is 1:1
 
+Compiler directive
+#define_attribute(att_name, json_object);
+#define_ruleblock(ruleblock, json_object); TBI
+
 Change Log
 ----------
 22/06/2019  Implemented Template engine
@@ -138,21 +142,12 @@ Change Log
 09/07/2019  Added Gen Datacubes
 10/07/2019  Bug fix: dv functions introduced multiple variable return, which caused multiple same name cte joins. this is fixed now
 17/07/2019  Gen Datacubes can accept multiple rules
+20/07/2019  Added compiler directive with build_compiler_exp 
 
 
 */
 
-    --Attribute Meta Data Record Definition
-    TYPE attr_meta_record is RECORD  (
-        blockId VARCHAR2(100),  --the block id the the attribute belongs to
-        attr VARCHAR2(100),     --the raw name of the pico attribute
-        label VARCHAR2(100),    --Label meta data: Human readable name of the attribute
-        is_trigger NUMBER(1,0)  --Trigger Indicator: Are the contents of this attribute considered to be trigger for some sort of action ot take place
-    );
-
-    --Attribute Meta Data Table type
-    TYPE attr_meta_table is TABLE of attr_meta_record;
-
+   
 
     TYPE rman_tbl_type IS TABLE OF rman_stack%ROWTYPE;
     
@@ -241,7 +236,7 @@ Change Log
     ) ;
     
     
-    PROCEDURE build_cond_sql_exp(indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);  
+    PROCEDURE build_cond_sql_exp(blockid     in varchar2,indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER);  
     
     PROCEDURE parse_ruleblocks(blockid varchar2);
     
@@ -649,13 +644,12 @@ PROCEDURE insert_ruleblocks_dep(
     dep_column_s  in    varchar2,
     dep_att_s     in    varchar2,
     dep_func_s    in    varchar2,
-    att_name_s    in    varchar2,
-    att_label_s    in    varchar2
+    att_name_s    in    varchar2
 )
 IS
 BEGIN
-    INSERT INTO rman_ruleblocks_dep (blockid, dep_table,dep_column,dep_att,dep_func,att_name,att_label)
-            VALUES (blockid_s, dep_table_s,dep_column_s,dep_att_s,dep_func_s,att_name_s,att_label_s);
+    INSERT INTO rman_ruleblocks_dep (blockid, dep_table,dep_column,dep_att,dep_func,att_name)
+            VALUES (blockid_s, dep_table_s,dep_column_s,dep_att_s,dep_func_s,att_name_s);
             
 END insert_ruleblocks_dep;
 
@@ -975,9 +969,7 @@ IS
     att         varchar2(4000);
     att0        varchar2(4000);
 
-    attr_meta_rec        attr_meta_record;
-    attr_meta_label      varchar2(4000); --Attributes Label meta data if availabe
-    attr_meta_isTrigger  number(1,0);    --Attributes trigger meta data if availabe
+
 
     att_str     varchar2(256);
     tbl         varchar2(100);
@@ -1064,38 +1056,7 @@ BEGIN
     build_assn_var2(txtin,'=>',left_tbl_name,from_clause,avn);
     assnvar:=sanitise_varname(avn);
     
-    /*Look up attribute meta data if availables*/
---    attr_meta_label :=  coalesce(assnvar,avn);
---    attr_meta_isTrigger := 0;
---    idx_ := 1;
---    
---    DBMS_OUTPUT.PUT_LINE('ATTR META -> FOUND META FOR: ' || avn ||' in ' || to_char(attr_meta.count) || ' definitions');
---    
---    WHILE idx_ <= attr_meta.count
---    LOOP
---        attr_meta_rec := attr_meta(idx_);
---        
---        if attr_meta_rec.blockId = blockid
---            and
---            attr_meta_rec.attr = avn
---        then 
---            BEGIN
---                DBMS_OUTPUT.PUT_LINE('ATTR META -> FOUND META FOR: ' || assnvar ||' ->' || attr_meta_rec.label);
---                attr_meta_label := coalesce(attr_meta_rec.label,assnvar,avn);
---                attr_meta_isTrigger := 0;
---                idx_ := attr_meta.count+1;
---            END;
---        ELSE 
---            BEGIN
---                DBMS_OUTPUT.PUT_LINE('ATTR META -> COULD NOT FIND META FOR: "' || avn || '" from: ' || txtin);
---                idx_ := idx_ +1;
---            END;
---        END IF;
---            
---
---    
---    END LOOP;
-
+   
     
     IF SUBSTR(tbl,1,5)='ROUT_' AND FUNC='BIND' THEN 
             where_txt:='';
@@ -1104,7 +1065,7 @@ BEGIN
             groupby_txt:='';
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
-            insert_ruleblocks_dep(blockid,tbl,ext_col_name,NULL,func, assnvar, attr_meta_label );
+            insert_ruleblocks_dep(blockid,tbl,ext_col_name,NULL,func, assnvar );
             rows_added:= 1;
             push_vstack(assnvar,indx,2,null,null);
     ELSE
@@ -1118,7 +1079,7 @@ BEGIN
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
-            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar );
             
             rows_added:= 1;
             
@@ -1144,7 +1105,7 @@ BEGIN
                 groupby_txt:='';
                 is_sub_val:=1;
                 insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,NULL, is_sub_val,sqlstat,func,funcparam);
-                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
+                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar );
                 where_txt:= 'rank=' || rankindx;
                 from_txt:= ctename;
                 IF FUNC='EXISTS' THEN
@@ -1194,7 +1155,8 @@ BEGIN
                 
                 insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar, is_sub_val,sqlstat,func,funcparam);
                 
-                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
+                insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar);
+                
                 
                 rows_added:= 1;
                 
@@ -1230,7 +1192,7 @@ BEGIN
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
-            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar, attr_meta_label );
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar );
             
             rows_added:= 1;
             
@@ -1256,7 +1218,7 @@ EXCEPTION
 END build_func_sql_exp;
 
 PROCEDURE build_cond_sql_exp(
-    indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
+    blockid     in varchar2,indx PLS_INTEGER,txtin IN varchar2,sqlstat OUT varchar2,rows_added OUT PLS_INTEGER
 )   
 IS
 
@@ -1293,15 +1255,10 @@ BEGIN
     
     build_assn_var2(txtin,':',left_tbl_name,from_clause,avn);
 
-                
-    dbms_output.put_line('GOT');
-    dbms_output.put_line(' : left_tbl_name:'||left_tbl_name);
-    dbms_output.put_line(' : from_clause:'||from_clause);
-    dbms_output.put_line(' : avn:'||avn);
+
     
     txtin2:=modify_ps_on_funcparam(txtin);
-    
-    --avn:=sanitise_varname(avn);
+        --avn:=sanitise_varname(avn);
     
     -- split at major assignment
     
@@ -1339,6 +1296,8 @@ BEGIN
             
 
             insert_rman(indx,'',from_clause,select_text,'',avn,0,sqlstat,'','');
+            
+            insert_ruleblocks_dep(blockid,null,null,null,null, avn);
         
             rows_added:= 1;
         
@@ -1360,69 +1319,58 @@ func_name       varchar2(30);
 func_param      varchar2(4000);
 func_param_tbl  tbl_type;
 param_key       varchar2(100);
-param_value     varchar2(100);
-kv              varchar2(200);
+param_value     varchar2(4000);
+
+label           varchar2(4000);
+
+rb_dep          rman_ruleblocks_dep%ROWTYPE;
+rb              rman_ruleblocks%ROWTYPE;
+
 BEGIN
-    dbms_output.put_line('compiler in :' || txtin);
+
     
-    func_name := UPPER(regexp_substr(txtin,'(#)(\w+)(\(([^}]+)\))',1,1,'i',2)) ;
+    func_name := UPPER(regexp_substr(txtin,'(#)(\w+)(\(([^)]+)\))',1,1,'i',2)) ;
     func_param:= regexp_substr(txtin,'(\()([^)]+)',1,1,'i',2)  ;
     
     param_key:= LOWER(TRIM(substr(func_param,1, instr(func_param,',')-1)));
     param_value:= substr(func_param,instr(func_param,',')+1);
     
-    dbms_output.put_line('compiler in key val :' || param_key || ' -> ' || param_value);
     
-    case param_key
-        when 'LABEL' then
-        dbms_output.put_line('compiler in LABEL :' || param_key || ' -> ' || param_value);
-            UPDATE rman_ruleblocks_dep SET ATT_LABEL=param_value WHERE ATT_NAME=param_key AND BLOCKID=ruleblockid;
+    
+    case func_name
+        when 'DEFINE_ATTRIBUTE' then
+
+            rb_dep.att_label:=json_value(param_value,'$.label' RETURNING VARCHAR2);
+            dbms_output.put_line('compiler in LABEL :' || param_key || ' -> ' || label);
+            UPDATE rman_ruleblocks_dep SET ATT_LABEL=rb_dep.att_label, ATT_META=param_value WHERE ATT_NAME=param_key AND BLOCKID=ruleblockid;
+            
+        when 'DEFINE_RULEBLOCK' then
+
+            
+            dbms_output.put_line('compiler in tba :');
+            
         else 
             dbms_output.put_line('compiler in tba :');
     end case;    
+EXCEPTION
     
     
+        
+    WHEN OTHERS THEN
+        commit_log('compile_ruleblocks',ruleblockid,'Error:');
+        -- Trap bad JSON error 
+        IF SQLCODE = -2290 THEN 
+            NULL;
+        ELSE
+            RAISE;
+        END IF;
+        
     
 END;
 
 
-/*
-Expected format for attribute declraetion is [ATTR]#[NAME](.IS_TRIGGER)
-where
-[ATTR] is the PICO attribute variable name
-[NAME] is the human readable name of the attribute
-.IS_TRIGGER if present is then attribute is a triggert
-
---Local type 
-TYPE attr_meta_record is RECORD  (
-    blockId  VARCHAR2(100),
-    attr VARCHAR2(100),
-    label VARCHAR2(100),
-    is_trigger NUMBER(1,0)
-);
-
-TYPE attr_meta_table is VARRAY of attr_meta_record;
-
-*/
---PROCEDURE generate_attr_metadata(blockid varchar2,line varchar2, attr_meta out attr_meta_record ) IS 
---    hashIdx number;
---BEGIN
---    dbms_output.put_line('generate_attr_metadata(' ||blockId || ',' || line ||')');
---    
---    hashIdx := INSTR(line,'#');
---    
---    attr_meta.blockId := blockid;
---    attr_meta.attr := substr(line,1,hashIdx-1);
---    attr_meta.label := substr(line,hashIdx+1);
---    attr_meta.is_trigger := 0;
---END;
-
-
-
 PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
-    --package tables type for attribue meta data
-    attr_meta attr_meta_table;
-    attr_meta_row attr_meta_record;
+
 
 
     rpipe_col rpipe_tbl_type;
@@ -1435,9 +1383,6 @@ PROCEDURE parse_rpipe (sqlout OUT varchar2) IS
     rs VARCHAR2(4000);
     ss VARCHAR2(4000);
 BEGIN
-
-    --intialise local meta table in case no meta data supplied
-    attr_meta := attr_meta_table();
     
     SELECT ruleid, rulebody,blockid 
     BULK COLLECT INTO rpipe_col
@@ -1469,44 +1414,20 @@ BEGIN
                 IF LENGTH(trim(ss))>0 THEN
                     --aggregate declaration
                     --identified by :
---<<<<<<< HEAD
-                    dbms_output.put_line('compiler ' || ss);
-                    dbms_output.put_line('compiler #' || instr(ss,'#'));
---                    IF INSTR(ss, '=>')>0  THEN
---=======
-                
---                    IF INSTR(ss, '#') >0 THEN
---                        generate_attr_metadata(rpipe_col(i).blockid ,ss , attr_meta_row);
---                        attr_meta.extend();
---                        attr_meta(attr_meta.COUNT).blockId := attr_meta_row.blockId ;
---                        attr_meta(attr_meta.COUNT).attr := attr_meta_row.attr ;
---                        attr_meta(attr_meta.COUNT).label := attr_meta_row.label ;
---                        attr_meta(attr_meta.COUNT).is_trigger := attr_meta_row.is_trigger ;
-
-                        --Add the return meta data to our table collection
-                        /*
-                        select attr_meta_row.blockId,
-                          attr_meta_row.attr ,
-                          attr_meta_row.label ,
-                          attr_meta_row.is_trigger  BULK COLLECT INTO attr_meta FROM DUAL  ;
-                        */
                     IF INSTR(ss, ':')=0  and INSTR(ss,'=>')>0 THEN
--->>>>>>> 0440940b7ec00c90c4e0d617cce4f5edddd2bb63
+                        -- functional form
                         rows_added:=0;
---                        build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added,attr_meta);
                         build_func_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
---<<<<<<< HEAD
+
                         
                     ELSIF INSTR(ss,'#')=1 THEN
                         -- Compiler directive
                         build_compiler_exp(rpipe_col(i).blockid,indx,ss);
                     ELSIF INSTR(ss,':')>0 THEN
---=======
---                    ELSE
--->>>>>>> 0440940b7ec00c90c4e0d617cce4f5edddd2bb63
+                        -- Conditional form
                         rows_added:=0;
-                        build_cond_sql_exp(indx,ss,sqlout,rows_added);
+                        build_cond_sql_exp(rpipe_col(i).blockid,indx,ss,sqlout,rows_added);
                         indx:=indx+rows_added;
         
                     END IF;
@@ -1521,10 +1442,6 @@ BEGIN
     
     indxtmp := vstack.FIRST; 
    
---    WHILE indxtmp IS NOT NULL LOOP   
-----        DBMS_Output.PUT_LINE('index -> ' || indxtmp || ' is ' || vstack(indxtmp));   
---        indxtmp := vstack.NEXT(indxtmp); 
---    END LOOP; 
     get_composite_sql(sqlout);
     
     dbms_output.put_line('sqlout ->' || chr(10) || sqlout);

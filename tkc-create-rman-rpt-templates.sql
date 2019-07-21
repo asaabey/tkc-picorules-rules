@@ -97,8 +97,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','alert_tg4660','tg4660',304660,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Alert : Contra-indicated medication (Trigger 4660)
-    --------------------------------------------------------------------
+    Alert : Medication safety concern (Trigger 4660)
+    ------------------------------------------------
     This patient is on <dm_rxn_bg>a biguanide,</dm_rxn_bg><dm_rxn_sglt2> SGLT2 inhibitor,</dm_rxn_sglt2><rx_nsaids> NSAIDS,</rx_nsaids> which is inconsistent with the current renal function.
     <dm_rxn_bg>Biguanides may be rarely associated with lactic acidosis at this level of renal function</dm_rxn_bg>
     <dm_rxn_sglt2>SGLT2 inhibitors are relatively contra-indicated at this level of renal function</dm_rxn_sglt2>

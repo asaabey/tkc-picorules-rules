@@ -55,9 +55,11 @@ CREATE TABLE rman_ruleblocks_dep
     dep_column  VARCHAR2(100),
     att_name    VARCHAR2(100),
     att_label   VARCHAR2(100),
+    att_meta    VARCHAR2(4000),
     dep_att     VARCHAR2(100),
     dep_func    VARCHAR2(100),
-    CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
+    CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid),
+    CONSTRAINT rman_ruleblocks_dep_json_chk CHECK (att_meta IS JSON)
 );
 /
 

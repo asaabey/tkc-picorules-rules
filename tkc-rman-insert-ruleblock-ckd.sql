@@ -39,6 +39,16 @@ BEGIN
             {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
             {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
             {=>0};
+            
+        #define_attribute(
+            rrt,
+            {
+                label:"Renal replacement therapy category.",
+                desc:"Integer [1-4] where 1=HD, 2=PD, 3=TX, 4=HHD",
+                is_reportable:1,
+                type:2
+            }
+        );
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
    INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate,exec_order) 
@@ -62,6 +72,18 @@ BEGIN
     rb.picoruleblock:='
     
         /* Rule block to stage CKD */
+        
+        #define_ruleblock(ckd,
+            {
+                blockid:="ckd",
+                target_table:="rout_ckd",
+                environment:="DEV",
+                rule_owner:="TKCADMIN",
+                is_active:=2,
+                def_exit_prop:="ckd",
+                def_predicate:=">0"
+            }
+        );
 
         /*  External bindings    */
         
@@ -181,6 +203,26 @@ BEGIN
                 {cga_g=`G5` => 6},
                 {=> 0};
         
+        #define_attribute(
+            ckd_stage,
+            {
+                label:"CKD stage as string as per KDIGO 2012",
+                desc:"VARCHAR2 corresponding to stage. eg.3A",
+                is_reportable:1,
+                type:1
+            }
+        );
+        
+        #define_attribute(
+            ckd,
+            {
+                label:"CKD stage as number as per KDIGO 2012",
+                desc:"Integer [1-6] corresponding to ordinal value",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
         /*  ICPC2+ coding , note that val has to set to ordered rank*/
         dx_ckd0  => eadv.[icpc_u990%].val.last();
         dx_ckd : {1=1 => nvl(dx_ckd0,0)};
@@ -192,8 +234,28 @@ BEGIN
                 {dx_ckd=5 => `4`},
                 {dx_ckd=6 => `5`},
                 {dx_ckd=0=> null};
+                
+        #define_attribute(
+            dx_ckd_stage,
+            {
+                label:"CKD stage on EHR as per ICPC2+ Code",
+                desc:"VARCHAR2 corresponding to stage. eg 3A",
+                is_reportable:1,
+                type:1
+            }
+        );
         
         dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
+        
+        #define_attribute(
+            dx_ckd_diff,
+            {
+                label:"Difference between coded and calculated",
+                desc:"Algebraic difference between numeric stages ",
+                is_reportable:0
+                type:2
+            }
+        );
         
         /* Encounters with specialist services */
         enc_n => eadv.enc_op_renal.dt.count();
@@ -206,6 +268,18 @@ BEGIN
         avf => eadv.caresys_3450901.dt.max();
         
         cp_mis :{cp_ckd>0 and (ckd - cp_ckd)>=2 => 1},{=>0};
+        
+        
+        #define_attribute(
+            cp_mis,
+            {
+                label:"Misclassifcation occured",
+                desc:"Integer [0-1]",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
         
         
             
@@ -262,9 +336,18 @@ BEGIN
      
      aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
-     aet_code : { ckd>0 => ( aet_dm * 1000000)+(aet_htn * 100000)+(aet_gn_ln * 10000)+(aet_gn_x * 1000) },{=>0};
      
+     ckd_cause : {coalesce(aet_dm,aet_htn_aet_gn_ln,aet_gn_x) is not null => 1},{=>0};
      
+     #define_attribute(
+            ckd_cause,
+            {
+                label:"CKD cause",
+                desc:"Integer [0-1] if matching comorbidity found ",
+                is_reportable:1,
+                type:2
+            }
+    );
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,target_table,environment,rule_owner,picoruleblock,is_active, def_exit_prop, def_predicate,exec_order) 
