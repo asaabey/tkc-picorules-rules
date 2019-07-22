@@ -143,6 +143,7 @@ Change Log
 10/07/2019  Bug fix: dv functions introduced multiple variable return, which caused multiple same name cte joins. this is fixed now
 17/07/2019  Gen Datacubes can accept multiple rules
 20/07/2019  Added compiler directive with build_compiler_exp 
+23/07/2019  Added serialize function
 
 
 */
@@ -1189,6 +1190,24 @@ BEGIN
             
             from_txt:= from_clause;
             select_txt:=  tbl || '.' || entity_id_col || ',' || func || '(' || prop || ', SYSDATE-' || dt_col || ') AS ' || assnvar || ' ';
+            groupby_txt:=tbl || '.' || entity_id_col;
+            insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
+            
+            insert_ruleblocks_dep(blockid,tbl,att_col,att0,func, assnvar );
+            
+            rows_added:= 1;
+            
+            push_vstack(assnvar,indx,2,func,to_char(funcparam));
+            
+        WHEN FUNC IN ('SERIALIZE') THEN
+            
+            where_txt:=att || predicate;
+            
+            from_txt:= from_clause;
+            select_txt:=  tbl || '.' || entity_id_col || ', LISTAGG(' || prop || ','','') WITHIN GROUP (ORDER BY DT DESC) AS ' || assnvar || ' ';
+            
+
+            
             groupby_txt:=tbl || '.' || entity_id_col;
             insert_rman(indx,where_txt,from_txt,select_txt,groupby_txt,assnvar,is_sub_val,sqlstat,func,funcparam);
             
