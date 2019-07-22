@@ -1340,7 +1340,9 @@ BEGIN
     case func_name
         when 'DEFINE_ATTRIBUTE' then
 
-            rb_dep.att_label:=json_value(param_value,'$.label' RETURNING VARCHAR2);
+--            rb_dep.att_label:=json_value(param_value,'$.label' RETURNING VARCHAR2);
+--          not working on 12.1.0.2 as a plsql statement
+            select json_value(param_value,'$.label' RETURNING VARCHAR2) into rb_dep.att_label from dual;
             dbms_output.put_line('compiler in LABEL :' || param_key || ' -> ' || label);
             UPDATE rman_ruleblocks_dep SET ATT_LABEL=rb_dep.att_label, ATT_META=param_value WHERE ATT_NAME=param_key AND BLOCKID=ruleblockid;
             

@@ -73,17 +73,7 @@ BEGIN
     
         /* Rule block to stage CKD */
         
-        #define_ruleblock(ckd,
-            {
-                blockid:="ckd",
-                target_table:="rout_ckd",
-                environment:="DEV",
-                rule_owner:="TKCADMIN",
-                is_active:=2,
-                def_exit_prop:="ckd",
-                def_predicate:=">0"
-            }
-        );
+        
 
         /*  External bindings    */
         
@@ -252,7 +242,7 @@ BEGIN
             {
                 label:"Difference between coded and calculated",
                 desc:"Algebraic difference between numeric stages ",
-                is_reportable:0
+                is_reportable:0,
                 type:2
             }
         );
@@ -298,7 +288,7 @@ BEGIN
     rb.environment:='DEV';
     rb.rule_owner:='TKCADMIN';
     rb.is_active:=2 ;
-    rb.def_exit_prop:='aet_code';
+    rb.def_exit_prop:='ckd_cause';
     rb.def_predicate:='>0';
     
     DELETE FROM rman_ruleblocks_dep WHERE blockid=rb.blockid;
@@ -337,7 +327,7 @@ BEGIN
      aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
      
-     ckd_cause : {coalesce(aet_dm,aet_htn_aet_gn_ln,aet_gn_x) is not null => 1},{=>0};
+     ckd_cause : {coalesce(aet_dm,aet_htn,aet_gn_ln,aet_gn_x) is not null => 1},{=>0};
      
      #define_attribute(
             ckd_cause,
