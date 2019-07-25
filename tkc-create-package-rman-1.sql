@@ -160,6 +160,8 @@ Change Log
     vstack          vstack_type;
     vstack_empty    vstack_type;
     
+    vstack_selected tbl_type:=tbl_type();
+    
     TYPE vstack_func_type IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
     vstack_func      vstack_func_type;
     
@@ -210,6 +212,8 @@ Change Log
     FUNCTION map_to_tmplt(jstr varchar2,tmplt varchar2 ) RETURN VARCHAR2;
     
     FUNCTION get_composition_by_eid(eid_in int,nlc_id varchar2) RETURN CLOB;
+    
+    FUNCTION is_selected_var(txtin varchar2) RETURN BOOLEAN;
     
     PROCEDURE insert_rman
     (
@@ -502,7 +506,35 @@ IF SUBSTR(TRIM(LEADING '"' FROM txtin),-1*(LENGTH(tempvar_char)))=tempvar_char T
 END IF;
 RETURN retval;
 
+
+
+
 END  is_tempvar;
+
+FUNCTION is_selected_var(txtin varchar2) RETURN BOOLEAN
+AS
+retval              BOOLEAN:=false;
+--idx               VARCHAR2(100);  
+BEGIN
+--    idx := vstack_selected.first;
+    
+    
+    --if vstack_selected is empty, it is assumed all variables are selected.hence return true
+    if vstack_selected.COUNT=0 then 
+        retval:=true;
+    end if;
+    
+    for i in 1..vstack_selected.COUNT LOOP
+        if vstack_selected(i)=txtin then
+            retval:=TRUE;
+           end if;
+    end loop;
+    
+    
+
+
+    RETURN retval;
+END is_selected_var;
 
 FUNCTION match_varname(txtbody varchar2,elem varchar2) RETURN BOOLEAN
 AS
@@ -571,7 +603,8 @@ BEGIN
     LOOP
         ctename:=get_cte_name(i);
         IF rmanobj(I).is_sub=0 THEN
-            IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+--            IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+            IF is_tempvar(rmanobj(I).varid)=FALSE and is_selected_var(rmanobj(I).varid)=TRUE THEN 
                 cmpstat := cmpstat || ctename || '.' || sanitise_varname(rmanobj(i).varid) || ' ';                        
                 --line break for readability
                 cmpstat:=cmpstat || chr(10);
@@ -581,7 +614,7 @@ BEGIN
                 END IF;
             END IF;
         ELSIF rmanobj(I).is_sub=2 THEN
-            IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+            IF is_tempvar(rmanobj(I).varid)=FALSE and is_selected_var(rmanobj(I).varid)=TRUE THEN
                 cmpstat := cmpstat || ctename || '.' || sanitise_varname(rmanobj(i).varid) || '_DT';                        
                 cmpstat:=cmpstat || chr(10);
                 cmpstat := cmpstat || ',';
@@ -606,7 +639,7 @@ BEGIN
 
         ctename:=get_cte_name(i);
         IF rmanobj(I).is_sub=0 OR rmanobj(I).is_sub=2 THEN
-                IF is_tempvar(rmanobj(I).varid)=FALSE THEN
+                IF is_tempvar(rmanobj(I).varid)=FALSE and is_selected_var(rmanobj(I).varid)=TRUE THEN
                     cmpstat := cmpstat || ' LEFT OUTER JOIN ' || ctename || ' ON ' || ctename || '.' || entity_id_col || '=' || get_cte_name(0)||'.' || entity_id_col || ' ';
                     --line break for readability
                     cmpstat:=cmpstat || chr(10);
@@ -654,51 +687,51 @@ BEGIN
             
 END insert_ruleblocks_dep;
 
-PROCEDURE build_assn_var
-(
-    txtin IN VARCHAR2,
-    delim IN VARCHAR2,
-    left_tbl_name IN VARCHAR2,
-    from_clause OUT VARCHAR2,
-    avn OUT VARCHAR2
-
-) IS
-    used_vars VARCHAR2(4000);
-    used_vars_tbl tbl_type;
-    txt VARCHAR2(4000);
-BEGIN
-            
-            txt:=SUBSTR(txtin,1,INSTR(txtin,delim)-LENGTH(delim)); 
-            
-
-            IF INSTR(txt,'(',1,1)>0 THEN
-                avn:=TRIM(SUBSTR(txt, 1, INSTR(txt,'(',1,1)-1));
-
-                used_vars:=REGEXP_SUBSTR(txt, '\((.*)?\)', 1, 1, 'i', 1);
-                
-                used_vars_tbl:=rman_pckg.splitstr(used_vars,','); 
-                
-                IF used_vars_tbl.COUNT>0 THEN
-                            from_clause :=from_clause || left_tbl_name;                    
-                            for i IN 1..used_vars_tbl.LAST LOOP
-                      
-                                from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
-                                        || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
-                                        || left_tbl_name || '.' || entity_id_col || ' ';
-                            END LOOP;
-                            
-                ELSE
-                            -- RAISE EXCEPTION
-                            DBMS_OUTPUT.PUT('BUILD :: no vars!' );
-                END IF;
-            ELSE
-                avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-1));
-                from_clause :=from_clause || left_tbl_name; 
-            END IF;
-            
-
-
-END build_assn_var;
+--PROCEDURE build_assn_var
+--(
+--    txtin IN VARCHAR2,
+--    delim IN VARCHAR2,
+--    left_tbl_name IN VARCHAR2,
+--    from_clause OUT VARCHAR2,
+--    avn OUT VARCHAR2
+--
+--) IS
+--    used_vars VARCHAR2(4000);
+--    used_vars_tbl tbl_type;
+--    txt VARCHAR2(4000);
+--BEGIN
+--            
+--            txt:=SUBSTR(txtin,1,INSTR(txtin,delim)-LENGTH(delim)); 
+--            
+--
+--            IF INSTR(txt,'(',1,1)>0 THEN
+--                avn:=TRIM(SUBSTR(txt, 1, INSTR(txt,'(',1,1)-1));
+--
+--                used_vars:=REGEXP_SUBSTR(txt, '\((.*)?\)', 1, 1, 'i', 1);
+--                
+--                used_vars_tbl:=rman_pckg.splitstr(used_vars,','); 
+--                
+--                IF used_vars_tbl.COUNT>0 THEN
+--                            from_clause :=from_clause || left_tbl_name;                    
+--                            for i IN 1..used_vars_tbl.LAST LOOP
+--                      
+--                                from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
+--                                        || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
+--                                        || left_tbl_name || '.' || entity_id_col || ' ';
+--                            END LOOP;
+--                            
+--                ELSE
+--                            -- RAISE EXCEPTION
+--                            DBMS_OUTPUT.PUT('BUILD :: no vars!' );
+--                END IF;
+--            ELSE
+--                avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-1));
+--                from_clause :=from_clause || left_tbl_name; 
+--            END IF;
+--            
+--
+--
+--END build_assn_var;
 
 FUNCTION modify_ps_on_funcparam(txtin varchar2) return varchar2
 AS
@@ -1366,9 +1399,40 @@ BEGIN
             UPDATE rman_ruleblocks_dep SET ATT_LABEL=rb_dep.att_label, ATT_META=param_value WHERE ATT_NAME=param_key AND BLOCKID=ruleblockid;
             
         when 'DEFINE_RULEBLOCK' then
-
             
-            dbms_output.put_line('compiler in tba :');
+            select json_value(param_value,'$.blockid' RETURNING VARCHAR2) into rb.blockid from dual;
+            
+            select json_value(param_value,'$.description' RETURNING VARCHAR2) into rb.description from dual;
+            
+            select json_value(param_value,'$.target_table' RETURNING VARCHAR2) into rb.target_table from dual;
+            
+            select json_value(param_value,'$.environment' RETURNING VARCHAR2) into rb.environment from dual;
+            
+            select json_value(param_value,'$.rule_owner' RETURNING VARCHAR2) into rb.rule_owner from dual;
+            
+            select json_value(param_value,'$.is_active' RETURNING VARCHAR2) into rb.is_active from dual;
+            
+            select json_value(param_value,'$.def_exit_prop' RETURNING VARCHAR2) into rb.def_exit_prop from dual;
+            
+            select json_value(param_value,'$.def_predicate' RETURNING VARCHAR2) into rb.def_predicate from dual;
+            
+            select json_value(param_value,'$.exec_order' RETURNING VARCHAR2) into rb.exec_order from dual;
+            
+            select json_value(param_value,'$.out_att' RETURNING VARCHAR2) into rb.out_att from dual;
+            
+            UPDATE rman_ruleblocks 
+                SET 
+                    TARGET_TABLE=rb.target_table,
+                    ENVIRONMENT=rb.environment,
+                    RULE_OWNER=rb.rule_owner,
+                    IS_ACTIVE=rb.is_active,
+                    DEF_EXIT_PROP=rb.def_exit_prop,
+                    DEF_PREDICATE=rb.def_predicate,
+                    EXEC_ORDER=rb.exec_order,
+                    OUT_ATT=rb.out_att,
+                    DESCRIPTION=rb.description
+            WHERE BLOCKID=ruleblockid;
+            
             
         else 
             dbms_output.put_line('compiler in tba :');
@@ -2238,6 +2302,21 @@ BEGIN
     
     vstack:=vstack_empty;
     
+    SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid_in;
+      -- process out_att if specified
+    
+    
+      
+    vstack_selected:=tbl_type();
+    IF length(trim(rb.out_att))>0 THEN
+        vstack_selected:=splitstr(rb.out_att,',');
+        
+        FOR i in 1..vstack_selected.COUNT LOOP
+            dbms_output.put_line('**-> ' || vstack_selected(i));
+            
+        END LOOP;
+    END IF;
+    
     rman_pckg.parse_ruleblocks(bid_in);
     
     rman_pckg.parse_rpipe(strsql);
@@ -2267,7 +2346,8 @@ IS
 BEGIN
     commit_log('compile_active_ruleblocks','','Started');
     SELECT * BULK COLLECT INTO rbs 
-    FROM rman_ruleblocks WHERE IS_ACTIVE=2 ORDER BY exec_order;
+    FROM rman_ruleblocks ;
+--    WHERE IS_ACTIVE=2 ORDER BY exec_order;
     
     IF rbs.COUNT>0 THEN 
         commit_log('compile_active_ruleblocks','',rbs.COUNT || ' Ruleblocks added to stack');
@@ -2320,7 +2400,7 @@ BEGIN
    
     commit_log('Execute ruleblock',rb.blockid,'initialised');
     
-    
+  
     
     IF create_wide_tbl=1 THEN  
         commit_log('Execute ruleblock',rb.blockid,'exec_ndsql');
@@ -2607,7 +2687,8 @@ as
     
     begin
     
-        select COLUMN_NAME BULK COLLECT INTO col_tbl from ALL_TAB_COLUMNS where TABLE_NAME=upper(tmp_tbl) and COLUMN_NAME not in ('EID','DIM_COL');
+        select COLUMN_NAME BULK COLLECT INTO col_tbl 
+        from ALL_TAB_COLUMNS where TABLE_NAME=upper(tmp_tbl) and COLUMN_NAME not in ('EID','DIM_COL');
         
         
         

@@ -33,8 +33,7 @@ CREATE TABLE rman_rpipe
 CREATE TABLE rman_ruleblocks
 (
     blockid             VARCHAR2(100),
-    picoruleblock       CLOB,
-    sqlblock            CLOB,
+    description         VARCHAR2(4000),
     target_table        VARCHAR2(100),
     environment         VARCHAR2(30),
     rule_owner          VARCHAR2(30),
@@ -42,6 +41,9 @@ CREATE TABLE rman_ruleblocks
     def_exit_prop       VARCHAR2(30),
     def_predicate       VARCHAR2(100),
     exec_order          NUMBER DEFAULT 1,
+    out_att             VARCHAR2(4000),
+    picoruleblock       CLOB,
+    sqlblock            CLOB,
     CONSTRAINT pk_ruleblocks PRIMARY KEY(blockid)
 );
 
@@ -58,7 +60,7 @@ CREATE TABLE rman_ruleblocks_dep
     att_meta    VARCHAR2(4000),
     dep_att     VARCHAR2(100),
     dep_func    VARCHAR2(100),
-    CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid),
+    CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid) ON DELETE CASCADE,
     CONSTRAINT rman_ruleblocks_dep_json_chk CHECK (att_meta IS JSON)
 );
 /
