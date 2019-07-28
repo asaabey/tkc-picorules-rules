@@ -59,12 +59,19 @@ BEGIN
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    DBMS_OUTPUT.PUT_LINE('--->' || rb.blockid);
+    DBMS_OUTPUT.PUT_LINE('--->' || rb.picoruleblock);
+    
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
 
     -- END OF RULEBLOCK --
         COMMIT;
     -- END OF RULEBLOCK --
 END;
+
+
 
 
 

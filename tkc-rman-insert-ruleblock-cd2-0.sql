@@ -20,21 +20,7 @@ BEGIN
     
         /* Algorithm to detect chronic disease entities */
         
-        #define_ruleblock(cd_dm,
-            {
-                description: "Algorithm to assess diabetes mellitus",
-                version: "0.0.1.1",
-                blockid: "cd_dm",
-                target_table:"rout_cd_dm",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"cd_dm",
-                def_predicate:">0",
-                exec_order:2
-                
-            }
-        );
+        
         
         
         

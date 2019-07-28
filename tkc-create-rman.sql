@@ -33,7 +33,7 @@ CREATE TABLE rman_rpipe
 CREATE TABLE rman_ruleblocks
 (
     blockid             VARCHAR2(100),
-    description         VARCHAR2(4000),
+--    description         VARCHAR2(4000),
     target_table        VARCHAR2(100),
     environment         VARCHAR2(30),
     rule_owner          VARCHAR2(30),

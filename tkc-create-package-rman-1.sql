@@ -160,7 +160,7 @@ Change Log
     vstack          vstack_type;
     vstack_empty    vstack_type;
     
-    vstack_selected tbl_type:=tbl_type();
+    global_vstack_selected tbl_type:=tbl_type();
     
     TYPE vstack_func_type IS TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
     vstack_func      vstack_func_type;
@@ -514,18 +514,15 @@ END  is_tempvar;
 FUNCTION is_selected_var(txtin varchar2) RETURN BOOLEAN
 AS
 retval              BOOLEAN:=false;
---idx               VARCHAR2(100);  
+
 BEGIN
---    idx := vstack_selected.first;
-    
-    
-    --if vstack_selected is empty, it is assumed all variables are selected.hence return true
-    if vstack_selected.COUNT=0 then 
+
+    if global_vstack_selected.COUNT=0 then 
         retval:=true;
     end if;
     
-    for i in 1..vstack_selected.COUNT LOOP
-        if vstack_selected(i)=txtin then
+    for i in 1..global_vstack_selected.COUNT LOOP
+        if global_vstack_selected(i)=txtin then
             retval:=TRUE;
            end if;
     end loop;
@@ -1402,9 +1399,9 @@ BEGIN
             
             select json_value(param_value,'$.blockid' RETURNING VARCHAR2) into rb.blockid from dual;
             
-            select json_value(param_value,'$.description' RETURNING VARCHAR2) into rb.description from dual;
+--            select json_value(param_value,'$.description' RETURNING VARCHAR2) into rb.description from dual;
             
-            select json_value(param_value,'$.target_table' RETURNING VARCHAR2) into rb.target_table from dual;
+            select upper(json_value(param_value,'$.target_table' RETURNING VARCHAR2)) into rb.target_table from dual;
             
             select json_value(param_value,'$.environment' RETURNING VARCHAR2) into rb.environment from dual;
             
@@ -1418,6 +1415,8 @@ BEGIN
             
             select json_value(param_value,'$.exec_order' RETURNING VARCHAR2) into rb.exec_order from dual;
             
+            
+            
             select json_value(param_value,'$.out_att' RETURNING VARCHAR2) into rb.out_att from dual;
             
             UPDATE rman_ruleblocks 
@@ -1429,8 +1428,8 @@ BEGIN
                     DEF_EXIT_PROP=rb.def_exit_prop,
                     DEF_PREDICATE=rb.def_predicate,
                     EXEC_ORDER=rb.exec_order,
-                    OUT_ATT=rb.out_att,
-                    DESCRIPTION=rb.description
+                    OUT_ATT=rb.out_att
+--                    DESCRIPTION=rb.description
             WHERE BLOCKID=ruleblockid;
             
             
@@ -1530,12 +1529,12 @@ BEGIN
     get_composite_sql(sqlout);
     
     dbms_output.put_line('sqlout ->' || chr(10) || sqlout);
-EXCEPTION
-    WHEN OTHERS
-        
-        THEN 
-            dbms_output.put_line(dbms_utility.format_error_stack);
-            RAISE;
+--EXCEPTION
+--    WHEN OTHERS
+--        
+--        THEN 
+--            dbms_output.put_line(dbms_utility.format_error_stack);
+--            RAISE;
 END parse_rpipe;
 
 
@@ -1560,7 +1559,7 @@ BEGIN
     
     DELETE FROM rman_rpipe;
     
-    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
+--    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
 
     --split at semicolon except when commented
     rbtbl:=splitclob(rbt.picoruleblock,';',comment_open_chars,comment_close_chars);
@@ -1577,12 +1576,12 @@ BEGIN
     END LOOP;
 
 --dbms_output.put_line('FUNC-AARAY VSTACK : ' || vstack.COUNT);
-EXCEPTION
-    WHEN OTHERS
-        
-        THEN 
-            dbms_output.put_line(dbms_utility.format_error_stack);
-            RAISE;
+--EXCEPTION
+--    WHEN OTHERS
+--        
+--        THEN 
+--            dbms_output.put_line(dbms_utility.format_error_stack);
+--            RAISE;
 
 END parse_ruleblocks;
 
@@ -2257,9 +2256,6 @@ BEGIN
 
 END exec_dsql_dstore_singlecol;
 
-
-
-
 PROCEDURE exec_ndsql(sqlstmt clob,tbl_name varchar2) 
 IS
     status              PLS_INTEGER;
@@ -2307,15 +2303,15 @@ BEGIN
     
     
       
-    vstack_selected:=tbl_type();
-    IF length(trim(rb.out_att))>0 THEN
-        vstack_selected:=splitstr(rb.out_att,',');
-        
-        FOR i in 1..vstack_selected.COUNT LOOP
-            dbms_output.put_line('**-> ' || vstack_selected(i));
-            
-        END LOOP;
-    END IF;
+--    global_vstack_selected:=tbl_type();
+--    IF length(trim(rb.out_att))>0 THEN
+--        global_vstack_selected:=splitstr(rb.out_att,',');
+--        
+--        FOR i in 1..global_vstack_selected.COUNT LOOP
+--            dbms_output.put_line('**-> ' || global_vstack_selected(i));
+--            
+--        END LOOP;
+--    END IF;
     
     rman_pckg.parse_ruleblocks(bid_in);
     
@@ -2328,12 +2324,12 @@ BEGIN
     commit_log('Compile ruleblock',rb.blockid,'compiled to sql');
     
     
-EXCEPTION
-    WHEN OTHERS
-        THEN 
-        commit_log('compile_ruleblocks',bid_in,'Error:');
-        commit_log('compile_ruleblocks',bid_in,'FAILED');
-        DBMS_OUTPUT.put_line('FAILED::' || bid || ' and errors logged to rman_ruleblocks_log !');
+--EXCEPTION
+--    WHEN OTHERS
+--        THEN 
+--        commit_log('compile_ruleblocks',bid_in,'Error:');
+--        commit_log('compile_ruleblocks',bid_in,'FAILED');
+--        DBMS_OUTPUT.put_line('FAILED::' || bid || ' and errors logged to rman_ruleblocks_log !');
 
 END compile_ruleblock;
 

@@ -133,7 +133,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_dm_rec_1','cd_dm_2',702100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_dm_rec_1','cd_dm',702100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <n0_st=3>Recommendation [2.3] Suggest optimizing glycaemic control</n0_st=3>
     <n0_st=4>Recommendation [2.3] Suggest optimizing glycaemic control</n0_st=4>
@@ -156,7 +156,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_htn_rec_1','cd_htn_2',703100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_htn_rec_1','cd_htn',703100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <htn_icpc=0>Recommendation [3.1] Update diagnosis to hypertension</htn_icpc=0>
     <bp_control=2>Recommendation [3.4] Optimize BP control</bp_control=2>
