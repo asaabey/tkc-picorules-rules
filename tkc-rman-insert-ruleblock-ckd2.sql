@@ -390,7 +390,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"ckd_journey",
+                def_exit_prop:"ckdj",
                 def_predicate:">0",
                 exec_order:3
                 
@@ -463,7 +463,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"ckd_diagnostics",
+                def_exit_prop:"ckd_dx",
                 def_predicate:">0",
                 exec_order:3
                 

@@ -139,8 +139,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4420",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4420"
+                exec_order:5
                 
             }
         );
@@ -231,8 +230,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4100",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4100"
+                exec_order:5
                 
             }
         );
@@ -319,8 +317,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4110",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4110"
+                exec_order:5
                 
             }
         );
@@ -368,8 +365,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4610",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4610,ckd_stage,eb,egfrlv,egfrld,egfr_max_v,ckd_null"
+                exec_order:5
                 
             }
         );
@@ -435,8 +431,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4620",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4620,ckd_stage,eb,avf"
+                exec_order:5
                 
             }
         );
@@ -491,8 +486,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4720",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4720"
+                exec_order:5
                 
             }
         );
@@ -549,8 +543,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4660",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg4660"
+                exec_order:5
                 
             }
         );
@@ -604,8 +597,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg2610",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "tg2610"
+                exec_order:5
                 
             }
         );

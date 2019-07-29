@@ -169,7 +169,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"cd_htn",
+                def_exit_prop:"htn",
                 def_predicate:">0",
                 exec_order:1,
                 out_att : "htn_icpc,htn_fd_yr,mu_1,mu_2,slice140_1_n,bp_trend,bp_control,htn_rxn,htn_rxn_arb,htn_rxn_acei,htn_rxn_ccb,htn_rxn_bb,htn_rxn_diuretic_thiazide,htn_rxn_diuretic_loop,iq_tier,iq_sbp,htn"

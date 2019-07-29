@@ -34,7 +34,7 @@ BEGIN
         eg :
         rman_pckg.compile_active_ruleblocks();
 */
-rman_pckg.compile_active_ruleblocks();
+--rman_pckg.compile_active_ruleblocks();
 
 
 /*
@@ -59,7 +59,7 @@ rman_pckg.compile_active_ruleblocks();
         rman_pckg.execute_active_ruleblocks(1);
 */
 
---        rman_pckg.execute_active_ruleblocks(1); 
+        rman_pckg.execute_active_ruleblocks(1); 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');

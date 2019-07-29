@@ -1,12 +1,12 @@
---cd C:\Users\abeya\Documents\Oracle11g\tkc;
+cd C:\Users\abeya\Documents\Oracle11g\tkc-master\tkc-picorules;
 
---@"tkc-create-eadvx.sql";
---@"tkc-create-rman.sql";
---@"tkc-create-rman-rpt-templates.sql";
---@"tkc-create-rman-comp-map.sql";
---@"tkc-create-package-rman-1.sql";
+@"tkc-create-eadvx.sql";
+@"tkc-create-rman.sql";
+@"tkc-create-rman-rpt-templates.sql";
+@"tkc-create-rman-comp-map.sql";
+@"tkc-create-package-rman-1.sql";
 
-@"tkc-rman-insert-ruleblock-cd.sql";
-@"tkc-rman-insert-ruleblock-ckd.sql";
-@"tkc-rman-insert-ruleblock-cvra.sql";
-@"tkc-rman-insert-ruleblock-trigger.sql";
+@"tkc-rman-insert-ruleblock-cd2.sql";
+@"tkc-rman-insert-ruleblock-ckd2.sql";
+@"tkc-rman-insert-ruleblock-cvra2.sql";
+@"tkc-rman-insert-ruleblock-trigger2.sql";

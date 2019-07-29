@@ -34,8 +34,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"cvra",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "cvra"
+                exec_order:5
                 
             }
         );
@@ -140,10 +139,9 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"kfre",
+                def_exit_prop:"kfre4v_ap",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "kfre"
+                exec_order:5
                 
             }
         );
@@ -208,8 +206,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"pcd",
                 def_predicate:">0",
-                exec_order:5,
-                out_att : "pcd"
+                exec_order:5
                 
             }
         );

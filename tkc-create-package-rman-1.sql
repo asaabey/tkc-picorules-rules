@@ -275,7 +275,8 @@ Change Log
 
     /* Truncates and populates the contens of EADV, the primary data source for RMAN */
     PROCEDURE populate_eadv_tables;
-
+        
+    PROCEDURE compile_templates;
 END;
 /
 
@@ -1429,7 +1430,7 @@ BEGIN
     FROM rman_rpipe;
     
     DELETE FROM rman_stack;
-    
+     
     indx:=1;
     
     vstack:=vstack_empty;
@@ -1481,16 +1482,18 @@ BEGIN
    
     
     indxtmp := vstack.FIRST; 
+    
+--    compile_templates;
    
     get_composite_sql(sqlout);
     
     dbms_output.put_line('sqlout ->' || chr(10) || sqlout);
---EXCEPTION
---    WHEN OTHERS
---        
---        THEN 
---            dbms_output.put_line(dbms_utility.format_error_stack);
---            RAISE;
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 END parse_rpipe;
 
 
@@ -1531,13 +1534,13 @@ BEGIN
         END IF;
     END LOOP;
 
---dbms_output.put_line('FUNC-AARAY VSTACK : ' || vstack.COUNT);
---EXCEPTION
---    WHEN OTHERS
---        
---        THEN 
---            dbms_output.put_line(dbms_utility.format_error_stack);
---            RAISE;
+
+EXCEPTION
+    WHEN OTHERS
+        
+        THEN 
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
 
 END parse_ruleblocks;
 
@@ -2252,6 +2255,7 @@ BEGIN
     DELETE FROM rman_rpipe;
     DELETE FROM rman_stack;
     
+    
     vstack:=vstack_empty;
     
     SELECT * INTO rb FROM rman_ruleblocks WHERE blockid=bid_in;
@@ -2297,6 +2301,9 @@ IS
 
 BEGIN
     commit_log('compile_active_ruleblocks','','Started');
+    
+    DELETE FROM rman_ruleblocks_dep;
+    
     SELECT * BULK COLLECT INTO rbs 
     FROM rman_ruleblocks ;
 --    WHERE IS_ACTIVE=2 ORDER BY exec_order;
@@ -3191,9 +3198,14 @@ BEGIN
 END populate_eadv_tables;
 
 
-PROCEDURE compile_templates AS
+PROCEDURE compile_templates 
+AS
         TYPE tp_type IS
             TABLE OF rman_rpt_templates%rowtype;
+            
+        TYPE rb_type IS
+            TABLE OF rman_ruleblocks%rowtype;
+            
         tp             tp_type;
         
 
@@ -3207,7 +3219,15 @@ PROCEDURE compile_templates AS
                 rman_rpt_templates;
 
         END;
-
+        
+--        PROCEDURE dep_att
+--        AS
+--        rbt     rb_type;
+--        BEGIN
+--            
+--        
+--        END;
+        
         PROCEDURE update_dep_view_exists AS
         k              VARCHAR2(100);
         k_tbl          tbl_type;
@@ -3224,7 +3244,7 @@ PROCEDURE compile_templates AS
                                        || '--------------------');
                 k_tbl := rman_pckg.splitstr(tp(i).templatehtml,'>');
                 FOR j IN 1..k_tbl.count LOOP
-                    k := regexp_substr(k_tbl(j),'(<)([a-z0-9]+)',1,1,'i',2);
+                    k := regexp_substr(k_tbl(j),'(<)([a-z0-9_]+)',1,1,'i',2);
 
                     IF length(k) > 0 THEN
                         used_var(k) := j;
@@ -3256,23 +3276,62 @@ PROCEDURE compile_templates AS
                 used_var := used_var_0;
             END LOOP;
         END;
-    PROCEDURE update_default_exit_prop
-    AS
     
-    BEGIN
-        DBMS_OUTPUT.PUT_LINE('TBA') ;   
-    END;
+    
+    procedure update_out_att is
+    begin
+    
+    UPDATE rman_ruleblocks r
+    SET
+        r.out_att = (
+            SELECT
+                LISTAGG(d.att_name, ',') WITHIN GROUP(
+                    ORDER BY
+                        NULL
+                )
+            FROM
+                rman_ruleblocks_dep d
+            WHERE
+                d.view_exists = 1
+                AND d.blockid = r.blockid
+                
+            GROUP BY
+                d.blockid
+        )
+
+    ;
+            
+    
+    end update_out_att;
+    
+    procedure concat_exit_prop is
+    begin
+        UPDATE rman_ruleblocks d
+        SET d.out_att = d.out_att || ',' || d.def_exit_prop
+        WHERE INSTR(NVL(d.out_att,''),d.def_exit_prop)=0;
+        
+        UPDATE rman_ruleblocks d
+        SET d.out_att = d.def_exit_prop
+        WHERE d.out_att is null;
+        
+    end concat_exit_prop;
+    
     --- Main procedure
+    
     
     BEGIN
         read_templates;
         update_dep_view_exists;
         
-        update_default_exit_prop;
+        
+        update_out_att;
+        
+        concat_exit_prop;
         
 END compile_templates;
 
 
+   
 END;
 
 
