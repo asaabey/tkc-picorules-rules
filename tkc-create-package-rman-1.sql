@@ -8,9 +8,9 @@ AS
 /*
 
 Package		    rman_pckg
-Version		    0.0.1.9
+Version		    0.0.2.1
 Creation date	07/04/2019
-update on date  05/07/2019
+update on date  29/07/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -144,8 +144,8 @@ Change Log
 17/07/2019  Gen Datacubes can accept multiple rules
 20/07/2019  Added compiler directive with build_compiler_exp 
 23/07/2019  Added serialize function
-
-
+27/07/2019  added define_ruleblock function
+20/07/2019  template compiler added to ensure integrity of attribute coupling to the view
 */
 
    
@@ -684,51 +684,7 @@ BEGIN
             
 END insert_ruleblocks_dep;
 
---PROCEDURE build_assn_var
---(
---    txtin IN VARCHAR2,
---    delim IN VARCHAR2,
---    left_tbl_name IN VARCHAR2,
---    from_clause OUT VARCHAR2,
---    avn OUT VARCHAR2
---
---) IS
---    used_vars VARCHAR2(4000);
---    used_vars_tbl tbl_type;
---    txt VARCHAR2(4000);
---BEGIN
---            
---            txt:=SUBSTR(txtin,1,INSTR(txtin,delim)-LENGTH(delim)); 
---            
---
---            IF INSTR(txt,'(',1,1)>0 THEN
---                avn:=TRIM(SUBSTR(txt, 1, INSTR(txt,'(',1,1)-1));
---
---                used_vars:=REGEXP_SUBSTR(txt, '\((.*)?\)', 1, 1, 'i', 1);
---                
---                used_vars_tbl:=rman_pckg.splitstr(used_vars,','); 
---                
---                IF used_vars_tbl.COUNT>0 THEN
---                            from_clause :=from_clause || left_tbl_name;                    
---                            for i IN 1..used_vars_tbl.LAST LOOP
---                      
---                                from_clause:=from_clause || ' LEFT OUTER JOIN ' || get_cte_name(vstack(used_vars_tbl(i)))
---                                        || ' ON ' || get_cte_name(vstack(used_vars_tbl(i))) || '.' || entity_id_col || '=' 
---                                        || left_tbl_name || '.' || entity_id_col || ' ';
---                            END LOOP;
---                            
---                ELSE
---                            -- RAISE EXCEPTION
---                            DBMS_OUTPUT.PUT('BUILD :: no vars!' );
---                END IF;
---            ELSE
---                avn:=TRIM(SUBSTR(txtin, 1, INSTR(txtin,delim,1,1)-1));
---                from_clause :=from_clause || left_tbl_name; 
---            END IF;
---            
---
---
---END build_assn_var;
+
 
 FUNCTION modify_ps_on_funcparam(txtin varchar2) return varchar2
 AS
@@ -2303,15 +2259,15 @@ BEGIN
     
     
       
---    global_vstack_selected:=tbl_type();
---    IF length(trim(rb.out_att))>0 THEN
---        global_vstack_selected:=splitstr(rb.out_att,',');
---        
---        FOR i in 1..global_vstack_selected.COUNT LOOP
---            dbms_output.put_line('**-> ' || global_vstack_selected(i));
---            
---        END LOOP;
---    END IF;
+    global_vstack_selected:=tbl_type();
+    IF length(trim(rb.out_att))>0 THEN
+        global_vstack_selected:=splitstr(rb.out_att,',');
+        
+        FOR i in 1..global_vstack_selected.COUNT LOOP
+            dbms_output.put_line('**-> ' || global_vstack_selected(i));
+            
+        END LOOP;
+    END IF;
     
     rman_pckg.parse_ruleblocks(bid_in);
     
@@ -3233,6 +3189,88 @@ BEGIN
     EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
 
 END populate_eadv_tables;
+
+
+PROCEDURE compile_templates AS
+        TYPE tp_type IS
+            TABLE OF rman_rpt_templates%rowtype;
+        tp             tp_type;
+        
+
+        PROCEDURE read_templates AS
+        BEGIN
+            SELECT
+                *
+            BULK COLLECT
+            INTO tp
+            FROM
+                rman_rpt_templates;
+
+        END;
+
+        PROCEDURE update_dep_view_exists AS
+        k              VARCHAR2(100);
+        k_tbl          tbl_type;
+        TYPE used_var_type IS
+            TABLE OF INTEGER INDEX BY VARCHAR2(100);
+        used_var       used_var_type;
+        used_var_0     used_var_type;
+        idx            VARCHAR2(100);
+        used_var_agg   VARCHAR2(4000);
+        BEGIN
+            FOR i IN tp.first..tp.last LOOP
+                dbms_output.put_line('tmp->'
+                                       || tp(i).templateid
+                                       || '--------------------');
+                k_tbl := rman_pckg.splitstr(tp(i).templatehtml,'>');
+                FOR j IN 1..k_tbl.count LOOP
+                    k := regexp_substr(k_tbl(j),'(<)([a-z0-9]+)',1,1,'i',2);
+
+                    IF length(k) > 0 THEN
+                        used_var(k) := j;
+                    END IF;
+
+                END LOOP;
+
+                used_var_agg := '';
+                idx := used_var.first;
+                WHILE idx IS NOT NULL LOOP
+                    used_var_agg := used_var_agg
+                                    || idx
+                                    || ',';
+                    idx := used_var.next(idx);
+                    UPDATE rman_ruleblocks_dep
+                    SET
+                        view_exists = 1
+                    WHERE
+                        blockid = tp(i).ruleblockid
+                        AND att_name = idx;
+
+                END LOOP;
+
+                dbms_output.put_line('t->'
+                                       || tp(i).ruleblockid
+                                       || ' -> '
+                                       || used_var_agg);
+
+                used_var := used_var_0;
+            END LOOP;
+        END;
+    PROCEDURE update_default_exit_prop
+    AS
+    
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('TBA') ;   
+    END;
+    --- Main procedure
+    
+    BEGIN
+        read_templates;
+        update_dep_view_exists;
+        
+        update_default_exit_prop;
+        
+END compile_templates;
 
 
 END;

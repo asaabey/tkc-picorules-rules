@@ -29,7 +29,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"cd_dm",
+                def_exit_prop:"dm",
                 def_predicate:">0",
                 exec_order:2
                 

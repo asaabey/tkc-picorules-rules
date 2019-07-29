@@ -60,6 +60,7 @@ CREATE TABLE rman_ruleblocks_dep
     att_meta    VARCHAR2(4000),
     dep_att     VARCHAR2(100),
     dep_func    VARCHAR2(100),
+    view_exists NUMBER(1,0) DEFAULT 0,
     CONSTRAINT dep_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid) ON DELETE CASCADE,
     CONSTRAINT rman_ruleblocks_dep_json_chk CHECK (att_meta IS JSON)
 );

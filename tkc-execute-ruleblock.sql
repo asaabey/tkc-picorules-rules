@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
-rman_pckg.compile_ruleblock('test1');
+--rman_pckg.compile_ruleblock('test1');
 
 
 /*
@@ -34,7 +34,7 @@ rman_pckg.compile_ruleblock('test1');
         eg :
         rman_pckg.compile_active_ruleblocks();
 */
---rman_pckg.compile_active_ruleblocks();
+rman_pckg.compile_active_ruleblocks();
 
 
 /*
