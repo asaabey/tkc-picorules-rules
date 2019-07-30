@@ -222,11 +222,11 @@ BEGIN
                             { htn_vintage_yr_>=10 and htn_vintage_yr_ <20 => 2 },
                             { htn_vintage_yr_>=20=> 3 },{=>0};
         
-        htn : {greatest(htn_icd,htn_icpc,htn_obs,htn_rxn)>0 =>1},{=>0};
         
-        htn_type : {htn=1 and htn_type_2>0 => 1},{htn=1 and htn_type_2=0 => 2},{=>0};
         
-        htn_dx_code : {htn=1 => (htn*1000 + htn_type*100 + htn_vintage_cat*10 )},{=>0};
+        
+        
+        
         
         /*  Bp control */
         sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365); 
@@ -249,7 +249,7 @@ BEGIN
         
         bp_control : { n_qt_1 >=0.75 => 3},{ n_qt_1<0.75 and n_qt_1>=0.25 => 2 },{ n_qt_1<0.25 => 1},{=>0};
         
-        
+        htn : {greatest(htn_icd,htn_icpc,htn_obs,htn_rxn)>0 =>1},{=>0};
         
         
     ';

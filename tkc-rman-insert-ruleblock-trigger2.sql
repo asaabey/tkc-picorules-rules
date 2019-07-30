@@ -108,7 +108,8 @@ BEGIN
                 desc:"Integer [0-1] if meets criteria ",
                 is_reportable:0,
                 is_trigger:1,
-                type:2
+                type:2,
+                priority:1
             }
         );
         
@@ -139,7 +140,8 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4420",
                 def_predicate:">0",
-                exec_order:5
+                exec_order:5,
+                priority:2
                 
             }
         );
@@ -199,7 +201,8 @@ BEGIN
                 desc:"Integer [0-1] if meets criteria ",
                 is_reportable:0,
                 is_trigger:1,
-                type:2
+                type:2,
+                priority:1
             }
         );
         
@@ -285,7 +288,8 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:0,
                     is_trigger:1,
-                    type:2
+                    type:2,
+                    priority:1
                 }
             );
                         
@@ -317,7 +321,8 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4110",
                 def_predicate:">0",
-                exec_order:5
+                exec_order:5,
+                priority:2
                 
             }
         );
@@ -326,7 +331,7 @@ BEGIN
           
         tg4110 : {aki_icd>0 => 1},{=>0};
           
-        tg4110_code : {1=1=> 1};
+        
                         
          #define_attribute(
                 tg4110,
@@ -335,7 +340,8 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:0,
                     is_trigger:1,
-                    type:2
+                    type:2,
+                    priority:1
                 }
             ); 
         
@@ -400,7 +406,8 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:0,
                     is_trigger:1,
-                    type:2
+                    type:2,
+                    priority:1
                 }
             ); 
 
@@ -456,7 +463,8 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:0,
                     is_trigger:1,
-                    type:2
+                    type:2,
+                    priority:1
                 }
             ); 
 
@@ -513,7 +521,8 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:0,
                     is_trigger:1,
-                    type:2
+                    type:2,
+                    priority:1
                 }
             ); 
 
@@ -543,7 +552,8 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"tg4660",
                 def_predicate:">0",
-                exec_order:5
+                exec_order:5,
+                priority:2
                 
             }
         );
@@ -652,7 +662,8 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:0,
                     is_trigger:1,
-                    type:2
+                    type:2,
+                    priority:2
                 }
             ); 
 

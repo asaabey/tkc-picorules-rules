@@ -139,7 +139,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"kfre4v_ap",
+                def_exit_prop:"kfre",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -177,6 +177,8 @@ BEGIN
         kfre4v_2yr : { kfre4v_ap =1 => round(1-power(0.9832,kfre4v_exp) ,2)};
         
         kfre4v_5yr : { kfre4v_ap =1 => round(1-power(0.9365,kfre4v_exp) ,2)};
+        
+        kfre : { 1=1 => kfre4v_ap};
                   
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

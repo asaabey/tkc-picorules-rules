@@ -10,3 +10,5 @@ cd C:\Users\abeya\Documents\Oracle11g\tkc-master\tkc-picorules;
 @"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
 @"tkc-rman-insert-ruleblock-trigger2.sql";
+
+
