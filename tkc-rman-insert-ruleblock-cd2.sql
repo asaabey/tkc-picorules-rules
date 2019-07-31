@@ -29,7 +29,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"dm",
+                def_exit_prop:"cd_dm",
                 def_predicate:">0",
                 exec_order:2
                 
@@ -107,14 +107,16 @@ BEGIN
         dm_longstanding : {dm_vintage_cat>=2 => 1},{=>0};   
         
         
-        
         dm : {greatest(dm_icd,dm_icpc,dm_lab,dm_rxn)>0 =>1},{=>0};
+        
         
         dm_dx_code_flag : {dm >=1 and greatest(dm_icd,dm_icpc)>=1 => 1},{dm >=1 and greatest(dm_lab,dm_rxn)>0 =>0};
         
         dm_dx_undiagnosed : {dm_dx_code_flag=0 => 1},{=>0};
         
         dm_type : {dm=1 and dm_type_1>0 => 1},{dm=1 and dm_type_1=0 => 2},{=>0};
+        
+        
         
         dm_dx_code : {dm=1 => (dm*1000 + dm_type*100 + dm_vintage_cat*10 + dm_micvas)},{=>0};
         
@@ -140,6 +142,7 @@ BEGIN
                             { hba1c_n0_val >=8 and hba1c_n0_val <10 => 3},
                             { hba1c_n0_val >=10 =>4},{=>0};
         
+        cd_dm : {1=1 => dm};
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
 

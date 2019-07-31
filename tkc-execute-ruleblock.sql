@@ -48,6 +48,7 @@ BEGIN
 */
 
 --    rman_pckg.execute_ruleblock('cd_dm',1,0,0,1);  
+    rman_pckg.execute_ruleblock('ckd_cause',1,1,0,1);  
     
 /*
     Execute all active ruleblock 
@@ -59,7 +60,7 @@ BEGIN
         rman_pckg.execute_active_ruleblocks(1);
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');

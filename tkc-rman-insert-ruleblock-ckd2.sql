@@ -86,7 +86,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"ckd",
+                def_exit_prop:"ckd_0",
                 def_predicate:">0",
                 exec_order:2
                 
@@ -288,7 +288,7 @@ BEGIN
             }
         );
         
-        
+        ckd_0 : {1=1=> ckd};
         
             
     ';
