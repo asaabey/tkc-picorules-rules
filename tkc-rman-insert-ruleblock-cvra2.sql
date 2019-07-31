@@ -205,7 +205,7 @@ BEGIN
                 target_table:"rout_pcd",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:2,
+                is_active:0,
                 def_exit_prop:"pcd",
                 def_predicate:">0",
                 exec_order:5

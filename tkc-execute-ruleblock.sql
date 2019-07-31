@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
---rman_pckg.compile_ruleblock('test1');
+--rman_pckg.compile_ruleblock('cd_htn');
 
 
 /*
@@ -47,8 +47,8 @@ BEGIN
         rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 */
 
---    rman_pckg.execute_ruleblock('cd_dm',1,0,0,1);  
-    
+--    rman_pckg.execute_ruleblock('ckd',1,1,0,1);  
+--    rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 /*
     Execute all active ruleblock 
     order determined by execution order

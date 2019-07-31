@@ -155,6 +155,8 @@ Change Log
     vstack vstack_type;
     vstack_empty vstack_type;
     global_vstack_selected tbl_type := tbl_type();
+    global_vstack_selected_empty tbl_type := tbl_type();
+    
     TYPE vstack_func_type IS
         TABLE OF VARCHAR2(100) INDEX BY VARCHAR2(100);
     vstack_func vstack_func_type;
@@ -231,9 +233,14 @@ Change Log
         eid_in INT,
         nlc_id VARCHAR2
     ) RETURN CLOB;
+    
+    FUNCTION is_not_last_selected_var (
+        txtin VARCHAR2
+    ) RETURN BOOLEAN;
 
     FUNCTION is_selected_var (
-        txtin VARCHAR2
+        txtin VARCHAR2,
+        sub    PLS_INTEGER
     ) RETURN BOOLEAN;
 
     PROCEDURE insert_rman (
@@ -255,7 +262,7 @@ Change Log
         txtin        VARCHAR2,
         sqlstat      OUT          VARCHAR2,
         rows_added   OUT          PLS_INTEGER
---    attr_meta   IN attr_meta_table
+
     );
 
     PROCEDURE build_cond_sql_exp (
@@ -612,19 +619,58 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN retval;
     END is_tempvar;
 
-    FUNCTION is_selected_var (
+    FUNCTION is_not_last_selected_var (
         txtin VARCHAR2
     ) RETURN BOOLEAN AS
         retval BOOLEAN := false;
     BEGIN
         IF global_vstack_selected.count = 0 THEN
-            retval := true;
+            retval := true ;
+        ELSIF global_vstack_selected(global_vstack_selected.last)<>txtin THEN
+            retval :=true ;
         END IF;
-        FOR i IN 1..global_vstack_selected.count LOOP IF global_vstack_selected(i) = txtin THEN
-            retval := true;
-        END IF;
-        END LOOP;
+        
+--        retval:=true;
 
+        RETURN retval;
+    END is_not_last_selected_var;
+
+    
+    FUNCTION is_selected_var (
+        txtin VARCHAR2,
+        sub    PLS_INTEGER
+    ) RETURN BOOLEAN AS
+        txt_tmp VARCHAR2(100);
+        retval BOOLEAN := false;
+    BEGIN
+        IF global_vstack_selected.count = 0 THEN
+            retval := true;
+        END IF;
+        
+        
+        FOR i IN 1..global_vstack_selected.LAST LOOP 
+        
+            IF sub=0 THEN
+                IF global_vstack_selected(i) = txtin THEN
+                    retval := true;
+                END IF;
+            ELSIF sub=2 THEN 
+                IF global_vstack_selected(i) = txtin || '_dt' OR global_vstack_selected(i) = txtin || '_val' THEN
+                    retval := true;
+                END IF;
+            END IF;    
+        
+        
+        END LOOP;
+        
+        
+        IF retval=true then 
+            dbms_output.put_line('-->' || txtin || ' -> TRUE');
+        ELSE
+            dbms_output.put_line('-->' || txtin || ' -> FALSE');
+        END IF;
+        
+--        retval:=true;
         RETURN retval;
     END is_selected_var;
 
@@ -733,7 +779,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         FOR i IN rmanobj.first..rmanobj.last LOOP
             ctename := get_cte_name(i);
             IF rmanobj(i).is_sub = 0 THEN
-                IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid) = true THEN
+                IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid,rmanobj(i).is_sub) = true THEN
                     cmpstat := cmpstat
                                || ctename
                                || '.'
@@ -749,7 +795,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 END IF;
 
             ELSIF rmanobj(i).is_sub = 2 THEN
-                IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid) = true THEN
+                IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid,rmanobj(i).is_sub) = true THEN
                     cmpstat := cmpstat
                                || ctename
                                || '.'
@@ -765,7 +811,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                || '_VAL';
 
                     cmpstat := cmpstat || chr(10);
-                    IF i < rmanobj.last THEN
+                    IF i < rmanobj.last and is_not_last_selected_var(rmanobj(i).varid) THEN
                         cmpstat := cmpstat || ',';
                     END IF;
                 END IF;
@@ -781,7 +827,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         FOR i IN rmanobj.first..rmanobj.last LOOP
             ctename := get_cte_name(i);
             IF rmanobj(i).is_sub = 0 OR rmanobj(i).is_sub = 2 THEN
-                IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid) = true THEN
+                IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid,rmanobj(i).is_sub) = true THEN
                     cmpstat := cmpstat
                                || ' LEFT OUTER JOIN '
                                || ctename
@@ -1812,9 +1858,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         BULK COLLECT
         INTO rpipe_col
         FROM
-            rman_rpipe;
+            rman_rpipe
+        ORDER BY ruleid;
 
-        DELETE FROM rman_stack;
+--        DELETE FROM rman_stack;
 
         indx := 1;
         vstack := vstack_empty;
@@ -1864,8 +1911,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         indxtmp := vstack.first; 
     
         compile_templates;
+        
         get_composite_sql(sqlout);
-        dbms_output.put_line('sqlout ->'
+        
+        dbms_output.put_line('sqlout '|| rpipe_col(rpipe_col.FIRST).blockid || '->'
                              || chr(10)
                              || sqlout);
     EXCEPTION
@@ -1897,7 +1946,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             blockid = blockid_predicate;
 
-        DELETE FROM rman_rpipe;
+--        DELETE FROM rman_rpipe;
     
 --    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
 
@@ -1915,7 +1964,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     rb,
                     blockid
                 );
-
+                
+                COMMIT;
             END IF;
 
         END LOOP;
@@ -2625,6 +2675,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
         END IF;
         EXECUTE IMMEDIATE create_tbl_sql_str;
+        
+        COMMIT;
         tstack.extend;
         tstack(tstack.count) := tbl_name;
     END exec_ndsql;
@@ -2639,11 +2691,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         bid      rman_ruleblocks.blockid%TYPE;
     BEGIN
         commit_log('Compile ruleblock', bid_in, 'compiling');
+        
         DELETE FROM rman_rpipe;
-
+        
         DELETE FROM rman_stack;
-
+        COMMIT;
+        
         vstack := vstack_empty;
+        
+        global_vstack_selected := global_vstack_selected_empty ;
+        
         SELECT
             *
         INTO rb
@@ -2653,7 +2710,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid = bid_in;
       -- process out_att if specified
 
-        global_vstack_selected := tbl_type();
+        
         IF length(trim(rb.out_att)) > 0 THEN
             global_vstack_selected := splitstr(rb.out_att, ',');
             FOR i IN 1..global_vstack_selected.count LOOP dbms_output.put_line('**-> ' || global_vstack_selected(i));
@@ -2661,24 +2718,32 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
-        rman_pckg.parse_ruleblocks(bid_in);
-        rman_pckg.parse_rpipe(strsql);
+        parse_ruleblocks(bid_in);
+        
+        parse_rpipe(strsql);
+        
+        
         UPDATE rman_ruleblocks
         SET
             sqlblock = strsql
         WHERE
             blockid = bid_in;
 
-        SELECT
-            *
-        INTO rb
-        FROM
-            rman_ruleblocks
-        WHERE
-            blockid = bid_in;
-
-        commit_log('Compile ruleblock', rb.blockid, 'compiled to sql');
-    
+--        SELECT
+--            *
+--        INTO rb
+--        FROM
+--            rman_ruleblocks
+--        WHERE
+--            blockid = bid_in;
+--commit_log('Compile ruleblock', rb.blockid, 'compiled to sql');
+        commit_log('Compile ruleblock', bid_in, 'compiled to sql');
+--        --clean up
+--    
+--        delete from rman_stack;
+--        
+--        delete from rman_rpipe;
+--        commit;
     
 EXCEPTION
     WHEN OTHERS
@@ -2694,7 +2759,7 @@ EXCEPTION
     BEGIN
         commit_log('compile_active_ruleblocks', '', 'Started');
         DELETE FROM rman_ruleblocks_dep;
-
+        COMMIT;
         SELECT
             *
         BULK COLLECT
@@ -2748,15 +2813,15 @@ EXCEPTION
         commit_log('Execute ruleblock', rb.blockid, 'initialised');
         IF create_wide_tbl = 1 THEN
             commit_log('Execute ruleblock', rb.blockid, 'exec_ndsql');
-            rman_pckg.exec_ndsql(rb.sqlblock, rb.target_table);
+            exec_ndsql(rb.sqlblock, rb.target_table);
         END IF;
 
         COMMIT;
         IF push_to_long_tbl = 1 THEN
             commit_log('Execute ruleblock', rb.blockid, 'exec_dsql_dstore');
         
---        rman_pckg.exec_dsql_dstore_singlecol(rb.blockid,rb.sqlblock,'eadvx', rb.def_exit_prop,rb.def_predicate) ;
-            rman_pckg.exec_dsql_dstore_singlecol(rb.blockid, 'SELECT * FROM ' || rb.target_table, 'eadvx', rb.def_exit_prop, rb.def_predicate
+
+            exec_dsql_dstore_singlecol(rb.blockid, 'SELECT * FROM ' || rb.target_table, 'eadvx', rb.def_exit_prop, rb.def_predicate
             );
 
         END IF;
@@ -2770,6 +2835,9 @@ EXCEPTION
 --    END IF;
         COMMIT;
         commit_log('Execute ruleblock', rb.blockid, 'Succeded');
+        
+    
+    
     EXCEPTION
         WHEN OTHERS THEN
             dbms_output.put_line(dbms_utility.format_error_stack);
@@ -2785,6 +2853,7 @@ EXCEPTION
         commit_log('execute_active_ruleblocks', '', 'Started');
         
         compile_active_ruleblocks;
+        commit;
         
         SELECT
             *
@@ -2801,10 +2870,8 @@ EXCEPTION
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
             FOR i IN rbs.first..rbs.last LOOP
                 bid := rbs(i).blockid;
---            IF recompile=1 THEN
---                compile_ruleblock(bid);
---            END IF;
-                execute_ruleblock(bid, 1, 1, 0, 0);
+
+                execute_ruleblock(bid, 1, 1, 0, 1);
                 dbms_output.put_line('rb: ' || bid);
             END LOOP;
 
@@ -3773,7 +3840,8 @@ EXCEPTION
         
             UPDATE rman_ruleblocks_dep
             SET
-                view_exists = 1
+--                view_exists = 1
+                dep_exists = 1
             WHERE
                 EXISTS (
                     SELECT
@@ -3860,8 +3928,10 @@ EXCEPTION
                     FROM
                         rman_ruleblocks_dep d
                     WHERE
-                        d.view_exists = 1
-                        AND d.blockid = r.blockid
+--                        d.view_exists = 1
+--                        AND d.blockid = r.blockid
+                        d.blockid = r.blockid 
+                        AND (d.view_exists = 1 OR d.dep_exists = 1)
                     GROUP BY
                         d.blockid
                 );
@@ -3896,6 +3966,7 @@ EXCEPTION
         update_dependent_att;
         update_out_att;
         concat_exit_prop;
+        
     END compile_templates;
 
 END;
