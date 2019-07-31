@@ -3877,9 +3877,9 @@ EXCEPTION
             used_var_agg   VARCHAR2(4000);
         BEGIN
             FOR i IN tp.first..tp.last LOOP
-                dbms_output.put_line('tmp->'
-                                     || tp(i).templateid
-                                     || '--------------------');
+--                dbms_output.put_line('tmp->'
+--                                     || tp(i).templateid
+--                                     || '--------------------');
                 k_tbl := rman_pckg.splitstr(tp(i).templatehtml, '>');
                 FOR j IN 1..k_tbl.count LOOP
                     k := regexp_substr(k_tbl(j), '(<)([a-z0-9_]+)', 1, 1, 'i', 2);
