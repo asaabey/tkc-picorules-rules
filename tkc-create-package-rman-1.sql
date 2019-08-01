@@ -3880,14 +3880,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     used_var_agg := used_var_agg
                                     || idx
                                     || ',';
-                    idx := used_var.next(idx);
+                    
                     UPDATE rman_ruleblocks_dep
                     SET
                         view_exists = 1
                     WHERE
                         blockid = tp(i).ruleblockid
                         AND att_name = idx;
-
+                    idx := used_var.next(idx);
+                    
                 END LOOP;
 
                 dbms_output.put_line('t->'
