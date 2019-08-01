@@ -13,6 +13,8 @@ begin
 --    eid:=2523;
 --    eid:=1546;
     composition:=rman_pckg.get_composition_by_eid(eid,'neph001');
+    
+    
     DBMS_OUTPUT.put_line('EID:' || eid);
 
     DBMS_OUTPUT.put_line(composition);

@@ -50,8 +50,8 @@ BEGIN
 --    rman_pckg.execute_ruleblock('ckd',1,1,0,1);  
 --    rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 
---    rman_pckg.execute_ruleblock('cd_dm',1,0,0,1);  
---    rman_pckg.execute_ruleblock('ckd_cause',1,1,0,1);  
+--    rman_pckg.execute_ruleblock('cd_htn',1,1,0,1);  
+
     
 /*
     Execute all active ruleblock 

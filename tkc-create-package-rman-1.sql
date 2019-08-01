@@ -7,7 +7,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 Package		    rman_pckg
 Version		    0.0.2.1
 Creation date	07/04/2019
-update on date  29/07/2019
+update on date  01/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -142,7 +142,10 @@ Change Log
 20/07/2019  Added compiler directive with build_compiler_exp 
 23/07/2019  Added serialize function
 27/07/2019  added define_ruleblock function
-20/07/2019  template compiler added to ensure integrity of attribute coupling to the view
+29/07/2019  template compiler added to ensure integrity of attribute coupling to the view
+01/08/2019  fixed rpipe sorting bug
+01/08/2019  changed listagg to xmlagg
+
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -1062,6 +1065,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             END IF;
 
         END LOOP;
+        
+        -- remove remaining tags and content
+        ret_tmplt := regexp_replace(ret_tmplt,'<(.*?)>'
+                                                        || '</'
+                                                        || html_tkey,'');
     -- if param is 0 then toggle text on 
 
         html_tkey := '\w+=0' || '>';
@@ -1077,6 +1085,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                 || '(.*?)'
                                                 || '</'
                                                 || html_tkey,'');
+                                                
+    -- remove unattended html segments
+        ret_tmplt := regexp_replace(ret_tmplt,'<[a-z0-9_\=]+>(.*?)<\/[a-z0-9_\=]+>','*');
     
     -- remove excess space and line feeds
 
@@ -1102,7 +1113,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 eid,
                 att,
                 dt,
-                rman_pckg.map_to_tmplt(t0.valc,tmp.templatehtml) AS body,
+                map_to_tmplt(t0.valc,tmp.templatehtml) AS body,
                 tmp.placementid
             FROM
                 (
@@ -1127,11 +1138,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 AND tmp.compositionid = compositionid_in
         )
         SELECT
---            LISTAGG(body, '') WITHIN GROUP(
---                ORDER BY
---                    placementid
---            )
-            rtrim(XMLAGG(xmlelement(e,body,' ').extract('//text()')
+
+            RTRIM(XMLAGG(xmlelement(e,body,' ').extract('//text()')
                 ORDER BY
                     placementid
             ).getclobval(),',')
@@ -2722,22 +2730,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             blockid = bid_in;
 
---        SELECT
---            *
---        INTO rb
---        FROM
---            rman_ruleblocks
---        WHERE
---            blockid = bid_in;
---commit_log('Compile ruleblock', rb.blockid, 'compiled to sql');
 
         commit_log('Compile ruleblock',bid_in,'compiled to sql');
---        --clean up
---    
---        delete from rman_stack;
---        
---        delete from rman_rpipe;
---        commit;
     EXCEPTION
         WHEN OTHERS THEN
             commit_log('compile_ruleblocks',bid_in,'Error:');
@@ -2761,7 +2755,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         INTO rbs
         FROM
             rman_ruleblocks;
---    WHERE IS_ACTIVE=2 ORDER BY exec_order;
+
 
         IF rbs.count > 0 THEN
             commit_log('compile_active_ruleblocks','',rbs.count || ' Ruleblocks added to stack');
@@ -2839,6 +2833,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     BEGIN
         tstack := tstack_empty;
         commit_log('execute_active_ruleblocks','','Started');
+        
         compile_active_ruleblocks;
         COMMIT;
         SELECT
@@ -2856,7 +2851,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             commit_log('execute_active_ruleblocks','',rbs.count || ' Ruleblocks added to stack');
             FOR i IN rbs.first..rbs.last LOOP
                 bid := rbs(i).blockid;
-                execute_ruleblock(bid,1,1,0,1);
+                execute_ruleblock(bid,1,1,0,0);
                 dbms_output.put_line('rb: ' || bid);
             END LOOP;
 
@@ -3825,7 +3820,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         BEGIN
             UPDATE rman_ruleblocks_dep
             SET
---                view_exists = 1
+
                 dep_exists = 1
             WHERE
                 EXISTS (
@@ -3861,14 +3856,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             used_var_agg   VARCHAR2(4000);
         BEGIN
             FOR i IN tp.first..tp.last LOOP
---                dbms_output.put_line('tmp->'
---                                     || tp(i).templateid
---                                     || '--------------------');
+
                 k_tbl := rman_pckg.splitstr(tp(i).templatehtml,'>');
                 FOR j IN 1..k_tbl.count LOOP
+                
+                    
                     k := regexp_substr(k_tbl(j),'(<)([a-z0-9_]+)',1,1,'i',2);
-
+                    
+                    
                     IF length(k) > 0 THEN
+                        dbms_output.Put_line('***-> ' || k);
                         used_var(k) := j;
                     END IF;
 
@@ -3880,14 +3877,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     used_var_agg := used_var_agg
                                     || idx
                                     || ',';
-                    idx := used_var.next(idx);
+                    
                     UPDATE rman_ruleblocks_dep
                     SET
                         view_exists = 1
                     WHERE
                         blockid = tp(i).ruleblockid
                         AND att_name = idx;
-
+                    idx := used_var.next(idx);
                 END LOOP;
 
                 dbms_output.put_line('t->'
