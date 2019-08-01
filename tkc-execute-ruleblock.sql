@@ -47,14 +47,12 @@ BEGIN
         rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 */
 
-<<<<<<< HEAD
 --    rman_pckg.execute_ruleblock('ckd',1,1,0,1);  
 --    rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
-=======
+
 --    rman_pckg.execute_ruleblock('cd_dm',1,0,0,1);  
-    rman_pckg.execute_ruleblock('ckd_cause',1,1,0,1);  
+--    rman_pckg.execute_ruleblock('ckd_cause',1,1,0,1);  
     
->>>>>>> 105ffd97a94977512c9f078466635627c70f04a6
 /*
     Execute all active ruleblock 
     order determined by execution order
@@ -65,7 +63,7 @@ BEGIN
         rman_pckg.execute_active_ruleblocks(1);
 */
 
---        rman_pckg.execute_active_ruleblocks; 
+        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');
