@@ -307,6 +307,14 @@ Change Log
         predicate   VARCHAR2
     );
 
+    PROCEDURE check_sql_syntax(
+        blockid     VARCHAR2,
+        sqlstmt     CLOB,
+        tbl_name    VARCHAR2,
+        disc_col    VARCHAR2,
+        predicate   VARCHAR2
+    );
+    
     PROCEDURE exec_ndsql (
         sqlstmt CLOB,
         tbl_name VARCHAR2
@@ -2657,6 +2665,54 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         dbms_sql.close_cursor(select_cursor);
     END exec_dsql_dstore_singlecol;
 
+PROCEDURE check_sql_syntax(
+        blockid     VARCHAR2,
+        sqlstmt     CLOB,
+        tbl_name    VARCHAR2,
+        disc_col    VARCHAR2,
+        predicate   VARCHAR2
+    ) IS
+
+        
+        select_cursor        PLS_INTEGER := dbms_sql.open_cursor;
+        
+        
+        select_tbl_sql_str   CLOB := sqlstmt;
+        
+        tbl_exists_val       PLS_INTEGER;
+        
+        src_id               VARCHAR2(32) := blockid;
+    BEGIN
+        IF src_id IS NULL THEN
+            src_id := 'undefined';
+        END IF;
+    --analyse query
+        IF disc_col IS NOT NULL AND predicate IS NOT NULL THEN
+            select_tbl_sql_str := select_tbl_sql_str
+                                  || ' WHERE '
+                                  || upper(disc_col)
+                                  || ' '
+                                  || predicate;
+
+        END IF;
+        dbms_output.put_line('Checking syntax -->' || src_id);
+        
+        EXECUTE IMMEDIATE 'alter session set cursor_sharing=force';
+        
+        dbms_sql.parse(select_cursor,select_tbl_sql_str,dbms_sql.native);
+        
+        EXECUTE IMMEDIATE 'alter session set cursor_sharing=exact';
+                
+        dbms_sql.close_cursor(select_cursor);
+        
+    EXCEPTION
+    WHEN OTHERS THEN
+        dbms_output.put_line('SQL syntax error -->' || src_id);
+        EXECUTE IMMEDIATE 'alter session set cursor_sharing=exact';
+        dbms_sql.close_cursor(select_cursor);
+        RAISE;
+    END check_sql_syntax;
+
     PROCEDURE exec_ndsql (
         sqlstmt CLOB,
         tbl_name VARCHAR2
@@ -2724,12 +2780,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         parse_ruleblocks(bid_in);
         parse_rpipe(strsql);
+        
+        
+        
         UPDATE rman_ruleblocks
         SET
             sqlblock = strsql
         WHERE
             blockid = bid_in;
 
+--        check_sql_syntax(rb.blockid,rb.sqlblock,rb.target_table,rb.def_exit_prop,rb.def_predicate);
 
         commit_log('Compile ruleblock',bid_in,'compiled to sql');
     EXCEPTION
@@ -3392,7 +3452,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             owner = schemaname
             AND table_name = 'EADV';
-
+        commit_log('populate_eadv_tables','','Create EADV table if not exisiting');
         IF table_exist = 0 THEN
             dbms_output.put_line('creating table: EADV');
             BEGIN
@@ -3425,7 +3485,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             owner = schemaname
             AND lower(view_name) = 'vw_eadv_locality';
-
+        commit_log('populate_eadv_tables','','Create Supporting Views if not exisiting');
         IF table_exist = 0 THEN
             BEGIN
                 dbms_output.put_line('creating view: vw_eadv_locality');
@@ -3456,7 +3516,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             WHEN OTHERS THEN
                 NULL;
         END;
-    
+    commit_log('populate_eadv_tables','','Merge patient result numeric');
     --3: truncate for repopulation
         dbms_output.put_line('truncating EADV');
         EXECUTE IMMEDIATE 'truncate table EADV';
@@ -3481,6 +3541,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
 
+    commit_log('populate_eadv_tables','','Merge patient result coded');
     --5: Insert patient result coded, icpc,icd, caresys
         dbms_output.put_line('Merge patient result coded');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3513,7 +3574,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     WHEN NOT MATCHED THEN
     INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
-    
+    commit_log('populate_eadv_tables','','Merge patient derived');
     --6: insert  Derived results
         dbms_output.put_line('Merge derived results');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3535,7 +3596,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
      
-    
+    commit_log('populate_eadv_tables','','Merge patient outpatient encounters');
     --7: OP encounters
         dbms_output.put_line('Merge OP encounters');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3558,6 +3619,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
     
+    commit_log('populate_eadv_tables','','Merge patient rxclass');
     --8: RxClass
         dbms_output.put_line('Merge RxClass');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3586,7 +3648,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
 
-    
+    commit_log('populate_eadv_tables','','Merge patient other misc');
     --9: care plan
         dbms_output.put_line('Merge Care Plans');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3690,7 +3752,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
      
-    
+    commit_log('populate_eadv_tables','','Merge patient RIS encounters');
     --13: Ris encounters
         dbms_output.put_line('Merge RIS Encounters');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3713,7 +3775,25 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
     
-     
+    commit_log('populate_eadv_tables','','Merge patient CSU actions');
+    --13.5: csu actions
+        dbms_output.put_line('Merge CSU actions');
+    EXECUTE IMMEDIATE 'MERGE INTO eadv t1
+    USING (
+    SELECT DISTINCT
+        lr.linked_registrations_id as eid,
+        ''csu_action'' as att,
+        prt.action_date                as dt,
+        prt.action_id as val
+    FROM
+        patient_cse_actions prt
+    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id 
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    ) t2 
+    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+    WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)
+    ';
     
     --14: CVRA
         dbms_output.put_line('Merge CVRA ');
@@ -3748,7 +3828,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
       where dup > 1
     )'
         ;
-    
+    commit_log('populate_eadv_tables','','Merge patient demographics');
     --16: Expose demographics from patient_registrations as eadv
         dbms_output.put_line('Merge demographics');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
@@ -3778,7 +3858,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
      
-    
+    commit_log('populate_eadv_tables','','Applying Bitmap indexing and compute statistics');
     --17: Re-create indexs
         dbms_output.put_line('Recreate indexs');
         BEGIN
@@ -3885,6 +3965,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         blockid = tp(i).ruleblockid
                         AND att_name = idx;
                     idx := used_var.next(idx);
+
                 END LOOP;
 
                 dbms_output.put_line('t->'

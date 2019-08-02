@@ -263,14 +263,19 @@ BEGIN
           
           /* Determine true baseline */
           cr_avg_2y => eadv.lab_bld_creatinine.val.avg().where(val<cr_max_1y and val>cr_min_1y and dt>sysdate-730);
-          cr_avg_min_1y_qt : {cr_avg_2y is not null => round(cr_min_1y/cr_avg_2y,1) };
+          cr_avg_min_1y_qt : {nvl(cr_avg_2y,0)>0 => round(cr_min_1y/cr_avg_2y,1) };
           cr_base : {cr_avg_min_1y_qt<0.5 => cr_avg_2y},{=>cr_min_1y};
           
           
           /* Calculate proportion */
-          cr_base_max_1y_qt : {cr_base is not null => round(cr_max_1y/cr_base,1) };
-          cr_base_lv_1y_qt : {cr_base is not null => round(cr_lv/cr_base,1) };
-          cr_max_lv_1y_qt : {cr_lv is not null => round(cr_max_1y/cr_lv,1) };
+          
+          
+          cr_base_max_1y_qt : {nvl(cr_base,0)>0 => round(cr_max_1y/cr_base,1) };
+          
+          
+          cr_base_lv_1y_qt : {nvl(cr_base,0)>0 => round(cr_lv/cr_base,1) };
+          
+          cr_max_lv_1y_qt : {nvl(cr_lv,0)>0 => round(cr_max_1y/cr_lv,1) };
           
           
           akin_stage : {rrt=0 and cr_base_max_1y_qt>2 => 3 },{rrt=0 and cr_base_max_1y_qt>1.5 => 2 },{=>0};
