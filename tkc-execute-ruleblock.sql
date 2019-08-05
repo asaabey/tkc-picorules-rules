@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
---rman_pckg.compile_ruleblock('cd_htn');
+--rman_pckg.compile_ruleblock('cd_dm');
 
 
 /*
@@ -63,7 +63,7 @@ BEGIN
         rman_pckg.execute_active_ruleblocks(1);
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');
@@ -72,6 +72,8 @@ BEGIN
 
 --rman_pckg.execute_ruleblock('qa_data_geom',1,1,0,1); 
 --            rman_pckg.compile_ruleblock('cd_cardiac');
+
+rman_pckg.gen_cube_from_ruleblock('cd_dm.dm,ckd.ckd_stage','01032019,01032018','rep123');
 END;
 
 
