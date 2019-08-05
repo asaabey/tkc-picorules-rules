@@ -7,7 +7,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 Package		    rman_pckg
 Version		    0.0.2.1
 Creation date	07/04/2019
-update on date  01/08/2019
+update on date  06/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -128,6 +128,11 @@ Compiler directive
 #define_attribute(att_name, json_object);
 #define_ruleblock(ruleblock, json_object); TBI
 
+Data cube generator
+Usage:
+rman_pckg.gen_cube_from_ruleblock('cd_dm.dm,ckd.ckd_stage','01032019,01032018','rep123');
+parameters
+
 Change Log
 ----------
 22/06/2019  Implemented Template engine
@@ -145,6 +150,7 @@ Change Log
 29/07/2019  template compiler added to ensure integrity of attribute coupling to the view
 01/08/2019  fixed rpipe sorting bug
 01/08/2019  changed listagg to xmlagg
+06/08/2019  datacube generator improvements
 
 */
     TYPE rman_tbl_type IS
@@ -3219,6 +3225,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         obj_tbl         tbl_type;
         ruleblock_tbl   tbl_type:=tbl_type();
         rb_att_str_tbl  tbl_type:=tbl_type();
+        att_init_tbl    tbl_type:=tbl_type();
         col_stack       vstack_type;
 
         FUNCTION get_object_name (
@@ -3353,9 +3360,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             obj_exists     BINARY_INTEGER;
         BEGIN
             rb_att_tbl := rman_pckg.splitstr(rb_att_str, ',');
-            FOR i IN 1..rb_att_tbl.count LOOP rb_str := rb_str
+            FOR i IN 1..rb_att_tbl.count 
+            LOOP rb_str := rb_str
                                                         || ','
                                                         || substr(rb_att_tbl(i), 1, instr(rb_att_tbl(i), '.') - 1);
+                 att_init_tbl.extend(1);
+                 att_init_tbl(i):= upper(substr(rb_att_tbl(i),instr(rb_att_tbl(i), '.') + 1));
             END LOOP;
 
             rb_str := trim(LEADING ',' FROM rb_str);
@@ -3377,6 +3387,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 
                 rb_att_str_tbl.extend(1);
                 rb_att_str_tbl(j):=rb_str;
+                
+                dbms_output.put_line('********** ->' || rb_str );
                 
                 
             END LOOP;
@@ -3491,11 +3503,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         FUNCTION get_col_list (
             tmp_tbl VARCHAR2
+            
         ) RETURN VARCHAR2 AS
             ret       VARCHAR2(4000) := '';
             col_tbl   tbl_type;
-            j         PLS_INTEGER;
+            
+--            j         PLS_INTEGER;
         BEGIN
+            
+            
             SELECT
                 column_name
             BULK COLLECT
@@ -3507,9 +3523,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 AND column_name NOT IN (
                     'EID',
                     'DIM_COL'
-                );
+                )
+                AND column_name IN (
+                    SELECT * FROM TABLE(att_init_tbl)
+                )
+                ;
 
-            FOR i IN 1..col_tbl.count LOOP IF col_stack.EXISTS(col_tbl(i)) = false THEN
+            FOR i IN 1..col_tbl.count LOOP 
+            IF col_stack.EXISTS(col_tbl(i)) = false THEN
                 IF i < col_tbl.count THEN
                     ret := ret
                            || upper(tmp_tbl)
@@ -3541,7 +3562,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                              || tbl_name
                              || '.EID, '
                              || tbl_name
-                             || '.DIM_COL, ';
+                             || '.DIM_COL ';
             FOR j IN 1..ruleblock_tbl.count LOOP
                 tbl_name := get_object_name('rt_cube', ruleblock_tbl(j), '0');
                 IF j < ruleblock_tbl.count THEN
@@ -3592,8 +3613,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             IF obj_exists > 0 THEN
                 EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
---                dbms_output.put_line('union -> dropping tbl '
---                                     || get_object_name('rt', ruleblockid, '0'));
+
             END IF;
 
             dbms_output.put_line('join-> creating '
@@ -3696,6 +3716,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END modify_temp_tbls;
 
     BEGIN
+        -- get time slices into collection
         get_slices(slices_str);
 --        get_ruleblocktbl(ruleblockid);
         cube_in_rbstack;
