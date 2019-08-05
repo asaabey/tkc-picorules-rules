@@ -151,7 +151,7 @@ Change Log
 01/08/2019  fixed rpipe sorting bug
 01/08/2019  changed listagg to xmlagg
 06/08/2019  datacube generator improvements
-
+07/08/2019  init_global_vstack bug fixes
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -282,6 +282,9 @@ Change Log
 
     PROCEDURE parse_ruleblocks (
         blockid VARCHAR2
+    );
+    PROCEDURE init_global_vstack(
+        bid_in IN VARCHAR2
     );
 
     PROCEDURE exec_dsql (
@@ -1890,7 +1893,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ORDER BY
             ruleid;
 
---        DELETE FROM rman_stack;
+        DELETE FROM rman_stack;
 
         indx := 1;
         vstack := vstack_empty;
@@ -1939,6 +1942,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         indxtmp := vstack.first;
         compile_templates;
+        init_global_vstack(rpipe_col(1).blockid);
+        
         get_composite_sql(sqlout);
         dbms_output.put_line('sqlout '
                              || rpipe_col(rpipe_col.first).blockid
@@ -1975,9 +1980,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             blockid = blockid_predicate;
 
---        DELETE FROM rman_rpipe;
+        DELETE FROM rman_rpipe;
     
---    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
+    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
 
     --split at semicolon except when commented
 
@@ -2553,6 +2558,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
+        
+        
         dbms_sql.parse(select_cursor, select_tbl_sql_str, dbms_sql.native);
         dbms_sql.describe_columns2(select_cursor, colcount, tbl_desc);
         FOR i IN 1..tbl_desc.count LOOP CASE tbl_desc(i).col_type
@@ -2748,6 +2755,31 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tstack(tstack.count) := tbl_name;
     END exec_ndsql;
 
+    PROCEDURE init_global_vstack(
+        bid_in IN VARCHAR2
+    )
+    AS
+    out_att_s       rman_ruleblocks.out_att%TYPE;
+    BEGIN
+    SELECT
+            out_att
+        INTO out_att_s
+        FROM
+            rman_ruleblocks
+        WHERE
+            blockid = bid_in;
+    global_vstack_selected := global_vstack_selected_empty;
+    
+            IF length(trim(out_att_s)) > 0 THEN
+            global_vstack_selected := splitstr(out_att_s, ',');
+            FOR i IN 1..global_vstack_selected.count 
+            LOOP 
+            dbms_output.put_line('* GVS *-> ' || global_vstack_selected(i));
+            END LOOP;
+
+        END IF;
+    END init_global_vstack;
+    
     PROCEDURE compile_ruleblock (
         bid_in IN VARCHAR2
     ) IS
@@ -2774,12 +2806,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid = bid_in;
       -- process out_att if specified
 
-        IF length(trim(rb.out_att)) > 0 THEN
-            global_vstack_selected := splitstr(rb.out_att, ',');
-            FOR i IN 1..global_vstack_selected.count LOOP dbms_output.put_line('**-> ' || global_vstack_selected(i));
-            END LOOP;
-
-        END IF;
+--        
+--        IF length(trim(rb.out_att)) > 0 THEN
+--            global_vstack_selected := splitstr(rb.out_att, ',');
+--            FOR i IN 1..global_vstack_selected.count LOOP dbms_output.put_line('* GVS *-> ' || global_vstack_selected(i));
+--            END LOOP;
+--
+--        END IF;
 
         parse_ruleblocks(bid_in);
         parse_rpipe(strsql);
@@ -4297,9 +4330,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             SET
                 d.out_att = d.out_att
                             || ','
-                            || d.def_exit_prop
-            WHERE
-                instr(nvl(d.out_att, ''), d.def_exit_prop) = 0;
+                            || d.def_exit_prop;
+--            WHERE
+--                instr(nvl(d.out_att, ''), d.def_exit_prop) = 0;
 
             UPDATE rman_ruleblocks d
             SET

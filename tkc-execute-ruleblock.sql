@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
---rman_pckg.compile_ruleblock('cd_dm');
+--rman_pckg.compile_ruleblock('tg4100');
 
 
 /*
@@ -50,7 +50,7 @@ BEGIN
 --    rman_pckg.execute_ruleblock('ckd',1,1,0,1);  
 --    rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 
---    rman_pckg.execute_ruleblock('cd_htn',1,1,0,1);  
+    rman_pckg.execute_ruleblock('cd_htn',1,1,0,1);  
 
     
 /*
@@ -73,7 +73,7 @@ BEGIN
 --rman_pckg.execute_ruleblock('qa_data_geom',1,1,0,1); 
 --            rman_pckg.compile_ruleblock('cd_cardiac');
 
-rman_pckg.gen_cube_from_ruleblock('cd_dm.dm,ckd.ckd_stage','01032019,01032018','rep123');
+--rman_pckg.gen_cube_from_ruleblock('cd_dm.dm,ckd.ckd_stage','01032019,01032018,01032017,01032016,01032015','rep123');
 END;
 
 

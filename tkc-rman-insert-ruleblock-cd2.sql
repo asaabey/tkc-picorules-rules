@@ -29,7 +29,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"cd_dm",
+                def_exit_prop:"dm",
                 def_predicate:">0",
                 exec_order:2
                 
@@ -142,7 +142,7 @@ BEGIN
                             { hba1c_n0_val >=8 and hba1c_n0_val <10 => 3},
                             { hba1c_n0_val >=10 =>4},{=>0};
         
-        cd_dm : {1=1 => dm};
+        
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
 
