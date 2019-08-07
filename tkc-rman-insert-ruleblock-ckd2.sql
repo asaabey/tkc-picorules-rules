@@ -232,7 +232,7 @@ BEGIN
         );
         
         /*  ICPC2+ coding , note that val has to set to ordered rank*/
-        dx_ckd0  => eadv.[icpc_u990%].val.last();
+        dx_ckd0  => eadv.[icpc_u990%,icpc_u88j%].val.last();
         dx_ckd : {1=1 => nvl(dx_ckd0,0)};
         
         dx_ckd_stage :{dx_ckd=1 => `1`},

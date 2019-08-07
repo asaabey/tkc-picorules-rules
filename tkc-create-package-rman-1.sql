@@ -3946,6 +3946,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             when ''icpc_u99044'' then 4
             when ''icpc_u99038'' then 5
             when ''icpc_u99039'' then 6
+            
+            when ''icpc_u88j91'' then 1
+            when ''icpc_u88j92'' then 2
+            when ''icpc_u88j93'' then 3
+            when ''icpc_u88j94'' then 4
+            when ''icpc_u88j95'' then 5
+            when ''icpc_u88j95'' then 6
         else 
         NULL end as val
     FROM    patient_results_coded rc
@@ -4231,8 +4238,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         case pr.sex when 1 then 1 else 0 end as val
     FROM    patient_registrations pr
     JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
-    where 
-    date_of_birth is not null
+    UNION ALL
+    SELECT distinct
+        lr.linked_registrations_id as eid,
+        ''dmg_dod'' as att,
+        date_of_death as dt,
+        null as val
+    FROM    patient_registrations pr
+    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+    WHERE
+    date_of_death is not null
     ) t2
     ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
     WHEN NOT MATCHED THEN
