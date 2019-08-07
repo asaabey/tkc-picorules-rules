@@ -51,6 +51,8 @@ BEGIN
         
         /*  on basic */
         
+        asm_cvra => eadv.asm_cvra.val.lastdv();
+        
         dob => eadv.dmg_dob.dt.max();
         
         male => eadv.dmg_gender.val.max();
@@ -70,6 +72,7 @@ BEGIN
         sbp => eadv.obs_bp_systolic.val.last();
         
         smoke0 => eadv.status_smoking_h2_v1.val.last();
+
         
         
         age : { dob<sysdate => round(((sysdate-dob)/365.25),0)};
@@ -110,6 +113,7 @@ BEGIN
                     { risk_5 >=15 => 3},
                     { risk_5 >=10 and risk_5 <15 => 2},
                     { risk_5 <15 => 1},{=>0};
+        cvra_dx_uncoded : {cvra=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
         
             
         

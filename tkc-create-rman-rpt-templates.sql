@@ -121,7 +121,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     Diabetes rubric
     -------------------
-    <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_undiagnosed>Undiagnosed</dm_dx_undiagnosed><dm_longstanding> long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
+    <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_uncoded>Undiagnosed</dm_dx_uncoded><dm_longstanding> long standing</dm_longstanding> type <dm_type></dm_type> diabetes mellitus since <dm_fd_t></dm_fd_t>.
     <dm_micvas>There are non-renal microvascular complications.</dm_micvas>
     <hba1c_n_tot>The last recorded HbA1c (NGSP) is <hba1c_n0_val></hba1c_n0_val> % (<hba1c_n0_dt></hba1c_n0_dt>).</hba1c_n_tot>
     The glycaemic control is <n0_st=0> unknown </n0_st=0><n0_st=2>optimal (6-8)</n0_st=2><n0_st=1>too tight(<6)</n0_st=1><n0_st=3>sub-optimal (8-10)</n0_st=3><n0_st=4>very sub-optimal (>10)</n0_st=4> with <n_opt_qt></n_opt_qt>% (<hba1c_n_opt></hba1c_n_opt>/<hba1c_n_tot></hba1c_n_tot>) of the readings in the optimal range.

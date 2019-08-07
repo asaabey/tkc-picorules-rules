@@ -47,10 +47,10 @@ BEGIN
         rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 */
 
---    rman_pckg.execute_ruleblock('ckd',1,1,0,1);  
---    rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
+--    rman_pckg.execute_ruleblock('ckd',1,0,0,1);  
+--    rman_pckg.execute_ruleblock('cd_htn',1,0,0,1); 
 
-    rman_pckg.execute_ruleblock('cd_htn',1,1,0,1);  
+--    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
     
 /*
@@ -73,8 +73,29 @@ BEGIN
 --rman_pckg.execute_ruleblock('qa_data_geom',1,1,0,1); 
 --            rman_pckg.compile_ruleblock('cd_cardiac');
 
---rman_pckg.gen_cube_from_ruleblock('cd_dm.dm,ckd.ckd_stage','01032019,01032018,01032017,01032016,01032015','rep123');
+--
+--    
+rman_pckg.gen_cube_from_ruleblock('
+    rrt.rrt,
+    dmg.dob,
+    dmg.dod,
+    ckd.ckd,
+    cd_dm.dm,
+    cd_dm.dm_dx_uncoded,
+    cd_htn.htn,
+    cd_htn.htn_dx_uncoded,
+    cd_obesity.obesity,
+    cd_obesity.obs_dx_uncoded,
+    cvra.cvra,
+    cvra.cvra_dx_uncoded
+    ','01072019,01072018,01072017','rep123');
+
+
+
 END;
+
+
+ 
 
 
 

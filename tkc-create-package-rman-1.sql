@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    0.0.2.1
+Version		    0.0.2.2
 Creation date	07/04/2019
-update on date  06/08/2019
+update on date  08/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -152,6 +152,8 @@ Change Log
 01/08/2019  changed listagg to xmlagg
 06/08/2019  datacube generator improvements
 07/08/2019  init_global_vstack bug fixes
+08/08/2019  dependency_walker bug fixes,gen cube optimizations
+
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -215,11 +217,19 @@ Change Log
         ignore_left    IN             CHAR DEFAULT '[',
         ignore_right   IN             CHAR DEFAULT ']'
     ) RETURN tbl_type2;
+    
+    
+    
 
     FUNCTION sanitise_clob (
         clbin CLOB
     ) RETURN CLOB;
 
+
+    FUNCTION tbl_type_to_string (
+        t IN tbl_type
+    ) RETURN VARCHAR2;
+    
     FUNCTION get_cte_name (
         indx BINARY_INTEGER
     ) RETURN NVARCHAR2;
@@ -283,7 +293,8 @@ Change Log
     PROCEDURE parse_ruleblocks (
         blockid VARCHAR2
     );
-    PROCEDURE init_global_vstack(
+
+    PROCEDURE init_global_vstack (
         bid_in IN VARCHAR2
     );
 
@@ -353,17 +364,17 @@ Change Log
         log_msg    IN         VARCHAR2
     );
 
---    PROCEDURE gen_cube_from_ruleblock (
---        ruleblockid    VARCHAR2,
---        slices_str     VARCHAR2,
---        ret_tbl_name   VARCHAR2
---    );
-    
+
+
+    PROCEDURE dependency_walker (
+        rb_in_str    IN           VARCHAR2,
+        dep_rb_str   OUT          VARCHAR2
+    );
+
     PROCEDURE gen_cube_from_ruleblock (
---        ruleblockid    VARCHAR2,
-        rb_att_str   IN               VARCHAR2,
-        slices_str       IN               VARCHAR2,
-        ret_tbl_name     IN               VARCHAR2
+        rb_att_str     IN             VARCHAR2,
+        slices_str     IN             VARCHAR2,
+        ret_tbl_name   IN             VARCHAR2
     );
 
     PROCEDURE build_compiler_exp (
@@ -547,7 +558,21 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END LOOP;
     END splitclob;
+    
+    FUNCTION tbl_type_to_string (
+        t IN tbl_type
+    ) RETURN VARCHAR2 AS
+        ret VARCHAR2(4000) := '';
+    BEGIN
+        FOR i IN 1..t.count LOOP ret := ret
+                                        || t(i)
+                                        || ',';
+        END LOOP;
 
+        ret := trim(TRAILING ',' FROM ret);
+        RETURN ret;
+    END tbl_type_to_string;
+    
     FUNCTION sanitise_clob (
         clbin CLOB
     ) RETURN CLOB AS
@@ -654,9 +679,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ELSIF global_vstack_selected(global_vstack_selected.last) <> txtin THEN
             retval := true;
         END IF;
-        
---        retval:=true;
+--Bypass        
 
+        retval := true;
         RETURN retval;
     END is_not_last_selected_var;
 
@@ -682,7 +707,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END LOOP;
 
         IF retval = true THEN
-            dbms_output.put_line('-->'
+            dbms_output.put_line('is_selected_GVS-->'
                                  || txtin
                                  || ' -> TRUE');
         ELSE
@@ -691,8 +716,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                  || ' -> FALSE');
         END IF;
         
---        retval:=true;
+        --Bypass
 
+        retval := true;
         RETURN retval;
     END is_selected_var;
 
@@ -841,7 +867,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             END IF;
 
         END LOOP;
-        cmpstat:= trim(trailing ',' from cmpstat);
+
+        cmpstat := trim(TRAILING ',' FROM cmpstat);
         cmpstat := cmpstat
                    || 'FROM '
                    || get_cte_name(0);
@@ -1943,7 +1970,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         indxtmp := vstack.first;
         compile_templates;
         init_global_vstack(rpipe_col(1).blockid);
-        
         get_composite_sql(sqlout);
         dbms_output.put_line('sqlout '
                              || rpipe_col(rpipe_col.first).blockid
@@ -1981,8 +2007,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid = blockid_predicate;
 
         DELETE FROM rman_rpipe;
-    
-    DELETE FROM rman_ruleblocks_dep WHERE blockid=blockid_predicate ;
+
+        DELETE FROM rman_ruleblocks_dep
+        WHERE
+            blockid = blockid_predicate;
 
     --split at semicolon except when commented
 
@@ -2558,8 +2586,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
-        
-        
         dbms_sql.parse(select_cursor, select_tbl_sql_str, dbms_sql.native);
         dbms_sql.describe_columns2(select_cursor, colcount, tbl_desc);
         FOR i IN 1..tbl_desc.count LOOP CASE tbl_desc(i).col_type
@@ -2755,31 +2781,29 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tstack(tstack.count) := tbl_name;
     END exec_ndsql;
 
-    PROCEDURE init_global_vstack(
+    PROCEDURE init_global_vstack (
         bid_in IN VARCHAR2
-    )
-    AS
-    out_att_s       rman_ruleblocks.out_att%TYPE;
+    ) AS
+        out_att_s rman_ruleblocks.out_att%TYPE;
     BEGIN
-    SELECT
+        SELECT
             out_att
         INTO out_att_s
         FROM
             rman_ruleblocks
         WHERE
             blockid = bid_in;
-    global_vstack_selected := global_vstack_selected_empty;
-    
-            IF length(trim(out_att_s)) > 0 THEN
+
+        global_vstack_selected := global_vstack_selected_empty;
+        IF length(trim(out_att_s)) > 0 THEN
             global_vstack_selected := splitstr(out_att_s, ',');
-            FOR i IN 1..global_vstack_selected.count 
-            LOOP 
-            dbms_output.put_line('* GVS *-> ' || global_vstack_selected(i));
+            FOR i IN 1..global_vstack_selected.count LOOP dbms_output.put_line('* GVS *-> ' || global_vstack_selected(i));
             END LOOP;
 
         END IF;
+
     END init_global_vstack;
-    
+
     PROCEDURE compile_ruleblock (
         bid_in IN VARCHAR2
     ) IS
@@ -3079,7 +3103,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             TABLE OF rman_ruleblocks.blockid%TYPE;
         TYPE exec_order_tbl_t IS
             TABLE OF rman_ruleblocks.exec_order%TYPE;
-        rb_in_tbl              tbl_type;
         TYPE uq_blockid_tbl_t IS
             TABLE OF INTEGER(1) INDEX BY VARCHAR2(100);
         uq_blockid_tbl         uq_blockid_tbl_t;
@@ -3174,18 +3197,29 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ) AS
             blockid_tbl      blockid_tbl_t;
             exec_order_tbl   exec_order_tbl_t;
+            rb_in_tbl        tbl_type;
+            rb_fetch_tbl     tbl_type := tbl_type();
         BEGIN
             rb_in_tbl := rman_pckg.splitstr(rb_in_str, ',');
-            fetch_rb(rb_in_tbl, blockid_tbl, exec_order_tbl);
-            uq_blockid_tbl := uq_blockid_tbl_empty;
-            FOR i IN 1..blockid_tbl.count LOOP
-                uq_blockid_tbl(blockid_tbl(i)) := exec_order_tbl(i);
-                rb_out_str := rb_out_str
-                              || ','
-                              || blockid_tbl(i);
+            FOR i IN 1..rb_in_tbl.count LOOP IF rb_in_tbl(i) IS NOT NULL THEN
+                rb_fetch_tbl.extend(1);
+                rb_fetch_tbl(i) := rb_in_tbl(i);
+            END IF;
             END LOOP;
 
-            rb_out_str := trim(BOTH ',' FROM rb_out_str);
+            IF rb_fetch_tbl.count > 0 THEN
+                fetch_rb(rb_fetch_tbl, blockid_tbl, exec_order_tbl);
+                uq_blockid_tbl := uq_blockid_tbl_empty;
+                FOR i IN 1..blockid_tbl.count LOOP
+                    uq_blockid_tbl(blockid_tbl(i)) := exec_order_tbl(i);
+                    rb_out_str := rb_out_str
+                                  || ','
+                                  || blockid_tbl(i);
+                END LOOP;
+
+                rb_out_str := trim(BOTH ',' FROM rb_out_str);
+            END IF;
+
         END init_stack;
 
     BEGIN
@@ -3194,7 +3228,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             pre_str := serialize_stack;
             process_stack;
             post_str := serialize_stack;
-            IF ( pre_str = post_str ) THEN
+            IF pre_str IS NULL OR ( pre_str = post_str ) THEN
                 EXIT;
             END IF;
         END LOOP;
@@ -3248,18 +3282,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END get_min_dep_att_str;
 
     PROCEDURE gen_cube_from_ruleblock (
---        ruleblockid    VARCHAR2,
-        rb_att_str   IN               VARCHAR2,
-        slices_str       IN               VARCHAR2,
-        ret_tbl_name     IN               VARCHAR2
+        rb_att_str     IN             VARCHAR2,
+        slices_str     IN             VARCHAR2,
+        ret_tbl_name   IN             VARCHAR2
     ) AS
 
-        slice_tbl       tbl_type;
-        obj_tbl         tbl_type;
-        ruleblock_tbl   tbl_type:=tbl_type();
-        rb_att_str_tbl  tbl_type:=tbl_type();
-        att_init_tbl    tbl_type:=tbl_type();
-        col_stack       vstack_type;
+        slice_tbl        tbl_type;
+        obj_tbl          tbl_type;
+        ruleblock_tbl    tbl_type := tbl_type();
+        rb_att_str_tbl   tbl_type := tbl_type();
+        att_init_tbl     tbl_type := tbl_type();
+        col_stack        vstack_type;
+        mock_mode        BOOLEAN := false;
 
         FUNCTION get_object_name (
             prefix        VARCHAR2,
@@ -3314,13 +3348,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             slice_tbl := rman_pckg.splitstr(slices_str, ',');
         END get_slices;
 
---        PROCEDURE get_ruleblocktbl (
---            ruleblockid VARCHAR2
---        ) AS
---        BEGIN
---            ruleblock_tbl := rman_pckg.splitstr(ruleblockid, ',');
---        END get_ruleblocktbl;
-
         PROCEDURE create_temp_eadv_views AS
             vw_name      VARCHAR2(30);
             obj_exists   BINARY_INTEGER;
@@ -3336,16 +3363,20 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     upper(view_name) = upper(vw_name);
 
                 IF obj_exists > 0 THEN
-                    EXECUTE IMMEDIATE 'DROP VIEW ' || vw_name;
+                    IF mock_mode = false THEN
+                        EXECUTE IMMEDIATE 'DROP VIEW ' || vw_name;
+                    END IF;
                     dbms_output.put_line('create_view-> dropping view ' || vw_name);
                 END IF;
 
-                EXECUTE IMMEDIATE 'CREATE VIEW '
-                                  || vw_name
-                                  || ' AS ('
-                                  || 'SELECT * FROM EADV WHERE DT<TO_DATE('''
-                                  || slice_tbl(i)
-                                  || ''',''ddmmyyyy''))';
+                IF mock_mode = false THEN
+                    EXECUTE IMMEDIATE 'CREATE VIEW '
+                                      || vw_name
+                                      || ' AS ('
+                                      || 'SELECT * FROM EADV WHERE DT<TO_DATE('''
+                                      || slice_tbl(i)
+                                      || ''',''ddmmyyyy''))';
+                END IF;
 
             END LOOP;
         END create_temp_eadv_views;
@@ -3378,34 +3409,38 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             RETURN ret;
         END modify_dep_tbls;
 
-        PROCEDURE cube_in_rbstack 
-            
-         AS
+        PROCEDURE cube_in_rbstack AS
 
-            rb_att_tbl     tbl_type;
-            rb_full_tbl    tbl_type;
-            rb_str         VARCHAR2(4000);
-            sql_stmt       CLOB;
-            tbl_name       VARCHAR2(30);
-            vw_name        VARCHAR2(30);
---            sql_stmt       CLOB;
-            sql_stmt_mod   CLOB;
-            obj_exists     BINARY_INTEGER;
+            rb_att_str_in   VARCHAR2(4000);
+            rb_att_tbl      tbl_type;
+            rb_full_tbl     tbl_type;
+            rb_str          VARCHAR2(4000);
+            rb_str2         VARCHAR2(4000);
+            sql_stmt        CLOB;
+            tbl_name        VARCHAR2(30);
+            vw_name         VARCHAR2(30);
+            sql_stmt_mod    CLOB;
+            obj_exists      BINARY_INTEGER;
         BEGIN
-            rb_att_tbl := rman_pckg.splitstr(rb_att_str, ',');
-            FOR i IN 1..rb_att_tbl.count 
-            LOOP rb_str := rb_str
-                                                        || ','
-                                                        || substr(rb_att_tbl(i), 1, instr(rb_att_tbl(i), '.') - 1);
-                 att_init_tbl.extend(1);
-                 att_init_tbl(i):= upper(substr(rb_att_tbl(i),instr(rb_att_tbl(i), '.') + 1));
+            rb_att_str_in := regexp_substr(regexp_replace(rb_att_str, '\s', ''), '[a-z0-9_.,]+');
+            dbms_output.put_line('phase 0->'
+                                 || replace(rb_att_str_in, ' ', '.'));
+            rb_att_tbl := rman_pckg.splitstr(rb_att_str_in, ',');
+            FOR i IN 1..rb_att_tbl.count LOOP
+                rb_str := rb_str
+                          || ','
+                          || trim(substr(rb_att_tbl(i), 1, instr(rb_att_tbl(i), '.') - 1));
+
+                att_init_tbl.extend(1);
+                att_init_tbl(i) := trim(upper(substr(rb_att_tbl(i), instr(rb_att_tbl(i), '.') + 1)));
+
             END LOOP;
 
             rb_str := trim(LEADING ',' FROM rb_str);
             dbms_output.put_line('pass 1 -> ' || rb_str);
-            dependency_walker(rb_str, rb_str);
-            dbms_output.put_line('pass 2 -> ' || rb_str);
-            rb_full_tbl := rman_pckg.splitstr(rb_str, ',');
+            dependency_walker(rb_str, rb_str2);
+            dbms_output.put_line('pass 2 -> ' || rb_str2);
+            rb_full_tbl := rman_pckg.splitstr(rb_str2, ',');
             FOR j IN 1..rb_full_tbl.count LOOP
                 get_min_dep_att_str(rb_full_tbl(j), rb_att_tbl, rb_str);
                 dbms_output.put_line('pass 3 -> '
@@ -3415,15 +3450,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                      || rb_full_tbl(j)
                                      || ' -> '
                                      || rb_str);
+
                 ruleblock_tbl.extend(1);
-                ruleblock_tbl(j):=rb_full_tbl(j);
-                
+                ruleblock_tbl(j) := rb_full_tbl(j);
                 rb_att_str_tbl.extend(1);
-                rb_att_str_tbl(j):=rb_str;
-                
-                dbms_output.put_line('********** ->' || rb_str );
-                
-                
+                rb_att_str_tbl(j) := rb_str;
+                dbms_output.put_line('********** ->' || rb_str);
             END LOOP;
 
         END cube_in_rbstack;
@@ -3438,10 +3470,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         BEGIN
             FOR j IN 1..ruleblock_tbl.count LOOP
                 dbms_output.put_line('ruleblock_tbl(j)->' || ruleblock_tbl(j));
-                
---                sql_stmt := get_sql_stmt_from_ruleblock(trim(ruleblock_tbl(j)));
                 compile_ruleblock_ext(ruleblock_tbl(j), rb_att_str_tbl(j), sql_stmt);
-                
                 dbms_output.put_line('sql_stmt->' || sql_stmt);
                 FOR i IN 1..slice_tbl.count LOOP
                     tbl_name := get_object_name('rt', ruleblock_tbl(j), slice_tbl(i));
@@ -3454,7 +3483,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         upper(table_name) = upper(tbl_name);
 
                     IF obj_exists > 0 THEN
-                        EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                        IF mock_mode = false THEN
+                            EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                        END IF;
                         dbms_output.put_line('create_tbl-> dropping tbl ' || tbl_name);
                     END IF;
 
@@ -3467,11 +3498,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     dbms_output.put_line(i
                                          || '->'
                                          || sql_stmt_mod);
-                    EXECUTE IMMEDIATE 'CREATE TABLE '
-                                      || tbl_name
-                                      || ' AS '
-                                      || sql_stmt_mod
-                                      || '';
+                    IF mock_mode = false THEN
+                        EXECUTE IMMEDIATE 'CREATE TABLE '
+                                          || tbl_name
+                                          || ' AS '
+                                          || sql_stmt_mod
+                                          || '';
+                    END IF;
+
                 END LOOP;
 
             END LOOP;
@@ -3506,7 +3540,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     upper(table_name) = upper(tbl_name);
 
                 IF obj_exists > 0 THEN
-                    EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                    IF mock_mode = false THEN
+                        EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                    END IF;
                     dbms_output.put_line('union -> dropping tbl '
                                          || 'DROP TABLE '
                                          || tbl_name);
@@ -3522,11 +3558,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                      || union_sql_stmt
                                      || ')');
 
-                EXECUTE IMMEDIATE 'CREATE TABLE '
-                                  || tbl_name
-                                  || ' AS ('
-                                  || union_sql_stmt
-                                  || ')';
+                IF mock_mode = false THEN
+                    EXECUTE IMMEDIATE 'CREATE TABLE '
+                                      || tbl_name
+                                      || ' AS ('
+                                      || union_sql_stmt
+                                      || ')';
+                END IF;
+
                 dbms_output.put_line('union -> creating tbl '
                                      || get_object_name('rt', ruleblock_tbl(j), '0'));
 
@@ -3536,15 +3575,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         FUNCTION get_col_list (
             tmp_tbl VARCHAR2
-            
         ) RETURN VARCHAR2 AS
             ret       VARCHAR2(4000) := '';
             col_tbl   tbl_type;
-            
---            j         PLS_INTEGER;
         BEGIN
-            
-            
             SELECT
                 column_name
             BULK COLLECT
@@ -3558,12 +3592,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     'DIM_COL'
                 )
                 AND column_name IN (
-                    SELECT * FROM TABLE(att_init_tbl)
-                )
-                ;
+                    SELECT
+                        *
+                    FROM
+                        TABLE ( att_init_tbl )
+                );
 
-            FOR i IN 1..col_tbl.count LOOP 
-            IF col_stack.EXISTS(col_tbl(i)) = false THEN
+            FOR i IN 1..col_tbl.count LOOP IF col_stack.EXISTS(col_tbl(i)) = false THEN
+                
                 IF i < col_tbl.count THEN
                     ret := ret
                            || upper(tmp_tbl)
@@ -3577,39 +3613,42 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                            || col_tbl(i)
                            || ' ';
                 END IF;
-
                 col_stack(col_tbl(i)) := i;
+
+                
             END IF;
             END LOOP;
-
+            
             RETURN ret;
         END get_col_list;
 
         PROCEDURE join_temp_tbls AS
+
             join_sql_stmt   CLOB := '';
             obj_exists      BINARY_INTEGER := 0;
             tbl_name        VARCHAR2(30);
+            col_list_str    VARCHAR2(4000);
         BEGIN
             tbl_name := get_object_name('rt_cube', ruleblock_tbl(1), '0');
             join_sql_stmt := 'SELECT '
                              || tbl_name
                              || '.EID, '
                              || tbl_name
-                             || '.DIM_COL ';
+                             || '.DIM_COL,';
             FOR j IN 1..ruleblock_tbl.count LOOP
                 tbl_name := get_object_name('rt_cube', ruleblock_tbl(j), '0');
-                IF j < ruleblock_tbl.count THEN
-                    join_sql_stmt := join_sql_stmt
-                                     || get_col_list(tbl_name)
-                                     || ', ';
-                ELSE
-                    join_sql_stmt := join_sql_stmt
-                                     || get_col_list(tbl_name)
-                                     || ' ';
-                END IF;
+                col_list_str := get_col_list(tbl_name);
+                
+                
+                if col_list_str is not null then
+                join_sql_stmt := join_sql_stmt || col_list_str || ',';
+                end if;
+                
+
 
             END LOOP;
 
+            join_sql_stmt := trim(TRAILING ',' FROM trim(join_sql_stmt));
             join_sql_stmt := join_sql_stmt
                              || ' FROM '
                              || get_object_name('rt_cube', ruleblock_tbl(1), '0')
@@ -3645,8 +3684,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 upper(table_name) = upper(tbl_name);
 
             IF obj_exists > 0 THEN
-                EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
-
+                IF mock_mode = false THEN
+                    EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                END IF;
             END IF;
 
             dbms_output.put_line('join-> creating '
@@ -3656,11 +3696,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                  || join_sql_stmt
                                  || ')');
 
-            EXECUTE IMMEDIATE 'CREATE TABLE '
-                              || tbl_name
-                              || ' AS ('
-                              || join_sql_stmt
-                              || ')';
+            IF mock_mode = false THEN
+                EXECUTE IMMEDIATE 'CREATE TABLE '
+                                  || tbl_name
+                                  || ' AS ('
+                                  || join_sql_stmt
+                                  || ')';
+            END IF;
+
             dbms_output.put_line('join-> creating ' || tbl_name);
         END;
 
@@ -3681,7 +3724,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         upper(table_name) = upper(tbl_name);
 
                     IF obj_exists > 0 THEN
-                        EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                        IF mock_mode = false THEN
+                            EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                        END IF;
                         dbms_output.put_line('cleanup-> dropping tbl ' || tbl_name);
                     END IF;
 
@@ -3696,7 +3741,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         upper(table_name) = upper(tbl_name);
 
                     IF obj_exists > 0 THEN
-                        EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                        IF mock_mode = false THEN
+                            EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
+                        END IF;
                         dbms_output.put_line('cleanup-> dropping tbl ' || tbl_name);
                     END IF;
 
@@ -3711,7 +3758,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         upper(view_name) = upper(vw_name);
 
                     IF obj_exists > 0 THEN
-                        EXECUTE IMMEDIATE 'DROP VIEW ' || vw_name;
+                        IF mock_mode = false THEN
+                            EXECUTE IMMEDIATE 'DROP VIEW ' || vw_name;
+                        END IF;
                         dbms_output.put_line('cleanup-> dropping view ' || vw_name);
                     END IF;
 
@@ -3735,11 +3784,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         upper(table_name) = upper(tbl_name);
 
                     IF obj_exists > 0 THEN
-                        EXECUTE IMMEDIATE 'ALTER TABLE '
-                                          || tbl_name
-                                          || ' ADD DIM_COL CHAR(30) DEFAULT ''SLC'
-                                          || slice_tbl(i)
-                                          || ''' NOT NULL';
+                        IF mock_mode = false THEN
+                            EXECUTE IMMEDIATE 'ALTER TABLE '
+                                              || tbl_name
+                                              || ' ADD DIM_COL CHAR(30) DEFAULT ''SLC'
+                                              || slice_tbl(i)
+                                              || ''' NOT NULL';
+                        END IF;
 
                         dbms_output.put_line('modifying -> alter tbl tbl ' || tbl_name);
                     END IF;
@@ -3749,9 +3800,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END modify_temp_tbls;
 
     BEGIN
+        mock_mode := false;
         -- get time slices into collection
         get_slices(slices_str);
---        get_ruleblocktbl(ruleblockid);
         cube_in_rbstack;
         create_temp_eadv_views;
         execute_ndsql_temp_tbls;
@@ -4269,7 +4320,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     k := regexp_substr(k_tbl(j), '(<)([a-z0-9_]+)', 1, 1, 'i', 2);
 
                     IF length(k) > 0 THEN
-                        dbms_output.put_line('***-> ' || k);
+--                        dbms_output.put_line('***-> ' || k);
                         used_var(k) := j;
                     END IF;
 

@@ -112,7 +112,7 @@ BEGIN
         
         dm_dx_code_flag : {dm >=1 and greatest(dm_icd,dm_icpc)>=1 => 1},{dm >=1 and greatest(dm_lab,dm_rxn)>0 =>0};
         
-        dm_dx_undiagnosed : {dm_dx_code_flag=0 => 1},{=>0};
+        dm_dx_uncoded : {dm_dx_code_flag=0 => 1},{=>0};
         
         dm_type : {dm=1 and dm_type_1>0 => 1},{dm=1 and dm_type_1=0 => 2},{=>0};
         
@@ -189,11 +189,11 @@ BEGIN
         /*  Hypertension diagnosis*/
         /*  Code criteria   */
         htn_icd => eadv.[icd_i10_%,icd_i15_%].dt.count(0);
-        htn_icpc0 => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count();
-        htn_icpc : {htn_icpc0 is not null=>1},{=>0};
+        htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count(0);
+        
         
         /*  Observation criteria    */
-        htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140);
+        htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140 and dt>sysdate-730);
         
         /*  Rxn cirteria   */
         htn_rxn_acei => eadv.[rxnc_c09aa].dt.count().where(val=1);
@@ -252,7 +252,11 @@ BEGIN
         
         bp_control : { n_qt_1 >=0.75 => 3},{ n_qt_1<0.75 and n_qt_1>=0.25 => 2 },{ n_qt_1<0.25 => 1},{=>0};
         
-        htn : {greatest(htn_icd,htn_icpc,htn_obs,htn_rxn)>0 =>1},{=>0};
+        htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>=2 =>1},{=>0};
+        
+        htn_dx_uncoded : {htn_obs>=2 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
+        
+        
         
         
     ';
@@ -400,6 +404,58 @@ BEGIN
             vhd : { coalesce(vhd_mv_icd,vhd_av_icd,vhd_ov_icd,vhd_ie_icd,vhd_icpc) is not null =>1},{=>0};
             
             cd_cardiac : {greatest(cad,vhd)=1 =>1},{=>0};
+        
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_obesity';
+
+    
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess obesity  */
+        
+        #define_ruleblock(cd_cardiac,
+            {
+                description: "Algorithm to assess obesity",
+                version: "0.0.1.1",
+                blockid: "cd_cardiac",
+                target_table:"rout_cd_obesity",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:2,
+                def_exit_prop:"obesity",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+            
+        ht => eadv.obs_height.val.lastdv();
+        
+        wt => eadv.obs_weight.val.lastdv();
+        
+        bmi : { nvl(ht_val,0)>0 and nvl(wt_val,0)>0 => round(wt_val/power(ht_val/100,2),1) };
+        
+        obs_icd => eadv.[icd_e66%].dt.count(0);
+        
+        obs_icpc => eadv.[icpc_t82%].dt.count(0);
+        
+        obesity : { bmi>30 => 1 },{=>0};
+        
+        obs_dx_uncoded : {bmi>30 and greatest(obs_icd,obs_icpc)=0 =>1},{=>0};
+        
+        
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
