@@ -210,6 +210,18 @@ BEGIN
                 {cga_g=`G4` => 5},
                 {cga_g=`G5` => 6},
                 {=> 0};
+                
+        ckd_stage_1 : { ckd=1 => 1},{=>0}; 
+        
+        ckd_stage_2 : { ckd=2 => 1},{=>0};
+        
+        ckd_stage_3a : { ckd=3 => 1},{=>0};
+        
+        ckd_stage_3b : { ckd=4 => 1},{=>0};
+        
+        ckd_stage_4 : { ckd=5 => 1},{=>0};
+        
+        ckd_stage_5 : { ckd=6 => 1},{=>0};
         
         #define_attribute(
             ckd_stage,
@@ -226,6 +238,66 @@ BEGIN
             {
                 label:"CKD stage as number as per KDIGO 2012",
                 desc:"Integer [1-6] corresponding to ordinal value",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_stage_1,
+            {
+                label:"CKD stage 1 (KDIGO 2012)",
+                desc:"",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_stage_2,
+            {
+                label:"CKD stage 2 (KDIGO 2012)",
+                desc:"",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_stage_3a,
+            {
+                label:"CKD stage 3A (KDIGO 2012)",
+                desc:"",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_stage_3b,
+            {
+                label:"CKD stage 3B (KDIGO 2012)",
+                desc:"",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_stage_4,
+            {
+                label:"CKD stage 4 (KDIGO 2012)",
+                desc:"",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_stage_5,
+            {
+                label:"CKD stage 5 (KDIGO 2012)",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
