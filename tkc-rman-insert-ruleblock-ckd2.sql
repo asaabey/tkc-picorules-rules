@@ -86,7 +86,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"ckd_0",
+                def_exit_prop:"ckd",
                 def_predicate:">0",
                 exec_order:2
                 
@@ -246,8 +246,7 @@ BEGIN
         #define_attribute(
             ckd_stage_1,
             {
-                label:"CKD stage 1 (KDIGO 2012)",
-                desc:"",
+                label:"CKD stage 1 KDIGO 2012",
                 is_reportable:1,
                 type:2
             }
@@ -256,8 +255,7 @@ BEGIN
         #define_attribute(
             ckd_stage_2,
             {
-                label:"CKD stage 2 (KDIGO 2012)",
-                desc:"",
+                label:"CKD stage 2 KDIGO 2012",
                 is_reportable:1,
                 type:2
             }
@@ -266,8 +264,7 @@ BEGIN
         #define_attribute(
             ckd_stage_3a,
             {
-                label:"CKD stage 3A (KDIGO 2012)",
-                desc:"",
+                label:"CKD stage 3A KDIGO 2012",
                 is_reportable:1,
                 type:2
             }
@@ -276,8 +273,7 @@ BEGIN
         #define_attribute(
             ckd_stage_3b,
             {
-                label:"CKD stage 3B (KDIGO 2012)",
-                desc:"",
+                label:"CKD stage 3B KDIGO 2012",
                 is_reportable:1,
                 type:2
             }
@@ -286,8 +282,7 @@ BEGIN
         #define_attribute(
             ckd_stage_4,
             {
-                label:"CKD stage 4 (KDIGO 2012)",
-                desc:"",
+                label:"CKD stage 4 KDIGO 2012",
                 is_reportable:1,
                 type:2
             }
@@ -296,16 +291,16 @@ BEGIN
         #define_attribute(
             ckd_stage_5,
             {
-                label:"CKD stage 5 (KDIGO 2012)",
-                desc:"",
+                label:"CKD stage 5 KDIGO 2012",
                 is_reportable:1,
                 type:2
             }
         );
         
         /*  ICPC2+ coding , note that val has to set to ordered rank*/
-        dx_ckd0  => eadv.[icpc_u990%,icpc_u88j%].val.last();
-        dx_ckd : {1=1 => nvl(dx_ckd0,0)};
+        
+        dx_ckd  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
+        
         
         dx_ckd_stage :{dx_ckd=1 => `1`},
                 {dx_ckd=2 => `2`},
@@ -360,7 +355,7 @@ BEGIN
             }
         );
         
-        ckd_0 : {1=1=> ckd};
+        
         
             
     ';

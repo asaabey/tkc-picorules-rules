@@ -1294,9 +1294,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         predicate              VARCHAR2(4000);
         constparam             VARCHAR2(4000);
         left_tbl_name          VARCHAR2(100);
-        ext_col_name           VARCHAR2(100);
+        ext_col_name           VARCHAR2(4000);
         equality_cmd           VARCHAR2(5) := '=';
-        where_txt              VARCHAR(2000);
+        where_txt              VARCHAR(4000);
         from_txt               VARCHAR(2000);
         from_clause            VARCHAR(2000);
         select_txt             VARCHAR(2000);
@@ -1642,15 +1642,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     RAISE ude_function_undefined;
             END CASE;
         END IF;
-
-    EXCEPTION
-        WHEN ude_function_undefined THEN
-            commit_log('build_func_sql_exp_undef', blockid, 'Error:');
-            dbms_output.put_line(dbms_utility.format_error_stack);
-        WHEN OTHERS THEN
-            commit_log('build_func_sql_exp', blockid, 'Error:');
-            dbms_output.put_line(dbms_utility.format_error_stack);
-            RAISE;
+--
+--    EXCEPTION
+--        WHEN ude_function_undefined THEN
+--            commit_log('build_func_sql_exp_undef', blockid, 'Error:');
+--            dbms_output.put_line(dbms_utility.format_error_stack);
+--        WHEN OTHERS THEN
+--            commit_log('build_func_sql_exp', blockid, 'Error:');
+--            dbms_output.put_line(dbms_utility.format_error_stack);
+--            RAISE;
     END build_func_sql_exp;
 
     PROCEDURE build_cond_sql_exp (
@@ -1781,10 +1781,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 FROM
                     dual;
 
-                dbms_output.put_line('compiler in LABEL :'
-                                     || param_key
-                                     || ' -> '
-                                     || label);
+                
                 UPDATE rman_ruleblocks_dep
                 SET
                     att_label = rb_dep.att_label,

@@ -47,8 +47,8 @@ BEGIN
         rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 */
 
---    rman_pckg.execute_ruleblock('ckd',1,0,0,1);  
---    rman_pckg.execute_ruleblock('cd_htn',1,0,0,1); 
+--    rman_pckg.execute_ruleblock('rrt',1,0,0,1);  
+    rman_pckg.execute_ruleblock('ckd',1,1,0,1); 
 
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
@@ -63,7 +63,7 @@ BEGIN
         rman_pckg.execute_active_ruleblocks(1);
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');

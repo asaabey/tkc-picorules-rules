@@ -53,7 +53,7 @@ CREATE TABLE rman_ruleblocks_dep (
     att_name      VARCHAR2(100),
     att_label     VARCHAR2(100),
     att_meta      VARCHAR2(4000),
-    dep_att       VARCHAR2(100),
+    dep_att       VARCHAR2(4000),
     dep_func      VARCHAR2(100),
     view_exists   NUMBER(1, 0) DEFAULT 0,
     dep_exists    NUMBER(1, 0) DEFAULT 0,
