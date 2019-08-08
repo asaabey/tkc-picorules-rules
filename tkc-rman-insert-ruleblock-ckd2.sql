@@ -246,7 +246,10 @@ BEGIN
         #define_attribute(
             ckd_stage_1,
             {
-                label:"CKD stage 1 KDIGO 2012",
+
+                
+                label:"CKD stage 1",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -255,7 +258,8 @@ BEGIN
         #define_attribute(
             ckd_stage_2,
             {
-                label:"CKD stage 2 KDIGO 2012",
+                label:"CKD stage 2",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -264,7 +268,8 @@ BEGIN
         #define_attribute(
             ckd_stage_3a,
             {
-                label:"CKD stage 3A KDIGO 2012",
+                label:"CKD stage 3A",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -273,7 +278,8 @@ BEGIN
         #define_attribute(
             ckd_stage_3b,
             {
-                label:"CKD stage 3B KDIGO 2012",
+                label:"CKD stage 3B",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -282,7 +288,8 @@ BEGIN
         #define_attribute(
             ckd_stage_4,
             {
-                label:"CKD stage 4 KDIGO 2012",
+                label:"CKD stage 4",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -291,13 +298,15 @@ BEGIN
         #define_attribute(
             ckd_stage_5,
             {
-                label:"CKD stage 5 KDIGO 2012",
+                label:"CKD stage 5",
+                desc:"",
                 is_reportable:1,
                 type:2
             }
         );
         
         /*  ICPC2+ coding , note that val has to set to ordered rank*/
+
         
         dx_ckd  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
         
@@ -315,7 +324,7 @@ BEGIN
             {
                 label:"CKD stage on EHR as per ICPC2+ Code",
                 desc:"VARCHAR2 corresponding to stage. eg 3A",
-                is_reportable:1,
+                is_reportable:0,
                 type:1
             }
         );
@@ -350,12 +359,10 @@ BEGIN
             {
                 label:"Misclassifcation occured",
                 desc:"Integer [0-1]",
-                is_reportable:1,
+                is_reportable:0,
                 type:2
             }
         );
-        
-        
         
             
     ';

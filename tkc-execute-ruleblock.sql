@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
---rman_pckg.compile_ruleblock('tg4100');
+--rman_pckg.compile_ruleblock('ckd');
 
 
 /*
@@ -48,6 +48,7 @@ BEGIN
 */
 
 --    rman_pckg.execute_ruleblock('rrt',1,0,0,1);  
+
     rman_pckg.execute_ruleblock('ckd',1,1,0,1); 
 
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
