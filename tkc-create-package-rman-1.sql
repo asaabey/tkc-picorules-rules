@@ -3952,7 +3952,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             when ''icpc_u88j93'' then 3
             when ''icpc_u88j94'' then 4
             when ''icpc_u88j95'' then 5
-            when ''icpc_u88j95'' then 6
+            when ''icpc_u88j96'' then 6
         else 
         NULL end as val
     FROM    patient_results_coded rc
