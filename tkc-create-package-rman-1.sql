@@ -4165,14 +4165,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
     USING (
     SELECT DISTINCT
-        lr.linked_registrations_id as eid,
-        ''csu_action'' as att,
-        prt.action_date                as dt,
-        prt.action_id as val
-    FROM
-        patient_cse_actions prt
-    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id 
-    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+     lr.linked_registrations_id   AS eid,
+     ''csu_action_'' || prt.cse_block_id || ''_'' || prt.cse_att_id  AS att,
+     prt.action_date              AS dt,
+     prt.action_id                AS val
+ FROM
+     patient_cse_actions prt
+     JOIN patient_registrations pr ON pr.id = prt.patient_registration_id
+     JOIN linked_registrations lr ON lr.patient_registration_id = pr.id
     ) t2 
     ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
     WHEN NOT MATCHED THEN

@@ -565,6 +565,7 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
+        csu_act => eadv.csu_action_tg4660_tg4660.val.lastdv();
         
         dm_rxn_bg => rout_cd_dm.dm_rxn_bg.val.bind();
         
