@@ -39,22 +39,69 @@ BEGIN
             }
         );
 
+        hd_z49_n => eadv.icd_z49_1.dt.count(0);
+        
         hd_dt => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
         pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
         tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
         homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
         
-        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) => 1},
+        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10 => 1},
             {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
             {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
             {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
             {=>0};
             
+        rrt_hd : {rrt=1 => 1},{=>0};
+        
+        rrt_pd : {rrt=2 => 1},{=>0};
+        
+        rrt_tx : {rrt=3 => 1},{=>0};
+        
+        rrt_hhd : {rrt=4 => 1},{=>0};
+        
+        
         #define_attribute(
             rrt,
             {
                 label:"Renal replacement therapy category.",
                 desc:"Integer [1-4] where 1=HD, 2=PD, 3=TX, 4=HHD",
+                is_reportable:0,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            rrt_hd,
+            {
+                label:"RRT Haemodialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+         #define_attribute(
+            rrt_pd,
+            {
+                label:"RRT Peritoneal dialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            rrt_tx,
+            {
+                label:"RRT Renal transplant",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            rrt_hhd,
+            {
+                label:"RRT Home haemodialysis",
                 is_reportable:1,
                 type:2
             }
@@ -228,7 +275,7 @@ BEGIN
             {
                 label:"CKD stage as string as per KDIGO 2012",
                 desc:"VARCHAR2 corresponding to stage. eg.3A",
-                is_reportable:1,
+                is_reportable:0,
                 type:1
             }
         );
@@ -238,7 +285,7 @@ BEGIN
             {
                 label:"CKD stage as number as per KDIGO 2012",
                 desc:"Integer [1-6] corresponding to ordinal value",
-                is_reportable:1,
+                is_reportable:0,
                 type:2
             }
         );
@@ -249,7 +296,6 @@ BEGIN
 
                 
                 label:"CKD stage 1",
-                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -259,7 +305,6 @@ BEGIN
             ckd_stage_2,
             {
                 label:"CKD stage 2",
-                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -269,7 +314,6 @@ BEGIN
             ckd_stage_3a,
             {
                 label:"CKD stage 3A",
-                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -279,7 +323,6 @@ BEGIN
             ckd_stage_3b,
             {
                 label:"CKD stage 3B",
-                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -289,7 +332,6 @@ BEGIN
             ckd_stage_4,
             {
                 label:"CKD stage 4",
-                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -299,7 +341,6 @@ BEGIN
             ckd_stage_5,
             {
                 label:"CKD stage 5",
-                desc:"",
                 is_reportable:1,
                 type:2
             }
@@ -353,6 +394,7 @@ BEGIN
         
         cp_mis :{cp_ckd>0 and (ckd - cp_ckd)>=2 => 1},{=>0};
         
+        avf_has : { avf is not null =>1},{=>0};
         
         #define_attribute(
             cp_mis,
@@ -364,6 +406,14 @@ BEGIN
             }
         );
         
+        #define_attribute(
+            avf_has,
+            {
+                label:"AVF present",
+                is_reportable:1,
+                type:2
+            }
+        );
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -434,7 +484,7 @@ BEGIN
             {
                 label:"CKD cause",
                 desc:"Integer [0-1] if matching comorbidity found ",
-                is_reportable:1,
+                is_reportable:0,
                 type:2
             }
     );

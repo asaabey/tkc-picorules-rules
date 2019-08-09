@@ -34,7 +34,7 @@ BEGIN
         eg :
         rman_pckg.compile_active_ruleblocks();
 */
---rman_pckg.compile_active_ruleblocks;
+rman_pckg.compile_active_ruleblocks;
 
 
 /*
@@ -47,7 +47,7 @@ BEGIN
         rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 */
 
---    rman_pckg.execute_ruleblock('rrt',1,0,0,1);  
+--    rman_pckg.execute_ruleblock('rrt',1,1,0,1);  
 
     rman_pckg.execute_ruleblock('ckd',1,1,0,1); 
 

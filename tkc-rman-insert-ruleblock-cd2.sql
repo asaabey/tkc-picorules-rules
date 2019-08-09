@@ -142,6 +142,15 @@ BEGIN
                             { hba1c_n0_val >=8 and hba1c_n0_val <10 => 3},
                             { hba1c_n0_val >=10 =>4},{=>0};
         
+        #define_attribute(
+            dm,
+            {
+                label:"Diabetes",
+                desc:"Presence of Type 2/1 Diabetes mellitus",
+                is_reportable:1,
+                type:2
+            }
+        );
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -256,7 +265,15 @@ BEGIN
         
         htn_dx_uncoded : {htn_obs>=2 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
         
-        
+        #define_attribute(
+            htn,
+            {
+                label:"Hypertension",
+                desc:"Presence of Hypertension",
+                is_reportable:1,
+                type:2
+            }
+        );
         
         
     ';
@@ -404,6 +421,26 @@ BEGIN
             vhd : { coalesce(vhd_mv_icd,vhd_av_icd,vhd_ov_icd,vhd_ie_icd,vhd_icpc) is not null =>1},{=>0};
             
             cd_cardiac : {greatest(cad,vhd)=1 =>1},{=>0};
+            
+            #define_attribute(
+            cad,
+                {
+                    label:"Coronary artery disease",
+                    desc:"Presence of Coronary artery disease",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            vhd,
+                {
+                    label:"Valvular heart disease",
+                    desc:"Presence of Valvular heart disease",
+                    is_reportable:1,
+                    type:2
+                }
+            );
         
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
