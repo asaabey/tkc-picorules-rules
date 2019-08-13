@@ -2010,7 +2010,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid = blockid_predicate;
 
     --split at semicolon except when commented
-
+        
         rbtbl := splitclob(rbt.picoruleblock, ';', comment_open_chars, comment_close_chars);
         FOR i IN 1..rbtbl.count LOOP
             rb := trim_comments(trim(rbtbl(i)));
@@ -3491,6 +3491,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                          || '->'
                                          || vw_name);
                     sql_stmt_mod := replace(sql_stmt, 'EADV', upper(vw_name));
+                    
+                    
+                    
+                    sql_stmt_mod := replace(sql_stmt, 'sysdate', 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
+--                    dbms_output.put_line('GEN CUBE sysdate replace ->' || 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
+                    
                     sql_stmt_mod := modify_dep_tbls(sql_stmt_mod, ruleblock_tbl(j), slice_tbl(i));
                     dbms_output.put_line(i
                                          || '->'

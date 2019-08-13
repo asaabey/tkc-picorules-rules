@@ -46,7 +46,9 @@ BEGIN
         tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
         homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
         
-        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10 => 1},
+        ren_enc => eadv.enc_op_renal.dt.max(1900);
+        
+        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10  and hd_dt>sysdate-365 => 1},
             {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
             {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
             {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
@@ -59,6 +61,10 @@ BEGIN
         rrt_tx : {rrt=3 => 1},{=>0};
         
         rrt_hhd : {rrt=4 => 1},{=>0};
+        
+        tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
+        
+        
         
         
         #define_attribute(

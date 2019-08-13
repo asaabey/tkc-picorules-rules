@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
---rman_pckg.compile_ruleblock('ckd');
+--rman_pckg.compile_ruleblock('rrt');
 
 
 /*
@@ -34,7 +34,7 @@ BEGIN
         eg :
         rman_pckg.compile_active_ruleblocks();
 */
-rman_pckg.compile_active_ruleblocks;
+--rman_pckg.compile_active_ruleblocks;
 
 
 /*
@@ -49,7 +49,7 @@ rman_pckg.compile_active_ruleblocks;
 
 --    rman_pckg.execute_ruleblock('rrt',1,1,0,1);  
 
-    rman_pckg.execute_ruleblock('ckd',1,1,0,1); 
+--    rman_pckg.execute_ruleblock('rrt',1,0,0,1); 
 
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
@@ -90,6 +90,11 @@ rman_pckg.compile_active_ruleblocks;
 --    cvra.cvra,
 --    cvra.cvra_dx_uncoded
 --    ','01072019,01072018,01072017','rep123');
+
+rman_pckg.gen_cube_from_ruleblock('
+    rrt.rrt,
+    dmg.dod
+    ','01072019,01072018,01072017,01072016,01072015','rep124');
 
 
 

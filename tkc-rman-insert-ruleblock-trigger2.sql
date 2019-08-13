@@ -106,7 +106,7 @@ BEGIN
             {
                 label:"Alert:Nephrotic range proteinuria in the absence of diabetes",
                 desc:"Integer [0-1] if meets criteria ",
-                is_reportable:0,
+                is_reportable:1,
                 is_trigger:1,
                 type:2,
                 priority:1
@@ -199,7 +199,7 @@ BEGIN
             {
                 label:"Alert:Possible nephritic syndrome",
                 desc:"Integer [0-1] if meets criteria ",
-                is_reportable:0,
+                is_reportable:1,
                 is_trigger:1,
                 type:2,
                 priority:1
@@ -291,7 +291,7 @@ BEGIN
                 {
                     label:"Alert:Acute kidney injury in community",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2,
                     priority:1
@@ -343,7 +343,7 @@ BEGIN
                 {
                     label:"Alert:Acute kidney injury in hospital by coding",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2,
                     priority:1
@@ -409,7 +409,7 @@ BEGIN
                 {
                     label:"Alert:Unmanaged possible early CKD with rapid progression",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2,
                     priority:1
@@ -466,7 +466,7 @@ BEGIN
                 {
                     label:"Alert:Unmanaged advanced CKD with rapid progression",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2,
                     priority:1
@@ -524,7 +524,7 @@ BEGIN
                 {
                     label:"Alert:New commencement on Renal replacement therapy",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2,
                     priority:1
@@ -581,7 +581,7 @@ BEGIN
                 {
                     label:"Alert:Medication safety concern",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2
                 }
@@ -666,7 +666,7 @@ BEGIN
                 {
                     label:"Alert:Potentially untreated chronic disease",
                     desc:"Integer [0-1] if meets criteria ",
-                    is_reportable:0,
+                    is_reportable:1,
                     is_trigger:1,
                     type:2,
                     priority:2
