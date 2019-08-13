@@ -41,7 +41,9 @@ BEGIN
 
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
-        hd_dt => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
+        hd_dt0 => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
+        hd_dt => eadv.icd_z49_1.dt.max(1900); 
+        
         pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
         tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
         homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
