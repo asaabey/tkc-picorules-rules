@@ -149,10 +149,12 @@ Change Log
 27/07/2019  added define_ruleblock function
 29/07/2019  template compiler added to ensure integrity of attribute coupling to the view
 01/08/2019  fixed rpipe sorting bug
-01/08/2019  changed listagg to xmlagg
+01/08/2019  changed listagg to xmlagg, to overcome string buffer 4000 overflow
 06/08/2019  datacube generator improvements
 07/08/2019  init_global_vstack bug fixes
 08/08/2019  dependency_walker bug fixes,gen cube optimizations
+13/08/2019  gen_cube sysdate injection
+14/08/2019  build_func predicate chain bug fixed. applies extra parantheses
 
 */
     TYPE rman_tbl_type IS
@@ -414,9 +416,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             att_str0 := substr(att_str0, instr(att_str0, '[') + 1, instr(att_str0, ']') - 2);
 
         END IF;
+        
+        
 
         IF instr(att_str0, ',') > 0 THEN
             att_tbl := rman_pckg.splitstr(att_str0, ',', '', '');
+            
+            s:=s || ' (';
+            
             FOR i IN 1..att_tbl.count LOOP
                 IF instr(att_tbl(i), '%') > 0 THEN
                     eq_op := ' LIKE ';
@@ -436,6 +443,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     s := s || ' OR ';
                 END IF;
             END LOOP;
+            
+            s:=s || ') ';
 
         ELSIF instr(att_str0, ',') = 0 THEN
             IF instr(att_str0, '%') > 0 THEN
@@ -454,6 +463,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
+        
         RETURN s;
     END sql_predicate;
 
@@ -3494,7 +3504,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     
                     
                     
-                    sql_stmt_mod := replace(sql_stmt, 'sysdate', 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
+                    sql_stmt_mod := replace(sql_stmt_mod, 'sysdate', 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
 --                    dbms_output.put_line('GEN CUBE sysdate replace ->' || 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
                     
                     sql_stmt_mod := modify_dep_tbls(sql_stmt_mod, ruleblock_tbl(j), slice_tbl(i));

@@ -71,30 +71,30 @@ BEGIN
     
  
 
---rman_pckg.execute_ruleblock('qa_data_geom',1,1,0,1); 
+--rman_pckg.execute_ruleblock('rrt',1,0,0,1); 
 --            rman_pckg.compile_ruleblock('cd_cardiac');
 
 --
 --    
---rman_pckg.gen_cube_from_ruleblock('
---    rrt.rrt,
---    dmg.dob,
---    dmg.dod,
---    ckd.ckd,
---    cd_dm.dm,
---    cd_dm.dm_dx_uncoded,
---    cd_htn.htn,
---    cd_htn.htn_dx_uncoded,
---    cd_obesity.obesity,
---    cd_obesity.obs_dx_uncoded,
---    cvra.cvra,
---    cvra.cvra_dx_uncoded
---    ','01072019,01072018,01072017','rep123');
-
 rman_pckg.gen_cube_from_ruleblock('
     rrt.rrt,
-    dmg.dod
-    ','01072019,01072018,01072017,01072016,01072015','rep124');
+    dmg.dob,
+    dmg.dod,
+    ckd.ckd,
+    ckd.egfr_outdated,
+    cd_dm.dm,
+    cd_dm.dm_dx_uncoded,
+    cd_htn.htn,
+    cd_htn.htn_dx_uncoded,
+    cd_obesity.obesity,
+    cd_obesity.obs_dx_uncoded,
+    cvra.cvra,
+    cvra.cvra_dx_uncoded
+    ','01072019,01072018,01072017','rep123');
+
+--rman_pckg.gen_cube_from_ruleblock('
+--    rrt.rrt
+--    ','01072019,01072018,01072017','rep124');
 
 
 

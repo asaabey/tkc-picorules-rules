@@ -31,27 +31,25 @@ BEGIN
                 target_table:"rout_test1",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:0,
+                is_active:1,
                 def_exit_prop:"test1",
                 def_predicate:">0",
-                exec_order:5,
+                exec_order:1,
                 out_att : "test1"
             }
         );
         
-        uacr0 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-365);
         
-        egfr_val_obj => eadv.lab_bld_egfr_c.val.serialize();
         
-        egfr_dt_obj => eadv.lab_bld_egfr_c.dt.serialize();
+        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.count().where(dt>sysdate-365);
         
-        test1 : { uacr0_dt is not null =>1},{=>0};
+        pd_dt2 => eadv.icpc_u59009.dt.count().where(dt>sysdate-365);
+        
+        test1 : { 1=1 => 1},{=>0};
         
         #define_attribute(test1,
             { 
-                label: "This is test variable", 
-                is_trigger:true, 
-                is_reportable:true
+                label: "This is test variable"
             }
         );
         
@@ -60,8 +58,7 @@ BEGIN
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     
-    DBMS_OUTPUT.PUT_LINE('--->' || rb.blockid);
-    DBMS_OUTPUT.PUT_LINE('--->' || rb.picoruleblock);
+    
     
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
 
