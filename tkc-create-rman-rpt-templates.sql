@@ -160,7 +160,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <htn_icpc=0>Recommendation [3.1] Update diagnosis to hypertension</htn_icpc=0>
     <bp_control=2>Recommendation [3.4] Optimize BP control</bp_control=2>
-    <bp_control=1>Recommendation [3.14] Optimize BP control</bp_control=1>
+    <bp_control=1>Recommendation [3.14] Optimize BP control : <htn_rxn_raas=0>consider adding ACEi or ARB</htn_rxn_raas=0><htn_rxn_raas=1><htn_rxn_ccb=0>consider adding calcium channel blocker</htn_rxn_ccb=0></htn_rxn_raas=1><htn_rxn_raas=1><htn_rxn_ccb=1><htn_rxn_diuretic_thiazide=0>consider adding thiazide diuretic </htn_rxn_diuretic_thiazide=0></htn_rxn_ccb=1></htn_rxn_raas=1></bp_control=1></bp_control=1>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)

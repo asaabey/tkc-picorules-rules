@@ -350,7 +350,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"cd_cardiac",
+                def_exit_prop:"cardiac",
                 def_predicate:">0",
                 exec_order:1
                 
@@ -420,7 +420,7 @@ BEGIN
             
             vhd : { coalesce(vhd_mv_icd,vhd_av_icd,vhd_ov_icd,vhd_ie_icd,vhd_icpc) is not null =>1},{=>0};
             
-            cd_cardiac : {greatest(cad,vhd)=1 =>1},{=>0};
+            cardiac : {greatest(cad,vhd)=1 =>1},{=>0};
             
             #define_attribute(
             cad,
@@ -461,7 +461,7 @@ BEGIN
     
         /* Algorithm to assess obesity  */
         
-        #define_ruleblock(cd_cardiac,
+        #define_ruleblock(cd_obesity,
             {
                 description: "Algorithm to assess obesity",
                 version: "0.0.1.1",
@@ -491,6 +491,81 @@ BEGIN
         obesity : { bmi>30 => 1 },{=>0};
         
         obs_dx_uncoded : {bmi>30 and greatest(obs_icd,obs_icpc)=0 =>1},{=>0};
+        
+        
+        
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='at_risk_ckd';
+
+    
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess at risk population for CKD */
+        
+        #define_ruleblock(at_risk_ckd,
+            {
+                description: "Algorithm to assess at_risk_ckd",
+                version: "0.0.1.1",
+                blockid: "at_risk_ckd",
+                target_table:"rout_at_risk_ckd",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:2,
+                def_exit_prop:"at_risk_ckd",
+                def_predicate:">0",
+                exec_order:5
+                
+            }
+        );
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        dm => rout_cd_dm.dm.val.bind();
+        
+        htn => rout_cd_htn.htn.val.bind();
+        
+        cad => rout_cd_cardiac.cardiac.val.bind();
+        
+    
+        
+        obesity => rout_cd_obesity.obesity.val.bind();
+        
+              
+        obst => eadv.[icd_e66%,icpc_t82%].dt.count(0);
+            
+        lit => eadv.[icd_n20,icd_n21,icd_n22,icd_n23,icpc_u95%].dt.count(0);
+        
+        struc => eadv.[icd_n25,icd_n26,icd_n27,icd_n28,icd_n29,icpc_u28006].dt.count(0);
+            
+        cti => eadv.[icd_l00%,icd_l01%,icd_l02%,icd_l03%,icd_l04%,icd_l05%,icd_l06%,icd_l07%,icd_l08%,icd_l09%,icd_m86%,icpc_s76%].dt.count(0);
+        
+        aki => eadv.[icd_n17%].dt.count(0);
+        
+        
+            
+        at_risk_ckd : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
+        
+        #define_attribute(
+            at_risk_ckd,
+                {
+                    label:"At risk for CKD",
+                    is_reportable:1,
+                    is_trigger:1,
+                    type:2,
+                    priority:1
+                }
+        );
         
         
         

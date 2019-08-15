@@ -398,7 +398,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
 
---https://stackoverflow.com/questions/3710589/is-there-a-function-to-split-a-string-in-pl-sql/3710619#3710619
+
 
     FUNCTION sql_predicate (
         att_str VARCHAR2
@@ -716,15 +716,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END IF;
         END LOOP;
 
-        IF retval = true THEN
-            dbms_output.put_line('is_selected_GVS-->'
-                                 || txtin
-                                 || ' -> TRUE');
-        ELSE
-            dbms_output.put_line('-->'
-                                 || txtin
-                                 || ' -> FALSE');
-        END IF;
+        
         
         --Bypass
 
@@ -996,7 +988,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 --find vstack param and func
             IF vstack_func.EXISTS(vsi) AND vstack_func_param.EXISTS(vsi) AND match_varname(txtout, vsi) THEN
                 IF vstack_func(vsi) IS NOT NULL AND vstack_func_param(vsi) IS NOT NULL THEN
---                        DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED LOOP ' || vstack_func(vsi) || ' --> ' || vstack_func_param(vsi));
+
                 --case select
                     CASE
                         WHEN vstack_func(vsi) IN (
@@ -1652,15 +1644,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     RAISE ude_function_undefined;
             END CASE;
         END IF;
---
---    EXCEPTION
---        WHEN ude_function_undefined THEN
---            commit_log('build_func_sql_exp_undef', blockid, 'Error:');
---            dbms_output.put_line(dbms_utility.format_error_stack);
---        WHEN OTHERS THEN
---            commit_log('build_func_sql_exp', blockid, 'Error:');
---            dbms_output.put_line(dbms_utility.format_error_stack);
---            RAISE;
+
+    EXCEPTION
+        WHEN ude_function_undefined THEN
+            commit_log('build_func_sql_exp_undef', blockid, 'Error:');
+            dbms_output.put_line(dbms_utility.format_error_stack);
+        WHEN OTHERS THEN
+            commit_log('build_func_sql_exp', blockid, 'Error:');
+            dbms_output.put_line(dbms_utility.format_error_stack);
+            RAISE;
     END build_func_sql_exp;
 
     PROCEDURE build_cond_sql_exp (
@@ -2379,7 +2371,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
-        dbms_output.put_line('-->' || select_tbl_sql_str);
+--        dbms_output.put_line('-->' || select_tbl_sql_str);
         dbms_sql.parse(select_cursor, select_tbl_sql_str, dbms_sql.native);
     
     --dbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
@@ -2804,8 +2796,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         global_vstack_selected := global_vstack_selected_empty;
         IF length(trim(out_att_s)) > 0 THEN
             global_vstack_selected := splitstr(out_att_s, ',');
-            FOR i IN 1..global_vstack_selected.count LOOP dbms_output.put_line('* GVS *-> ' || global_vstack_selected(i));
-            END LOOP;
+
 
         END IF;
 
@@ -3033,9 +3024,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
             FOR i IN rbs.first..rbs.last LOOP
-                bid := rbs(i).blockid;
-                execute_ruleblock(bid, 1, 1, 0, 0);
-                dbms_output.put_line('rb: ' || bid);
+                BEGIN
+                    bid := rbs(i).blockid;
+                    execute_ruleblock(bid, 1, 1, 0, 0);
+                    dbms_output.put_line('rb: ' || bid);
+                    EXCEPTION
+                    WHEN OTHERS THEN
+                        commit_log('execute_active_ruleblocks', bid, 'Error:');
+                        commit_log('execute_active_ruleblocks', bid, 'FAILED');
+                        dbms_output.put_line('FAILED::'
+                                             || bid
+                                             || ' and errors logged to rman_ruleblocks_log !');
+                END;
             END LOOP;
 
             drop_rout_tables;
@@ -4370,10 +4370,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     idx := used_var.next(idx);
                 END LOOP;
 
-                dbms_output.put_line('t->'
-                                     || tp(i).ruleblockid
-                                     || ' -> '
-                                     || used_var_agg);
+            
 
                 used_var := used_var_0;
             END LOOP;
@@ -4407,9 +4404,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         BEGIN
             UPDATE rman_ruleblocks d
             SET
-                d.out_att = d.out_att
+                d.out_att = TRIM(BOTH ',' FROM d.out_att
                             || ','
-                            || d.def_exit_prop;
+                            || d.def_exit_prop);
 --            WHERE
 --                instr(nvl(d.out_att, ''), d.def_exit_prop) = 0;
 

@@ -22,7 +22,7 @@ BEGIN
         rman_pckg.compile_ruleblock('cd_cardiac');
 */
 
---rman_pckg.compile_ruleblock('rrt');
+--rman_pckg.compile_ruleblock('at_risk_ckd');
 
 
 /*
@@ -61,10 +61,10 @@ BEGIN
     usage :
         rman_pckg.execute_active_ruleblocks(recompile={0,1});
         eg :
-        rman_pckg.execute_active_ruleblocks(1);
+        rman_pckg.execute_active_ruleblocks;
 */
 
---        rman_pckg.execute_active_ruleblocks; 
+        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');
@@ -76,21 +76,21 @@ BEGIN
 
 --
 --    
-rman_pckg.gen_cube_from_ruleblock('
-    rrt.rrt,
-    dmg.dob,
-    dmg.dod,
-    ckd.ckd,
-    ckd.egfr_outdated,
-    cd_dm.dm,
-    cd_dm.dm_dx_uncoded,
-    cd_htn.htn,
-    cd_htn.htn_dx_uncoded,
-    cd_obesity.obesity,
-    cd_obesity.obs_dx_uncoded,
-    cvra.cvra,
-    cvra.cvra_dx_uncoded
-    ','01072019,01072018,01072017','rep123');
+--rman_pckg.gen_cube_from_ruleblock('
+--    rrt.rrt,
+--    dmg.dob,
+--    dmg.dod,
+--    ckd.ckd,
+--    ckd.egfr_outdated,
+--    cd_dm.dm,
+--    cd_dm.dm_dx_uncoded,
+--    cd_htn.htn,
+--    cd_htn.htn_dx_uncoded,
+--    cd_obesity.obesity,
+--    cd_obesity.obs_dx_uncoded,
+--    cvra.cvra,
+--    cvra.cvra_dx_uncoded
+--    ','01072019,01072018,01072017','rep123');
 
 --rman_pckg.gen_cube_from_ruleblock('
 --    rrt.rrt
