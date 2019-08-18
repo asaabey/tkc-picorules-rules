@@ -6,12 +6,9 @@ declare
 
 
 begin
-    eid:=6811;
---    eid:=18289;
---    eid:=44074;
---    eid:=27876;
---    eid:=2523;
---    eid:=1546;
+--    eid:=6811;
+
+    eid:=6121;
     composition:=rman_pckg.get_composition_by_eid(eid,'neph001');
     
     

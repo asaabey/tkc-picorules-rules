@@ -989,26 +989,25 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             IF vstack_func.EXISTS(vsi) AND vstack_func_param.EXISTS(vsi) AND match_varname(txtout, vsi) THEN
                 IF vstack_func(vsi) IS NOT NULL AND vstack_func_param(vsi) IS NOT NULL THEN
 
-                --case select
+                
                     CASE
                         WHEN vstack_func(vsi) IN (
                             'COUNT',
                             'LAST',
                             'FIRST'
                         ) AND vstack_func_param(vsi) = '0' THEN
-                        --DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED CASE');
                             rep_str := 'NVL('
                                        || vsi
                                        || ',0)';
                             txtout := replace(txtout, vsi, rep_str);    
-                            --    DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> VSI : ' || vsi || ' REP_STR :' || rep_str || chr(10) || 'TXTOUT : ' || txtout);
+                            
                         WHEN vstack_func(vsi) IN (
                             'MIN',
                             'MAX',
                             'FIRST',
                             'LAST'
                         ) AND vstack_func_param(vsi) = '1900' THEN
-                        --DBMS_OUTPUT.PUT_LINE('MODIFY_PS -> ENTERED CASE');
+                        
                             rep_str := 'NVL('
                                        || vsi
                                        || ',TO_DATE(''19000101'',''YYYYMMDD''))';
@@ -3038,7 +3037,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 END;
             END LOOP;
 
-            drop_rout_tables;
+--            drop_rout_tables;
         ELSE
             commit_log('execute_active_ruleblocks', '', 'Exiting with NULL Ruleblocks');
         END IF;

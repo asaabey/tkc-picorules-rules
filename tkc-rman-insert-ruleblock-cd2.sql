@@ -204,14 +204,21 @@ BEGIN
         /*  Observation criteria    */
         htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140 and dt>sysdate-730);
         
+        /*  Ancillary information for causality or treatment recom */
+        bld_k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
+        
+        bld_k_state : {nvl(bld_k_val,0)>5.2 =>3},{nvl(bld_k_val,0)>4.0 =>2},{=>1};
+        
         /*  Rxn cirteria   */
-        htn_rxn_acei => eadv.[rxnc_c09aa].dt.count().where(val=1);
-        htn_rxn_arb => eadv.[rxnc_c09ca].dt.count().where(val=1);
-        htn_rxn_bb => eadv.[rxnc_c07%].dt.count().where(val=1);
-        htn_rxn_ccb => eadv.[rxnc_c08%].dt.count().where(val=1);
-        htn_rxn_c02 => eadv.[rxnc_c02%].dt.count().where(val=1);
-        htn_rxn_diuretic_thiaz => eadv.[rxnc_c03aa].dt.count().where(val=1);
-        htn_rxn_diuretic_loop => eadv.[rxnc_c03c%].dt.count().where(val=1);
+        htn_rxn_acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
+        htn_rxn_arb => eadv.[rxnc_c09ca].dt.count(0).where(val=1);
+        htn_rxn_bb => eadv.[rxnc_c07%].dt.count(0).where(val=1);
+        htn_rxn_ccb => eadv.[rxnc_c08%].dt.count(0).where(val=1);
+        htn_rxn_c02 => eadv.[rxnc_c02%].dt.count(0).where(val=1);
+        htn_rxn_diuretic_thiaz => eadv.[rxnc_c03aa].dt.count(0).where(val=1);
+        htn_rxn_diuretic_loop => eadv.[rxnc_c03c%].dt.count(0).where(val=1);
+        
+        htn_rxn_raas : { greatest(htn_rxn_acei,htn_rxn_arb)>0 =>1},{=>0};
         
         htn_rxn : { coalesce(htn_rxn_acei, htn_rxn_arb, htn_rxn_bb, htn_rxn_ccb , htn_rxn_c02 , htn_rxn_diuretic_thiaz , htn_rxn_diuretic_loop) is not null =>1 },{=>0};
         
@@ -566,6 +573,88 @@ BEGIN
                     priority:1
                 }
         );
+        
+        
+        
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+   
+   -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='htn_rcm';
+
+    
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess at risk population for CKD */
+        
+        #define_ruleblock(htn_rcm,
+            {
+                description: "Algorithm to assess hypertension recommendations",
+                version: "0.0.1.1",
+                blockid: "htn_rcm",
+                target_table:"rout_htn_rcm",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:0,
+                def_exit_prop:"htn_rcm",
+                def_predicate:">0",
+                exec_order:5
+                
+            }
+        );
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        htn => rout_cd_htn.htn.val.bind();
+        
+        bpc => rout_cd_htn.bp_control.val.bind();
+        
+        cad => rout_cd_cardiac.cardiac.val.bind();
+        
+        
+        
+
+        acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
+        arb => eadv.[rxnc_c09ca].dt.count(0).where(val=1);
+        bb => eadv.[rxnc_c07%].dt.count(0).where(val=1);
+        ccb => eadv.[rxnc_c08%].dt.count(0).where(val=1);
+        c02 => eadv.[rxnc_c02%].dt.count(0).where(val=1);
+        thiaz => eadv.[rxnc_c03aa].dt.count(0).where(val=1);
+        loop => eadv.[rxnc_c03c%].dt.count(0).where(val=1);
+        mrb  => eadv.[rxnc_c03da].dt.count(0).where(val=1);
+        
+        k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
+        
+        k_state : {nvl(k_val,0)>5.2 =>3},{nvl(k_val,0)>4.0 =>2},{=>1};
+        
+        raas : { greatest(acei,arb)>0 =>1 },{=>0};
+        
+        rx_line : { greatest(acei,arb,ccb,bb,c02,thiaz,loop,mrb)=0 =>0},
+                    { raas=1 and greatest(ccb,bb,c02,thiaz,loop,mrb)=0 =>1},
+                    { raas=1 and ccb>0 and greatest(bb,c02,thiaz,loop,mrb)=0 =>2},
+                    { raas=1 and ccb>0 and thiaz>0 and greatest(bb,c02,loop,mrb)=0 =>3};
+                    
+        htn_rcm :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
+                    { htn=1 and bpc>1 and raas=0 and k_state=3 and ccb=0 => 12 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=0 => 22 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=0 and k_state>1 => 33 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=0 and k_state=1 => 34 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and k_state<3 => 44 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and k_state=3 => 35 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and mrb=1 => 55 },
+                    {htn=1 and bpc>1 =>99},
+                    {=>0};
+                    
+        
+        
         
         
         

@@ -156,11 +156,19 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','cd_htn_rec_1','cd_htn',703100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','cd_htn_rec_1','htn_rcm',703100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <htn_icpc=0>Recommendation [3.1] Update diagnosis to hypertension</htn_icpc=0>
-    <bp_control=2>Recommendation [3.4] Optimize BP control</bp_control=2>
-    <bp_control=1>Recommendation [3.14] Optimize BP control : <htn_rxn_raas=0>consider adding ACEi or ARB</htn_rxn_raas=0><htn_rxn_raas=1><htn_rxn_ccb=0>consider adding calcium channel blocker</htn_rxn_ccb=0></htn_rxn_raas=1><htn_rxn_raas=1><htn_rxn_ccb=1><htn_rxn_diuretic_thiazide=0>consider adding thiazide diuretic </htn_rxn_diuretic_thiazide=0></htn_rxn_ccb=1></htn_rxn_raas=1></bp_control=1></bp_control=1>
+    <bpc=2>Recommendation [3.4] Optimize BP control</bpc=2><bpc=3>Recommendation [3.4] Optimize BP control</bpc=3>
+    <htn_rcm=11>Recommendation [3.4.1] Consider adding ACEi or ARB (RAAS blockade) which is recommended as first line therapy</htn_rcm=11>
+    <htn_rcm=12>Recommendation [3.4.1] Consider adding DHP-CCB instead of RAAS blockade as there is a risk worsening hyperkalaemia</htn_rcm=12>
+    <htn_rcm=22>Recommendation [3.4.1] Consider adding CCB which is recommended as second line therapy</htn_rcm=22>
+    <htn_rcm=33>Recommendation [3.4.1] Consider adding low dose thiazide which is recommended as third line therapy</htn_rcm=33>
+    <htn_rcm=34>Recommendation [3.4.1] Consider adding Aldosterone antagonist instead of low dose thiazide as there is a risk of worsening hypokalaemia</htn_rcm=34>
+    <htn_rcm=35>Recommendation [3.4.1] Consider adding beta blocker or central blocker instead of Aldosterone Antagonist as there is a risk of worsening hyperkalaemia</htn_rcm=35>
+    <htn_rcm=44>Recommendation [3.4.1] Consider adding Aldosterone antagonist which is recommended as fourth line therapy</htn_rcm=44>
+    <htn_rcm=55>Recommendation [3.4.1] Consider adding Beta blocker or Central blocker as 5th line therapy</htn_rcm=55>
+    <htn_rcm=99>Recommendation [3.4.1] Best combination cannot be determined</htn_rcm=99>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)

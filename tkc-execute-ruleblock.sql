@@ -47,7 +47,7 @@ BEGIN
         rman_pckg.execute_ruleblock('cd_dm',1,1,0,1); 
 */
 
---    rman_pckg.execute_ruleblock('rrt',1,1,0,1);  
+    rman_pckg.execute_ruleblock('htn_rcm',1,1,0,1);  
 
 --    rman_pckg.execute_ruleblock('rrt',1,0,0,1); 
 
@@ -61,10 +61,10 @@ BEGIN
     usage :
         rman_pckg.execute_active_ruleblocks(recompile={0,1});
         eg :
-        rman_pckg.execute_active_ruleblocks;
+--        rman_pckg.execute_active_ruleblocks;
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');
