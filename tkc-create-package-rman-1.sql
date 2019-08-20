@@ -343,7 +343,8 @@ Change Log
     );
 
     PROCEDURE compile_ruleblock (
-        bid_in IN VARCHAR2
+        bid_in IN VARCHAR2,
+        return_code OUT pls_integer
     );
 
     PROCEDURE compile_active_ruleblocks;
@@ -353,7 +354,8 @@ Change Log
         create_wide_tbl     IN                  PLS_INTEGER,
         push_to_long_tbl    IN                  PLS_INTEGER,
         push_to_long_tbl2   IN                  PLS_INTEGER,
-        recompile           IN                  PLS_INTEGER
+        recompile           IN                  PLS_INTEGER,
+        return_code OUT pls_integer
     );
 
     PROCEDURE execute_active_ruleblocks;
@@ -2803,7 +2805,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     PROCEDURE compile_ruleblock (
         bid_in IN VARCHAR2,
-        return_state OUT PLS_INTEGER:=0;
+        return_code OUT PLS_INTEGER
     ) IS
 
         strsql   CLOB;
@@ -2847,6 +2849,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --        check_sql_syntax(rb.blockid,rb.sqlblock,rb.target_table,rb.def_exit_prop,rb.def_predicate);
 
         commit_log('Compile ruleblock', bid_in, 'compiled to sql');
+        return_code:=0;
     EXCEPTION
         WHEN OTHERS THEN
             commit_log('compile_ruleblocks', bid_in, 'Error:');
@@ -2854,6 +2857,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             dbms_output.put_line('FAILED::'
                                  || bid
                                  || ' and errors logged to rman_ruleblocks_log !');
+            return_code:=1;
     END compile_ruleblock;
 
     PROCEDURE compile_ruleblock_ext (
@@ -2861,7 +2865,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         out_att_str   IN            VARCHAR2,
         sqlstmt       OUT           CLOB
     ) IS
-
+        
         strsql   CLOB;
         t0       INTEGER := dbms_utility.get_time;
         rb       rman_ruleblocks%rowtype;
@@ -2919,6 +2923,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     PROCEDURE compile_active_ruleblocks IS
         rbs   rman_ruleblocks_type;
         bid   VARCHAR2(100);
+        compile_return_code PLS_INTEGER;
     BEGIN
         commit_log('compile_active_ruleblocks', '', 'Started');
         DELETE FROM rman_ruleblocks_dep;
@@ -2935,7 +2940,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             commit_log('compile_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
             FOR i IN rbs.first..rbs.last LOOP
                 bid := rbs(i).blockid;
-                compile_ruleblock(bid);
+                compile_ruleblock(bid,compile_return_code);
                 dbms_output.put_line('rb: ' || bid);
             END LOOP;
 
@@ -2954,16 +2959,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         create_wide_tbl     IN                  PLS_INTEGER,
         push_to_long_tbl    IN                  PLS_INTEGER,
         push_to_long_tbl2   IN                  PLS_INTEGER,
-        recompile           IN                  PLS_INTEGER
+        recompile           IN                  PLS_INTEGER,
+        return_code OUT pls_integer
     ) IS
-
+        compile_return_code PLS_INTEGER;
         strsql   CLOB;
         t0       INTEGER := dbms_utility.get_time;
         rb       rman_ruleblocks%rowtype;
         bid      rman_ruleblocks.blockid%TYPE;
     BEGIN
         IF recompile = 1 THEN
-            compile_ruleblock(bid_in);
+            compile_ruleblock(bid_in,compile_return_code);
         END IF;
         SELECT
             *
@@ -2996,15 +3002,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --    END IF;
         COMMIT;
         commit_log('Execute ruleblock', rb.blockid, 'Succeded');
+        return_code:=0;
     EXCEPTION
         WHEN OTHERS THEN
             dbms_output.put_line(dbms_utility.format_error_stack);
+            return_code:=1;
             RAISE;
     END execute_ruleblock;
 
     PROCEDURE execute_active_ruleblocks IS
         rbs   rman_ruleblocks_type;
         bid   VARCHAR2(100);
+        execute_return_code pls_integer;
     BEGIN
         tstack := tstack_empty;
         commit_log('execute_active_ruleblocks', '', 'Started');
@@ -3026,7 +3035,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             FOR i IN rbs.first..rbs.last LOOP
                 BEGIN
                     bid := rbs(i).blockid;
-                    execute_ruleblock(bid, 1, 1, 0, 0);
+                    execute_ruleblock(bid, 1, 1, 0, 0,execute_return_code);
                     dbms_output.put_line('rb: ' || bid);
                     EXCEPTION
                     WHEN OTHERS THEN
@@ -3319,8 +3328,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             ruleblockid VARCHAR2
         ) RETURN VARCHAR2 AS
             sql_stmt VARCHAR2(32767) := '';
+            compile_return_code pls_integer;
         BEGIN
-            compile_ruleblock(ruleblockid);
+            compile_ruleblock(ruleblockid,compile_return_code);
             SELECT
                 sqlblock
             INTO sql_stmt
