@@ -1177,7 +1177,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ROW_NUMBER() OVER(
                             PARTITION BY eid, att
                             ORDER BY
-                                dt
+                                dt DESC
                         ) AS rn
                     FROM
                         eadvx
@@ -2802,7 +2802,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END init_global_vstack;
 
     PROCEDURE compile_ruleblock (
-        bid_in IN VARCHAR2
+        bid_in IN VARCHAR2,
+        return_state OUT PLS_INTEGER:=0;
     ) IS
 
         strsql   CLOB;
