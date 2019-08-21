@@ -1035,11 +1035,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         key_tbl        tbl_type;
         t              VARCHAR2(4000);
         tkey           VARCHAR2(100);
-        tval           VARCHAR2(100);
-        html_tkey      VARCHAR2(100);
+--        tval           VARCHAR2(100);
+        tval           VARCHAR2(4000);
+--        html_tkey      VARCHAR2(100);
+        html_tkey      VARCHAR2(4000);
         tag_param      VARCHAR2(100);
         tag_operator   VARCHAR(2);
-        ret_tmplt      VARCHAR2(4000) := tmplt;
+        ret_tmplt      VARCHAR2(32767) := tmplt;
+--        ret_tmplt      CLOB := tmplt;
     BEGIN
 --jstr into collection
         t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i', 1);
@@ -1202,14 +1205,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             eid;
 
         RETURN composition;
-    EXCEPTION
-        WHEN eid_not_found THEN
-            dbms_output.put_line('Error: eid not found');
-            RETURN '';
-        WHEN OTHERS THEN
-            commit_log('get_composition_by_eid', '', 'Error:');
-            dbms_output.put_line('FAILED:: and errors logged to rman_ruleblocks_log !');
-            RETURN '';
+--    EXCEPTION
+--        WHEN eid_not_found THEN
+--            dbms_output.put_line('Error: eid not found');
+--            RETURN '';
+--        WHEN OTHERS THEN
+--            commit_log('get_composition_by_eid', '', 'Error:');
+--            dbms_output.put_line('FAILED:: and errors logged to rman_ruleblocks_log !');
+--            RETURN '';
     END get_composition_by_eid;
 
     PROCEDURE build_assn_var2 (
@@ -1621,14 +1624,23 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 WHEN func IN (
                     'SERIALIZE'
                 ) THEN
+
                     where_txt := att || predicate;
                     from_txt := from_clause;
+--                    select_txt := tbl
+--                                  || '.'
+--                                  || entity_id_col
+--                                  || ', LISTAGG('
+--                                  || prop
+--                                  || ','','') WITHIN GROUP (ORDER BY DT DESC) AS '
+--                                  || assnvar
+--                                  || ' ';
                     select_txt := tbl
                                   || '.'
                                   || entity_id_col
-                                  || ', LISTAGG('
+                                  || ', RTRIM(XMLAGG(XMLELEMENT(e,'
                                   || prop
-                                  || ','','') WITHIN GROUP (ORDER BY DT DESC) AS '
+                                  || ','';'').EXTRACT(''//text()'') ORDER BY DT DESC).GETCLOBVAL(),'','') AS '
                                   || assnvar
                                   || ' ';
 
@@ -2564,6 +2576,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         typ12_val            DATE;
         typ96_val            VARCHAR2(4);
         typ00_val            VARCHAR2(4000);
+        typ112_val           CLOB;
         row_eid              NUMBER;
         select_tbl_sql_str   CLOB := sqlstmt;
         create_tbl_sql_str   VARCHAR2(4000);
@@ -2595,6 +2608,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 dbms_sql.define_column(select_cursor, i, 1);
             WHEN 12 THEN --date
                 dbms_sql.define_column(select_cursor, i, SYSDATE);
+            WHEN 112 THEN --date
+                dbms_sql.define_column(select_cursor, i,typ112_val);
             WHEN 96 THEN --char
                 dbms_sql.define_column(select_cursor, i, 'a', 32);
             ELSE
@@ -2667,7 +2682,20 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 --                                
                         END IF;
+                    WHEN 112 THEN --clob
+                        dbms_sql.column_value(select_cursor, i, typ112_val);
+                        IF typ112_val IS NOT NULL THEN
+                            insert_jstr := insert_jstr
+                                           || '"'
+                                           || format_bindvar_name(tbl_desc(i).col_name)
+                                           || '":"'
+                                           || dbms_lob.substr(typ112_val,3500,1)
+                                           || '"';
 
+                            IF i < tbl_desc.count THEN
+                                insert_jstr := insert_jstr || ',';
+                            END IF;
+                        END IF;
                     WHEN 96 THEN --char
                         dbms_sql.column_value(select_cursor, i, typ96_val);
                         IF typ96_val IS NOT NULL THEN
