@@ -305,7 +305,6 @@ BEGIN
             ckd_stage_1,
             {
 
-                
                 label:"CKD stage 1",
                 is_reportable:1,
                 type:2
@@ -488,7 +487,9 @@ BEGIN
      aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
      
-     ckd_cause : {coalesce(aet_dm,aet_htn,aet_gn_ln,aet_gn_x) is not null => 1},{=>0};
+     ckd_cause : { greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
+     
+
      
      #define_attribute(
             ckd_cause,

@@ -236,7 +236,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph001','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
     '
     <aet_multiple=1>Multiple aetiology is suggested by presence of </aet_multiple=1><aet_dm=1>diabetes mellitus </aet_dm=1><aet_htn=1>,hypertension </aet_htn=1><aet_gn_ln=1>,lupus nephritis </aet_gn_ln=1><aet_gn_x=1>,glomerulopathy NOS</aet_gn_x=1>
-    <aet_multiple=0>The likely cause is <aet_dm>diabetic kidney disease (DKD)</aet_dm><aet_htn>,hypertensive kidney disease</aet_htn><aet_gn_ln>,lupus nephritis</aet_gn_ln><aet_gn_x>,glomerulopathy NOS</aet_gn_x></aet_multiple=0>
+    <aet_multiple=0>The likely cause is <aet_dm>diabetic kidney disease (DKD)</aet_dm><aet_htn>,hypertensive kidney disease</aet_htn><aet_gn_ln>,lupus nephritis</aet_gn_ln></aet_multiple=0>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
