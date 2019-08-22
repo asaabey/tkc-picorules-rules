@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    0.0.2.2
+Version		    1.0.0.1
 Creation date	07/04/2019
-update on date  08/08/2019
+update on date  23/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -155,7 +155,8 @@ Change Log
 08/08/2019  dependency_walker bug fixes,gen cube optimizations
 13/08/2019  gen_cube sysdate injection
 14/08/2019  build_func predicate chain bug fixed. applies extra parantheses
-
+21/08/2019  dbms_sql handles type 112 clob type
+23/08/2019  templates handles medication lists 
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -2689,7 +2690,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || dbms_lob.substr(typ112_val,3500,1)
+                                           || translate(dbms_lob.substr(typ112_val,3500,1),',',' ')
                                            || '"';
 
                             IF i < tbl_desc.count THEN
