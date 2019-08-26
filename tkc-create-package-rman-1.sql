@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.0.1
+Version		    1.0.0.2
 Creation date	07/04/2019
-update on date  23/08/2019
+update on date  27/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -157,6 +157,7 @@ Change Log
 14/08/2019  build_func predicate chain bug fixed. applies extra parantheses
 21/08/2019  dbms_sql handles type 112 clob type
 23/08/2019  templates handles medication lists 
+27/08/2019  template handling of tabs and line feeds
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -1150,7 +1151,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     -- remove excess space and line feeds
         ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
                                                                                                            || '{2,}', chr(10));
+    -- add line breaks
+        ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
 
+        ret_tmplt := regexp_replace(ret_tmplt, '\\n', chr(10));
+        
+        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10) || chr(9));
+        
+    -- add tabs
+        
+        ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
+    
         RETURN ret_tmplt;
     END map_to_tmplt;
 
@@ -1160,8 +1171,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     ) RETURN CLOB AS
 
         composition        CLOB; 
---compositionid_in    varchar2(100):=nlc_id;
-        compositionid_in   VARCHAR2(100) := 'neph001';
+        compositionid_in    varchar2(100):=nlc_id;
+--        compositionid_in   VARCHAR2(100) := 'neph001';
         eid_not_found EXCEPTION;
         PRAGMA exception_init ( eid_not_found, 100 );
     BEGIN

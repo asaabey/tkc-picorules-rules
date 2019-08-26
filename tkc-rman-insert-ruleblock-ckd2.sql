@@ -487,7 +487,7 @@ BEGIN
      aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
      
-     ckd_cause : { greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
+     ckd_cause : { ckd>0 and greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
      
 
      

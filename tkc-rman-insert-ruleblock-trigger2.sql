@@ -678,6 +678,61 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);    
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg4810';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Algorithm to detect untreated dm   */
+        
+         #define_ruleblock(tg4810,
+            {
+                description: "Algorithm to detect high haemoglobin while on ESA",
+                version: "0.0.1.1",
+                blockid: "tg4810",
+                target_table:"rout_tg4810",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:2,
+                def_exit_prop:"tg4810",
+                def_predicate:">0",
+                exec_order:5
+                
+            }
+        );
+        
+        esa_dt => eadv.rxnc_b03xa.dt.max().where(val=1);
+        
+        hb_i => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-180);
+        
+        hb_i1 => eadv.lab_bld_hb.val.lastdv(1);
+        
+        
+          
+        tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt=> 1},{=>0};
+        
+        #define_attribute(
+                tg4810,
+                {
+                    label:"Alert: High Hb associated with ESA therapy",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:1,
+                    is_trigger:1,
+                    type:2,
+                    priority:2
+                }
+            ); 
+
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);    
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

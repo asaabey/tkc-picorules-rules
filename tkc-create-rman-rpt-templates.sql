@@ -20,27 +20,19 @@
 --31	Chronic disease : HTN
 --41	Chronic disease : HTN
 
+DELETE FROM rman_rpt_templates WHERE compositionid='neph001';
 
-DROP TABLE rman_rpt_templates;
-/
-CREATE TABLE rman_rpt_templates
-(
-    templateid      varchar2(100) not null,
-    ruleblockid     varchar2(100),
-    placementid     INTEGER,
-    templatehtml    clob,
-    environment     varchar2(30),
-    template_owner  varchar2(30),
-    effective_dt    date,
-    compositionid   varchar2(100)not null,
-    CONSTRAINT pk_rman_rpt_templates PRIMARY KEY(templateid)
-    --CONSTRAINT fk_template_ruleblock FOREIGN KEY(ruleblockid) REFERENCES rman_ruleblocks(blockid)
-);
-/
-DROP INDEX rman_rpt_templates_ruleblockid;
-/
-CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
-/
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','alert_tg4810','tg4810',304810,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : High haemoglobin on the background of ESA therapy  (Trigger 4810)
+    --------------------------------------------------------------------------
+    Current haemoglobin is <hb_i_val></hb_i_val> g/L which has increased from a previous hb of <hb_i1_val></hb_i1_val>  g/L.<br> 
+    The ESA was last prescribed on \t <esa_dt></esa_dt>.
+    This finding is associated with a higher all-cause mortality in CKD and RRT patients.\n
+    It is possible that the medication is not administered,or an undocumented dose reduction has occured.<br>
+    '
+    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','alert_tg4620','tg4620',304620,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -300,14 +292,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     Renal services engagement rubric
     --------------------------------------
-    <enc_multi=0><enc_ld>Nephrologist review :               </enc_ld><enc_ld></enc_ld></enc_multi=0>
-    <enc_multi>Nephrologist reviews :              <enc_fd></enc_fd>-<enc_ld></enc_ld> [<enc_n></enc_n>] </enc_multi>
-    <edu_init>CKD Education (initial) :           </edu_init><edu_init></edu_init>
-    <edu_rv>CKD Education review (last) :       </edu_rv><edu_rv></edu_rv>
-    <dietn>Renal Dietician review (last) :     </dietn><dietn></dietn>
-    <sw>Renal social work review (last) :         </sw><sw></sw>
+    <enc_multi=0><enc_ld>Nephrologist review :\t\t\t</enc_ld><enc_ld></enc_ld></enc_multi=0>
+    <enc_multi>Nephrologist reviews :\t\t\t\t\t\t<enc_fd></enc_fd>-<enc_ld></enc_ld> [<enc_n></enc_n>] </enc_multi>
+    <edu_init>CKD Education (initial) :\t\t</edu_init><edu_init></edu_init>
+    <edu_rv>CKD Education review (last) :\t\t</edu_rv><edu_rv></edu_rv>
+    <dietn>Renal Dietician review (last) :\t\t\t</dietn><dietn></dietn>
+    <sw>Renal social work review (last) :\t\t</sw><sw></sw>
     
-    <avf_ld>CKD Access (AVF) formation date :   </avf_ld><avf_ld></avf_ld>
+    <avf_ld>CKD Access (AVF) formation date :\t\t</avf_ld><avf_ld></avf_ld>
     
     '
     );

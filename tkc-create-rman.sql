@@ -75,6 +75,26 @@ CREATE TABLE rman_ruleblocks_log (
     --CONSTRAINT log_fk_ruleblock FOREIGN KEY(blockid) REFERENCES rman_ruleblocks(blockid)
 );
 /
+DROP TABLE rman_rpt_templates;
+/
+CREATE TABLE rman_rpt_templates
+(
+    templateid      varchar2(100) not null,
+    ruleblockid     varchar2(100),
+    placementid     INTEGER,
+    templatehtml    clob,
+    environment     varchar2(30),
+    template_owner  varchar2(30),
+    effective_dt    date,
+    compositionid   varchar2(100)not null,
+    CONSTRAINT pk_rman_rpt_templates PRIMARY KEY(templateid,compositionid)
+    --CONSTRAINT fk_template_ruleblock FOREIGN KEY(ruleblockid) REFERENCES rman_ruleblocks(blockid)
+);
+/
+DROP INDEX rman_rpt_templates_ruleblockid;
+/
+CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
+/
 
 CREATE OR REPLACE TYPE tbl_type AS
     TABLE OF VARCHAR2(2000);
