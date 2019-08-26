@@ -571,10 +571,10 @@ BEGIN
         
         dm_rxn_sglt2 => rout_cd_dm.dm_rxn_sglt2.val.bind();
         
-        rx_nsaids => eadv.[rxnc_m01a%].dt.count();
+        rx_nsaids => eadv.[rxnc_m01a%].dt.count(0).where(val=1);
         
           
-        tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2,rx_nsaids) is not null => 1},{=>0};
+        tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 => 1},{=>0};
         
         #define_attribute(
                 tg4660,
