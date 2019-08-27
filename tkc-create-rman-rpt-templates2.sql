@@ -38,7 +38,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     +-- <dm_dx_code_flag>Diagnosed</dm_dx_code_flag><dm_dx_uncoded>Undiagnosed</dm_dx_uncoded> Diabetes type <dm_type></dm_type>
     |       +-- since <dm_fd_t></dm_fd_t>
     <dm_micvas>|       +-- Non-renal microvascular complications present</dm_micvas>
-    <hba1c_n_tot>|       +-- Llast recorded HbA1c (NGSP) is <hba1c_n0_val></hba1c_n0_val> % (<hba1c_n0_dt></hba1c_n0_dt>)</hba1c_n_tot>
+    <hba1c_n_tot>|       +-- Last recorded HbA1c (NGSP) is <hba1c_n0_val></hba1c_n0_val> % (<hba1c_n0_dt></hba1c_n0_dt>)</hba1c_n_tot>
     <dm_rxn=0>|       +-- Non-medicated</dm_rxn=0>
     <dm_rxn>|       +-- Current medication classes</dm_rxn>
     <dm_rxn_su>|              +-- sulphonylurea</dm_rxn_su>
@@ -159,9 +159,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    <aet_multiple=1>Multiple aetiology is suggested by presence of </aet_multiple=1><aet_dm=1>diabetes mellitus </aet_dm=1><aet_htn=1>,hypertension </aet_htn=1><aet_gn_ln=1>,lupus nephritis </aet_gn_ln=1><aet_gn_x=1>,glomerulopathy NOS</aet_gn_x=1>
-    <aet_multiple=0>The likely cause is <aet_dm>diabetic kidney disease (DKD)</aet_dm><aet_htn>,hypertensive kidney disease</aet_htn><aet_gn_ln>,lupus nephritis</aet_gn_ln></aet_multiple=0>
+    '   |       +-- CKD aetiology
+    <aet_multiple=1>|              +-- Multiple aetiology is suggested </aet_multiple=1>
+    <aet_dm=1>|                  +-- diabetes mellitus </aet_dm=1>
+    <aet_htn=1>|                  +-- hypertension </aet_htn=1>
+    <aet_gn_ln=1>|                  +-- lupus nephritis </aet_gn_ln=1>
+    <aet_gn_x=1>|                  +-- glomerulopathy NOS</aet_gn_x=1>
+    <aet_multiple=0>|              +-- The likely cause is <aet_dm>diabetic kidney disease (DKD)</aet_dm><aet_htn>,hypertensive kidney disease</aet_htn><aet_gn_ln>,lupus nephritis</aet_gn_ln></aet_multiple=0>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -254,9 +258,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002','cd_ckd_compx_1','ckd_complications',601400,'dev','tkc',TO_DATE(SYSDATE),
     '   |       +-- CKD Complications
     |              +-- Haemopoetic function
-    <hb_lv>|                  +-- Last haemoglobin on <hb_ld></hb_ld> is </hb_lv><hb_lv></hb_lv> g/L and is consistent a <hb_state=2> with an acceptable range</hb_state=2>
-    <hb_state=1><mcv_state=11>|                  +-- severe microcytic </mcv_state=11><mcv_state=12>|                  +-- microcytic </mcv_state=12><mcv_state=20>|                  +-- normocytic </mcv_state=20><mcv_state=31>|                  +-- macrocytic </mcv_state=31> anaemia</hb_state=1>
-    <esa_state=0>|                  +-- No ESA use</esa_state=0><esa_state=1>|                  +-- current ESA use</esa_state=1><esa_state=2>|                  +-- Past ESA use but not current</esa_state=2>
+    <hb_lv>|                  +-- Last haemoglobin on <hb_ld></hb_ld> is </hb_lv><hb_lv></hb_lv> g/L 
+    <hb_state=2>|                  +-- acceptable range</hb_state=2>
+    <hb_state=1><mcv_state=11>|                  +-- consistent with severe microcytic anaemia </mcv_state=11></hb_state=1>
+    <hb_state=1><mcv_state=12>|                  +-- consistent with microcytic anaemia</mcv_state=12></hb_state=1>
+    <hb_state=1><mcv_state=20>|                  +-- consistent with normocytic anaemia</mcv_state=20></hb_state=1>
+    <hb_state=1><mcv_state=31>|                  +-- consistent with macrocytic anaemia</mcv_state=31></hb_state=1>
+    <hb_state=1><mcv_state=0>|                  +-- consistent with anaemia</mcv_state=0></hb_state=1>
+    <esa_state=0>|                  +-- No ESA use</esa_state=0>
+    <esa_state=1>|                  +-- current ESA use</esa_state=1>
+    <esa_state=2>|                  +-- Past ESA use but not current</esa_state=2>
     <iron_low>|                  +-- Iron stores low</iron_low>'
     );
 @"tkc-create-package-rman-1.sql";
