@@ -270,4 +270,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <esa_state=2>|                  +-- Past ESA use but not current</esa_state=2>
     <iron_low>|                  +-- Iron stores low</iron_low>'
     );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    temporal Variation of eGFR  
+    <br><xygraph></xygraph><br>
+    '
+    );
 @"tkc-create-package-rman-1.sql";

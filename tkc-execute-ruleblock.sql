@@ -40,7 +40,7 @@ BEGIN
         rman_pckg.compile_active_ruleblocks();
 */
 --rman_pckg.compile_active_ruleblocks;
-
+--
 
 /*
     Execute single ruleblock regardless of active status
@@ -67,9 +67,9 @@ BEGIN
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 --
 rman_pckg.execute_ruleblock(
-        bid_in => 'ckd_cause',
+        bid_in => 'egfr_graph',
         create_wide_tbl => 1,
-        push_to_long_tbl =>0,
+        push_to_long_tbl =>1,
         push_to_long_tbl2=>0,
         recompile=>1,
         return_code=>ret_val
