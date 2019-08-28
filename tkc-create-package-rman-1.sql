@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.0.2
+Version		    1.0.0.3
 Creation date	07/04/2019
-update on date  27/08/2019
+update on date  29/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -158,6 +158,12 @@ Change Log
 21/08/2019  dbms_sql handles type 112 clob type
 23/08/2019  templates handles medication lists 
 27/08/2019  template handling of tabs and line feeds
+28/08/2019  fixed serializedv function to take two param for transformation
+            fixed build_func for funcparam_str
+            fixed regex for funcparam
+            fixed map_to_tmplt for interecept graph
+            added ascii_graph_dv function
+            dsql_single_col fixed for varchar2(4000)
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;

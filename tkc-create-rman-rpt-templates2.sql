@@ -273,7 +273,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    temporal Variation of eGFR  
+    Temporal variation of eGFR  
     <br><xygraph></xygraph><br>
     '
     );
