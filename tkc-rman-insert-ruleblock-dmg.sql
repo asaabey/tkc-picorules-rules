@@ -42,6 +42,13 @@ BEGIN
         
         gender => eadv.dmg_gender.val.last();
         
+        loc_mode_24 => eadv_loc.dmg_location.val.stats_mode().where(dt > sysdate- 730);
+        
+        loc_mode_full => eadv_loc.dmg_location.val.stats_mode();
+        
+        loc_last_24 => eadv_loc.dmg_location.val.last().where(dt > sysdate- 730);
+        
+        loc_last_full => eadv_loc.dmg_location.val.last();
         
         dmg : { 1=1 => 1},{=>0};    
         

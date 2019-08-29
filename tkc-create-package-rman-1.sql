@@ -254,7 +254,8 @@ Change Log
     
     FUNCTION ascii_graph_dv (
         dts VARCHAR2,
-        vals VARCHAR2
+        vals VARCHAR2,
+        param   varchar2 default null 
     ) RETURN VARCHAR2;
 
     FUNCTION map_to_tmplt (
@@ -1042,7 +1043,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     FUNCTION ascii_graph_dv (
         dts VARCHAR2,
-        vals VARCHAR2
+        vals VARCHAR2,
+        param   varchar2 default null 
     ) RETURN VARCHAR2 AS
     y pls_integer:=120;
     x pls_integer:=1;

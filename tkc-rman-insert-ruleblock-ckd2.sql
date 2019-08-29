@@ -785,6 +785,65 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='egfr_fit';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine diagnostics */
+        
+        #define_ruleblock(egfr_fit,
+            {
+                description: "Algorithm to egfr fit",
+                version: "0.0.1.1",
+                blockid: "egfr_fit",
+                target_table:"rout_egfr_fit",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:2,
+                def_exit_prop:"egfr_fit",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+
+       egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
+       
+       egfr_min => eadv.lab_bld_egfr_c.val.minldv();
+       
+       egfr_first => eadv.lab_bld_egfr_c.val.firstdv();
+       
+       egfr_last => eadv.lab_bld_egfr_c.val.lastdv();
+       
+       egfr_n => eadv.lab_bld_egfr_c.val.count(0);
+       
+       egfr_b0_ => eadv.lab_bld_egfr_c.val.regr_slope();
+       
+       egfr_c0_ => eadv.lab_bld_egfr_c.val.regr_intercept();
+       
+       egfrs => eadv.lab_bld_egfr_c.val.serializedv(val~dt);
+       
+       egfr_b : { egfr_b0_ is not null => round(egfr_b0_,1)},{=>0};
+       
+       egfr_c : { egfr_c0_ is not null => round(egfr_c0_,0)},{=>0};
+       
+       dspan : { 1=1 => egfr_last_dt - egfr_first_dt};
+       
+       egfr_fit : { egfr_n >0 =>1},{=>0};
+     
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 
