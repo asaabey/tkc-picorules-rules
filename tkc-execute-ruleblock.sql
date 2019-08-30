@@ -66,15 +66,15 @@ BEGIN
 
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 --
-rman_pckg.execute_ruleblock(
-        bid_in => 'egfr_graph',
-        create_wide_tbl => 1,
-        push_to_long_tbl =>1,
-        push_to_long_tbl2=>0,
-        recompile=>1,
-        return_code=>ret_val
-); 
-    
+--rman_pckg.execute_ruleblock(
+--        bid_in => 'egfr_graph',
+--        create_wide_tbl => 1,
+--        push_to_long_tbl =>1,
+--        push_to_long_tbl2=>0,
+--        recompile=>1,
+--        return_code=>ret_val
+--); 
+--    
 /*
     Execute all active ruleblock 
     order determined by execution order
@@ -97,21 +97,21 @@ rman_pckg.execute_ruleblock(
 
 --
 --    
---rman_pckg.gen_cube_from_ruleblock('
---    rrt.rrt,
---    dmg.dob,
---    dmg.dod,
---    ckd.ckd,
---    ckd.egfr_outdated,
---    cd_dm.dm,
---    cd_dm.dm_dx_uncoded,
---    cd_htn.htn,
---    cd_htn.htn_dx_uncoded,
---    cd_obesity.obesity,
---    cd_obesity.obs_dx_uncoded,
---    cvra.cvra,
---    cvra.cvra_dx_uncoded
---    ','01072019,01072018,01072017','rep123');
+rman_pckg.gen_cube_from_ruleblock('
+    rrt.rrt,
+    dmg.dob,
+    dmg.dod,
+    ckd.ckd,
+    ckd.egfr_outdated,
+    cd_dm.dm,
+    cd_dm.dm_dx_uncoded,
+    cd_htn.htn,
+    cd_htn.htn_dx_uncoded,
+    cd_obesity.obesity,
+    cd_obesity.obs_dx_uncoded,
+    cvra.cvra,
+    cvra.cvra_dx_uncoded
+    ','01072019,01072018,01072017','rep124');
 
 --rman_pckg.gen_cube_from_ruleblock('
 --    rrt.rrt
