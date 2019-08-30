@@ -1171,17 +1171,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                    || html_tkey, tval);
             -- add graphs
             if length(xygraph)>0 then 
---                ret_tmplt := regexp_replace(ret_tmplt, '<'
---                                                   || html_tkey
---                                                   || '</'
---                                                   || html_tkey, xygraph);
+
                 
                 ret_tmplt := regexp_replace(ret_tmplt, '<xygraph></xygraph>', xygraph);                                       
             end if;                                       
             
             -- toggle on
 
-            IF nvl(length(tval), 0) > 0 AND nvl(tval, '0') <> '0' THEN
+            IF nvl(length(tval), 0) > 0 AND nvl(length(tval), 0) < 13 AND nvl(tval, '0') <> '0' THEN
                 -- without tag param
                 html_tkey := tkey || '>';
                 ret_tmplt := regexp_replace(ret_tmplt, '<' || html_tkey, '', 1, 0, 'i');
