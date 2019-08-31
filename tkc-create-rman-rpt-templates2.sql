@@ -46,7 +46,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <dm_rxn_glp1>|              +-- GLP1 analogue</dm_rxn_glp1>
     <dm_rxn_dpp4>|              +-- DPP4 inhibitor</dm_rxn_dpp4>
     <dm_rxn_sglt2>|              +-- SGLT2 inhibitor</dm_rxn_sglt2>
-    <cp_dm=0>|      +-- Diabetes careplan was not detected [2.4]</cp_dm=0>
+    <cp_dm=0>|       +-- Diabetes careplan was not detected [2.4]</cp_dm=0>
     <cp_dm>|       +-- Diabetes careplan was updated on </cp_dm><cp_dm_ld></cp_dm_ld>
     '
     );
@@ -135,7 +135,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Relevant Diagnoses
     |
     +-- CKD 
-    <dx_ckd>|       +-- Diagnosed </dx_ckd><pers>Persistent </pers>CKD stage <ckd_stage></ckd_stage> (<cga_g></cga_g><cga_a></cga_a>) [1.1]. 
+    <ckd_stage>|       +-- <dx_ckd>Diagnosed </dx_ckd><pers>Persistent </pers>CKD stage </ckd_stage> (<cga_g></cga_g><cga_a></cga_a>) [1.1]. 
     <dx_ckd=0>|       +-- There is no coded diagnosis on the EHR [1.2]</dx_ckd=0>
     <dx_ckd>|       +-- The diagnosis on the EHR is CKD stage <dx_ckd_stage></dx_ckd_stage> [1.2] </dx_ckd>
     |       +-- Last eGFR is <egfrlv></egfrlv> ml/min/1.73m2 (<egfrld></egfrld>)<egfr_outdated> and is outdated [1.3].</egfr_outdated>

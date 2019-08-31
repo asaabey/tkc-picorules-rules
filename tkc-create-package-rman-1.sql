@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.0.3
+Version		    1.0.0.4
 Creation date	07/04/2019
-update on date  29/08/2019
+update on date  31/08/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -164,6 +164,7 @@ Change Log
             fixed map_to_tmplt for interecept graph
             added ascii_graph_dv function
             dsql_single_col fixed for varchar2(4000)
+31/08/2019  map to template fixes
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;

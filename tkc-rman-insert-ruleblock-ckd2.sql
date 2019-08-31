@@ -359,7 +359,9 @@ BEGIN
         /*  ICPC2+ coding , note that val has to set to ordered rank*/
 
         
-        dx_ckd  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
+        dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
+        
+        dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};
         
         
         dx_ckd_stage :{dx_ckd=1 => `1`},
@@ -368,7 +370,7 @@ BEGIN
                 {dx_ckd=4 => `3B`},
                 {dx_ckd=5 => `4`},
                 {dx_ckd=6 => `5`},
-                {dx_ckd=0=> null};
+                {dx_ckd=0 => `0`};
                 
         #define_attribute(
             dx_ckd_stage,
