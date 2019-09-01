@@ -16,4 +16,8 @@ cd C:\Users\asabe\Documents\projects\tkc-sql\tkc-picorules;
 @"tkc-rman-insert-ruleblock-cvra2.sql";
 @"tkc-rman-insert-ruleblock-trigger2.sql";
 @"tkc-rman-insert-ruleblock-dmg.sql";
+@"tkc-rman-insert-ruleblock-rx.sql";
+@"tkc-rman-insert-ruleblock-graph.sql";
+
+
 exec rman_pckg.compile_active_ruleblocks;
