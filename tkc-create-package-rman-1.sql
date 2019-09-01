@@ -165,6 +165,7 @@ Change Log
             added ascii_graph_dv function
             dsql_single_col fixed for varchar2(4000)
 31/08/2019  map to template fixes
+02/09/2019  ascii graphing scaling fixes
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -256,6 +257,7 @@ Change Log
     FUNCTION ascii_graph_dv (
         dts VARCHAR2,
         vals VARCHAR2,
+        yscale number,
         param   varchar2 default null 
     ) RETURN VARCHAR2;
 
@@ -1042,12 +1044,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN txtout;
     END modify_ps_on_funcparam;
 
-    FUNCTION ascii_graph_dv (
+     FUNCTION ascii_graph_dv (
         dts VARCHAR2,
         vals VARCHAR2,
+        yscale number,
         param   varchar2 default null 
     ) RETURN VARCHAR2 AS
-    y pls_integer:=120;
+    y pls_integer:=12;
     x pls_integer:=1;
     x_pixels pls_integer:=36;
     y_pixels pls_integer:=12;
@@ -1064,7 +1067,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     span    number;
     span_unit   varchar(10);
     xscale  number;
+
     BEGIN
+
+        
         dt_tbl:=rman_pckg.splitstr(dts,' ');
         val_tbl:=rman_pckg.splitstr(vals,' ');
     
@@ -1075,7 +1081,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         xscale:=x_pixels/mspan;
         WHILE y>0
         LOOP
-            str:=str ||chr(9) ||  lpad(y,3,' ') || ' | ';
+            str:=str ||chr(9) ||  lpad(y*yscale,3,' ') || ' | ';
             WHILE x<x_pixels
             LOOP
                 FOR i IN 1..dt_tbl.COUNT
@@ -1086,7 +1092,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     
                     
                     IF dt_x=x THEN
-                        IF val_y<y and val_y>(y-10) THEN
+                        IF val_y<(y*yscale) and val_y>((y-1)*yscale) THEN
                             dot:='*';
                         ELSE
                             dot:=' ';
@@ -1101,7 +1107,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             
                 x:=x+1;
             END LOOP;
-            y:=y-10;
+            y:=y-1;
             str:=str || chr(10);
             x:=1;
         END LOOP;  
@@ -1116,7 +1122,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             span:=round(mspan*30.4,0);
             span_unit:=' days ';
         end if ;   
-        str:=str || chr(9) || rpad('    |',x_pixels+2,'_') || chr(10);
+        str:=str || chr(9) || rpad('    |',x_pixels+4,'_') || chr(10);
         str:=str || chr(9) || dt_tbl(dt_tbl.count) || rpad(' ',x_pixels-12,' ') || sysdate || chr(10);
         str:=str || chr(9) || chr(9) || rpad('[-',(x_pixels-12)/2,'-') || span || span_unit || lpad('-]',(x_pixels-12)/2,'-') || chr(10);
         return str;
@@ -1130,17 +1136,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         key_tbl        tbl_type;
         t              VARCHAR2(4000);
         tkey           VARCHAR2(100);
---        tval           VARCHAR2(100);
+
         tval           VARCHAR2(4000);
---        html_tkey      VARCHAR2(100);
+
         html_tkey      VARCHAR2(4000);
         tag_param      VARCHAR2(100);
         tag_operator   VARCHAR(2);
         ret_tmplt      VARCHAR2(32767) := tmplt;
         x_vals          VARCHAR2(1000):='';
         y_vals          VARCHAR2(1000):='';
+        yscale_in          NUMBER;
         xygraph         VARCHAR(1000);
---        ret_tmplt      CLOB := tmplt;
+
     BEGIN
 --jstr into collection
         t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i', 1);
@@ -1150,17 +1157,22 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             tval := regexp_substr(substr(key_tbl(i), instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i', 1);
 
+            -- extract graphing param if present and draw graph
             if instr(tkey,'_graph_dt')>0 then
                 x_vals:=tval;
             end if;
             if instr(tkey,'_graph_val')>0 then
                 y_vals:=tval;
             end if;
-            if length(x_vals)>0 and length(y_vals)>0 then
-                xygraph:=ascii_graph_dv(x_vals,y_vals);
+            if instr(tkey,'_graph_yscale')>0 then
+                yscale_in:=to_number(tval,'9999.999');
+            end if;
+            if length(x_vals)>0 and length(y_vals)>0 and yscale_in>0 then
+            
+                xygraph:=ascii_graph_dv(dts => x_vals,vals => y_vals, yscale=>yscale_in);
                 
             end if;
-            
+
             -- insertions
             
             
@@ -1174,7 +1186,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             if length(xygraph)>0 then 
 
                 
-                ret_tmplt := regexp_replace(ret_tmplt, '<xygraph></xygraph>', xygraph);                                       
+                ret_tmplt := regexp_replace(ret_tmplt, '<xygraph></xygraph>', xygraph);     
+                x_vals:='';
+                y_vals:='';
             end if;                                       
             
             -- toggle on

@@ -217,7 +217,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001','rx_syn_1','rx_desc',651100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph001','rx_syn_1','rx_desc',69s1100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Medications(<rxn_0></rxn_0>)
     --------------
@@ -255,13 +255,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph001_1','cd_htn_footnote_1_1','cd_htn',801100,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    Test msg
 
-    '
-    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph001','cd_cvra_syn_1','cvra',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -333,6 +327,23 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <iron_low>Iron store are low</iron_low>
     
     
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Temporal variation of eGFR  
+    eGFR ml/min against time 
+    <br><xygraph></xygraph><br>
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph001','graph_acr','acr_graph',651110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Temporal variation of uACR  
+    Log(uACR) mg/mmol against time
+    <br><xygraph></xygraph><br>
     '
     );
 @"tkc-create-package-rman-1.sql";

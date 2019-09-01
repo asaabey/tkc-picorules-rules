@@ -13,6 +13,7 @@ cd C:\Users\abeya\Documents\Oracle11g\tkc-master\tkc-picorules;
 @"tkc-rman-insert-ruleblock-trigger2.sql";
 @"tkc-rman-insert-ruleblock-dmg.sql";
 @"tkc-rman-insert-ruleblock-rx.sql";
+@"tkc-rman-insert-ruleblock-graph.sql";
 
 exec rman_pckg.compile_active_ruleblocks;
 

@@ -6,10 +6,10 @@ declare
 
 
 begin
-    eid:=4609;
+    eid:=6811;
 
---    eid:=295;
-    composition:=rman_pckg.get_composition_by_eid(eid,'neph002');
+    eid:=295;
+    composition:=rman_pckg.get_composition_by_eid(eid,'neph001');
     
     
     DBMS_OUTPUT.put_line('EID:' || eid);

@@ -150,7 +150,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002','rx_syn_1','rx_desc',651100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Medications(<rxn_0></rxn_0>)
     --------------
@@ -174,6 +174,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <dx_ckd_diff>Recommendation [1.2] Update diagnosis to CKD stage <ckd_stage></ckd_stage></dx_ckd_diff>
     <egfr_outdated>Recommendation [1.3] Repeat renal function tests.</egfr_outdated>
     <cp_mis>Recommendation [1.7] Update care plan to include appropriate stage of CKD</cp_mis>
+    
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002','cd_ckd_recm_2','ckd_complications',701200,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hco3_low>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</hco3_low>
+    <phos_high>Recommendation [1.5.2] Consider adding oral phsophate binder therapy</phos_high>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -268,12 +276,25 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <esa_state=0>|                  +-- No ESA use</esa_state=0>
     <esa_state=1>|                  +-- current ESA use</esa_state=1>
     <esa_state=2>|                  +-- Past ESA use but not current</esa_state=2>
-    <iron_low>|                  +-- Iron stores low</iron_low>'
+    <iron_low>|                  +-- Iron stores low</iron_low>
+    |              +-- Acid-base balance
+    <hco3_low>|                  +-- low tCO2 at <hco3_lv></hco3_lv> mmol/l likely due to metabolic acidosis</hco3_low>
+    '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Temporal variation of eGFR  
+    eGFR ml/min against time 
+    <br><xygraph></xygraph><br>
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002','graph_acr','acr_graph',651110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Temporal variation of uACR  
+    Log(uACR) mg/mmol against time
     <br><xygraph></xygraph><br>
     '
     );

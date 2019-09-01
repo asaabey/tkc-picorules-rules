@@ -6,9 +6,10 @@ DECLARE
     
     FUNCTION ascii_graph_dv (
         dts VARCHAR2,
-        vals VARCHAR2
+        vals VARCHAR2,
+        param   varchar2 default null 
     ) RETURN VARCHAR2 AS
-    y pls_integer:=120;
+    y pls_integer:=12;
     x pls_integer:=1;
     x_pixels pls_integer:=36;
     y_pixels pls_integer:=12;
@@ -21,31 +22,35 @@ DECLARE
     dt_x    pls_integer;
     val_y   number;
     mspan   number;
+    yspan   number;
+    span    number;
+    span_unit   varchar(10);
     xscale  number;
+    y1scale  number:=10;
     BEGIN
         dt_tbl:=rman_pckg.splitstr(dts,' ');
         val_tbl:=rman_pckg.splitstr(vals,' ');
     
 
         
-        mspan :=(CEIL((SYSDATE-(TO_DATE(dt_tbl(dt_tbl.COUNT), 'dd/mm/yy')))/12))+2;
+        mspan :=(CEIL((SYSDATE-(TO_DATE(dt_tbl(dt_tbl.COUNT), 'dd/mm/yy')))/30.43))+2;
         
         xscale:=x_pixels/mspan;
         WHILE y>0
         LOOP
-            str:=str || lpad(y,3,' ') || ' | ';
+            str:=str ||chr(9) ||  lpad(y,3,' ') || ' | ';
             WHILE x<x_pixels
             LOOP
                 FOR i IN 1..dt_tbl.COUNT
                 LOOP
-                    dt_x:=round(x_pixels-(ceil((SYSDATE-TO_DATE(dt_tbl(i), 'dd/mm/yy'))/12)*xscale),0); 
+                    dt_x:=round(x_pixels-(ceil((SYSDATE-TO_DATE(dt_tbl(i), 'dd/mm/yy'))/30.43)*xscale),0); 
                     
                     val_y:=to_number(val_tbl(i));
                     
                     
                     IF dt_x=x THEN
-                        IF val_y<y and val_y>(y-10) THEN
-                            dot:='O';
+                        IF val_y<(y*y1scale) and val_y>((y-1)*y1scale) THEN
+                            dot:='*';
                         ELSE
                             dot:=' ';
                         END IF;
@@ -59,13 +64,24 @@ DECLARE
             
                 x:=x+1;
             END LOOP;
-            y:=y-10;
+            y:=y-1;
             str:=str || chr(10);
             x:=1;
-        END LOOP;    
-        str:=str || rpad('    |',x_pixels+2,'_') || chr(10);
-        str:=str || dt_tbl(dt_tbl.count) || rpad(' ',x_pixels-12,' ') || sysdate || chr(10);
+        END LOOP;  
         
+        if mspan>24 then
+            span:=round(mspan/12,1);
+            span_unit:=' years ';
+        elsif mspan<=24 and mspan>3 then
+            span:=mspan;
+            span_unit:=' months ';
+        else
+            span:=round(mspan*30.4,0);
+            span_unit:=' days ';
+        end if ;   
+        str:=str || chr(9) || rpad('    |',x_pixels+2,'_') || chr(10);
+        str:=str || chr(9) || dt_tbl(dt_tbl.count) || rpad(' ',x_pixels-12,' ') || sysdate || chr(10);
+        str:=str || chr(9) || chr(9) || rpad('[-',(x_pixels-12)/2,'-') || span || span_unit || lpad('-]',(x_pixels-12)/2,'-') || chr(10);
         return str;
     end ascii_graph_dv;
     
