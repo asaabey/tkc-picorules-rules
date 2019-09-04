@@ -39,11 +39,7 @@ BEGIN
             }
         );
         
-        
-        
-        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.count().where(dt>sysdate-365);
-        
-        pd_dt2 => eadv.icpc_u59009.dt.count().where(dt>sysdate-365);
+        neg_def_point => eadv.lab_bld_egfr_c.val.max_neg_delta_dv();
         
         test1 : { 1=1 => 1},{=>0};
         

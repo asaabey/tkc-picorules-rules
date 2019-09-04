@@ -4,7 +4,7 @@ declare
     dts varchar2(2000);
     vals varchar2(2000);
     
-    eid_in  number:=304;
+    eid_in  number:=71;
     
     graph   varchar2(4000):='No graph';
     
@@ -17,7 +17,7 @@ begin
     from rout_egfr_fit
     where eid=eid_in;
 
-    graph:=rman_pckg.ascii_graph_dv(dts,vals);
+    graph:=rman_pckg.ascii_graph_dv(dts=>dts,vals=>vals,yscale=>10);
     
     DBMS_OUTPUT.PUT_LINE(graph);
     

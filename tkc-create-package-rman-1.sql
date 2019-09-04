@@ -166,6 +166,8 @@ Change Log
             dsql_single_col fixed for varchar2(4000)
 31/08/2019  map to template fixes
 02/09/2019  ascii graphing scaling fixes
+03/09/2019  fixed bug in func_build not concatenating tab name
+04/09/2019  added max_deta_dv functions family
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -1593,13 +1595,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ctename := get_cte_name(indx);
                         where_txt := att || predicate;
                         from_txt := from_clause;
-                        select_txt := entity_id_col
+                        select_txt := tbl
+                                  || '.'
+                                  || entity_id_col
                                       || ','
                                       || prop
                                       || ',ROW_NUMBER() OVER(PARTITION BY '
-                                      || entity_id_col
+                                      || tbl || '.' || entity_id_col
                                       || ' ORDER BY '
-                                      || entity_id_col
+                                      || tbl || '.' || entity_id_col
                                       || ',DT '
                                       || sortdirection
                                       || ') AS rank ';
@@ -1677,18 +1681,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ELSE
                             rankindx := funcparam + 1;
                         END IF;
---                IF func='FIRSTDV' THEN sortdirection:='';END IF;  
+ 
 
                         ctename := get_cte_name(indx);
                         where_txt := ' RANK=' || rankindx;
                         from_txt := '(SELECT '
-                                    || entity_id_col
+                                    || tbl || '.' || entity_id_col
                                     || ','
                                     || val_col
                                     || ','
                                     || dt_col
                                     || ',ROW_NUMBER() OVER(PARTITION BY '
-                                    || entity_id_col
+                                    || tbl || '.' || entity_id_col
                                     || ' ORDER BY '
                                     || orderby_windfunc_txt
                                     || ') AS rank '
@@ -1781,14 +1785,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                     where_txt := att || predicate;
                     from_txt := from_clause;
---                    select_txt := tbl
---                                  || '.'
---                                  || entity_id_col
---                                  || ', LISTAGG('
---                                  || prop
---                                  || ','','') WITHIN GROUP (ORDER BY DT DESC) AS '
---                                  || assnvar
---                                  || ' ';
+
                     select_txt := tbl
                                   || '.'
                                   || entity_id_col
@@ -1847,6 +1844,76 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
                         insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
                         insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
+                WHEN func IN ('MAX_POS_DELTA_DV','MAX_NEG_DELTA_DV') THEN
+                DECLARE
+                        rankindx   NUMBER;
+                        ctename    NVARCHAR2(20);
+                    BEGIN
+                        CASE func
+                            WHEN 'MAX_POS_DELTA_DV' THEN
+                                orderby_windfunc_txt := 'VAL_D'
+                                                        || ' DESC ';
+
+                            WHEN 'MAX_NEG_DELTA_DV' THEN
+                                orderby_windfunc_txt := 'VAL_D'
+                                                        || ' ASC ';
+                        END CASE;
+
+                        IF funcparam = 0 THEN
+                            rankindx := 1;
+                        ELSE
+                            rankindx := funcparam + 1;
+                        END IF;
+ 
+
+                        ctename := get_cte_name(indx);
+                        where_txt := ' RN=' || rankindx;
+                        from_txt := '(SELECT '
+                                    || entity_id_col
+                                    || ','
+                                    || 'VAL_D'
+                                    || ','
+                                    || dt_col
+                                    || ',RANK() OVER(PARTITION BY '
+                                    || entity_id_col
+                                    || ' ORDER BY '
+                                    || orderby_windfunc_txt
+                                    || ') AS RN '
+                                    || ' FROM ('
+                                    || 'SELECT ' || tbl || '.' || entity_id_col
+                                    || ', ' || tbl || '.' || dt_col
+                                    || ', ' || tbl || '.' || val_col || '- (LAG(' || val_col || ') OVER(PARTITION BY '
+                                    || tbl || '.' || entity_id_col || ', ' || att_col || ' ORDER BY ' || tbl || '.' ||dt_col || ')) AS VAL_D FROM ' 
+                                    || from_clause
+                                    || ' WHERE '
+                                    || att
+                                    || predicate
+                                    || ') WHERE VAL_D IS NOT NULL)';
+                                    
+                                    
+
+                        select_txt := entity_id_col
+                                      || ','
+                                      || 'VAL_D'
+                                      || ' AS '
+                                      || assnvar
+                                      || '_VAL ,'
+                                      || dt_col
+                                      || ' AS '
+                                      || assnvar
+                                      || '_DT ';
+
+                        groupby_txt := '';
+                        is_sub_val := 2;
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        );
+
+                        rows_added := 1;
+                        push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
+                        push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
+                    END;    
                 ELSE
                     RAISE ude_function_undefined;
             END CASE;
