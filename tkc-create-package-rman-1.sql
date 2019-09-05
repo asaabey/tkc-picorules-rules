@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.0.4
+Version		    1.0.0.5
 Creation date	07/04/2019
-update on date  31/08/2019
+update on date  05/09/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -168,6 +168,7 @@ Change Log
 02/09/2019  ascii graphing scaling fixes
 03/09/2019  fixed bug in func_build not concatenating tab name
 04/09/2019  added max_deta_dv functions family
+05/09/2019  ascii graphing  xline and ylines ability
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -231,19 +232,15 @@ Change Log
         ignore_left    IN             CHAR DEFAULT '[',
         ignore_right   IN             CHAR DEFAULT ']'
     ) RETURN tbl_type2;
-    
-    
-    
 
     FUNCTION sanitise_clob (
         clbin CLOB
     ) RETURN CLOB;
 
-
     FUNCTION tbl_type_to_string (
         t IN tbl_type
     ) RETURN VARCHAR2;
-    
+
     FUNCTION get_cte_name (
         indx BINARY_INTEGER
     ) RETURN NVARCHAR2;
@@ -255,12 +252,14 @@ Change Log
     FUNCTION modify_ps_on_funcparam (
         txtin VARCHAR2
     ) RETURN VARCHAR2;
-    
+
     FUNCTION ascii_graph_dv (
-        dts VARCHAR2,
-        vals VARCHAR2,
-        yscale number,
-        param   varchar2 default null 
+        dts             VARCHAR2,
+        vals            VARCHAR2,
+        yscale          NUMBER,
+        xline_str_arr   VARCHAR2,
+        yline_str_arr   VARCHAR2,
+        param           VARCHAR2 DEFAULT NULL
     ) RETURN VARCHAR2;
 
     FUNCTION map_to_tmplt (
@@ -362,8 +361,8 @@ Change Log
     );
 
     PROCEDURE compile_ruleblock (
-        bid_in IN VARCHAR2,
-        return_code OUT pls_integer
+        bid_in        IN            VARCHAR2,
+        return_code   OUT           PLS_INTEGER
     );
 
     PROCEDURE compile_active_ruleblocks;
@@ -374,7 +373,7 @@ Change Log
         push_to_long_tbl    IN                  PLS_INTEGER,
         push_to_long_tbl2   IN                  PLS_INTEGER,
         recompile           IN                  PLS_INTEGER,
-        return_code OUT pls_integer
+        return_code         OUT                 PLS_INTEGER
     );
 
     PROCEDURE execute_active_ruleblocks;
@@ -386,8 +385,6 @@ Change Log
         blockid    IN         VARCHAR2,
         log_msg    IN         VARCHAR2
     );
-
-
 
     PROCEDURE dependency_walker (
         rb_in_str    IN           VARCHAR2,
@@ -417,10 +414,6 @@ END;
 
 CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
-
-
-
-
     FUNCTION sql_predicate (
         att_str VARCHAR2
     ) RETURN VARCHAR2 AS
@@ -437,14 +430,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             att_str0 := substr(att_str0, instr(att_str0, '[') + 1, instr(att_str0, ']') - 2);
 
         END IF;
-        
-        
 
         IF instr(att_str0, ',') > 0 THEN
             att_tbl := rman_pckg.splitstr(att_str0, ',', '', '');
-            
-            s:=s || ' (';
-            
+            s := s || ' (';
             FOR i IN 1..att_tbl.count LOOP
                 IF instr(att_tbl(i), '%') > 0 THEN
                     eq_op := ' LIKE ';
@@ -464,9 +453,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     s := s || ' OR ';
                 END IF;
             END LOOP;
-            
-            s:=s || ') ';
 
+            s := s || ') ';
         ELSIF instr(att_str0, ',') = 0 THEN
             IF instr(att_str0, '%') > 0 THEN
                 eq_op := ' LIKE ';
@@ -484,7 +472,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
-        
         RETURN s;
     END sql_predicate;
 
@@ -589,7 +576,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END LOOP;
     END splitclob;
-    
+
     FUNCTION tbl_type_to_string (
         t IN tbl_type
     ) RETURN VARCHAR2 AS
@@ -603,7 +590,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ret := trim(TRAILING ',' FROM ret);
         RETURN ret;
     END tbl_type_to_string;
-    
+
     FUNCTION sanitise_clob (
         clbin CLOB
     ) RETURN CLOB AS
@@ -1009,8 +996,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 --find vstack param and func
             IF vstack_func.EXISTS(vsi) AND vstack_func_param.EXISTS(vsi) AND match_varname(txtout, vsi) THEN
                 IF vstack_func(vsi) IS NOT NULL AND vstack_func_param(vsi) IS NOT NULL THEN
-
-                
                     CASE
                         WHEN vstack_func(vsi) IN (
                             'COUNT',
@@ -1020,15 +1005,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             rep_str := 'NVL('
                                        || vsi
                                        || ',0)';
-                            txtout := replace(txtout, vsi, rep_str);    
-                            
+                            txtout := replace(txtout, vsi, rep_str);
                         WHEN vstack_func(vsi) IN (
                             'MIN',
                             'MAX',
                             'FIRST',
                             'LAST'
                         ) AND vstack_func_param(vsi) = '1900' THEN
-                        
                             rep_str := 'NVL('
                                        || vsi
                                        || ',TO_DATE(''19000101'',''YYYYMMDD''))';
@@ -1046,110 +1029,149 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN txtout;
     END modify_ps_on_funcparam;
 
-     FUNCTION ascii_graph_dv (
-        dts VARCHAR2,
-        vals VARCHAR2,
-        yscale number,
-        param   varchar2 default null 
+    FUNCTION ascii_graph_dv (
+        dts             VARCHAR2,
+        vals            VARCHAR2,
+        yscale          NUMBER,
+        xline_str_arr   VARCHAR2,
+        yline_str_arr   VARCHAR2,
+        param           VARCHAR2 DEFAULT NULL
     ) RETURN VARCHAR2 AS
-    y pls_integer:=12;
-    x pls_integer:=1;
-    x_pixels pls_integer:=36;
-    y_pixels pls_integer:=12;
-    x_min pls_integer:=1;
-    
-    str varchar2(4000):='';
-    dot char(1):=' ';
-    dt_tbl  tbl_type;
-    val_tbl tbl_type;
-    dt_x    pls_integer;
-    val_y   number;
-    mspan   number;
-    yspan   number;
-    span    number;
-    span_unit   varchar(10);
-    xscale  number;
 
+        y           PLS_INTEGER := 12;
+        x           PLS_INTEGER := 1;
+        x_pixels    PLS_INTEGER := 36;
+        y_pixels    PLS_INTEGER := 12;
+        x_min       PLS_INTEGER := 1;
+        str         VARCHAR2(4000) := '';
+        dot         CHAR(1) := ' ';
+        dt_tbl      tbl_type;
+        val_tbl     tbl_type;
+        dt_x        PLS_INTEGER;
+        val_y       NUMBER;
+        mspan       NUMBER;
+        yspan       NUMBER;
+        span        NUMBER;
+        span_unit   VARCHAR(10);
+        xscale      NUMBER;
+        xline_tbl   tbl_type;
+        xline_x     PLS_INTEGER;
+        yline_tbl   tbl_type;
+        yline_y     PLS_INTEGER;
     BEGIN
+        dt_tbl := rman_pckg.splitstr(dts, ' ');
+        val_tbl := rman_pckg.splitstr(vals, ' ');
+        xline_tbl := rman_pckg.splitstr(xline_str_arr, ' ');
+        yline_tbl := rman_pckg.splitstr(yline_str_arr, ' ');
+        mspan := ( ceil((SYSDATE -(TO_DATE(dt_tbl(dt_tbl.count), 'dd/mm/yy'))) / 30.43) ) + 2;
 
-        
-        dt_tbl:=rman_pckg.splitstr(dts,' ');
-        val_tbl:=rman_pckg.splitstr(vals,' ');
-    
+        xscale := x_pixels / mspan;
+        WHILE y > 0 LOOP
+            str := str
+                   || chr(9)
+                   || lpad(y * yscale, 3, ' ')
+                   || ' | ';
 
-        
-        mspan :=(CEIL((SYSDATE-(TO_DATE(dt_tbl(dt_tbl.COUNT), 'dd/mm/yy')))/30.43))+2;
-        
-        xscale:=x_pixels/mspan;
-        WHILE y>0
-        LOOP
-            str:=str ||chr(9) ||  lpad(y*yscale,3,' ') || ' | ';
-            WHILE x<x_pixels
-            LOOP
-                FOR i IN 1..dt_tbl.COUNT
-                LOOP
-                    dt_x:=round(x_pixels-(ceil((SYSDATE-TO_DATE(dt_tbl(i), 'dd/mm/yy'))/30.43)*xscale),0); 
-                    
-                    val_y:=to_number(val_tbl(i));
-                    
-                    
-                    IF dt_x=x THEN
-                        IF val_y<(y*yscale) and val_y>((y-1)*yscale) THEN
-                            dot:='*';
+            WHILE x < x_pixels LOOP
+                FOR i IN 1..dt_tbl.count LOOP
+                    dt_x := round(x_pixels -(ceil((SYSDATE - TO_DATE(dt_tbl(i), 'dd/mm/yy')) / 30.43) * xscale), 0);
+
+                    val_y := to_number(val_tbl(i));
+                    IF dt_x = x THEN
+                        IF val_y < ( y * yscale ) AND val_y > ( ( y - 1 ) * yscale ) THEN
+                            dot := '*';
                         ELSE
-                            dot:=' ';
+                            FOR k IN 1..xline_tbl.count LOOP
+                                xline_x := round(x_pixels -(ceil((SYSDATE - TO_DATE(xline_tbl(k), 'dd/mm/yy')) / 30.43) * xscale)
+                                , 0);
+
+                                IF xline_x = x THEN
+                                    dot := '.';
+                                ELSE
+                                    dot := ' ';
+                                END IF;
+
+                                EXIT;
+                            END LOOP;
                         END IF;
 
-                    EXIT;
+                        EXIT;
                     END IF;
 
+                    FOR k IN 1..yline_tbl.count LOOP
+                        yline_y := yline_tbl(k);
+                        IF yline_y < ( y * yscale ) AND yline_y > ( ( y - 1 ) * yscale ) AND dot = ' ' THEN
+                            dot := '.';
+                        END IF;
+
+                    END LOOP;
+
                 END LOOP;
-                str:=str || dot;
-                dot:=' ';
-            
-                x:=x+1;
+
+                str := str || dot;
+                dot := ' ';
+                x := x + 1;
             END LOOP;
-            y:=y-1;
-            str:=str || chr(10);
-            x:=1;
-        END LOOP;  
-        
-        if mspan>24 then
-            span:=round(mspan/12,1);
-            span_unit:=' years ';
-        elsif mspan<=24 and mspan>3 then
-            span:=mspan;
-            span_unit:=' months ';
-        else
-            span:=round(mspan*30.4,0);
-            span_unit:=' days ';
-        end if ;   
-        str:=str || chr(9) || rpad('    |',x_pixels+4,'_') || chr(10);
-        str:=str || chr(9) || dt_tbl(dt_tbl.count) || rpad(' ',x_pixels-12,' ') || sysdate || chr(10);
-        str:=str || chr(9) || chr(9) || rpad('[-',(x_pixels-12)/2,'-') || span || span_unit || lpad('-]',(x_pixels-12)/2,'-') || chr(10);
-        return str;
-    end ascii_graph_dv;
+
+            y := y - 1;
+            str := str || chr(10);
+            x := 1;
+        END LOOP;
+
+        IF mspan > 24 THEN
+            span := round(mspan / 12, 1);
+            span_unit := ' years ';
+        ELSIF mspan <= 24 AND mspan > 3 THEN
+            span := mspan;
+            span_unit := ' months ';
+        ELSE
+            span := round(mspan * 30.4, 0);
+            span_unit := ' days ';
+        END IF;
+
+        str := str
+               || chr(9)
+               || rpad('    |', x_pixels + 4, '_')
+               || chr(10);
+
+        str := str
+               || chr(9)
+               || dt_tbl(dt_tbl.count)
+               || rpad(' ', x_pixels - 12, ' ')
+               || SYSDATE
+               || chr(10);
+
+        str := str
+               || chr(9)
+               || chr(9)
+               || rpad('[-',(x_pixels - 12) / 2, '-')
+               || span
+               || span_unit
+               || lpad('-]',(x_pixels - 12) / 2, '-')
+               || chr(10);
+
+        RETURN str;
+    END ascii_graph_dv;
 
     FUNCTION map_to_tmplt (
         jstr VARCHAR2,
         tmplt VARCHAR2
     ) RETURN VARCHAR2 AS
 
-        key_tbl        tbl_type;
-        t              VARCHAR2(4000);
-        tkey           VARCHAR2(100);
-
-        tval           VARCHAR2(4000);
-
-        html_tkey      VARCHAR2(4000);
-        tag_param      VARCHAR2(100);
-        tag_operator   VARCHAR(2);
-        ret_tmplt      VARCHAR2(32767) := tmplt;
-        x_vals          VARCHAR2(1000):='';
-        y_vals          VARCHAR2(1000):='';
+        key_tbl            tbl_type;
+        t                  VARCHAR2(4000);
+        tkey               VARCHAR2(100);
+        tval               VARCHAR2(4000);
+        html_tkey          VARCHAR2(4000);
+        tag_param          VARCHAR2(100);
+        tag_operator       VARCHAR(2);
+        ret_tmplt          VARCHAR2(32767) := tmplt;
+        x_vals             VARCHAR2(1000) := '';
+        y_vals             VARCHAR2(1000) := '';
         yscale_in          NUMBER;
-        xygraph         VARCHAR(1000);
-
+        xygraph            VARCHAR(1000);
+        xline_str_arr_in   VARCHAR(1000);
+        yline_str_arr_in   VARCHAR(1000);
     BEGIN
 --jstr into collection
         t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i', 1);
@@ -1160,24 +1182,35 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             tval := regexp_substr(substr(key_tbl(i), instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i', 1);
 
             -- extract graphing param if present and draw graph
-            if instr(tkey,'_graph_dt')>0 then
-                x_vals:=tval;
-            end if;
-            if instr(tkey,'_graph_val')>0 then
-                y_vals:=tval;
-            end if;
-            if instr(tkey,'_graph_yscale')>0 then
-                yscale_in:=to_number(tval,'9999.999');
-            end if;
-            if length(x_vals)>0 and length(y_vals)>0 and yscale_in>0 then
-            
-                xygraph:=ascii_graph_dv(dts => x_vals,vals => y_vals, yscale=>yscale_in);
-                
-            end if;
+
+            IF instr(tkey, '_graph_dt') > 0 THEN
+                x_vals := tval;
+            END IF;
+            IF instr(tkey, '_graph_val') > 0 THEN
+                y_vals := tval;
+            END IF;
+            IF instr(tkey, '_graph_yscale') > 0 THEN
+                yscale_in := to_number(tval, '9999.999');
+            END IF;
+
+            IF instr(tkey, '_graph_xline_') > 0 THEN
+                xline_str_arr_in := ltrim(xline_str_arr_in
+                                          || ' '
+                                          || tval);
+            END IF;
+
+            IF instr(tkey, '_graph_yline_') > 0 THEN
+                yline_str_arr_in := ltrim(yline_str_arr_in
+                                          || ' '
+                                          || tval);
+            END IF;
+
+            IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
+                xygraph := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in, yline_str_arr
+                => yline_str_arr_in);
+            END IF;
 
             -- insertions
-            
-            
 
             html_tkey := tkey || '>';
             ret_tmplt := regexp_replace(ret_tmplt, '<'
@@ -1185,13 +1218,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                    || '</'
                                                    || html_tkey, tval);
             -- add graphs
-            if length(xygraph)>0 then 
 
-                
-                ret_tmplt := regexp_replace(ret_tmplt, '<xygraph></xygraph>', xygraph);     
-                x_vals:='';
-                y_vals:='';
-            end if;                                       
+            IF length(xygraph) > 0 THEN
+                ret_tmplt := regexp_replace(ret_tmplt, '<xygraph></xygraph>', xygraph);
+                x_vals := '';
+                y_vals := '';
+            END IF;                                       
             
             -- toggle on
 
@@ -1285,18 +1317,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
                                                                                                            || '{2,}', chr(10));
     -- add line breaks
-        ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
 
+        ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
         ret_tmplt := regexp_replace(ret_tmplt, '\\n', chr(10));
-        
-        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10) || chr(9));
+        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10)
+                                                    || chr(9));
         
     -- add tabs
-        
+
         ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
-    
-        
-    
         RETURN ret_tmplt;
     END map_to_tmplt;
 
@@ -1305,8 +1334,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         nlc_id VARCHAR2
     ) RETURN CLOB AS
 
-        composition        CLOB; 
-        compositionid_in    varchar2(100):=nlc_id;
+        composition        CLOB;
+        compositionid_in   VARCHAR2(100) := nlc_id;
 --        compositionid_in   VARCHAR2(100) := 'neph001';
         eid_not_found EXCEPTION;
         PRAGMA exception_init ( eid_not_found, 100 );
@@ -1459,9 +1488,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         is_sub_val             INT := 0;
         varr                   tbl_type;
         att_tbl                tbl_type;
-        
-        val_trans              VARCHAR2(400):=val_col;
-        dt_trans               VARCHAR2(400):=dt_col;
+        val_trans              VARCHAR2(400) := val_col;
+        dt_trans               VARCHAR2(400) := dt_col;
         ude_function_undefined EXCEPTION;
     BEGIN
     
@@ -1476,8 +1504,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
 
 --            funcparam := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), 0);
+
             funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+
             funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+
             IF upper(substr(varr(5), 1, 5)) = 'WHERE' THEN
                 predicate := ' AND '
                              || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
@@ -1490,8 +1521,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
 
 --            funcparam := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), 0);
+
             funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+
             funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+
             ext_col_name := varr(2);
         ELSIF varr.count = 3 THEN
             tbl := upper(varr(1));
@@ -1519,15 +1553,19 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 funcparam := 0;
             END IF;
         END IF;
-        
+
         att0 := att;
         att := sql_predicate(att);
         left_tbl_name := tbl;
         build_assn_var2(txtin, '=>', left_tbl_name, from_clause, avn);
         assnvar := sanitise_varname(avn);
-        
-        dbms_output.put_line('func_build -> '|| assnvar ||' funcparam_str:' || funcparam_str || ' funcparam:' || funcparam);
-        
+        dbms_output.put_line('func_build -> '
+                             || assnvar
+                             || ' funcparam_str:'
+                             || funcparam_str
+                             || ' funcparam:'
+                             || funcparam);
+
         IF substr(tbl, 1, 5) = 'ROUT_' AND func = 'BIND' THEN
             where_txt := '';
             from_txt := tbl;
@@ -1596,14 +1634,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         where_txt := att || predicate;
                         from_txt := from_clause;
                         select_txt := tbl
-                                  || '.'
-                                  || entity_id_col
+                                      || '.'
+                                      || entity_id_col
                                       || ','
                                       || prop
                                       || ',ROW_NUMBER() OVER(PARTITION BY '
-                                      || tbl || '.' || entity_id_col
+                                      || tbl
+                                      || '.'
+                                      || entity_id_col
                                       || ' ORDER BY '
-                                      || tbl || '.' || entity_id_col
+                                      || tbl
+                                      || '.'
+                                      || entity_id_col
                                       || ',DT '
                                       || sortdirection
                                       || ') AS rank ';
@@ -1681,18 +1723,21 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ELSE
                             rankindx := funcparam + 1;
                         END IF;
- 
 
                         ctename := get_cte_name(indx);
                         where_txt := ' RANK=' || rankindx;
                         from_txt := '(SELECT '
-                                    || tbl || '.' || entity_id_col
+                                    || tbl
+                                    || '.'
+                                    || entity_id_col
                                     || ','
                                     || val_col
                                     || ','
                                     || dt_col
                                     || ',ROW_NUMBER() OVER(PARTITION BY '
-                                    || tbl || '.' || entity_id_col
+                                    || tbl
+                                    || '.'
+                                    || entity_id_col
                                     || ' ORDER BY '
                                     || orderby_windfunc_txt
                                     || ') AS rank '
@@ -1782,10 +1827,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 WHEN func IN (
                     'SERIALIZE'
                 ) THEN
-
                     where_txt := att || predicate;
                     from_txt := from_clause;
-
                     select_txt := tbl
                                   || '.'
                                   || entity_id_col
@@ -1804,17 +1847,23 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
                     rows_added := 1;
                     push_vstack(assnvar, indx, 2, func, TO_CHAR(funcparam));
-                    
-                    WHEN func IN (
+                WHEN func IN (
                     'SERIALIZEDV'
                 ) THEN
-                    IF length(funcparam_str)>0 THEN
-                        val_trans:=substr(funcparam_str,1,instr(funcparam_str,'~')-1);
-                        dt_trans:=substr(funcparam_str,instr(funcparam_str,'~')+1);
-                        
-                        dbms_output.put_line('build_func ->'|| assnvar ||' serializedv-> val_trans: ' || val_trans );
-                        dbms_output.put_line('build_func ->'|| assnvar ||' serializedv-> dt_trans: ' || dt_trans );
+                    IF length(funcparam_str) > 0 THEN
+                        val_trans := substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
+
+                        dt_trans := substr(funcparam_str, instr(funcparam_str, '~') + 1);
+                        dbms_output.put_line('build_func ->'
+                                             || assnvar
+                                             || ' serializedv-> val_trans: '
+                                             || val_trans);
+                        dbms_output.put_line('build_func ->'
+                                             || assnvar
+                                             || ' serializedv-> dt_trans: '
+                                             || dt_trans);
                     END IF;
+
                     where_txt := att || predicate;
                     from_txt := from_clause;
                     select_txt := tbl
@@ -1831,32 +1880,31 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || assnvar
                                   || '_DT ';
 
-
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
                     is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                        );
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    );
 
-                        rows_added := 1;
-                        push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
-                        push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
-                WHEN func IN ('MAX_POS_DELTA_DV','MAX_NEG_DELTA_DV') THEN
-                DECLARE
+                    rows_added := 1;
+                    push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
+                    push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
+                WHEN func IN (
+                    'MAX_POS_DELTA_DV',
+                    'MAX_NEG_DELTA_DV'
+                ) THEN
+                    DECLARE
                         rankindx   NUMBER;
                         ctename    NVARCHAR2(20);
                     BEGIN
                         CASE func
                             WHEN 'MAX_POS_DELTA_DV' THEN
-                                orderby_windfunc_txt := 'VAL_D'
-                                                        || ' DESC ';
-
+                                orderby_windfunc_txt := 'VAL_D' || ' DESC ';
                             WHEN 'MAX_NEG_DELTA_DV' THEN
-                                orderby_windfunc_txt := 'VAL_D'
-                                                        || ' ASC ';
+                                orderby_windfunc_txt := 'VAL_D' || ' ASC ';
                         END CASE;
 
                         IF funcparam = 0 THEN
@@ -1864,7 +1912,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ELSE
                             rankindx := funcparam + 1;
                         END IF;
- 
 
                         ctename := get_cte_name(indx);
                         where_txt := ' RN=' || rankindx;
@@ -1880,17 +1927,36 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     || orderby_windfunc_txt
                                     || ') AS RN '
                                     || ' FROM ('
-                                    || 'SELECT ' || tbl || '.' || entity_id_col
-                                    || ', ' || tbl || '.' || dt_col
-                                    || ', ' || tbl || '.' || val_col || '- (LAG(' || val_col || ') OVER(PARTITION BY '
-                                    || tbl || '.' || entity_id_col || ', ' || att_col || ' ORDER BY ' || tbl || '.' ||dt_col || ')) AS VAL_D FROM ' 
+                                    || 'SELECT '
+                                    || tbl
+                                    || '.'
+                                    || entity_id_col
+                                    || ', '
+                                    || tbl
+                                    || '.'
+                                    || dt_col
+                                    || ', '
+                                    || tbl
+                                    || '.'
+                                    || val_col
+                                    || '- (LAG('
+                                    || val_col
+                                    || ') OVER(PARTITION BY '
+                                    || tbl
+                                    || '.'
+                                    || entity_id_col
+                                    || ', '
+                                    || att_col
+                                    || ' ORDER BY '
+                                    || tbl
+                                    || '.'
+                                    || dt_col
+                                    || ')) AS VAL_D FROM '
                                     || from_clause
                                     || ' WHERE '
                                     || att
                                     || predicate
                                     || ') WHERE VAL_D IS NOT NULL)';
-                                    
-                                    
 
                         select_txt := entity_id_col
                                       || ','
@@ -1913,7 +1979,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
                         insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
                         insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
-                    END;    
+                    END;
                 ELSE
                     RAISE ude_function_undefined;
             END CASE;
@@ -2057,7 +2123,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 FROM
                     dual;
 
-                
                 UPDATE rman_ruleblocks_dep
                 SET
                     att_label = rb_dep.att_label,
@@ -2286,7 +2351,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid = blockid_predicate;
 
     --split at semicolon except when commented
-        
+
         rbtbl := splitclob(rbt.picoruleblock, ';', comment_open_chars, comment_close_chars);
         FOR i IN 1..rbtbl.count LOOP
             rb := trim_comments(trim(rbtbl(i)));
@@ -2646,6 +2711,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END IF;
 
 --        dbms_output.put_line('-->' || select_tbl_sql_str);
+
         dbms_sql.parse(select_cursor, select_tbl_sql_str, dbms_sql.native);
     
     --dbms_sql.parse(select_cursor,sqlstmt,dbms_sql.native);
@@ -2864,13 +2930,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         dbms_sql.describe_columns2(select_cursor, colcount, tbl_desc);
         FOR i IN 1..tbl_desc.count LOOP CASE tbl_desc(i).col_type
             WHEN 1 THEN --varchar2
-                dbms_sql.define_column(select_cursor, i,'a',4000);
+                dbms_sql.define_column(select_cursor, i, 'a', 4000);
             WHEN 2 THEN --number
                 dbms_sql.define_column(select_cursor, i, 1);
             WHEN 12 THEN --date
                 dbms_sql.define_column(select_cursor, i, SYSDATE);
             WHEN 112 THEN --date
-                dbms_sql.define_column(select_cursor, i,typ112_val);
+                dbms_sql.define_column(select_cursor, i, typ112_val);
             WHEN 96 THEN --char
                 dbms_sql.define_column(select_cursor, i, 'a', 32);
             ELSE
@@ -2943,6 +3009,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 --                                
                         END IF;
+
                     WHEN 112 THEN --clob
                         dbms_sql.column_value(select_cursor, i, typ112_val);
                         IF typ112_val IS NOT NULL THEN
@@ -2950,13 +3017,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || translate(dbms_lob.substr(typ112_val,3500,1),',',' ')
+                                           || translate(dbms_lob.substr(typ112_val, 3500, 1), ',', ' ')
                                            || '"';
 
                             IF i < tbl_desc.count THEN
                                 insert_jstr := insert_jstr || ',';
                             END IF;
                         END IF;
+
                     WHEN 96 THEN --char
                         dbms_sql.column_value(select_cursor, i, typ96_val);
                         IF typ96_val IS NOT NULL THEN
@@ -3086,15 +3154,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         global_vstack_selected := global_vstack_selected_empty;
         IF length(trim(out_att_s)) > 0 THEN
             global_vstack_selected := splitstr(out_att_s, ',');
-
-
         END IF;
 
     END init_global_vstack;
 
     PROCEDURE compile_ruleblock (
-        bid_in IN VARCHAR2,
-        return_code OUT PLS_INTEGER
+        bid_in        IN            VARCHAR2,
+        return_code   OUT           PLS_INTEGER
     ) IS
 
         strsql   CLOB;
@@ -3138,7 +3204,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --        check_sql_syntax(rb.blockid,rb.sqlblock,rb.target_table,rb.def_exit_prop,rb.def_predicate);
 
         commit_log('Compile ruleblock', bid_in, 'compiled to sql');
-        return_code:=0;
+        return_code := 0;
     EXCEPTION
         WHEN OTHERS THEN
             commit_log('compile_ruleblocks', bid_in, 'Error:');
@@ -3146,7 +3212,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             dbms_output.put_line('FAILED::'
                                  || bid
                                  || ' and errors logged to rman_ruleblocks_log !');
-            return_code:=1;
+            return_code := 1;
     END compile_ruleblock;
 
     PROCEDURE compile_ruleblock_ext (
@@ -3154,7 +3220,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         out_att_str   IN            VARCHAR2,
         sqlstmt       OUT           CLOB
     ) IS
-        
+
         strsql   CLOB;
         t0       INTEGER := dbms_utility.get_time;
         rb       rman_ruleblocks%rowtype;
@@ -3210,9 +3276,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END compile_ruleblock_ext;
 
     PROCEDURE compile_active_ruleblocks IS
-        rbs   rman_ruleblocks_type;
-        bid   VARCHAR2(100);
-        compile_return_code PLS_INTEGER;
+        rbs                   rman_ruleblocks_type;
+        bid                   VARCHAR2(100);
+        compile_return_code   PLS_INTEGER;
     BEGIN
         commit_log('compile_active_ruleblocks', '', 'Started');
         DELETE FROM rman_ruleblocks_dep;
@@ -3229,7 +3295,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             commit_log('compile_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
             FOR i IN rbs.first..rbs.last LOOP
                 bid := rbs(i).blockid;
-                compile_ruleblock(bid,compile_return_code);
+                compile_ruleblock(bid, compile_return_code);
                 dbms_output.put_line('rb: ' || bid);
             END LOOP;
 
@@ -3249,16 +3315,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         push_to_long_tbl    IN                  PLS_INTEGER,
         push_to_long_tbl2   IN                  PLS_INTEGER,
         recompile           IN                  PLS_INTEGER,
-        return_code OUT pls_integer
+        return_code         OUT                 PLS_INTEGER
     ) IS
-        compile_return_code PLS_INTEGER;
-        strsql   CLOB;
-        t0       INTEGER := dbms_utility.get_time;
-        rb       rman_ruleblocks%rowtype;
-        bid      rman_ruleblocks.blockid%TYPE;
+
+        compile_return_code   PLS_INTEGER;
+        strsql                CLOB;
+        t0                    INTEGER := dbms_utility.get_time;
+        rb                    rman_ruleblocks%rowtype;
+        bid                   rman_ruleblocks.blockid%TYPE;
     BEGIN
         IF recompile = 1 THEN
-            compile_ruleblock(bid_in,compile_return_code);
+            compile_ruleblock(bid_in, compile_return_code);
         END IF;
         SELECT
             *
@@ -3291,18 +3358,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --    END IF;
         COMMIT;
         commit_log('Execute ruleblock', rb.blockid, 'Succeded');
-        return_code:=0;
+        return_code := 0;
     EXCEPTION
         WHEN OTHERS THEN
             dbms_output.put_line(dbms_utility.format_error_stack);
-            return_code:=1;
+            return_code := 1;
             RAISE;
     END execute_ruleblock;
 
     PROCEDURE execute_active_ruleblocks IS
-        rbs   rman_ruleblocks_type;
-        bid   VARCHAR2(100);
-        execute_return_code pls_integer;
+        rbs                   rman_ruleblocks_type;
+        bid                   VARCHAR2(100);
+        execute_return_code   PLS_INTEGER;
     BEGIN
         tstack := tstack_empty;
         commit_log('execute_active_ruleblocks', '', 'Started');
@@ -3321,22 +3388,22 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
-            FOR i IN rbs.first..rbs.last LOOP
-                BEGIN
-                    bid := rbs(i).blockid;
-                    execute_ruleblock(bid, 1, 1, 0, 0,execute_return_code);
-                    dbms_output.put_line('rb: ' || bid);
-                    EXCEPTION
-                    WHEN OTHERS THEN
-                        commit_log('execute_active_ruleblocks', bid, 'Error:');
-                        commit_log('execute_active_ruleblocks', bid, 'FAILED');
-                        dbms_output.put_line('FAILED::'
-                                             || bid
-                                             || ' and errors logged to rman_ruleblocks_log !');
-                END;
+            FOR i IN rbs.first..rbs.last LOOP BEGIN
+                bid := rbs(i).blockid;
+                execute_ruleblock(bid, 1, 1, 0, 0, execute_return_code);
+                dbms_output.put_line('rb: ' || bid);
+            EXCEPTION
+                WHEN OTHERS THEN
+                    commit_log('execute_active_ruleblocks', bid, 'Error:');
+                    commit_log('execute_active_ruleblocks', bid, 'FAILED');
+                    dbms_output.put_line('FAILED::'
+                                         || bid
+                                         || ' and errors logged to rman_ruleblocks_log !');
+            END;
             END LOOP;
 
 --            drop_rout_tables;
+
         ELSE
             commit_log('execute_active_ruleblocks', '', 'Exiting with NULL Ruleblocks');
         END IF;
@@ -3616,10 +3683,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         FUNCTION get_sql_stmt_from_ruleblock (
             ruleblockid VARCHAR2
         ) RETURN VARCHAR2 AS
-            sql_stmt VARCHAR2(32767) := '';
-            compile_return_code pls_integer;
+            sql_stmt              VARCHAR2(32767) := '';
+            compile_return_code   PLS_INTEGER;
         BEGIN
-            compile_ruleblock(ruleblockid,compile_return_code);
+            compile_ruleblock(ruleblockid, compile_return_code);
             SELECT
                 sqlblock
             INTO sql_stmt
@@ -3800,12 +3867,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                          || '->'
                                          || vw_name);
                     sql_stmt_mod := replace(sql_stmt, 'EADV', upper(vw_name));
-                    
-                    
-                    
-                    sql_stmt_mod := replace(sql_stmt_mod, 'sysdate', 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
+                    sql_stmt_mod := replace(sql_stmt_mod, 'sysdate', 'to_date('''
+                                                                     || slice_tbl(i)
+                                                                     || ''',''ddmmyyyy'')');
 --                    dbms_output.put_line('GEN CUBE sysdate replace ->' || 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
-                    
+
                     sql_stmt_mod := modify_dep_tbls(sql_stmt_mod, ruleblock_tbl(j), slice_tbl(i));
                     dbms_output.put_line(i
                                          || '->'
@@ -3911,7 +3977,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 );
 
             FOR i IN 1..col_tbl.count LOOP IF col_stack.EXISTS(col_tbl(i)) = false THEN
-                
                 IF i < col_tbl.count THEN
                     ret := ret
                            || upper(tmp_tbl)
@@ -3925,12 +3990,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                            || col_tbl(i)
                            || ' ';
                 END IF;
-                col_stack(col_tbl(i)) := i;
 
-                
+                col_stack(col_tbl(i)) := i;
             END IF;
             END LOOP;
-            
+
             RETURN ret;
         END get_col_list;
 
@@ -3950,13 +4014,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             FOR j IN 1..ruleblock_tbl.count LOOP
                 tbl_name := get_object_name('rt_cube', ruleblock_tbl(j), '0');
                 col_list_str := get_col_list(tbl_name);
-                
-                
-                if col_list_str is not null then
-                join_sql_stmt := join_sql_stmt || col_list_str || ',';
-                end if;
-                
-
+                IF col_list_str IS NOT NULL THEN
+                    join_sql_stmt := join_sql_stmt
+                                     || col_list_str
+                                     || ',';
+                END IF;
 
             END LOOP;
 
@@ -4669,8 +4731,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     idx := used_var.next(idx);
                 END LOOP;
 
-            
-
                 used_var := used_var_0;
             END LOOP;
         END;
@@ -4704,8 +4764,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             UPDATE rman_ruleblocks d
             SET
                 d.out_att = TRIM(BOTH ',' FROM d.out_att
-                            || ','
-                            || d.def_exit_prop);
+                                               || ','
+                                               || d.def_exit_prop);
 --            WHERE
 --                instr(nvl(d.out_att, ''), d.def_exit_prop) = 0;
 

@@ -4,7 +4,7 @@ declare
     dts varchar2(2000);
     vals varchar2(2000);
     
-    eid_in  number:=71;
+    eid_in  number:=158;
     
     graph   varchar2(4000):='No graph';
     
@@ -12,12 +12,12 @@ declare
     egfr_max_val integer;
 begin
 
-    select egfrs_dt,egfrs_val,egfr_max_dt,egfr_max_val 
+    select egfrs_dt,egfrs_val,egfr_max_dt,egfr_max_val
     into dts,vals,egfr_max_dt,egfr_max_val
     from rout_egfr_fit
     where eid=eid_in;
 
-    graph:=rman_pckg.ascii_graph_dv(dts=>dts,vals=>vals,yscale=>10);
+    graph:=rman_pckg.ascii_graph_dv(dts=>dts,vals=>vals,yscale=>10,xline_str_arr=>'10/SEP/14',yline_str_arr=>'79');
     
     DBMS_OUTPUT.PUT_LINE(graph);
     

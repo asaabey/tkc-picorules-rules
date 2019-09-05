@@ -50,6 +50,8 @@ BEGIN
             
             egfr_ld => eadv.lab_bld_egfr_c.dt.max();
             
+            egfr_graph_xline_60 => eadv.lab_bld_egfr_c.dt.max().where(val>60);
+            
             mspan : { egfr_n>0 => round((egfr_ld-egfr_fd)/12,0)};
             
             egfr_graph_yscale : {1=1 => 10};
