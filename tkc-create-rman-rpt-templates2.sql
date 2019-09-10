@@ -291,7 +291,17 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002','graph_acr','acr_graph',651110,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002','egfr_metrics','egfr_metrics',651110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <r1_stg=1>Normal renal function of <egfr_r1_val></egfr_r1_val> ml/min at entry</r1_stg=1>
+    <r1_stg=2>Near normal renal function of <egfr_r1_val></egfr_r1_val> ml/min at entry</r1_stg=2>
+    <p3pg_signal=1>Apparent progression from <egfr60_last_val></egfr60_last_val> ml/min to <egfr_rn_val></egfr_rn_val> ml/min during (<egfr60_last_dt></egfr60_last_dt>-<egfr_rn_dt></egfr_rn_dt>) </p3pg_signal=1>
+    <est_esrd_lapsed=0><est_esrd_dt>Estimated ESRD around <est_esrd_dt></est_esrd_dt>.</est_esrd_dt></est_esrd_lapsed=0>
+    <est_esrd_lapsed=1><est_esrd_dt>Imminent ESRD, with estimation boundry in the past</est_esrd_lapsed=1>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002','graph_acr','acr_graph',661100,'dev','tkc',TO_DATE(SYSDATE),
     '
     Temporal variation of uACR  
     Log(uACR) mg/mmol against time

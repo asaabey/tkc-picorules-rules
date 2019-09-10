@@ -6,8 +6,8 @@ declare
 
 
 begin
-    eid:=36821;
-
+--    eid:=4538; //buffer overflow
+        eid:=&val;
 --    eid:=295;
     composition:=rman_pckg.get_composition_by_eid(eid,'neph002');
     
