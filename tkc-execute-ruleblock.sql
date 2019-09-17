@@ -67,9 +67,9 @@ BEGIN
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 --
 rman_pckg.execute_ruleblock(
-        bid_in => 'egfr_metrics',
+        bid_in => 'at_risk_ckd',
         create_wide_tbl => 1,
-        push_to_long_tbl =>1,
+        push_to_long_tbl =>0,
         push_to_long_tbl2=>0,
         recompile=>1,
         return_code=>ret_val
@@ -116,6 +116,18 @@ rman_pckg.execute_ruleblock(
 --rman_pckg.gen_cube_from_ruleblock('
 --    rrt.rrt
 --    ','01072019,01072018,01072017','rep124');
+
+rman_pckg.gen_cube_from_ruleblock('
+    at_risk_ckd.rrt,
+    dmg.dob,
+    dmg.dod,
+    at_risk_ckd.ckd,
+    at_risk_ckd.dm,
+    at_risk_ckd.htn,
+    at_risk_ckd.obesity,
+    cvra.cvra,
+    cvra.cvra_dx_uncoded
+    ','01072019,01072018,01072017','rep126');
 
 
 

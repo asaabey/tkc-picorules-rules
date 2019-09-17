@@ -89,6 +89,18 @@ BEGIN
             
             p3_slope : { p3pg_signal=1 => (round((egfr_rn_val-egfr60_last_val)/(egfr_rn_dt-egfr60_last_dt),3))},{=>null};
             
+            p3_b1 => eadv.lab_bld_egfr_c.val.regr_slope().where(dt>egfr60_last_dt);
+            
+            p3_b0 => eadv.lab_bld_egfr_c.val.regr_intercept().where(dt>egfr60_last_dt);
+            
+            p3_r2 => eadv.lab_bld_egfr_c.val.regr_r2().where(dt>egfr60_last_dt);
+            
+            px_b1 => eadv.lab_bld_egfr_c.val.regr_slope();
+            
+            px_b0 => eadv.lab_bld_egfr_c.val.regr_intercept();
+            
+            px_r2 => eadv.lab_bld_egfr_c.val.regr_r2();
+            
             est_esrd_d : { nvl(p3_slope,0)<0 and egfr_rn_val>=5 => (5-egfr_rn_val)/p3_slope};
 
             est_esrd_dt : { nvl(est_esrd_d,0)>0 and nvl(est_esrd_d,0)<1500 => (egfr_rn_dt + est_esrd_d)};

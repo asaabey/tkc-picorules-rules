@@ -530,13 +530,15 @@ BEGIN
                 rule_owner:"TKCADMIN",
                 is_active:2,
                 def_exit_prop:"at_risk_ckd",
-                def_predicate:">0",
+                def_predicate:"",
                 exec_order:5
                 
             }
         );
         
         ckd => rout_ckd.ckd.val.bind();
+        
+        rrt => rout_rrt.rrt.val.bind();
         
         dm => rout_cd_dm.dm.val.bind();
         
@@ -548,6 +550,11 @@ BEGIN
         
         obesity => rout_cd_obesity.obesity.val.bind();
         
+        lab_ld => eadv.[lab_bld%].dt.max().where(dt > sysdate-730);
+        
+        obs_ld => eadv.[obs%].dt.max().where(dt > sysdate-730);
+        
+        is_active_2y : {coalesce(lab_ld,obs_ld) is null =>0},{=>1};
               
         obst => eadv.[icd_e66%,icpc_t82%].dt.count(0);
             
@@ -562,6 +569,8 @@ BEGIN
         
             
         at_risk_ckd : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
+        
+        tkc_active_cohort : { greatest(ckd,rrt,at_risk_ckd)>0 and is_active_2y=1 =>1},{=>0};
         
         #define_attribute(
             at_risk_ckd,
@@ -582,6 +591,8 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    
    
    -- BEGINNING OF RULEBLOCK --
 
