@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.0.5
+Version		    1.0.0.6
 Creation date	07/04/2019
-update on date  05/09/2019
+update on date  27/09/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -169,6 +169,7 @@ Change Log
 03/09/2019  fixed bug in func_build not concatenating tab name
 04/09/2019  added max_deta_dv functions family
 05/09/2019  ascii graphing  xline and ylines ability
+27/09/2019  string buffer overun error fixed: tbl_type varchar 4000 from 2000
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -1336,7 +1337,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         composition        CLOB;
         compositionid_in   VARCHAR2(100) := nlc_id;
---        compositionid_in   VARCHAR2(100) := 'neph001';
         eid_not_found EXCEPTION;
         PRAGMA exception_init ( eid_not_found, 100 );
     BEGIN

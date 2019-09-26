@@ -97,7 +97,7 @@ CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);
 /
 
 CREATE OR REPLACE TYPE tbl_type AS
-    TABLE OF VARCHAR2(2000);
+    TABLE OF VARCHAR2(4000);
 /
 
 CREATE OR REPLACE TYPE tbl_type2 AS
