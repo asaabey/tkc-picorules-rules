@@ -1495,7 +1495,7 @@ FUNCTION map_to_tmplt2 (
                                                 
     -- remove unattended html segments
 
-        ret_tmplt := regexp_replace(ret_tmplt, '<<[a-z0-9_\=]+>>(.*?)<<\/[a-z0-9_\=]+>>', '*');
+        ret_tmplt := regexp_replace(ret_tmplt, '<<[a-z0-9_\=]+>>(.*?)<<\/[a-z0-9_\=]+>>', '');
     
     -- remove excess space and line feeds
         ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
@@ -1567,6 +1567,8 @@ FUNCTION map_to_tmplt2 (
         composition := replace(composition,chr(38) || 'lt;','<');
         
         composition := replace(composition,chr(38) || 'gt;','>');
+        
+        
 
         RETURN composition;
 --    EXCEPTION

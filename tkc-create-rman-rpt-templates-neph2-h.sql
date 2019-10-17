@@ -28,23 +28,23 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li><<dm_dx_code_flag>>Diagnosed<</dm_dx_code_flag>><<dm_dx_uncoded>>Undiagnosed<</dm_dx_uncoded>> Diabetes type <<dm_type>><</dm_type>>
+    <<dm_dx_code_flag>><li>Diagnosed<</dm_dx_code_flag>><<dm_dx_uncoded>>Undiagnosed<</dm_dx_uncoded>> Diabetes type <<dm_type>><</dm_type>>
     <ul>
-    <li><<dm_fd_t>>since <</dm_fd_t>><<dm_fd_t>><</dm_fd_t>></li>
-    <li><<dm_micvas>>Non-renal microvascular complications present<</dm_micvas>></li>
-    <li><<hba1c_n_tot>>Last recorded HbA1c (NGSP) is <<hba1c_n0_val>><</hba1c_n0_val>> % (<<hba1c_n0_dt>><</hba1c_n0_dt>>)<</hba1c_n_tot>></li>
-    <li><<dm_rxn=0>>Non-medicated<</dm_rxn=0>></li>
-    <li><<dm_rxn>>Current medication classes<</dm_rxn>>
+    <<dm_fd_t>><li>since <<dm_fd_t>><</dm_fd_t>></li><</dm_fd_t>>
+    <<dm_micvas>><li>Non-renal microvascular complications present</li><</dm_micvas>>
+    <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val>><</hba1c_n0_val>> % (<<hba1c_n0_dt>><</hba1c_n0_dt>>)</li><</hba1c_n_tot>>
+    <<dm_rxn=0>><li>Non-medicated</li><</dm_rxn=0>>
+    <<dm_rxn>><li>Current medication classes
     <ul>
-    <li><<dm_rxn_su>>sulphonylurea<</dm_rxn_su>></li>
-    <li><<dm_rxn_ins_long>>long-acting insulin<</dm_rxn_ins_long>></li>
-    <li><<dm_rxn_glp1>>GLP1 analogue<</dm_rxn_glp1>></li>
-    <li><<dm_rxn_dpp4>>DPP4 inhibitor<</dm_rxn_dpp4>></li>
-    <li><<dm_rxn_sglt2>>SGLT2 inhibitor<</dm_rxn_sglt2>></li>
+    <<dm_rxn_su>><li>sulphonylurea</li><</dm_rxn_su>>
+    <<dm_rxn_ins_long>><li>long-acting insulin<li><</dm_rxn_ins_long>>
+    <<dm_rxn_glp1>><li>GLP1 analogue</li><</dm_rxn_glp1>>
+    <<dm_rxn_dpp4>><li>DPP4 inhibitor</li><</dm_rxn_dpp4>>
+    <<dm_rxn_sglt2>><li>SGLT2 inhibitor</li><</dm_rxn_sglt2>>
     </ul>
-    </li>
-    <li><<cp_dm=0>>Diabetes careplan was not detected [2.4]<</cp_dm=0>></li>
-    <li><<cp_dm>>Diabetes careplan was updated on <</cp_dm>><<cp_dm_ld>><</cp_dm_ld>></li>
+    </li><</dm_rxn>>
+    <<cp_dm=0>><li>Diabetes careplan was not detected [2.4]</li><</cp_dm=0>>
+    <<cp_dm>><li>Diabetes careplan was updated on <<cp_dm_ld>><</cp_dm_ld>></li><</cp_dm>>
     </ul>
     </li>
     </ul>
@@ -162,29 +162,31 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_syn_1','ckd',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
-        <ul>
-    <li>CKD
     <ul>
-    <li><<ckd_stage>><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <</ckd_stage>> (<<cga_g>><</cga_g>><<cga_a>><</cga_a>>) [1.1].</li>
-    <li><<dx_ckd=0>>No coded diagnosis on the EHR [1.2]<</dx_ckd=0>></li>
-    <li><<dx_ckd>>The diagnosis on the EHR is CKD stage <<dx_ckd_stage>><</dx_ckd_stage>> [1.2] <</dx_ckd>></li>
-    <li><<egfrlv>>Last eGFR is <</egfrlv>><<egfrlv>><</egfrlv>> ml/min/1.73m2 (<<egfrld>><</egfrld>>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li>
-    <li><<acrlv>>Last uACR is <</acrlv>><<acrlv>><</acrlv>> mg/mmol (<<acrld>><</acrld>>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li>
-    <li><<egfr_decline>>There is <<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2>><</egfr_slope2>>ml/min/yr [1.3]<</egfr_decline>></li>
-    <li><<enc_null=0>>No captured encounters with renal services.<</enc_null=0>>
+    <li>CKD stage <strong><<ckd_stage>><</ckd_stage>></strong>
     <ul>
-    <li><<enc_ld>>Last encounter with renal services was on <</enc_ld>><<enc_ld>><</enc_ld>><<enc_n>> and there have been <</enc_n>><<enc_n>><</enc_n>><<enc_n>> encounters since <</enc_n>><<enc_fd>><</enc_fd>></li>
-    </ul>
-    </li>
-    <li><<avf>>An arterio-venous fistula has been created on <</avf>><<avf>><</avf>></li>
-    <li><<cp_ckd=0>>No current careplan for CKD<</cp_ckd=0>></li>
-    <li><<cp_ckd>>CKD current careplan is <</cp_ckd>><<cp_ckd>><</cp_ckd>><<cp_ckd>> updated on <</cp_ckd>><<cp_ckd_ld>><</cp_ckd_ld>>
+    <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g>><</cga_g>><<cga_a>><</cga_a>>)</strong> [1.1].</li><</ckd_stage>>
+    <<dx_ckd=0>><li>No coded diagnosis on the EHR [1.2]</li><</dx_ckd=0>>
+    <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage>><</dx_ckd_stage>> [1.2]</li><</dx_ckd>>
+    <<egfrlv>><li>Last eGFR is <strong><<egfrlv>><</egfrlv>></strong> ml/min/1.73m2 (<<egfrld>><</egfrld>>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfrlv>>
+    <<acrlv>><li>Last uACR is <<acrlv>><</acrlv>> mg/mmol (<<acrld>><</acrld>>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acrlv>>
+    <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2>><</egfr_slope2>>ml/min/yr [1.3]</li><</egfr_decline>>
+    <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
+    <<enc_ld>><li>Last encounter with renal services was on <<enc_ld>><</enc_ld>><<enc_n>> and there have been <</enc_n>><<enc_n>><</enc_n>><<enc_n>> encounters since <</enc_n>><<enc_fd>><</enc_fd>></li><</enc_ld>>
+    <<avf>><li>An arterio-venous fistula has been created on <<avf>><</avf>></li><</avf>>
+    <<cp_ckd=0>><li>No current careplan for CKD</li><</cp_ckd=0>>
+    <<cp_ckd>><li>CKD current careplan is <<cp_ckd>><</cp_ckd>><<cp_ckd>> updated on <</cp_ckd>><<cp_ckd_ld>><</cp_ckd_ld>><</cp_ckd>>
     <ul>
-    <li><<cp_mis>>existing care plan may not be adequate [1.8]<</cp_mis>></li>
+    <<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>>
     </ul>
     </li>
     </ul>
     </li>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_ckd_syn_1z','ckd',601199,'dev','tkc',TO_DATE(SYSDATE),
+    '
     </ul>
     '
     );
@@ -198,13 +200,21 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
-    '   |       +-- CKD aetiology
-    <<aet_multiple=1>>|              +-- Multiple aetiology is suggested <</aet_multiple=1>>
-    <<aet_dm=1>>|                  +-- diabetes mellitus <</aet_dm=1>>
-    <<aet_htn=1>>|                  +-- hypertension <</aet_htn=1>>
-    <<aet_gn_ln=1>>|                  +-- lupus nephritis <</aet_gn_ln=1>>
-    <<aet_gn_x=1>>|                  +-- glomerulopathy NOS<</aet_gn_x=1>>
-    <<aet_multiple=0>>|              +-- The likely cause is <<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>><<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>><</aet_multiple=0>>
+    '<ul>
+    <li>aetiology
+    <ul>
+    <<aet_multiple=1>><li>Multiple aetiology is suggested<</aet_multiple=1>>
+    <ul>
+    <<aet_dm=1>><li>diabetes mellitus</li><</aet_dm=1>>
+    <<aet_htn=1>><li>hypertension</li><</aet_htn=1>>
+    <<aet_gn_ln=1>><li>lupus nephritis</li><</aet_gn_ln=1>>
+    <<aet_gn_x=1>><li>glomerulopathy NOS</li><</aet_gn_x=1>>
+    </ul>
+    </li>
+    <<aet_multiple=0>><li>The likely cause is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>><<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong></li><</aet_multiple=0>>
+    </ul>
+    </li>
+    </ul>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -276,7 +286,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_ckd_journey_1','ckd_journey',601200,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','cd_ckd_journey_1','ckd_journey',601105,'dev','tkc',TO_DATE(SYSDATE),
     '   |       +-- Renal services engagement
     <<enc_multi=0>><<enc_ld>>|              +-- Nephrologist review <</enc_ld>><<enc_ld>><</enc_ld>><</enc_multi=0>>
     <<enc_multi>>|              +-- Nephrologist reviews :\t<<enc_fd>><</enc_fd>>-<<enc_ld>><</enc_ld>> [<<enc_n>><</enc_n>>] <</enc_multi>>
@@ -288,36 +298,53 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_ckd_dx_1','ckd_diagnostics',601300,'dev','tkc',TO_DATE(SYSDATE),
-    '   |       +-- CKD diagnostic workup
-    |              +-- Basic urinalysis : <<ua_null=1>>not performed<</ua_null=1>><<ua_rbc_ld>>last performed on <</ua_rbc_ld>><<ua_rbc_ld>><</ua_rbc_ld>><<ua_rbc_ld>> and shows <</ua_rbc_ld>><<ua_null=0>><<ua_pos=0>>no significance<</ua_pos=0>><<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>><<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>><</ua_null=0>>
-    |              +-- ANA Serology     : <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld>><</dsdna_ld>><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>>
-    |              +-- ANCA Serology    : <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld>><</pr3_ld>><</anca_null=0>>
-    |              +-- Complements      : <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld>><</c3_ld>><</c3c4_null=0>>
-    |              +-- Serum PEP        : <<spep_null=1>>not performed <</spep_null=1>><<spep_null=0>><<paraprot_ld>>last performed on <</paraprot_ld>><<paraprot_ld>><</paraprot_ld>><</spep_null=0>>
-    |              +-- SFLC assay       : <<sflc_null=1>>not performed <</sflc_null=1>><<sflc_null=0>><<sflc_kappa_ld>>last performed on <</sflc_kappa_ld>><<sflc_kappa_ld>><</sflc_kappa_ld>><</sflc_null=0>>
-    |              +-- Renal imaging    : <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld>><</ris_usk_ld>><</usk_null=0>>
-    |              +-- Kidney biopsy    : <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld>><</ris_bxk_ld>><</bxk_null=0>>
+    VALUES('neph002_html','cd_ckd_dx_1','ckd_diagnostics',601110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+    <li>diagnostic workup
+    <ul>
+    <li>Basic urinalysis : <<ua_null=1>>not performed<</ua_null=1>><<ua_rbc_ld>>last performed on <</ua_rbc_ld>><<ua_rbc_ld>><</ua_rbc_ld>><<ua_rbc_ld>> and shows <</ua_rbc_ld>><<ua_null=0>><<ua_pos=0>>no significance<</ua_pos=0>><<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>><<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>><</ua_null=0>></li>
+    <li>ANA Serology : <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld>><</dsdna_ld>><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
+    <li>ANCA Serology : <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld>><</pr3_ld>><</anca_null=0>></li>
+    <li>Complements : <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld>><</c3_ld>><</c3c4_null=0>></li>
+    <li>Serum PEP : <<spep_null=1>>not performed <</spep_null=1>><<spep_null=0>><<paraprot_ld>>last performed on <</paraprot_ld>><<paraprot_ld>><</paraprot_ld>><</spep_null=0>></li>
+    <li>SFLC assay : <<sflc_null=1>>not performed <</sflc_null=1>><<sflc_null=0>><<sflc_kappa_ld>>last performed on <</sflc_kappa_ld>><<sflc_kappa_ld>><</sflc_kappa_ld>><</sflc_null=0>></li>
+    <li>Renal imaging : <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld>><</ris_usk_ld>><</usk_null=0>></li>
+    <li>Kidney biopsy : <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld>><</ris_bxk_ld>><</bxk_null=0>></li>
+    </ul>
+    </li>
+    </ul>
     '
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_ckd_compx_1','ckd_complications',601400,'dev','tkc',TO_DATE(SYSDATE),
-    '   |       +-- CKD Complications
-    |              +-- Haemopoetic function
-    <<hb_lv>>|                  +-- Last haemoglobin on <<hb_ld>><</hb_ld>> is <</hb_lv>><<hb_lv>><</hb_lv>> g/L 
-    <<hb_state=2>>|                  +-- acceptable range<</hb_state=2>>
-    <<hb_state=1>><<mcv_state=11>>|                  +-- consistent with severe microcytic anaemia <</mcv_state=11>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=12>>|                  +-- consistent with microcytic anaemia<</mcv_state=12>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=20>>|                  +-- consistent with normocytic anaemia<</mcv_state=20>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=31>>|                  +-- consistent with macrocytic anaemia<</mcv_state=31>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=0>>|                  +-- consistent with anaemia<</mcv_state=0>><</hb_state=1>>
-    <<esa_state=0>>|                  +-- No ESA use<</esa_state=0>>
-    <<esa_state=1>>|                  +-- current ESA use<</esa_state=1>>
-    <<esa_state=2>>|                  +-- Past ESA use but not current<</esa_state=2>>
-    <<iron_low>>|                  +-- Iron stores low<</iron_low>>
-    |              +-- Acid-base balance
-    <<hco3_low>>|                  +-- low tCO2 at <<hco3_lv>><</hco3_lv>> mmol/l likely due to metabolic acidosis<</hco3_low>>
+    VALUES('neph002_html','cd_ckd_compx_1','ckd_complications',601120,'dev','tkc',TO_DATE(SYSDATE),
+    '<ul>
+    <li>CKD Complications
+    <ul>
+    <li>Haemopoetic function
+    <ul>
+    <<hb_lv>><li>Last haemoglobin on <<hb_ld>><</hb_ld>> is <<hb_lv>></hb_lv>> g/L</li><</hb_lv>>
+    <<hb_state=2>><li>acceptable range</li><</hb_state=2>>
+    <<hb_state=1>><li><<mcv_state=11>>consistent with severe microcytic anaemia <</mcv_state=11>></li><</hb_state=1>>
+    <<hb_state=1>></li><<mcv_state=12>>consistent with microcytic anaemia<</mcv_state=12>></li><</hb_state=1>>
+    <<hb_state=1>><li><<mcv_state=20>>consistent with normocytic anaemia<</mcv_state=20>></li><</hb_state=1>>
+    <<hb_state=1>><li><<mcv_state=31>>consistent with macrocytic anaemia<</mcv_state=31>></li><</hb_state=1>>
+    <<hb_state=1>><li><<mcv_state=0>>consistent with anaemia<</mcv_state=0>></li><</hb_state=1>>
+    <<esa_state=0>><li>No ESA use</li><</esa_state=0>>
+    <<esa_state=1>><li>current ESA use</li><</esa_state=1>>
+    <<esa_state=2>><li>Past ESA use but not current</li><</esa_state=2>>
+    <<iron_low>><li>Iron stores low/<li><</iron_low>>
+    </ul>
+    </li>
+    <li>Acid-base balance
+    <ul>
+    <<hco3_low>><li>low tCO2 at <<hco3_lv>><</hco3_lv>> mmol/l likely due to metabolic acidosis</li><</hco3_low>>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    </ul>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
