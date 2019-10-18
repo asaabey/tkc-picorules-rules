@@ -9,7 +9,7 @@ begin
 
         eid:=&val;
 
-    composition:=rman_pckg.get_composition_by_eid(eid,'neph001');
+    composition:=rman_pckg.get_composition_by_eid(eid,'neph002_html');
     
     
     DBMS_OUTPUT.put_line('EID:' || eid);

@@ -63,23 +63,23 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_htn_syn_1','cd_htn',603100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li>Hypertension
-    <ul>
-    <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr>><</htn_fd_yr>></li>
-    <li><<mu_1>>Average systolic BP during last year was <</mu_1>><<mu_1>><</mu_1>><<mu_1>> mmHg<</mu_1>></li>
-    <li><<mu_2>> Average systolic BP the year before was <</mu_2>><<mu_2>><</mu_2>><<mu_2>> mmHg.<</mu_2>></li>
-    <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
-    <ul>
-    <li><<htn_rxn_arb>>Angiotensin receptor blocker (ARB) <</htn_rxn_arb>></li>
-    <li><<htn_rxn_acei>>ACE inhibitor <</htn_rxn_acei>></li>
-    <li><<htn_rxn_ccb>>Calcium channel blocker (CCB) <</htn_rxn_ccb>></li>
-    <li><<htn_rxn_bb>>Beta blocker <</htn_rxn_bb>></li>
-    <li><<htn_rxn_diuretic_thiazide>>Thiazide diuretic <</htn_rxn_diuretic_thiazide>></li>
-    <li><<htn_rxn_diuretic_loop>>Thiazide diuretic <</htn_rxn_diuretic_loop>></li>
-    </ul>
-    </li>
-    </ul>
-    </li>
+        <li>Hypertension
+        <ul>
+            <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr>><</htn_fd_yr>></li>
+            <<mu_1>><li>Average systolic BP during last year was <</mu_1>><<mu_1>><</mu_1>><<mu_1>> mmHg</li><</mu_1>>
+            <<mu_2>><li>Average systolic BP the year before was <</mu_2>><<mu_2>><</mu_2>><<mu_2>> mmHg.</li><</mu_2>>
+            <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
+            <ul>
+                <<htn_rxn_arb>><li>Angiotensin receptor blocker (ARB)</li><</htn_rxn_arb>>
+                <<htn_rxn_acei>><li>ACE inhibitor</li><</htn_rxn_acei>>
+                <<htn_rxn_ccb>><li>Calcium channel blocker (CCB)</li><</htn_rxn_ccb>>
+                <<htn_rxn_bb>><li>Beta blocker</li><</htn_rxn_bb>>
+                <<htn_rxn_diuretic_thiazide>><li>Thiazide diuretic</li><</htn_rxn_diuretic_thiazide>>
+                <<htn_rxn_diuretic_loop>><li>Thiazide diuretic</li><</htn_rxn_diuretic_loop>>
+            </ul>
+            </li>
+        </ul>
+        </li>
     </ul>
     '
     );
@@ -112,36 +112,36 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_cardiac_syn','cd_cardiac',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li>Cardiac disease
-    <ul>
-    <li><<cad>>Coronary artery disease<</cad>>
-    <ul>
-    <li><<cabg>>Cornoary artery bypass grafting <</cabg>><<cabg>><</cabg>></li>
-    <li><<cad_mi_icd>>First myocardial infarction <</cad_mi_icd>><<cad_mi_icd>><</cad_mi_icd>></li>
-    </ul>
-    </li>
-    <li><<vhd>>Valvular heart disease :<</vhd>>
-    <ul>
-    <li><<vhd_mv_icd>>Mitral valve disease <</vhd_mv_icd>><<vhd_mv_icd>><</vhd_mv_icd>></li>
-    <li><<vhd_av_icd>>Aortic valve disease <</vhd_av_icd>><<vhd_av_icd>><</vhd_av_icd>></li>
-    <li><<vhd_ov_icd>>Non aortic-mitral valve disease <</vhd_ov_icd>><<vhd_ov_icd>><</vhd_ov_icd>></li>
-    <li><<vhd_ie_icd>>Infective endocarditis <</vhd_ie_icd>><<vhd_ie_icd>><</vhd_ie_icd>></li>
-    <li><<vhd_icpc>>Valvular disease NOS<</vhd_icpc>><<vhd_icpc>><</vhd_icpc>></li>
-    </ul>
-    </li>
-    <li><<rxn>>Current medication classes
-    <ul>
-    <li><<rxn_ap>>Anti-platelet agents<</rxn_ap>></li>
-    <li><<rxn_statin>>Statins<</rxn_statin>></li>
-    <li><<rxn_anticoag>>Anti-coagulation (Warfarin or NOAC)<</rxn_anticoag>></li>
-    <li><<rxn_diu_loop>>Loop diuretics<</rxn_diu_loop>></li>
-    <li><<rxn_diu_low_ceil>>Low-ceiling diuretics<</rxn_diu_low_ceil>></li>
-    <li><<rxn_diu_k_sp>>Low-ceiling diuretics<</rxn_diu_k_sp>></li>
-    <li><<rxn_chrono>>Anti-arrhythmic agent<</rxn_chrono>><</rxn>></li>
-    </ul>
-    </li>
-    </ul>
-    </li>
+        <li>Cardiac disease
+        <ul>
+            <<cad>><li>Coronary artery disease
+            <ul>
+                <<cabg>><li>Cornoary artery bypass grafting <<cabg>><</cabg>></li><</cabg>>
+                <<cad_mi_icd>><li>First myocardial infarction <<cad_mi_icd>><</cad_mi_icd>></li><</cad_mi_icd>>
+            </ul>
+            </li><</cad>>
+            <<vhd>><li>Valvular heart disease :
+            <ul>
+                <<vhd_mv_icd>><li>Mitral valve disease <</vhd_mv_icd>><<vhd_mv_icd>></li><</vhd_mv_icd>>
+                <<vhd_av_icd>><li>Aortic valve disease <</vhd_av_icd>><<vhd_av_icd>></li><</vhd_av_icd>>
+                <<vhd_ov_icd>><li>Non aortic-mitral valve disease <</vhd_ov_icd>><<vhd_ov_icd>></li><</vhd_ov_icd>>
+                <<vhd_ie_icd>><li>Infective endocarditis <</vhd_ie_icd>><<vhd_ie_icd>></li><</vhd_ie_icd>>
+                <<vhd_icpc>><li>Valvular disease NOS<</vhd_icpc>><<vhd_icpc>></li><</vhd_icpc>>
+            </ul>
+            </li><</vhd>>
+            <li><<rxn>>Current medication classes
+            <ul>
+                <<rxn_ap>><li>Anti-platelet agents</li><</rxn_ap>>
+                <<rxn_statin>><li>Statins</li><</rxn_statin>>
+                <<rxn_anticoag>><li>Anti-coagulation (Warfarin or NOAC)</li><</rxn_anticoag>>
+                <<rxn_diu_loop>><li>Loop diuretics</li><</rxn_diu_loop>>
+                <<rxn_diu_low_ceil>><li>Low-ceiling diuretics</li><</rxn_diu_low_ceil>>
+                <<rxn_diu_k_sp>><li>Low-ceiling diuretics</li><</rxn_diu_k_sp>>
+                <<rxn_chrono>><li>Anti-arrhythmic agent</li><</rxn_chrono>>
+            </ul>
+            </li><</rxn>>
+        </ul>
+        </li>
     </ul>  
     '
     );
