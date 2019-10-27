@@ -17,7 +17,8 @@ CREATE TABLE rman_stack (
     varid            VARCHAR2(100),
     is_sub           NUMBER(1, 0),
     agg_func         VARCHAR2(100),
-    func_param       VARCHAR2(100)
+    func_param       VARCHAR2(100),
+    ruleid           VARCHAR2(100)
 );
 /
 

@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.0.7
+Version		    1.0.1.0
 Creation date	07/04/2019
-update on date  04/10/2019
+update on date  28/10/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -171,6 +171,8 @@ Change Log
 05/09/2019  ascii graphing  xline and ylines ability
 27/09/2019  string buffer overun error fixed: tbl_type varchar 4000 from 2000
 04/10/2019  map_to_tmplt2 function which uses the double chars to allow html
+28/10/2019  added new function parse_rpipe_to_rdoc
+28/10/2019  added new function rstack_row_to_human_code
 */
 
     TYPE rman_tbl_type IS
@@ -213,6 +215,9 @@ Change Log
     PROCEDURE get_composite_sql (
         cmpstat OUT NVARCHAR2
     );
+    FUNCTION rstack_row_to_human_code (
+        rstack_ruleid IN VARCHAR2
+    ) RETURN VARCHAR2;
 
     FUNCTION sql_predicate (
         att_str VARCHAR2
@@ -299,7 +304,8 @@ Change Log
         is_sub           INT,
         sqlstat          OUT              NVARCHAR2,
         agg_func         VARCHAR2,
-        func_param       VARCHAR2
+        func_param       VARCHAR2,
+        ruleid           VARCHAR2
     );
 
     PROCEDURE build_func_sql_exp (
@@ -307,7 +313,8 @@ Change Log
         indx         IN           INT,
         txtin        VARCHAR2,
         sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER
+        rows_added   OUT          PLS_INTEGER,
+        ruleid       IN           VARCHAR2
     );
 
     PROCEDURE build_cond_sql_exp (
@@ -315,8 +322,13 @@ Change Log
         indx         PLS_INTEGER,
         txtin        IN           VARCHAR2,
         sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER
+        rows_added   OUT          PLS_INTEGER,
+        ruleid       IN           VARCHAR2
     );
+
+    PROCEDURE parse_rpipe_to_rdoc (
+        rdoc OUT CLOB
+    ); 
 
     PROCEDURE parse_ruleblocks (
         blockid VARCHAR2
@@ -785,7 +797,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             varid,
             is_sub,
             agg_func,
-            func_param
+            func_param,
+            ruleid
         BULK COLLECT
         INTO rmanobj
         FROM
@@ -918,6 +931,66 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END LOOP;
 
     END get_composite_sql;
+    
+    
+    FUNCTION rstack_row_to_human_code (
+        rstack_ruleid IN VARCHAR2
+    ) RETURN VARCHAR2 
+    AS
+        rst     rman_stack%rowtype;  
+        func    varchar2(100);
+        cmpstat varchar2(4000):='';
+    BEGIN
+            
+        SELECT * INTO rst 
+        FROM rman_stack
+        WHERE ruleid=rstack_ruleid
+        AND varid IS NOT NULL
+        ;
+    
+    
+    
+    
+    IF rst.agg_func IS NOT NULL THEN
+                IF rst.agg_func='BIND' THEN
+                    cmpstat := 
+                       ' Take the value of  '
+                       || substr(rst.select_clause,instr(rst.select_clause,',')+1,instr(rst.select_clause,'AS')-5)
+                       || ' from the external ruleblock called '
+                       || rst.from_clause
+                       || ' and call it "'
+                       || rst.varid
+                       || '" '
+                       || chr(10);
+                ELSE
+                    cmpstat :=                     
+                       ' Take '
+                       || rst.agg_func 
+                       || ' for '
+                       || rst.where_clause
+                       || ' and call it "'
+                       || rst.varid
+                       || '" '
+                       || chr(10);
+                END IF;
+            
+            ELSE
+                cmpstat := 
+                       ' Decide '
+                       || rst.agg_func 
+                       || ' for '
+                       || rst.where_clause
+                       || ' and call it "'
+                       || rst.varid
+                       || '" '
+                       || chr(10);
+            
+                
+            END IF;
+    RETURN cmpstat;    
+
+    END rstack_row_to_human_code;
+    
 
     PROCEDURE insert_rman (
         indx             INT,
@@ -929,7 +1002,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         is_sub           INT,
         sqlstat          OUT              NVARCHAR2,
         agg_func         VARCHAR2,
-        func_param       VARCHAR2
+        func_param       VARCHAR2,
+        ruleid           VARCHAR2
     ) IS
     BEGIN
         INSERT INTO rman_stack (
@@ -941,7 +1015,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             varid,
             is_sub,
             agg_func,
-            func_param
+            func_param,
+            ruleid
         ) VALUES (
             indx,
             where_clause,
@@ -951,7 +1026,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             varid,
             is_sub,
             agg_func,
-            func_param
+            func_param,
+            ruleid
         );
 
         sqlstat := 'rows added :' || SQL%rowcount;
@@ -1650,7 +1726,8 @@ FUNCTION map_to_tmplt2 (
         indx         IN           INT,
         txtin        VARCHAR2,
         sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER
+        rows_added   OUT          PLS_INTEGER,
+        ruleid       IN           VARCHAR2
     ) IS
 
         idx_                   NUMBER;
@@ -1767,7 +1844,7 @@ FUNCTION map_to_tmplt2 (
                           || ' ';
 
             groupby_txt := '';
-            insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam);
+            insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid);
 
             insert_ruleblocks_dep(blockid, tbl, ext_col_name, NULL, func, assnvar);
             rows_added := 1;
@@ -1799,7 +1876,7 @@ FUNCTION map_to_tmplt2 (
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                     );
 
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
@@ -1842,7 +1919,7 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 1;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, NULL, is_sub_val, sqlstat, func, funcparam
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, NULL, is_sub_val, sqlstat, func, funcparam,ruleid
                         );
 
                         insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
@@ -1863,7 +1940,7 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 0;
-                        insert_rman(indx + 1, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        insert_rman(indx + 1, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                         );
 
                         rows_added := 2;
@@ -1951,7 +2028,7 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                         );
 
                         rows_added := 1;
@@ -1973,7 +2050,7 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := entity_id_col;
                         is_sub_val := 0;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                         );
 
                         rows_added := 1;
@@ -2008,7 +2085,7 @@ FUNCTION map_to_tmplt2 (
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                     );
 
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
@@ -2031,7 +2108,7 @@ FUNCTION map_to_tmplt2 (
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                     );
 
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
@@ -2074,7 +2151,7 @@ FUNCTION map_to_tmplt2 (
                                    || '.'
                                    || entity_id_col;
                     is_sub_val := 2;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                     );
 
                     rows_added := 1;
@@ -2161,7 +2238,7 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
                         );
 
                         rows_added := 1;
@@ -2190,7 +2267,8 @@ FUNCTION map_to_tmplt2 (
         indx         PLS_INTEGER,
         txtin        IN           VARCHAR2,
         sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER
+        rows_added   OUT          PLS_INTEGER,
+        ruleid       IN           VARCHAR2
     ) IS
 
         t1              tbl_type;
@@ -2267,7 +2345,7 @@ FUNCTION map_to_tmplt2 (
                            || ' ';
 
             push_vstack(avn, indx, 1, NULL, NULL);
-            insert_rman(indx, '', from_clause, select_text, '', avn, 0, sqlstat, '', '');
+            insert_rman(indx, '', from_clause, select_text, '', avn, 0, sqlstat, '', '',ruleid);
 
             insert_ruleblocks_dep(blockid, NULL, NULL, NULL, NULL, avn);
             rows_added := 1;
@@ -2423,7 +2501,9 @@ FUNCTION map_to_tmplt2 (
             ELSE
                 RAISE;
             END IF;
-    END;
+    END build_compiler_exp ;
+    
+    
 
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
@@ -2475,7 +2555,7 @@ FUNCTION map_to_tmplt2 (
                         IF instr(ss, ':') = 0 AND instr(ss, '=>') > 0 THEN
                         -- functional form
                             rows_added := 0;
-                            build_func_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added);
+                            build_func_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added,rpipe_col(i).ruleid);
                             indx := indx + rows_added;
                         ELSIF instr(ss, '#') = 1 THEN
                         -- Compiler directive
@@ -2483,7 +2563,7 @@ FUNCTION map_to_tmplt2 (
                         ELSIF instr(ss, ':') > 0 THEN
                         -- Conditional form
                             rows_added := 0;
-                            build_cond_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added);
+                            build_cond_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added,rpipe_col(i).ruleid);
                             indx := indx + rows_added;
                         END IF;
 
@@ -2510,6 +2590,84 @@ FUNCTION map_to_tmplt2 (
             dbms_output.put_line(dbms_utility.format_error_stack);
             RAISE;
     END parse_rpipe;
+    
+    PROCEDURE parse_rpipe_to_rdoc (
+        rdoc OUT CLOB
+    ) AS
+        rpipe_col        rpipe_tbl_type;
+        rstack_row       rman_stack%rowtype;
+        indx             PLS_INTEGER;
+        indxtmp          VARCHAR2(100);
+        rows_added       PLS_INTEGER;
+        statements_tbl   tbl_type;
+        rs               VARCHAR2(4000);
+        ss               VARCHAR2(4000);
+
+    BEGIN
+        SELECT
+            ruleid,
+            rulebody,
+            blockid
+        BULK COLLECT
+        INTO rpipe_col
+        FROM
+            rman_rpipe
+        ORDER BY
+            ruleid;
+            
+        
+    
+    -- loop though each line
+        FOR i IN 1..rpipe_col.count LOOP
+        
+            rs := rpipe_col(i).rulebody;
+        
+        
+        -- implied semi colon terminator added
+            IF instr(rs, ';') = 0 THEN
+                rs := rs || ';';
+            END IF;
+
+            IF instr(rs, ';') > 0 THEN
+                statements_tbl := rman_pckg.splitstr(rs, ';');
+            -- loop through each statement in rule line
+                FOR j IN 1..statements_tbl.count LOOP
+                    ss := statements_tbl(j);
+                    IF length(trim(ss)) > 0 THEN
+                    --aggregate declaration
+                    --identified by :
+                        IF instr(ss, ':') = 0 AND instr(ss, '=>') > 0 THEN
+                        -- functional form
+                            rdoc:=rdoc || chr(10) || rpipe_col(i).ruleid || '-> functional form' || rstack_row_to_human_code(rpipe_col(i).ruleid) || chr(10);
+                            
+
+                        ELSIF instr(ss, '#') = 1 THEN
+                        -- Compiler directive
+                            rdoc:=rdoc || chr(10) || rpipe_col(i).ruleid || '-> compiler directive';
+                        
+--                            build_compiler_exp(rpipe_col(i).blockid, indx, ss);
+                        ELSIF instr(ss, ':') > 0 THEN
+                        -- Conditional form
+                            rdoc:=rdoc || chr(10) || rpipe_col(i).ruleid || '-> conditional form';
+
+                        END IF;
+
+                    END IF;
+
+                END LOOP;
+
+            END IF;
+
+        END LOOP;
+
+
+        dbms_output.put_line('rdoc ->' || chr(10)
+                             || rdoc);
+
+  
+    END parse_rpipe_to_rdoc;
+    
+    
 
     PROCEDURE parse_ruleblocks (
         blockid VARCHAR2
@@ -2547,7 +2705,7 @@ FUNCTION map_to_tmplt2 (
             rb := trim_comments(trim(rbtbl(i)));
             IF length(rb) > 0 THEN
         
---dbms_output.put_line('block '|| i || '-- ' || rb);
+    --dbms_output.put_line('block '|| i || '-- ' || rb);
                 INSERT INTO rman_rpipe VALUES (
                     blockid
                     || lpad(i, 5, 0),

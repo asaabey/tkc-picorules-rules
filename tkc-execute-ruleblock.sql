@@ -24,10 +24,10 @@ BEGIN
 
 --rman_pckg.compile_ruleblock('rrt',ret_val);
 --
---rman_pckg.compile_ruleblock(
---    bid_in =>'egfr_metrics',
---    return_code => ret_val
---);
+rman_pckg.compile_ruleblock(
+    bid_in =>'ckd',
+    return_code => ret_val
+);
 
 
 /*
@@ -67,9 +67,9 @@ BEGIN
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 --
 --rman_pckg.execute_ruleblock(
---        bid_in => 'at_risk_ckd',
+--        bid_in => 'hb_graph',
 --        create_wide_tbl => 1,
---        push_to_long_tbl =>0,
+--        push_to_long_tbl =>1,
 --        push_to_long_tbl2=>0,
 --        recompile=>1,
 --        return_code=>ret_val
@@ -85,7 +85,7 @@ BEGIN
 --        rman_pckg.execute_active_ruleblocks;
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');

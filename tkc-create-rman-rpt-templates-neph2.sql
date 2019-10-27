@@ -308,4 +308,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <<br>><<xygraph>><</xygraph>><<br>>
     '
     );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002','graph_hb','hb_graph',671100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Temporal variation of Haemoglobin  
+    Hb g/L against time
+    <<br>><<xygraph>><</xygraph>><<br>>
+    '
+    );
 @"tkc-create-package-rman-1.sql";
