@@ -174,7 +174,6 @@ Change Log
 28/10/2019  added new function parse_rpipe_to_rdoc
 28/10/2019  added new function rstack_row_to_human_code
 */
-
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
     TYPE rpipe_tbl_type IS
@@ -208,6 +207,21 @@ Change Log
     val_col CONSTANT VARCHAR2(32) := 'VAL';
     dt_col CONSTANT VARCHAR2(32) := 'DT';
     def_tbl_name CONSTANT VARCHAR2(32) := 'EADV';
+    TYPE func_exp_type IS RECORD (
+        func VARCHAR2(32),
+        funcparam PLS_INTEGER,
+        funcparam_str VARCHAR2(400),
+        att VARCHAR2(4000),
+        att_str VARCHAR2(256),
+        tbl VARCHAR2(100),
+        prop VARCHAR2(100),
+        assnvar VARCHAR2(100),
+        avn VARCHAR2(100),
+        predicate VARCHAR2(4000),
+        constparam VARCHAR2(4000),
+        left_tbl_name VARCHAR2(100),
+        ext_col_name VARCHAR2(4000)
+    );
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
     );
@@ -215,9 +229,8 @@ Change Log
     PROCEDURE get_composite_sql (
         cmpstat OUT NVARCHAR2
     );
-    FUNCTION rstack_row_to_human_code (
-        rstack_ruleid IN VARCHAR2
-    ) RETURN VARCHAR2;
+
+   
 
     FUNCTION sql_predicate (
         att_str VARCHAR2
@@ -328,7 +341,7 @@ Change Log
 
     PROCEDURE parse_rpipe_to_rdoc (
         rdoc OUT CLOB
-    ); 
+    );
 
     PROCEDURE parse_ruleblocks (
         blockid VARCHAR2
@@ -931,65 +944,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END LOOP;
 
     END get_composite_sql;
-    
-    
-    FUNCTION rstack_row_to_human_code (
-        rstack_ruleid IN VARCHAR2
-    ) RETURN VARCHAR2 
-    AS
-        rst     rman_stack%rowtype;  
-        func    varchar2(100);
-        cmpstat varchar2(4000):='';
-    BEGIN
-            
-        SELECT * INTO rst 
-        FROM rman_stack
-        WHERE ruleid=rstack_ruleid
-        AND varid IS NOT NULL
-        ;
-    
-    
-    
-    
-    IF rst.agg_func IS NOT NULL THEN
-                IF rst.agg_func='BIND' THEN
-                    cmpstat := 
-                       ' Take the value of  '
-                       || substr(rst.select_clause,instr(rst.select_clause,',')+1,instr(rst.select_clause,'AS')-5)
-                       || ' from the external ruleblock called '
-                       || rst.from_clause
-                       || ' and call it "'
-                       || rst.varid
-                       || '" '
-                       || chr(10);
-                ELSE
-                    cmpstat :=                     
-                       ' Take '
-                       || rst.agg_func 
-                       || ' for '
-                       || rst.where_clause
-                       || ' and call it "'
-                       || rst.varid
-                       || '" '
-                       || chr(10);
-                END IF;
-            
-            ELSE
-                cmpstat := 
-                       ' Decide '
-                       || rst.agg_func 
-                       || ' for '
-                       || rst.where_clause
-                       || ' and call it "'
-                       || rst.varid
-                       || '" '
-                       || chr(10);
-            
-                
-            END IF;
-    RETURN cmpstat;    
 
-    END rstack_row_to_human_code;
     
 
     PROCEDURE insert_rman (
@@ -1413,7 +1368,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN ret_tmplt;
     END map_to_tmplt;
 
-FUNCTION map_to_tmplt2 (
+    FUNCTION map_to_tmplt2 (
         jstr VARCHAR2,
         tmplt VARCHAR2
     ) RETURN VARCHAR2 AS
@@ -1589,7 +1544,6 @@ FUNCTION map_to_tmplt2 (
         RETURN ret_tmplt;
     END map_to_tmplt2;
 
-
     FUNCTION get_composition_by_eid (
         eid_in INT,
         nlc_id VARCHAR2
@@ -1639,13 +1593,11 @@ FUNCTION map_to_tmplt2 (
             cte1
         GROUP BY
             eid;
-        
-        composition := replace(composition,chr(38) || 'lt;','<');
-        
-        composition := replace(composition,chr(38) || 'gt;','>');
-        
-        
 
+        composition := replace(composition, chr(38)
+                                            || 'lt;', '<');
+        composition := replace(composition, chr(38)
+                                            || 'gt;', '>');
         RETURN composition;
 --    EXCEPTION
 --        WHEN eid_not_found THEN
@@ -1721,6 +1673,77 @@ FUNCTION map_to_tmplt2 (
         END IF;
     END push_vstack;
 
+    PROCEDURE decompose_func_exp (
+        txtin           IN              VARCHAR2,
+        tbl             OUT             VARCHAR2,
+        att             OUT             VARCHAR2,
+        prop            OUT             VARCHAR2,
+        func            OUT             VARCHAR2,
+        funcparam       OUT             VARCHAR2,
+        funcparam_str   OUT             VARCHAR2,
+        predicate       OUT             VARCHAR2,
+        ext_col_name    OUT             VARCHAR2,
+        constparam      OUT             VARCHAR2
+    ) AS
+        varr tbl_type;
+    BEGIN
+        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '[', ']');
+
+        IF varr.count = 5 THEN
+            tbl := upper(varr(1));
+            att := varr(2);
+            prop := varr(3);
+            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
+
+            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+
+            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+
+            IF upper(substr(varr(5), 1, 5)) = 'WHERE' THEN
+                predicate := ' AND '
+                             || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
+            END IF;
+
+        ELSIF varr.count = 4 THEN
+            tbl := upper(varr(1));
+            att := varr(2);
+            prop := varr(3);
+            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
+
+            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+
+            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+
+            ext_col_name := varr(2);
+        ELSIF varr.count = 3 THEN
+            tbl := upper(varr(1));
+            att := varr(2);
+            prop := varr(3);
+            func := 'LAST';
+            funcparam := 0;
+        ELSIF varr.count = 2 THEN
+            tbl := upper(varr(1));
+            att := varr(2);
+            prop := val_col;
+            func := 'LAST';
+            funcparam := 0;
+        ELSIF varr.count = 1 THEN
+            IF upper(substr(varr(1), 1, 5)) = 'CONST' THEN
+                tbl := def_tbl_name;
+                func := 'CONST';
+                constparam := regexp_substr(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
+
+            ELSE
+                tbl := def_tbl_name;
+                att := varr(1);
+                prop := val_col;
+                func := 'LAST';
+                funcparam := 0;
+            END IF;
+        END IF;
+
+    END decompose_func_exp;
+
     PROCEDURE build_func_sql_exp (
         blockid      IN           VARCHAR2,
         indx         IN           INT,
@@ -1762,64 +1785,65 @@ FUNCTION map_to_tmplt2 (
     
     
     -- parse txt string
-        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '[', ']');
-
-        IF varr.count = 5 THEN
-            tbl := upper(varr(1));
-            att := varr(2);
-            prop := varr(3);
-            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
-
---            funcparam := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), 0);
-
-            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
-
-            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
-
-            IF upper(substr(varr(5), 1, 5)) = 'WHERE' THEN
-                predicate := ' AND '
-                             || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
-            END IF;
-
-        ELSIF varr.count = 4 THEN
-            tbl := upper(varr(1));
-            att := varr(2);
-            prop := varr(3);
-            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
-
---            funcparam := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), 0);
-
-            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
-
-            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
-
-            ext_col_name := varr(2);
-        ELSIF varr.count = 3 THEN
-            tbl := upper(varr(1));
-            att := varr(2);
-            prop := varr(3);
-            func := 'LAST';
-            funcparam := 0;
-        ELSIF varr.count = 2 THEN
-            tbl := upper(varr(1));
-            att := varr(2);
-            prop := val_col;
-            func := 'LAST';
-            funcparam := 0;
-        ELSIF varr.count = 1 THEN
-            IF upper(substr(varr(1), 1, 5)) = 'CONST' THEN
-                tbl := def_tbl_name;
-                func := 'CONST';
-                constparam := regexp_substr(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
-
-            ELSE
-                tbl := def_tbl_name;
-                att := varr(1);
-                prop := val_col;
-                func := 'LAST';
-                funcparam := 0;
-            END IF;
-        END IF;
+--        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '[', ']');
+--
+--        IF varr.count = 5 THEN
+--            tbl := upper(varr(1));
+--            att := varr(2);
+--            prop := varr(3);
+--            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
+--
+--
+--            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+--
+--            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+--
+--            IF upper(substr(varr(5), 1, 5)) = 'WHERE' THEN
+--                predicate := ' AND '
+--                             || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
+--            END IF;
+--
+--        ELSIF varr.count = 4 THEN
+--            tbl := upper(varr(1));
+--            att := varr(2);
+--            prop := varr(3);
+--            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
+--
+--
+--
+--            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+--
+--            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+--
+--            ext_col_name := varr(2);
+--        ELSIF varr.count = 3 THEN
+--            tbl := upper(varr(1));
+--            att := varr(2);
+--            prop := varr(3);
+--            func := 'LAST';
+--            funcparam := 0;
+--        ELSIF varr.count = 2 THEN
+--            tbl := upper(varr(1));
+--            att := varr(2);
+--            prop := val_col;
+--            func := 'LAST';
+--            funcparam := 0;
+--        ELSIF varr.count = 1 THEN
+--            IF upper(substr(varr(1), 1, 5)) = 'CONST' THEN
+--                tbl := def_tbl_name;
+--                func := 'CONST';
+--                constparam := regexp_substr(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
+--
+--            ELSE
+--                tbl := def_tbl_name;
+--                att := varr(1);
+--                prop := val_col;
+--                func := 'LAST';
+--                funcparam := 0;
+--            END IF;
+--        END IF;
+        decompose_func_exp(txtin => txtin, tbl => tbl, att => att, prop => prop, func => func, funcparam => funcparam, funcparam_str
+        => funcparam_str, predicate => predicate, ext_col_name => ext_col_name, constparam => constparam);
 
         att0 := att;
         att := sql_predicate(att);
@@ -1844,7 +1868,8 @@ FUNCTION map_to_tmplt2 (
                           || ' ';
 
             groupby_txt := '';
-            insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid);
+            insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam, ruleid
+            );
 
             insert_ruleblocks_dep(blockid, tbl, ext_col_name, NULL, func, assnvar);
             rows_added := 1;
@@ -1876,8 +1901,8 @@ FUNCTION map_to_tmplt2 (
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                    );
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    , ruleid);
 
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
                     rows_added := 1;
@@ -1919,8 +1944,8 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 1;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, NULL, is_sub_val, sqlstat, func, funcparam,ruleid
-                        );
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, NULL, is_sub_val, sqlstat, func, funcparam
+                        , ruleid);
 
                         insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
                         where_txt := 'rank=' || rankindx;
@@ -1940,8 +1965,8 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 0;
-                        insert_rman(indx + 1, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                        );
+                        insert_rman(indx + 1, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        , ruleid);
 
                         rows_added := 2;
                         push_vstack(assnvar, indx + 1, 2, NULL, NULL);
@@ -2028,8 +2053,8 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                        );
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        , ruleid);
 
                         rows_added := 1;
                         push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
@@ -2050,8 +2075,8 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := entity_id_col;
                         is_sub_val := 0;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                        );
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        , ruleid);
 
                         rows_added := 1;
                         push_vstack(assnvar, indx, 2, NULL, NULL);
@@ -2085,8 +2110,8 @@ FUNCTION map_to_tmplt2 (
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                    );
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    , ruleid);
 
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
                     rows_added := 1;
@@ -2108,8 +2133,8 @@ FUNCTION map_to_tmplt2 (
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                    );
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    , ruleid);
 
                     insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
                     rows_added := 1;
@@ -2151,8 +2176,8 @@ FUNCTION map_to_tmplt2 (
                                    || '.'
                                    || entity_id_col;
                     is_sub_val := 2;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                    );
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    , ruleid);
 
                     rows_added := 1;
                     push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
@@ -2238,8 +2263,8 @@ FUNCTION map_to_tmplt2 (
 
                         groupby_txt := '';
                         is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam,ruleid
-                        );
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                        , ruleid);
 
                         rows_added := 1;
                         push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
@@ -2345,7 +2370,7 @@ FUNCTION map_to_tmplt2 (
                            || ' ';
 
             push_vstack(avn, indx, 1, NULL, NULL);
-            insert_rman(indx, '', from_clause, select_text, '', avn, 0, sqlstat, '', '',ruleid);
+            insert_rman(indx, '', from_clause, select_text, '', avn, 0, sqlstat, '', '', ruleid);
 
             insert_ruleblocks_dep(blockid, NULL, NULL, NULL, NULL, avn);
             rows_added := 1;
@@ -2501,9 +2526,7 @@ FUNCTION map_to_tmplt2 (
             ELSE
                 RAISE;
             END IF;
-    END build_compiler_exp ;
-    
-    
+    END build_compiler_exp;
 
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
@@ -2555,7 +2578,8 @@ FUNCTION map_to_tmplt2 (
                         IF instr(ss, ':') = 0 AND instr(ss, '=>') > 0 THEN
                         -- functional form
                             rows_added := 0;
-                            build_func_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added,rpipe_col(i).ruleid);
+                            build_func_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added, rpipe_col(i).ruleid);
+
                             indx := indx + rows_added;
                         ELSIF instr(ss, '#') = 1 THEN
                         -- Compiler directive
@@ -2563,7 +2587,8 @@ FUNCTION map_to_tmplt2 (
                         ELSIF instr(ss, ':') > 0 THEN
                         -- Conditional form
                             rows_added := 0;
-                            build_cond_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added,rpipe_col(i).ruleid);
+                            build_cond_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added, rpipe_col(i).ruleid);
+
                             indx := indx + rows_added;
                         END IF;
 
@@ -2590,10 +2615,11 @@ FUNCTION map_to_tmplt2 (
             dbms_output.put_line(dbms_utility.format_error_stack);
             RAISE;
     END parse_rpipe;
-    
+
     PROCEDURE parse_rpipe_to_rdoc (
         rdoc OUT CLOB
     ) AS
+
         rpipe_col        rpipe_tbl_type;
         rstack_row       rman_stack%rowtype;
         indx             PLS_INTEGER;
@@ -2602,7 +2628,12 @@ FUNCTION map_to_tmplt2 (
         statements_tbl   tbl_type;
         rs               VARCHAR2(4000);
         ss               VARCHAR2(4000);
-
+        func_exp         func_exp_type;
+        cond_exp         VARCHAR2(4000);
+        func_name        VARCHAR2(30);
+        func_param       VARCHAR2(4000);
+        param_key        VARCHAR2(100);
+        param_value      VARCHAR2(4000);
     BEGIN
         SELECT
             ruleid,
@@ -2618,8 +2649,8 @@ FUNCTION map_to_tmplt2 (
         
     
     -- loop though each line
+
         FOR i IN 1..rpipe_col.count LOOP
-        
             rs := rpipe_col(i).rulebody;
         
         
@@ -2633,25 +2664,142 @@ FUNCTION map_to_tmplt2 (
             -- loop through each statement in rule line
                 FOR j IN 1..statements_tbl.count LOOP
                     ss := statements_tbl(j);
+                    
+                            
                     IF length(trim(ss)) > 0 THEN
+                    
                     --aggregate declaration
                     --identified by :
                         IF instr(ss, ':') = 0 AND instr(ss, '=>') > 0 THEN
                         -- functional form
-                            rdoc:=rdoc || chr(10) || rpipe_col(i).ruleid || '-> functional form' || rstack_row_to_human_code(rpipe_col(i).ruleid) || chr(10);
+                            decompose_func_exp(txtin => ss, func => func_exp.func, funcparam => func_exp.funcparam, funcparam_str
+                            => func_exp.funcparam_str, att => func_exp.att, tbl => func_exp.tbl, prop => func_exp.prop, predicate
+                            => func_exp.predicate, constparam => func_exp.constparam, ext_col_name => func_exp.ext_col_name);
+
+                            func_exp.avn := trim(substr(ss, 1, instr(ss, '=>', 1, 1) - length('=>')));
+                            
+                            SELECT * INTO rstack_row FROM rman_stack WHERE ruleid= rpipe_col(i).ruleid AND varid IS NOT NULL;
+                                    
+                            rdoc := rdoc || chr(10)  || i || '. ';
+                            
+                            rdoc := rdoc
+                                    || 'READ the '
+                                    || func_exp.func
+                                    || ' '
+                                    || func_exp.prop
+                                    || ' of '
+                                    || func_exp.att;
+
+                            rdoc := rdoc
+                                    || ' and ASSIGN TO "'
+                                    || func_exp.avn
+                                    || '"'
+                                    || chr(10);
+                                    
+                            rdoc := rdoc || chr(10) || '   pIcoScript : '  || ss || chr(10);
+                            
+                                    
+                            rdoc := rdoc || chr(10)
+                                    || '   SQL construct :'
+                                    || chr(10)
+                                    || '   SELECT ' || rstack_row.select_clause || chr(10)
+                                    || '   FROM ' || rstack_row.from_clause || chr(10)
+                                    || '   WHERE ' || NVL(rstack_row.where_clause,'.') || chr(10)
+                                    || '   GROUP BY ' || NVL(rstack_row.groupby_clause,'.') || chr(10)
+                                    || chr(10);
+                                    
                             
 
                         ELSIF instr(ss, '#') = 1 THEN
                         -- Compiler directive
-                            rdoc:=rdoc || chr(10) || rpipe_col(i).ruleid || '-> compiler directive';
+                            
+                           
+                            func_name := upper(regexp_substr(ss, '(#)(\w+)(\(([^)]+)\))', 1, 1, 'i', 2));
+
+                            func_param := regexp_substr(ss, '(\()([^)]+)', 1, 1, 'i', 2);
+                            
+                            param_key := lower(trim(substr(func_param, 1, instr(func_param, ',') - 1)));
+
+                            param_value := substr(func_param, instr(func_param, ',') + 1);        
+                            
+                            CASE func_name
+                                    WHEN 'DEFINE_ATTRIBUTE' THEN
+                                        rdoc := rdoc
+                                        || chr(10)
+                                        || param_key 
+                                        || ' label as  : '
+                                        || JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
+                                        || chr(10);
+                                    WHEN 'DEFINE_RULEBLOCK' THEN
+                                        
+                                        rdoc := rdoc
+                                        || chr(10)
+                                        || 'Description: '
+                                        || JSON_VALUE(param_value, '$.description' RETURNING VARCHAR2)
+                                        || chr(10)
+                                        || 'Version: '
+                                        || JSON_VALUE(param_value, '$.version' RETURNING VARCHAR2)
+                                        || chr(10)
+                                        || 'Author: '
+                                        || JSON_VALUE(param_value, '$.rule_author' RETURNING VARCHAR2)
+                                        || chr(10);
+                                    
+                                    WHEN 'DOC' THEN
+                                        
+                                        rdoc := rdoc
+                                        || chr(10)
+                                        || initcap(trim(both '"' from trim(param_value)))
+                                        || chr(10);
+                                        
+                                    ELSE
+                                    dbms_output.put_line('undefined comp dir');
+                            END CASE;
+                          
+                            
                         
---                            build_compiler_exp(rpipe_col(i).blockid, indx, ss);
+
                         ELSIF instr(ss, ':') > 0 THEN
                         -- Conditional form
-                            rdoc:=rdoc || chr(10) || rpipe_col(i).ruleid || '-> conditional form';
+                            func_exp.avn := trim(substr(ss, 1, instr(ss, ':', 1, 1) - length(':')));
+
+                            SELECT * INTO rstack_row FROM rman_stack WHERE ruleid= rpipe_col(i).ruleid AND varid IS NOT NULL;
+
+                            rdoc := rdoc || chr(10)  || i || '. ';
+                            
+                            rdoc := rdoc
+                                    || 'EVALUATE and ASSIGN TO "'
+                                    || func_exp.avn
+                                    || '"'
+                                    || chr(10);
+                            
+                            cond_exp := trim(substr(ss, instr(ss, ':') + 1));
+                            
+                            
+                            
+                            cond_exp := regexp_replace(cond_exp,'},',chr(10));
+                            cond_exp := regexp_replace(cond_exp,'{=>','   ELSE ASSIGN ');
+                            cond_exp := regexp_replace(cond_exp,'=>',' then ASSIGN ');
+                            cond_exp := regexp_replace(cond_exp,'{','   IF ');
+                            cond_exp := regexp_replace(cond_exp,'}',chr(10));
+                            rdoc := rdoc
+                                    || cond_exp;
+                                    
+                            rdoc := rdoc || chr(10) || '   pIcoScript : '  || ss || chr(10);
+                            
+                            rdoc := rdoc || chr(10)
+                                    || '   SQL construct :'
+                                    || chr(10)
+                                    || '   SELECT ' || rstack_row.select_clause || chr(10)
+                                    || '   FROM ' || rstack_row.from_clause || chr(10)
+                                    || '   WHERE ' || rstack_row.where_clause || chr(10)
+                                    || '   GROUP BY ' || rstack_row.groupby_clause || chr(10)
+                                    || chr(10);
+                            
+                            
 
                         END IF;
-
+                        
+                        
                     END IF;
 
                 END LOOP;
@@ -2660,14 +2808,10 @@ FUNCTION map_to_tmplt2 (
 
         END LOOP;
 
-
-        dbms_output.put_line('rdoc ->' || chr(10)
+        dbms_output.put_line('rdoc ->'
+                             || chr(10)
                              || rdoc);
-
-  
     END parse_rpipe_to_rdoc;
-    
-    
 
     PROCEDURE parse_ruleblocks (
         blockid VARCHAR2

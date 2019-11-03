@@ -18,16 +18,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to detect chronic disease entities */
+        /* Ruleblock to detect diabetes */
         
         #define_ruleblock(cd_dm,
             {
-                description: "Algorithm to assess diabetes mellitus",
-                version: "0.0.1.1",
+                description: "Ruleblock to detect diabetes",
+                version: "0.0.2.1",
                 blockid: "cd_dm",
                 target_table:"rout_cd_dm",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"dm",
                 def_predicate:">0",
@@ -36,7 +37,9 @@ BEGIN
             }
         );
         
-        
+        #doc(
+            "External bindings"
+        );
         
         cp_lv => eadv.careplan_h9_v1.val.last();
         
@@ -46,25 +49,43 @@ BEGIN
         
         cp_dm_ld : {cp_dm>0 => cp_ld};
         
-        /*  Calculate iq    */
+        
+        #doc(
+            "Calculate information quantity"
+        );
+        
         iq_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(dt>sysdate-730);
         
         iq_tier : {iq_hba1c>1 => 2},{iq_hba1c>0 => 1},{=>0};
         
-        /*  Diabetes diagnosis*/
-        /*  Code criteria   */
+        #doc(
+            "Determine diagnosis by code, lab and rxn criteria"
+        );
+        
+        #doc(
+            "code criteria"
+        );
+        
+        
         dm_icd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.count(0);
         
         dm_icpc => eadv.[icpc_t89%,icpc_t90%].dt.count(0);
         
         dm_code_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
         
+        #doc(
+            "lab criteria"
+        );
         
-        /*  Lab criteria   */
+        
+        
         dm_lab => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>65/10);
         dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min().where(val>65/10);
         
-        /*  Rxn cirteria   */
+        #doc(
+            "rxn criteria"
+        );
+        
         
         dm_rxn => eadv.[rxnc_a10%].dt.count(0).where(val=1);
         dm_rxn_su => eadv.[rxnc_a10bb].dt.count(0).where(val=1);
@@ -78,6 +99,10 @@ BEGIN
         dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
                
         
+        #doc(
+            "Determine dm chronology"
+        );
+        
         
         dm_fd :{coalesce(dm_code_fd,dm_lab_fd) is not null => 
                     (least(nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
@@ -87,11 +112,13 @@ BEGIN
 
         dm_type_1 => eadv.[icpc_t89%].dt.count(0);
         
-        /*  Diabetic complications */
-        /* Diabetic retinopathy */
+        #doc(
+            "Determine diabetic complications including retinopathy, neuropathy, dm foot"
+        );
+        
         dm_micvas_retino => eadv.[icd_e11_3%,icpc_f83002].dt.count(0);
         
-        /* Diabetic neuropathy,includes ulcer */
+        
         dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.count(0);
         
         dm_micvas :{ greatest(dm_micvas_neuro,dm_micvas_retino)>0 => 1},{=>0};
@@ -120,7 +147,9 @@ BEGIN
         
         dm_dx_code : {dm=1 => (dm*1000 + dm_type*100 + dm_vintage_cat*10 + dm_micvas)},{=>0};
         
-        /*  Diabetic glycaemic control */
+        #doc(
+            "Diabetic glycaemic control"
+        );
         
         hba1c_n_tot0 => eadv.lab_bld_hba1c_ngsp.dt.count();
         hba1c_n_opt0 => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8);
@@ -141,6 +170,8 @@ BEGIN
                             { hba1c_n0_val >=6 and hba1c_n0_val <8 => 2},
                             { hba1c_n0_val >=8 and hba1c_n0_val <10 => 3},
                             { hba1c_n0_val >=10 =>4},{=>0};
+        
+        
         
         #define_attribute(
             dm,
@@ -175,11 +206,12 @@ BEGIN
         #define_ruleblock(cd_htn,
             {
                 description: "Algorithm to assess hypertension",
-                version: "0.0.1.1",
+                version: "0.0.2.1",
                 blockid: "cd_htn",
                 target_table:"rout_cd_htn",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"htn",
                 def_predicate:">0",
@@ -189,27 +221,39 @@ BEGIN
             }
         );
         
+        #doc(
+            "Calculate iq"
+        );
         
-        /*  Calculate iq    */
         iq_sbp => eadv.obs_bp_systolic.val.count(0).where(dt>sysdate-730);
         
         iq_tier : {iq_sbp>1 => 2},{iq_sbp>0 => 1},{=>0};
         
-        /*  Hypertension diagnosis*/
-        /*  Code criteria   */
+        
+        #doc(
+            "Hypertension diagnosis: code criteria"
+        );
+        
         htn_icd => eadv.[icd_i10_%,icd_i15_%].dt.count(0);
         htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count(0);
         
         
-        /*  Observation criteria    */
+        #doc(
+            "Hypertension diagnosis: observation criteria"
+        );
         htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140 and dt>sysdate-730);
         
-        /*  Ancillary information for causality or treatment recom */
+        #doc(
+            "Ancillary information for causality"
+        );
+        
         bld_k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
         
         bld_k_state : {nvl(bld_k_val,0)>5.2 =>3},{nvl(bld_k_val,0)>4.0 =>2},{=>1};
         
-        /*  Rxn cirteria   */
+        #doc(
+            "Hypertension diagnosis: rxn criteria"
+        );
         htn_rxn_acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
         htn_rxn_arb => eadv.[rxnc_c09ca].dt.count(0).where(val=1);
         htn_rxn_bb => eadv.[rxnc_c07%].dt.count(0).where(val=1);
@@ -222,7 +266,10 @@ BEGIN
         
         htn_rxn : { coalesce(htn_rxn_acei, htn_rxn_arb, htn_rxn_bb, htn_rxn_ccb , htn_rxn_c02 , htn_rxn_diuretic_thiaz , htn_rxn_diuretic_loop) is not null =>1 },{=>0};
         
-        /*  Vintage */
+        #doc(
+            "Hypertension diagnosis: vintage"
+        );
+        
         htn_fd_code => eadv.[icd_i10_%,icd_i15_%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
         htn_fd_obs => eadv.obs_bp_systolic.dt.min().where(val>140);
         
@@ -233,7 +280,9 @@ BEGIN
         htn_type_2 => eadv.[icd_i15_%].dt.count(0);
         
         
-        /*  Hypertension complications */
+        #doc(
+            "Hypertension complications"
+        );
         
         htn_vintage_yr_ : { htn_fd is not null => round((sysdate-htn_fd)/365,0)},{=>0};
         
@@ -241,13 +290,10 @@ BEGIN
                             { htn_vintage_yr_>=10 and htn_vintage_yr_ <20 => 2 },
                             { htn_vintage_yr_>=20=> 3 },{=>0};
         
+        #doc(
+            "BP control"
+        );
         
-        
-        
-        
-        
-        
-        /*  Bp control */
         sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365); 
         mu_2 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
@@ -298,16 +344,17 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-        /*  Careplan analyser */
+        /*  Ruleblock to determine existing careplans*/
         
         #define_ruleblock(careplan,
             {
-                description: "Algorithm to assess careplan",
-                version: "0.0.1.1",
+                description: "Ruleblock to determine existing careplans",
+                version: "0.0.2.1",
                 blockid: "careplan",
                 target_table:"rout_careplan",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"careplan",
                 def_predicate:">0",
@@ -317,6 +364,11 @@ BEGIN
         );
         
         cp_l => eadv.careplan_h9_v1.val.lastdv();
+        
+        #doc(
+            "Assign binary careplan attributes based on positional values "
+        );
+        
         
         cp_cs : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-1,1))},{=>0};
         
@@ -351,11 +403,12 @@ BEGIN
         #define_ruleblock(cd_cardiac,
             {
                 description: "Algorithm to assess careplan",
-                version: "0.0.1.1",
+                version: "0.0.2.1",
                 blockid: "cd_cardiac",
                 target_table:"rout_cd_cardiac",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"cardiac",
                 def_predicate:">0",
@@ -365,7 +418,10 @@ BEGIN
         );
         
             
-            /* coronary insufficiency */
+            #doc(
+                "coronary insufficiency"
+            );
+            
             cabg => eadv.[icd_z95_1%,icpc_k54007].dt.MIN();
             
             cad_mi_icd => eadv.[icd_i21%,icd_i22%,icd_i23%].dt.min();
@@ -374,8 +430,9 @@ BEGIN
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();        
                      
-            
-            /* valvular heart disease */
+            #doc(
+                "valvular heart disease"
+            );
             
             vhd_mv_icd => eadv.[icd_i34_%,icd_i05%].dt.min();
             
@@ -388,13 +445,19 @@ BEGIN
             vhd_icpc => eadv.[icpc_k83%].dt.min();
             
             
-            /*  Other atherosclerotic disease */
+            #doc(
+                "Other atherosclerotic disease"
+            );
             
             cva => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
             
             pvd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min();
             
             
+            #doc(
+                "Medications:
+                Anti-platelet agents, anti-coagulation including NOAC, anti-arrhythmic, diuretics, lipid lowering"
+            );
             /* Medication */
             /*  antiplatelet agents */
             
@@ -466,16 +529,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to assess obesity  */
+        /* Ruleblock to assess obesity  */
         
         #define_ruleblock(cd_obesity,
             {
-                description: "Algorithm to assess obesity",
-                version: "0.0.1.1",
+                description: "Ruleblock to assess obesity",
+                version: "0.0.2.1",
                 blockid: "cd_cardiac",
                 target_table:"rout_cd_obesity",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"obesity",
                 def_predicate:">0",
@@ -499,6 +563,15 @@ BEGIN
         
         obs_dx_uncoded : {bmi>30 and greatest(obs_icd,obs_icpc)=0 =>1},{=>0};
         
+        #define_attribute(
+            obesity,
+                {
+                    label:"Obesity",
+                    desc:"Integer [0-1] if Obesity based on code and observation criteria",
+                    is_reportable:1,
+                    type:2
+                }
+        );
         
         
     ';
@@ -518,22 +591,27 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to assess at risk population for CKD */
+        /* Ruleblock to assess at risk population for CKD */
         
         #define_ruleblock(at_risk_ckd,
             {
-                description: "Algorithm to assess at_risk_ckd",
-                version: "0.0.1.1",
+                description: "Ruleblock to assess at_risk_ckd",
+                version: "0.0.2.1",
                 blockid: "at_risk_ckd",
                 target_table:"rout_at_risk_ckd",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"at_risk_ckd",
                 def_predicate:"",
                 exec_order:5
                 
             }
+        );
+        
+        #doc(
+            "External bindings"
         );
         
         ckd => rout_ckd.ckd.val.bind();
@@ -546,9 +624,12 @@ BEGIN
         
         cad => rout_cd_cardiac.cardiac.val.bind();
         
-    
-        
         obesity => rout_cd_obesity.obesity.val.bind();
+    
+        #doc(
+            "Gather risk factors from coding"
+        );
+        
         
         lab_ld => eadv.[lab_bld%].dt.max().where(dt > sysdate-730);
         
@@ -566,7 +647,9 @@ BEGIN
         
         aki => eadv.[icd_n17%].dt.count(0);
         
-        
+        #doc(
+            "Determine at risk for CKD, and active cohort"
+        );
             
         at_risk_ckd : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
         
@@ -576,6 +659,17 @@ BEGIN
             at_risk_ckd,
                 {
                     label:"At risk for CKD",
+                    is_reportable:1,
+                    is_trigger:1,
+                    type:2,
+                    priority:1
+                }
+        );
+        
+        #define_attribute(
+            tkc_active_cohort,
+                {
+                    label:"TKC active cohort",
                     is_reportable:1,
                     is_trigger:1,
                     type:2,
@@ -604,22 +698,27 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to assess at risk population for CKD */
+        /* Ruleblock to assess hypertension pharmacology recommendations */
         
         #define_ruleblock(htn_rcm,
             {
-                description: "Algorithm to assess hypertension recommendations",
-                version: "0.0.1.1",
+                description: "Ruleblock to assess hypertension pharmacology recommendations",
+                version: "0.0.2.1",
                 blockid: "htn_rcm",
                 target_table:"rout_htn_rcm",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"htn_rcm",
                 def_predicate:">0",
                 exec_order:5
                 
             }
+        );
+        
+        #doc(
+            "External bindings"
         );
         
         ckd => rout_ckd.ckd.val.bind();
@@ -631,6 +730,10 @@ BEGIN
         cad => rout_cd_cardiac.cardiac.val.bind();
         
         
+        #doc(
+            "Gather existing medications:
+            ACE-i, ARB, Beta-blockers, Calcium channel blockers, Central blocking agents, Thiazides, Loop diuretics, MRB"
+        );
         
 
         acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
@@ -642,9 +745,15 @@ BEGIN
         loop => eadv.[rxnc_c03c%].dt.count(0).where(val=1);
         mrb  => eadv.[rxnc_c03da].dt.count(0).where(val=1);
         
+        
+        #doc(
+            "Workout potential complications"
+        );
         k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
         
         k_state : {nvl(k_val,0)>5.2 =>3},{nvl(k_val,0)>4.0 =>2},{=>1};
+        
+        
         
         raas : { greatest(acei,arb)>0 =>1 },{=>0};
         
@@ -653,6 +762,10 @@ BEGIN
                     { raas=1 and ccb>0 and greatest(bb,c02,thiaz,loop,mrb)=0 =>2},
                     { raas=1 and ccb>0 and thiaz>0 and greatest(bb,c02,loop,mrb)=0 =>3};
                     
+        #doc(
+            "Treatment recommendation as a code"
+        );
+        
         htn_rcm :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
                     { htn=1 and bpc>1 and raas=0 and k_state=3 and ccb=0 => 12 },
                     { htn=1 and bpc>1 and raas=1 and ccb=0 => 22 },

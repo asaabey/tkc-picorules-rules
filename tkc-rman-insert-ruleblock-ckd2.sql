@@ -21,16 +21,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to calculate dx information quantity*/
+        /* Rule block to determine RRT status*/
         
         #define_ruleblock(rrt,
             {
-                description: "Algorithm to assess diabetes mellitus",
-                version: "0.0.1.1",
+                description: "Rule block to determine RRT status",
+                version: "0.0.2.1",
                 blockid: "rrt",
                 target_table:"rout_rrt",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"rrt",
                 def_predicate:">0",
@@ -39,6 +40,9 @@ BEGIN
             }
         );
 
+        #doc(
+            "Haemodialysis episode ICD and problem ICPC2p coding"
+        );
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
         hd_dt0 => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
@@ -46,12 +50,28 @@ BEGIN
         
         hd_dt_min => eadv.icd_z49_1.dt.min();
         
+        #doc(
+            "Peritoneal episode ICD and problem ICPC2p coding"
+        );
+        
         pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
+        
+        #doc(
+            "Transplant episode ICD and problem ICPC2p coding"
+        );
         tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
         
+        #doc(
+            "Home-haemodialysis ICPC2p coding"
+        );
         homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
         
+        
         ren_enc => eadv.enc_op_renal.dt.max(1900);
+        
+        #doc(
+            "Determine RRT category based on chronology"
+        );
         
         rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10  and hd_dt>sysdate-365 => 1},
             {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
@@ -68,9 +88,6 @@ BEGIN
         rrt_hhd : {rrt=4 => 1},{=>0};
         
         tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
-        
-        
-        
         
         #define_attribute(
             rrt,
@@ -137,12 +154,13 @@ BEGIN
         
           #define_ruleblock(ckd,
             {
-                description: "Algorithm to to stage CKD",
-                version: "0.0.1.1",
+                description: "Rule block to stage CKD",
+                version: "0.0.2.1",
                 blockid: "ckd",
                 target_table:"rout_ckd",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"ckd",
                 def_predicate:">0",
@@ -150,11 +168,12 @@ BEGIN
                 
             }
         );
-
-        /*  External bindings    */
         
-        rrt0 => rout_rrt.rrt.val.bind();
+        #doc(
+            "External bindings"
+        );
         
+        rrt0 => rout_rrt.rrt.val.bind();        
                 
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
@@ -162,7 +181,11 @@ BEGIN
         
         cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
-        /* calculate dx information quantity*/
+        #doc(
+            "calculate dx information quantity"
+        );
+        
+        
         iq_uacr => eadv.lab_ua_acr.val.count(0);
         iq_egfr => eadv.lab_bld_egfr_c.val.count(0);
         iq_coding => eadv.[icd_%,icpc_%].dt.count(0);
@@ -173,8 +196,11 @@ BEGIN
                 {iq_egfr>0 or iq_uacr>0 => 1},
                 {=>0};
         
+        #doc(
+            "calculate egfr metrics"
+        );
         
-        /*  egfr metrics */
+        
         
         egfr_last => eadv.lab_bld_egfr_c.val.lastdv();
         
@@ -192,13 +218,20 @@ BEGIN
         
         egfr_tspan : {1=1 => egfrld-egfrfd};
         
+        #doc(
+            "calculate uacr metrics"
+        );
         
-        /*  uacr metrics */
+        
         acrlv => eadv.lab_ua_acr.val.last();
         acrld => eadv.lab_ua_acr.dt.max();
         acr_outdated : {sysdate-acrld > 730 =>1},{=>0};
         
-        /*  Check for persistence*/
+        #doc(
+            "check for persistence, based on KDIGO persistence definition"
+        );
+        
+        
         
         egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfrld-90 and val<60);
         acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acrld-30 and val>3);
@@ -206,17 +239,21 @@ BEGIN
         pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
         
         
+        #doc(
+            "check for egfr assumption violation"
+        );
         
-        /*  check for egfr assumption violation */
         
         egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfrld-30);
         egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfrld-30);
         
         egfr_3m_qt : {egfr_3m_n2>=2 => round(egfrlv/egfr_3m_mu,2)};
         
+        #doc(
+            "calculate egfr slope and related metrics"
+        );
         
         
-        /* egfr slope */
         
         egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
         
@@ -228,8 +265,11 @@ BEGIN
         
         egfr_rapid_decline : { egfr_decline=1 and egfr_slope2<-10 =>1},{=>0};
         
-                
-        /*  Apply KDIGO 2012 staging    */
+        #doc(
+            "Apply KDIGO 2012 staging"
+        );
+        
+        
         
         rrt : {rrt0 is null =>0},{=>rrt0};
         
@@ -253,6 +293,10 @@ BEGIN
         
         asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
         
+        #doc(
+            "KDIGO 2012, string composite attribute"
+        );
+        
         ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
                 {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => `2`},
                 {cga_g=`G3A` => `3A`},
@@ -261,6 +305,10 @@ BEGIN
                 {cga_g=`G5` => `5`},
                 {=> null};
         
+        #doc(
+            "KDIGO 2012, numeric composite attribute"
+        );
+        
         ckd :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => 1},
                 {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => 2},
                 {cga_g=`G3A` => 3},
@@ -268,6 +316,10 @@ BEGIN
                 {cga_g=`G4` => 5},
                 {cga_g=`G5` => 6},
                 {=> 0};
+        
+        #doc(
+            "KDIGO 2012, binary attributes"
+        );
                 
         ckd_stage_1 : { ckd=1 => 1},{=>0}; 
         
@@ -446,12 +498,13 @@ BEGIN
      
      #define_ruleblock(ckd_cause,
             {
-                description: "Algorithm to to stage CKD",
-                version: "0.0.1.1",
+                description: "Rule block to determine causality for CKD",
+                version: "0.0.2.1",
                 blockid: "ckd_cause",
                 target_table:"rout_ckd_cause",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"ckd_cause",
                 def_predicate:">0",
@@ -459,45 +512,96 @@ BEGIN
                 
             }
     );
-     /* External bindings */ 
      
+     #doc(
+        "External bindings"
+     );
      
      dm => rout_cd_dm.dm.val.bind(); 
      htn => rout_cd_htn.htn.val.bind();
      ckd => rout_ckd.ckd.val.bind();
      
-     
+     #doc(
+        "calculate dx information quantity "
+     );
     
      
-     /* calculate dx information quantity 
+     /* 
      iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-730); 
      iq_egfr => eadv.lab_bld_egfr_c.val.count(0).where(dt>sysdate-730); 
      iq_coding => eadv.[icd_%,icpc_%].dt.count(0); 
      iq_tier: {iq_coding>1 and least(iq_egfr,iq_uacr)>=2 => 4}, {least(iq_egfr,iq_uacr)>=2 => 3}, {least(iq_egfr,iq_uacr)>=1 => 2}, {iq_egfr>0 or iq_uacr>0 => 1}, {=>0}; 
      */ 
+     #doc(
+        "Gather coding supporting DM2, HTN, LN, and other GN"
+     );
      
      gn_ln => eadv.icd_m32_14.dt.count(0); 
      gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
      
+     
      aet_dm : {ckd>0 and dm>0 =>1},{=>0};
-     aet_htn : {ckd>0 and htn>0 =>1},{=>0};
+     #define_attribute(
+            aet_dm,
+            {
+                label:"CKD aetiology likely diabetes",
+                desc:"Integer [0-1] if CKD aetiology likely diabetes ",
+                is_reportable:1,
+                type:2
+            }
+     );
+     
+     aet_htn : {ckd>0 and htn>0 and dm=0 =>1},{=>0};
+     
+     #define_attribute(
+            aet_htn,
+            {
+                label:"CKD aetiology likely hypertension",
+                desc:"Integer [0-1] if CKD aetiology likely hypertension",
+                is_reportable:1,
+                type:2
+            }
+     );
+     
      aet_gn_ln : {ckd>0 and gn_ln>0 =>1},{=>0};
-     aet_gn_x : {ckd>0 and gn_x>0 =>1},{=>0};
+     
+     #define_attribute(
+            aet_gn_ln,
+            {
+                label:"CKD aetiology likely Lupus nephritis",
+                desc:"Integer [0-1] if CKD aetiology likely Lupus nephritis ",
+                is_reportable:1,
+                type:2
+            }
+     );
+     
+     aet_gn_x : {ckd>0 and gn_x>0 and dm=0 =>1},{=>0};
+     
+     #define_attribute(
+            aet_gn_x,
+            {
+                label:"CKD aetiology likely other GN",
+                desc:"Integer [0-1] if CKD aetiology likely other GN ",
+                is_reportable:1,
+                type:2
+            }
+     );
 
      aet_cardinality : { ckd>0 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
      
      aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
-     
+     #doc(
+        "Determine causality"
+     );
      ckd_cause : { ckd>0 and greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
      
-
      
      #define_attribute(
             ckd_cause,
             {
                 label:"CKD cause",
-                desc:"Integer [0-1] if matching comorbidity found ",
+                desc:"Integer [0-1] if CKD aetiology found ",
                 is_reportable:0,
                 type:2
             }
@@ -521,12 +625,13 @@ BEGIN
         
          #define_ruleblock(ckd_journey,
             {
-                description: "Algorithm to to stage CKD",
-                version: "0.0.1.1",
+                description: "Rule block to determine journey of CKD",
+                version: "0.0.2.1",
                 blockid: "ckd_journey",
                 target_table:"rout_ckd_journey",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"ckdj",
                 def_predicate:">0",
@@ -535,9 +640,16 @@ BEGIN
             }
     );
         
-        /*  External bindings    */
+        #doc(
+            "External bindings"
+        );
+        
                
         ckd => rout_ckd.ckd.val.bind();       
+        
+        #doc(
+            "Gather encounter, procedure and careplan"
+        );
           
         enc_n => eadv.enc_op_renal.dt.count();
         enc_ld => eadv.enc_op_renal.dt.max();
@@ -546,13 +658,18 @@ BEGIN
         
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
+        #doc(
+            "Extract renal specific careplan"
+        );
         cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
         cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
         
+        #doc(
+            "Gather Nursing and allied health encounters"
+        );
         
-        /*  Nursing and allied health encounters    */
         
         edu_init => eadv.enc_op_renal_edu.dt.min().where(val=31);
         
@@ -560,7 +677,6 @@ BEGIN
         
         edu_n => eadv.enc_op_renal_edu.dt.count().where(val=31 or val=32);
         
-        /* edu_plan => eadv.enc_op_renal_edu.val.first().where(val=35); */
         
         dietn => eadv.enc_op_renal_edu.dt.max().where(val=61);
         
@@ -570,7 +686,15 @@ BEGIN
         
         ckdj : { coalesce(edu_init, edu_rv,enc_fd) is not null => 1},{=>0};
         
-        
+        #define_attribute(
+            ckdj,
+            {
+                label:"Renal services interaction",
+                desc:"Integer [0-1] if Renal services interaction found",
+                is_reportable:1,
+                type:2
+            }
+        );
         
         
         
@@ -594,12 +718,13 @@ BEGIN
         
         #define_ruleblock(ckd_diagnostics,
             {
-                description: "Algorithm to determine diagnostics",
-                version: "0.0.1.1",
+                description: "Rule block to determine diagnostics",
+                version: "0.0.2.1",
                 blockid: "ckd_diagnostics",
                 target_table:"rout_ckd_diagnostics",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"ckd_dx",
                 def_predicate:">0",
@@ -608,10 +733,16 @@ BEGIN
             }
         );
 
-        /*  External bindings    */
+        #doc(
+            "External bindings"
+        );
       
         
         ckd => rout_ckd.ckd.val.bind();
+        
+        #doc(
+            "Gather lab workup"
+        );
         
         acr_lv => eadv.lab_ua_acr.val.last();
         
@@ -670,8 +801,16 @@ BEGIN
         ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
                 { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
                 {=>0};
+        #doc(
+            "Determine radiology (regional imaging) encounters"
+        );
         
         usk_null : { ris_usk_ld is null =>1},{=>0};
+        
+        #doc(
+            "Determine renal biopsy status"
+        );
+        
         bxk_null : { ris_bxk_ld is null =>1},{=>0};
         
         
@@ -692,16 +831,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to determine diagnostics */
+        /* Rule block to determine CKD complications */
         
         #define_ruleblock(ckd_complications,
             {
-                description: "Algorithm to determine diagnostics",
-                version: "0.0.1.1",
+                description: "Rule block to determine CKD complications",
+                version: "0.0.2.1",
                 blockid: "ckd_complications",
                 target_table:"rout_ckd_complications",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"ckd_compx",
                 def_predicate:">0",
@@ -710,9 +850,16 @@ BEGIN
             }
         );
 
-        /*  External bindings    */
+        #doc(
+            "External bindings"
+        );
+        
         
         ckd => rout_ckd.ckd.val.bind(); 
+        
+        #doc(
+            "Haematenics"
+        );
         
         hb_lv => eadv.lab_bld_hb.val.last();
         hb_ld => eadv.lab_bld_hb.dt.max();
@@ -724,8 +871,15 @@ BEGIN
         
         rbc_mcv_lv => eadv.lab_bld_rbc_mcv.val.last();
         
+        
+        
         esa_lv => eadv.rxnc_b03xa.val.last();
         esa_ld => eadv.rxnc_b03xa.dt.max();
+        
+        #doc(
+            "Electrolytes"
+        );
+        
         
         k_lv => eadv.lab_bld_potassium.val.last();
         k_ld => eadv.lab_bld_potassium.dt.max();
@@ -739,13 +893,16 @@ BEGIN
         
         alb_lv => eadv.lab_bld_albumin.val.last();
         
+        
         pth_lv => eadv.lab_bld_pth.val.last();
         pth_ld => eadv.lab_bld_pth.val.last();
         
         fer_lv => eadv.lab_bld_ferritin.val.last();
         fer_ld => eadv.lab_bld_ferritin.dt.max();
         
-        /*  Haematenics */
+        #doc(
+            "Determine haematenic complications"
+        );
         
         hb_state : { nvl(hb_lv,0)>0 and nvl(hb_lv,0)<100 =>1},
                     { nvl(hb_lv,0)>=100 and nvl(hb_lv,0)<180 =>2},
@@ -765,21 +922,39 @@ BEGIN
         
         esa_state : { esa_null=0 and esa_lv=1 => 1},{ esa_null=0 and esa_lv=0 => 2},{=>0};
         
-        /*  CKD-MBD */
+        #doc(
+            "Determine CKD-MBD complications"
+        );
+        
         
         phos_null : {phos_lv is null =>1},{=>0};
         phos_high : {phos_null=0 and phos_lv>=2 =>1},{=>0};
         
-        k_null : {k_lv is null =>1},{=>0};
-        k_high : {k_null=0 and k_lv>=6 =>1},{=>0};
-        
         pth_null : {pth_lv is null =>1},{=>0};
         pth_high : {pth_null=0 and pth_lv>=72 =>1},{=>0};
+        
+        #doc(
+            "Determine CKD electrolyte and acid base complications"
+        );
+        
+        k_null : {k_lv is null =>1},{=>0};
+        k_high : {k_null=0 and k_lv>=6 =>1},{=>0};      
+        
         
         hco3_null : {hco3_lv is null =>1},{=>0};
         hco3_low : {hco3_null=0 and hco3_lv<22 =>1},{=>0};
         
-        ckd_compx : {ckd>=3 => 1},{=>0};
+        ckd_compx : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high)>0=> 1},{=>0};
+        
+        #define_attribute(
+            ckd_compx,
+            {
+                label:"CKD complication present",
+                desc:"Integer [0-1] if CKD current complication present",
+                is_reportable:1,
+                type:2
+            }
+        );
      
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -798,16 +973,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to determine diagnostics */
+        /* Rule block to determine egfr fit */
         
         #define_ruleblock(egfr_fit,
             {
-                description: "Algorithm to egfr fit",
-                version: "0.0.1.1",
+                description: "Rule block to determine egfr fit",
+                version: "0.0.2.1",
                 blockid: "egfr_fit",
                 target_table:"rout_egfr_fit",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"egfr_fit",
                 def_predicate:">0",

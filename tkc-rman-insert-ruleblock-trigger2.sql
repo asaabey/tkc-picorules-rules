@@ -228,7 +228,7 @@ BEGIN
                 version: "0.0.1.1",
                 blockid: "tg4100",
                 target_table:"rout_tg4100",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
                 is_active:2,
                 def_exit_prop:"tg4100",
@@ -238,13 +238,18 @@ BEGIN
             }
         );
         
-        /*  Exclusions  */  
+        #doc(
+            "External bindings"
+        );
           rrt => rout_rrt.rrt.val.bind(); 
           
-          
+        
           cr_n => eadv.lab_bld_creatinine.dt.count(); 
           cr_fd => eadv.lab_bld_creatinine.dt.min(); 
           cr_ld => eadv.lab_bld_creatinine.dt.max(); 
+          
+          egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<sysdate-90 and dt>sysdate-365);
+          
           cr_span_days : {1=1 => cr_ld-cr_fd}; 
           cr_tail_days : {1=1 => ROUND(SYSDATE-cr_ld,0)}; 
           
@@ -279,6 +284,10 @@ BEGIN
           
           
           akin_stage : {rrt=0 and cr_base_max_1y_qt>2 => 3 },{rrt=0 and cr_base_max_1y_qt>1.5 => 2 },{=>0};
+          
+          aki_context : { akin_stage>=1 and egfr_base_val>=60 => 1},
+                        { akin_stage>=1 and egfr_base_val>30 and egfr_base_val<60 => 2},
+                        { akin_stage>=1 and egfr_base_val<30 => 3},{=>0};
           
           aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},

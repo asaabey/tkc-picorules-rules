@@ -21,16 +21,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Framingham equation*/
+        /* Ruleblock to apply Framingham equations*/
         
         #define_ruleblock(cvra,
             {
-                description: "Algorithm to assess Framingham equation",
+                description: "Ruleblock to apply Framingham equations",
                 version: "0.0.1.1",
                 blockid: "cvra",
                 target_table:"rout_cvra",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"cvra",
                 def_predicate:">0",
@@ -39,7 +40,10 @@ BEGIN
             }
         );
         
-        /*  External bindings*/
+        #doc(
+            "External bindings"
+        );
+        
         
         ckd0 => rout_ckd.ckd.val.bind();
         dm => rout_cd_dm.dm.val.bind();
@@ -47,9 +51,9 @@ BEGIN
         
         
         
-        /*  Gather variables */
-        
-        /*  on basic */
+        #doc(
+            "Gather variables including existing assessment, demographics, diseases by coding"
+        );
         
         asm_cvra => eadv.asm_cvra.val.lastdv();
         
@@ -81,6 +85,10 @@ BEGIN
         
         lvh => const(0);
         
+        #doc(
+            "Determine if overide criteria are met"
+        );
+        
         dmckd1 : {dm=1 and ckd0>=1 => 1},{=>0};
         dm60 : {dm=1 and ckd0>=1 => 1},{=>0};
         ckd3 : {ckd0>=3 => 1},{=>0};
@@ -91,6 +99,9 @@ BEGIN
       
         risk_high_ovr : { greatest(dm60,dmckd1,ckd3,tc7,sbp180,age74,cvd_prev)>0 =>1},{=>0};
         
+        #doc(
+            "Otherwise calculate the 5 year risk for non-fatal MI, and CVE"
+        );
         
         risk_5_chd : {risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
             (-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+(-0.2767*smoke)+(-0.7181*LN(tc/hdl))+
@@ -132,16 +143,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  KFRE */
+        /*  Ruleblock to calculate KFRE */
         
         #define_ruleblock(kfre,
             {
-                description: "Algorithm to assess Framingham equation",
+                description: "Ruleblock to calculate KFRE",
                 version: "0.0.1.1",
                 blockid: "kfre",
                 target_table:"rout_kfre",
-                environment:"DEV_2",
+                environment:"PROD",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"kfre",
                 def_predicate:">0",
@@ -151,11 +163,16 @@ BEGIN
         );
         
         
-        /*  External bindings*/
+        #doc(
+            "External bindings"
+        );
         
         ckd => rout_ckd.ckd.val.bind();
         
-        /*  Gather variables */
+        #doc(
+            "Gather variables"
+        );
+        
         dob => eadv.dmg_dob.dt.max();
         
         male => eadv.dmg_gender.val.max();
@@ -168,6 +185,9 @@ BEGIN
         
         uacr_ld => eadv.lab_ua_acr.dt.max();
         
+        #doc(
+            "Determine if 4 variable equation is applicable"
+        );
         kfre4v_ap : { least(dob,egfr_ld,uacr_ld) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
         
         egfr_1 : { 1=1 => egfr_lv};
@@ -176,6 +196,10 @@ BEGIN
         
         age : { 1=1 => round(((egfr_ld-dob)/365.25),0)};
         
+        #doc(
+            "Apply equation"
+        );
+        
         kfre4v_exp : { kfre4v_ap =1 => exp((-0.5567*(egfr_1/5-7.222))+(0.2467*(male - 0.5642))+(0.451*(ln_uacr_1-5.137))-(0.2201*(age/10-7.036)))},{=>0};
         
         kfre4v_2yr : { kfre4v_ap =1 => round(1-power(0.9832,kfre4v_exp) ,2)};
@@ -183,6 +207,7 @@ BEGIN
         kfre4v_5yr : { kfre4v_ap =1 => round(1-power(0.9365,kfre4v_exp) ,2)};
         
         kfre : { 1=1 => kfre4v_ap};
+        
                   
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -199,16 +224,17 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  PCD Traffic light report */
+        /*  Ruleblock for PCD Traffic light report */
         
         #define_ruleblock(kfre,
             {
-                description: "Algorithm to assess PCD Traffic light report",
+                description: "Ruleblock to assess PCD Traffic light report",
                 version: "0.0.1.1",
                 blockid: "pcd",
                 target_table:"rout_pcd",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
                 is_active:0,
                 def_exit_prop:"pcd",
                 def_predicate:">0",
