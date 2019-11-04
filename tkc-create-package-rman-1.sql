@@ -222,6 +222,29 @@ Change Log
         left_tbl_name VARCHAR2(100),
         ext_col_name VARCHAR2(4000)
     );
+    
+    TYPE rb_def_type IS RECORD (
+        description     VARCHAR2(400),
+        version         VARCHAR2(12),
+        blockid         VARCHAR2(100),
+        target_table    VARCHAR2(40),
+        environment     VARCHAR2(12),
+        rule_owner      VARCHAR2(100),
+        rule_author     VARCHAR2(100),
+        is_active       INT,
+        def_exit_prop   VARCHAR2(100),
+        def_predicate   VARCHAR2(100),
+        exec_order      INT
+    );
+
+    TYPE att_def_type IS RECORD (
+        label           VARCHAR2(400),
+        is_reportable   PLS_INTEGER,
+        is_trigger      PLS_INTEGER,
+        type            PLS_INTEGER,
+        priority        PLS_INTEGER
+    );
+    
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
     );
@@ -2629,6 +2652,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         rs               VARCHAR2(4000);
         ss               VARCHAR2(4000);
         func_exp         func_exp_type;
+        rb_def           rb_def_type;
+        att_def          att_def_type;
         cond_exp         VARCHAR2(4000);
         func_name        VARCHAR2(30);
         func_param       VARCHAR2(4000);
@@ -2722,26 +2747,34 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                             param_value := substr(func_param, instr(func_param, ',') + 1);        
                             
+                            
+                            
+                            SELECT JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2) INTO att_def.label FROM DUAL;
+                            
                             CASE func_name
                                     WHEN 'DEFINE_ATTRIBUTE' THEN
+                                        SELECT JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2) INTO att_def.label FROM DUAL;
                                         rdoc := rdoc
                                         || chr(10)
                                         || param_key 
                                         || ' label as  : '
-                                        || JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
+                                        || att_def.label
                                         || chr(10);
                                     WHEN 'DEFINE_RULEBLOCK' THEN
+                                        SELECT JSON_VALUE(param_value, '$.description' RETURNING VARCHAR2) INTO rb_def.description FROM DUAL;
+                                        SELECT JSON_VALUE(param_value, '$.version' RETURNING VARCHAR2) INTO rb_def.version FROM DUAL;
+                                        SELECT JSON_VALUE(param_value, '$.rule_author' RETURNING VARCHAR2) INTO rb_def.rule_author FROM DUAL;
                                         
                                         rdoc := rdoc
                                         || chr(10)
                                         || 'Description: '
-                                        || JSON_VALUE(param_value, '$.description' RETURNING VARCHAR2)
+                                        || rb_def.description
                                         || chr(10)
                                         || 'Version: '
-                                        || JSON_VALUE(param_value, '$.version' RETURNING VARCHAR2)
+                                        || rb_def.version
                                         || chr(10)
                                         || 'Author: '
-                                        || JSON_VALUE(param_value, '$.rule_author' RETURNING VARCHAR2)
+                                        || rb_def.rule_author
                                         || chr(10);
                                     
                                     WHEN 'DOC' THEN
