@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.0
+Version		    1.0.1.1
 Creation date	07/04/2019
-update on date  28/10/2019
+update on date  05/11/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -172,7 +172,8 @@ Change Log
 27/09/2019  string buffer overun error fixed: tbl_type varchar 4000 from 2000
 04/10/2019  map_to_tmplt2 function which uses the double chars to allow html
 28/10/2019  added new function parse_rpipe_to_rdoc
-28/10/2019  added new function rstack_row_to_human_code
+05/11/2019  rman_ruleblocks added col rmdoc
+05/11/2019  compile_ruleblock in parse to rmdoc automatically
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -2659,7 +2660,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         func_param       VARCHAR2(4000);
         param_key        VARCHAR2(100);
         param_value      VARCHAR2(4000);
+        counter          PLS_INTEGER:=1;
     BEGIN
+        
+        
+        
         SELECT
             ruleid,
             rulebody,
@@ -2705,35 +2710,60 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             
                             SELECT * INTO rstack_row FROM rman_stack WHERE ruleid= rpipe_col(i).ruleid AND varid IS NOT NULL;
                                     
-                            rdoc := rdoc || chr(10)  || i || '. ';
+                            rdoc := rdoc || '<p>'  || counter || '. ';
                             
-                            rdoc := rdoc
-                                    || 'READ the '
-                                    || func_exp.func
-                                    || ' '
+                            CASE func_exp.func
+                            
+                            WHEN 'BIND' THEN
+                                rdoc := rdoc
+                                    || '<strong>Read</strong> from <strong>external rule</strong> '
+                                    || REPLACE(func_exp.tbl,'ROUT_','')
+                                    || ' the '
                                     || func_exp.prop
                                     || ' of '
                                     || func_exp.att;
+                            ELSE
+                                rdoc := rdoc
+                                        || '<strong>Read</strong> the '
+                                        || func_exp.func
+                                        || ' '
+                                        || func_exp.prop
+                                        || ' of '
+                                        || func_exp.att;
+                            
+                            END CASE;
+                            
 
                             rdoc := rdoc
-                                    || ' and ASSIGN TO "'
+                                    || ' and <strong>Assign</strong> to "<mark>'
                                     || func_exp.avn
-                                    || '"'
+                                    || '</mark>"</p>'
                                     || chr(10);
                                     
-                            rdoc := rdoc || chr(10) || '   pIcoScript : '  || ss || chr(10);
+                            ss:=replace(ss,'<',chr(38) || 'lt;');
+                            ss:=replace(ss,'>',chr(38) || 'gt;');
+                            rdoc := rdoc || chr(10) || '<code>'  || ss || '</code><br/><br/>' || chr(10);
                             
                                     
                             rdoc := rdoc || chr(10)
-                                    || '   SQL construct :'
+                                    || '<em>SQL construct :</em><br/><p style="font-family:courier;font-size:10">'
                                     || chr(10)
                                     || '   SELECT ' || rstack_row.select_clause || chr(10)
-                                    || '   FROM ' || rstack_row.from_clause || chr(10)
-                                    || '   WHERE ' || NVL(rstack_row.where_clause,'.') || chr(10)
-                                    || '   GROUP BY ' || NVL(rstack_row.groupby_clause,'.') || chr(10)
-                                    || chr(10);
+                                    || '   FROM ' || rstack_row.from_clause || chr(10);
                                     
+                            IF rstack_row.where_clause IS NOT NULL THEN
+                            rdoc:=rdoc || chr(10)                        
+                                    || '   WHERE ' || rstack_row.where_clause;
+                            END IF;        
                             
+                            IF rstack_row.groupby_clause IS NOT NULL THEN        
+                            rdoc:=rdoc || chr(10)                        
+                                    || '   GROUP BY ' || rstack_row.groupby_clause;
+                            END IF;
+                            
+                            rdoc:=rdoc || '</p><br/>';
+                            
+                            counter:=counter +1;
 
                         ELSIF instr(ss, '#') = 1 THEN
                         -- Compiler directive
@@ -2767,22 +2797,24 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                         
                                         rdoc := rdoc
                                         || chr(10)
-                                        || 'Description: '
+                                        || '<i>TKC rman documentation for '
+                                        || rpipe_col(i).blockid
+                                        || '</i><h2>Description: '
                                         || rb_def.description
-                                        || chr(10)
+                                        || '</h2><br/>'
                                         || 'Version: '
                                         || rb_def.version
                                         || chr(10)
                                         || 'Author: '
                                         || rb_def.rule_author
-                                        || chr(10);
+                                        || '<br/><hr>';
                                     
                                     WHEN 'DOC' THEN
                                         
                                         rdoc := rdoc
-                                        || chr(10)
+                                        || '<strong>'
                                         || initcap(trim(both '"' from trim(param_value)))
-                                        || chr(10);
+                                        || '</strong><br/>';
                                         
                                     ELSE
                                     dbms_output.put_line('undefined comp dir');
@@ -2797,38 +2829,48 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                             SELECT * INTO rstack_row FROM rman_stack WHERE ruleid= rpipe_col(i).ruleid AND varid IS NOT NULL;
 
-                            rdoc := rdoc || chr(10)  || i || '. ';
+                            rdoc := rdoc || '<p>'  || counter || '. ';
                             
                             rdoc := rdoc
-                                    || 'EVALUATE and ASSIGN TO "'
+                                    || '<strong>Evaluate</strong> and <strong>Assign</strong> to "<mark>'
                                     || func_exp.avn
-                                    || '"'
+                                    || '</mark>"<br/>'
                                     || chr(10);
                             
                             cond_exp := trim(substr(ss, instr(ss, ':') + 1));
                             
                             
                             
-                            cond_exp := regexp_replace(cond_exp,'},',chr(10));
-                            cond_exp := regexp_replace(cond_exp,'{=>','   ELSE ASSIGN ');
+                            cond_exp := regexp_replace(cond_exp,'},','<br/>' || chr(10));
+                            cond_exp := regexp_replace(cond_exp,'{=>','   <strong>ELSE ASSIGN</strong>');
                             cond_exp := regexp_replace(cond_exp,'=>',' then ASSIGN ');
-                            cond_exp := regexp_replace(cond_exp,'{','   IF ');
+                            cond_exp := regexp_replace(cond_exp,'{','   <strong>IF</strong> ');
                             cond_exp := regexp_replace(cond_exp,'}',chr(10));
                             rdoc := rdoc
                                     || cond_exp;
                                     
-                            rdoc := rdoc || chr(10) || '   pIcoScript : '  || ss || chr(10);
+                            rdoc := rdoc || chr(10) || '<br/><code>'  || ss || '</code><br/><br/>' || chr(10);
                             
+                                    
                             rdoc := rdoc || chr(10)
-                                    || '   SQL construct :'
+                                    || '<em>SQL construct :</em><br/><p style="font-family:courier;font-size:10">'
                                     || chr(10)
                                     || '   SELECT ' || rstack_row.select_clause || chr(10)
-                                    || '   FROM ' || rstack_row.from_clause || chr(10)
-                                    || '   WHERE ' || rstack_row.where_clause || chr(10)
-                                    || '   GROUP BY ' || rstack_row.groupby_clause || chr(10)
-                                    || chr(10);
+                                    || '   FROM ' || rstack_row.from_clause || chr(10);
+                                    
+                            IF rstack_row.where_clause IS NOT NULL THEN
+                            rdoc:=rdoc || chr(10)                        
+                                    || '   WHERE ' || rstack_row.where_clause;
+                            END IF;        
                             
+                            IF rstack_row.groupby_clause IS NOT NULL THEN        
+                            rdoc:=rdoc || chr(10)                        
+                                    || '   GROUP BY ' || rstack_row.groupby_clause;
+                            END IF;
                             
+                            rdoc:=rdoc || '</p><br/>';
+                            
+                            counter:=counter +1;
 
                         END IF;
                         
@@ -2841,9 +2883,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END LOOP;
 
-        dbms_output.put_line('rdoc ->'
-                             || chr(10)
-                             || rdoc);
+        dbms_output.put_line(rdoc);
     END parse_rpipe_to_rdoc;
 
     PROCEDURE parse_ruleblocks (
@@ -3689,6 +3729,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     ) IS
 
         strsql   CLOB;
+        str_rmdoc    CLOB;
         t0       INTEGER := dbms_utility.get_time;
         rb       rman_ruleblocks%rowtype;
         bid      rman_ruleblocks.blockid%TYPE;
@@ -3720,9 +3761,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         parse_ruleblocks(bid_in);
         parse_rpipe(strsql);
+        parse_rpipe_to_rdoc(str_rmdoc);
+        
+        dbms_output.put_line('rmdoc--->' || length(str_rmdoc));
+        
         UPDATE rman_ruleblocks
         SET
-            sqlblock = strsql
+            sqlblock = strsql,
+            rmdoc = str_rmdoc
         WHERE
             blockid = bid_in;
 

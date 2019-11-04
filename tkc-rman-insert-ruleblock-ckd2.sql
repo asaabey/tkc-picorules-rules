@@ -41,7 +41,7 @@ BEGIN
         );
 
         #doc(
-            "Haemodialysis episode ICD and problem ICPC2p coding"
+            "Haemodialysis episode ICD, proc codes and problem ICPC2p coding"
         );
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
