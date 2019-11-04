@@ -248,32 +248,42 @@ BEGIN
           cr_fd => eadv.lab_bld_creatinine.dt.min(); 
           cr_ld => eadv.lab_bld_creatinine.dt.max(); 
           
-          egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<sysdate-90 and dt>sysdate-365);
+          egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<cr_ld-90 and dt>cr_ld-365);
           
           cr_span_days : {1=1 => cr_ld-cr_fd}; 
           cr_tail_days : {1=1 => ROUND(SYSDATE-cr_ld,0)}; 
           
           
-          /* Minima, Maxima and last */
+        #doc(
+            "Minima, Maxima and last")
+        );
           cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365); 
           cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365); 
           cr_min_1y => eadv.lab_bld_creatinine.val.min().where(dt>sysdate-365);
           
           
-          /* Date of event and window */
+        #doc(
+            "Date of event and window"
+        );
+        
           cr_max_ld_1y => eadv.lab_bld_creatinine.dt.max().where(val=cr_max_1y and dt>sysdate-365); 
           win_lb : {1=1 => cr_max_ld_1y-30 };
           win_ub : {1=1 => cr_max_ld_1y+30 };
           
+        #doc(
+            "Determine true baseline"
+        );
           
-          /* Determine true baseline */
+          
           cr_avg_2y => eadv.lab_bld_creatinine.val.avg().where(val<cr_max_1y and val>cr_min_1y and dt>sysdate-730);
           cr_avg_min_1y_qt : {nvl(cr_avg_2y,0)>0 => round(cr_min_1y/cr_avg_2y,1) };
           cr_base : {cr_avg_min_1y_qt<0.5 => cr_avg_2y},{=>cr_min_1y};
           
           
-          /* Calculate proportion */
-          
+        #doc(
+            "Calculate proportions
+        ");
+        
           
           cr_base_max_1y_qt : {nvl(cr_base,0)>0 => round(cr_max_1y/cr_base,1) };
           
@@ -443,7 +453,7 @@ BEGIN
         
          #define_ruleblock(tg4620,
             {
-                description: "Algorithm to detect nephritic syndrome",
+                description: "Algorithm to generate CKD45 10 pa without AVF",
                 version: "0.0.1.1",
                 blockid: "tg4620",
                 target_table:"rout_tg4620",

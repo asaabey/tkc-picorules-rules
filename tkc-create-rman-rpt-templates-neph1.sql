@@ -58,8 +58,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Alert : Acute kidney injury in community (Trigger 4100)
     --------------------------------------------------------------------------
     Baseline creatinine is estimated to be <<cr_base>><</cr_base>> umol/l and the maxima is <<cr_max_1y>><</cr_max_1y>> umol/l on <<cr_max_ld_1y>><</cr_max_ld_1y>>
-    This is consistent with an acute kidney injury (AKIN stage 2 or above).
-    <<aki_outcome=3>>There is no resoltion <</aki_outcome=3>>
+    This is consistent with an acute kidney injury (AKIN stage 2 or above) on <<aki_context=1>>normal baseline<</aki_context=1>><<aki_context=2>>mild to moderate CKD (3-4)<</aki_context=2>><<aki_context=3>>severe CKD(4+)<</aki_context=3>>.
+    <<aki_outcome=3>>There is no resolution <</aki_outcome=3>>
     <<aki_outcome=2>>There appears to be partial resolution<</aki_outcome=2>>
     <<aki_outcome=1>>There appears to be complete resolution<</aki_outcome=1>>
     last recored creatinine is <<cr_lv>><</cr_lv>>umol/l on <<cr_ld>><</cr_ld>>.

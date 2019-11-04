@@ -23,6 +23,91 @@
 
 DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
 
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4810','tg4810',304810,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : High haemoglobin on the background of ESA therapy  (Trigger 4810)
+    --------------------------------------------------------------------------
+    Current haemoglobin is <<hb_i_val>><</hb_i_val>> g/L which has increased from a previous hb of <<hb_i1_val>><</hb_i1_val>>  g/L.<<br>> 
+    The ESA was last prescribed on \t <<esa_dt>><</esa_dt>>.
+    This finding is associated with a higher all-cause mortality in CKD and RRT patients.\n
+    It is possible that the medication is not administered,or an undocumented dose reduction has occured.<<br>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4620','tg4620',304620,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Unmanaged advanced CKD with rapid progression (Trigger 4620)
+    --------------------------------------------------------------------
+    There is CKD stage <<ckd_stage>><</ckd_stage>> disease with an annual decline of <<eb>><</eb>> ml/min/yr without a recent specialist encounter
+    <<avf>>Please note the AVF creation on <</avf>><<avf>><</avf>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4610','tg4610',304610,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Unmanaged possible early CKD with rapid progression (Trigger 4610)
+    --------------------------------------------------------------------------
+    The current glomerular stage is <<ckd_stage>><</ckd_stage>> with an annual decline of <<eb>><</eb>> ml/min/yr without a recent specialist encounter
+    <<egfrlv>>The last eGFR was <</egfrlv>><<egfrlv>><</egfrlv>><<egfrlv>> ml/min on <</egfrlv>><<egfrld>><</egfrld>><<egfr_max_v>> with a decline from <</egfr_max_v>><<egfr_max_v>><</egfr_max_v>><<egfr_max_v>> ml/min <</egfr_max_v>><<egfr_max_ld>> on <</egfr_max_ld>><<egfr_max_ld>><</egfr_max_ld>> 
+    <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria.<</ckd_null>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4100','tg4100',304100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Acute kidney injury in community (Trigger 4100)
+    --------------------------------------------------------------------------
+    Baseline creatinine is estimated to be <<cr_base>><</cr_base>> umol/l and the maxima is <<cr_max_1y>><</cr_max_1y>> umol/l on <<cr_max_ld_1y>><</cr_max_ld_1y>>
+    This is consistent with an acute kidney injury (AKIN stage 2 or above).
+    <<aki_outcome=3>>There is no resoltion <</aki_outcome=3>>
+    <<aki_outcome=2>>There appears to be partial resolution<</aki_outcome=2>>
+    <<aki_outcome=1>>There appears to be complete resolution<</aki_outcome=1>>
+    last recored creatinine is <<cr_lv>><</cr_lv>>umol/l on <<cr_ld>><</cr_ld>>.
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4410','tg4410',304410,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
+    -----------------------------------------------------------------------------
+    The last uACR was <<uacr1>><</uacr1>> mg/mmol and the one before was <<uacr2>><</uacr2>> mg/mmol.
+    <<iq_tier=3>>Serum Albumin and Cholesterol have been checked <<low_alb>> and there is hypoalbuminaemia<</low_alb>><<higl_chol>> and hypercholesterolaemia<</higl_chol>><</iq_tier=3>>
+    This is consistent with a primary nephrotic syndrome
+    <<iq_tier=4>>It is noted that autoimmune and other relevant serological tests have been performed<</iq_tier=4>>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4720','tg4720',304720,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : New commencement on Renal replacement therapy (Trigger 4720)
+    --------------------------------------------------------------------
+    <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min>><</hd_dt_min>><<hd_start>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg4660','tg4660',304660,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Medication safety concern (Trigger 4660)
+    ------------------------------------------------
+    This patient is on <<dm_rxn_bg>>a biguanide,<</dm_rxn_bg>><<dm_rxn_sglt2>> SGLT2 inhibitor,<</dm_rxn_sglt2>><<rx_nsaids>> NSAIDS,<</rx_nsaids>> which is inconsistent with the current renal function.
+    <<dm_rxn_bg>>Biguanides may be rarely associated with lactic acidosis at this level of renal function<</dm_rxn_bg>>
+    <<dm_rxn_sglt2>>SGLT2 inhibitors are relatively contra-indicated at this level of renal function<</dm_rxn_sglt2>>
+    <<rx_nsaids>>NSAIDS may cause additional renal injury<</rx_nsaids>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','alert_tg2610','tg2610',302610,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    Alert : Potentially untreated chronic disease (Trigger 2610)
+    ------------------------------------------------------------
+    <<dm_untreat>>Likely to require pharmacotherapy for glycaemic control. No active medications are detected.<</dm_untreat>>
+    <<ckd_untreat>>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease<</ckd_untreat>>
+    <<ckd_untreat>>Last systolic BP is <<sbp_val>><</sbp_val>> mmHg ( <<sbp_dt>><</sbp_dt>>) and serum potassium is <<k_val>><</k_val>> mmol/l (<<k_dt>><</k_dt>>)<</ckd_untreat>>
+    '
+    );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
