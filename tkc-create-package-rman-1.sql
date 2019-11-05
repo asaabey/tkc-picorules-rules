@@ -174,6 +174,8 @@ Change Log
 28/10/2019  added new function parse_rpipe_to_rdoc
 05/11/2019  rman_ruleblocks added col rmdoc
 05/11/2019  compile_ruleblock in parse to rmdoc automatically
+05/11/2019  serializedv updated to output iso dates
+
 */
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
@@ -1127,6 +1129,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         xline_tbl := rman_pckg.splitstr(xline_str_arr, ' ');
         yline_tbl := rman_pckg.splitstr(yline_str_arr, ' ');
         mspan := ( ceil((SYSDATE -(TO_DATE(dt_tbl(dt_tbl.count), 'dd/mm/yy'))) / 30.43) ) + 2;
+        
+        
 
         xscale := x_pixels / mspan;
         WHILE y > 0 LOOP
@@ -2168,8 +2172,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 ) THEN
                     IF length(funcparam_str) > 0 THEN
                         val_trans := substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
-
+                        
                         dt_trans := substr(funcparam_str, instr(funcparam_str, '~') + 1);
+
+--                        dt_trans := to_char(substr(funcparam_str, instr(funcparam_str, '~') + 1),'YYYY-MM-DD');
                         dbms_output.put_line('build_func ->'
                                              || assnvar
                                              || ' serializedv-> val_trans: '
@@ -2190,9 +2196,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || ','' '') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || '_VAL '
-                                  || ', LISTAGG('
+                                  || ', LISTAGG(TO_CHAR('
                                   || dt_trans
-                                  || ','' '') WITHIN GROUP (ORDER BY DT DESC) AS '
+                                  || ',`YYYY-MM-DD`),'' '') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || '_DT ';
 

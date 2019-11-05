@@ -192,7 +192,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <egfr_outdated>Note [1.2.1] Last egfr on <egfrld></egfrld></egfr_outdated>
     <acr_outdated>Note [1.2.2] Last uACR on <acrld></acrld></acr_outdated>
     <asm_viol_3m>Note [1.2.3] Assumption violation present. +/- 20% fluctuation in last 30 days </asm_viol_3m>
-    <egfr_decline>Note [1.3] Maximum eGFR of <egfr_max_v></egfr_max_v> ml/min/1.73m2 on <egfr_max_ld></egfr_max_ld>  with the most recent value being <egfrlv></egfrlv></egfr_decline>
+    <egfr_decline>Note [1.3] Maximum eGFR of <egfr_max_val></egfr_max_val> ml/min/1.73m2 on <egfr_max_dt></egfr_max_dt>  with the most recent value being <egfrlv></egfrlv></egfr_decline>
     <iq_tier=4>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR value (Tier 4).</iq_tier=4>
     <iq_tier=3>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). </iq_tier=3>
     <iq_tier=2>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3). </iq_tier=2>
@@ -279,6 +279,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <iron_low>|                  +-- Iron stores low</iron_low>
     |              +-- Acid-base balance
     <hco3_low>|                  +-- low tCO2 at <hco3_lv></hco3_lv> mmol/l likely due to metabolic acidosis</hco3_low>
+    |              +-- CKD mineral bone disease
+    <pth_high>|                  +-- PTH is above target</pth_high>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)

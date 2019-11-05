@@ -41,7 +41,7 @@ BEGIN
                 }
             );
             
-            rrt=> rout_rrt.rrt.val.bind();
+            rrt => rout_rrt.rrt.val.bind();
             
             egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
             
@@ -93,7 +93,8 @@ BEGIN
                 }
             );
             
-                       
+            rrt => rout_rrt.rrt.val.bind();
+            
             acr_graph => eadv.lab_ua_acr.val.serializedv(abs(round(log(10,val+1),1))~dt);
             
             acr_n => eadv.lab_ua_acr.val.count(0);

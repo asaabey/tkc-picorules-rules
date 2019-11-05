@@ -1,6 +1,6 @@
 cd C:\Users\abeya\Documents\Oracle11g\tkc-master\tkc-picorules;
 
-@"tkc-create-eadvx.sql";
+--@"tkc-create-eadvx.sql";
 @"tkc-create-rman.sql";
 @"tkc-create-rman-rpt-templates-neph1.sql";
 @"tkc-create-rman-rpt-templates-neph2.sql";

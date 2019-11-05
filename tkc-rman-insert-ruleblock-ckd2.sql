@@ -940,6 +940,9 @@ BEGIN
         k_null : {k_lv is null =>1},{=>0};
         k_high : {k_null=0 and k_lv>=6 =>1},{=>0};      
         
+        #doc(
+            "Need to include bicarbonate therapy"
+        );
         
         hco3_null : {hco3_lv is null =>1},{=>0};
         hco3_low : {hco3_null=0 and hco3_lv<22 =>1},{=>0};
