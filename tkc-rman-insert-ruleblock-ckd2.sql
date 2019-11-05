@@ -45,6 +45,8 @@ BEGIN
         );
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
+        hd_z49_1y_n => eadv.icd_z49_1.dt.count(0).where(dt>sysdate-365);
+        
         hd_dt0 => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
         hd_dt => eadv.icd_z49_1.dt.max(1900); 
         
@@ -70,7 +72,8 @@ BEGIN
         ren_enc => eadv.enc_op_renal.dt.max(1900);
         
         #doc(
-            "Determine RRT category based on chronology"
+            "Determine RRT category based on chronology. RRT cat 1 (HD) requires more than 10 sessions
+            "
         );
         
         rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10  and hd_dt>sysdate-365 => 1},
@@ -86,6 +89,10 @@ BEGIN
         rrt_tx : {rrt=3 => 1},{=>0};
         
         rrt_hhd : {rrt=4 => 1},{=>0};
+        
+        #doc(
+            "Current transplant patient based on 2y encounter activity"
+        );
         
         tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
         
@@ -155,7 +162,7 @@ BEGIN
           #define_ruleblock(ckd,
             {
                 description: "Rule block to stage CKD",
-                version: "0.0.2.1",
+                version: "0.0.2.2",
                 blockid: "ckd",
                 target_table:"rout_ckd",
                 environment:"PROD",
@@ -170,19 +177,17 @@ BEGIN
         );
         
         #doc(
-            "External bindings"
+            "Gather RRT details for exclusion and check assumption violation"
         );
         
-        rrt0 => rout_rrt.rrt.val.bind();        
+        rrt => rout_rrt.rrt.val.bind();        
+        
+        hd_y1 => eadv.icd_z49_1.dt.count(0).where(dt>sysdate-365);
                 
-        cp_l => eadv.careplan_h9_v1.val.lastdv();
         
-        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
-        
-        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
         #doc(
-            "calculate dx information quantity"
+            "Calculate information quantity(iq)"
         );
         
         
@@ -197,57 +202,42 @@ BEGIN
                 {=>0};
         
         #doc(
-            "calculate egfr metrics"
+            "Calculate egfr metrics"
         );
         
+        #doc(
+            "Gather last, first and penultimate within 3-12 month windows with cardinality"
+        );
         
+        egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
         
-        egfr_last => eadv.lab_bld_egfr_c.val.lastdv();
+        egfr_l1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
         
-        egfrlv : {1=1 => egfr_last_val};
-        egfrld : {1=1 => egfr_last_dt};
+        egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
         
-        egfr_first => eadv.lab_bld_egfr_c.val.firstdv();
-        
-        egfrfv : {1=1 => egfr_first_val};
-        egfrfd : {1=1 => egfr_first_dt};
         
         egfr_single:{ iq_egfr=1 =>1},{=>0};
         egfr_multiple:{ iq_egfr>1 =>1},{=>0};
-        egfr_outdated:{ (sysdate-egfrld>730) =>1},{=>0};
+        egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
         
-        egfr_tspan : {1=1 => egfrld-egfrfd};
-        
-        #doc(
-            "calculate uacr metrics"
-        );
-        
-        
-        acrlv => eadv.lab_ua_acr.val.last();
-        acrld => eadv.lab_ua_acr.dt.max();
-        acr_outdated : {sysdate-acrld > 730 =>1},{=>0};
-        
-        #doc(
-            "check for persistence, based on KDIGO persistence definition"
-        );
-        
-        
-        
-        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfrld-90 and val<60);
-        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acrld-30 and val>3);
-        
-        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
-        
+        egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
         
         #doc(
             "check for egfr assumption violation"
         );
         
+        egfr_1y_delta : {egfr_l1_val is not null => egfr_l_val-egfr_l1_val};
         
-        egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfrld-30);
-        egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfrld-30);
+        egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
+        egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
         
-        egfr_3m_qt : {egfr_3m_n2>=2 => round(egfrlv/egfr_3m_mu,2)};
+        egfr_3m_qt : {egfr_3m_n2>=2 => round(egfr_l_val/egfr_3m_mu,2)};
+        
+        asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
+        
+        asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
+        
+        asm_viol_hd : {hd_y1 >0 => 1},{=>0};
         
         #doc(
             "calculate egfr slope and related metrics"
@@ -257,13 +247,36 @@ BEGIN
         
         egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
         
-        egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfrld);
+        egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfr_l_dt);
         
-        egfr_slope2 : {egfrld > egfr_max_dt => round((egfrlv-egfr_max_val)/((egfrld-egfr_max_dt)/365),2)};
+        egfr_slope2 : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};
         
-        egfr_decline : {egfrld - egfr_max_dt >365 and egfr_ld_max_n >2 and egfr_max_val - egfrlv>=20 => 1},{=>0};
+        egfr_decline : {egfr_l_dt - egfr_max_dt >365 and egfr_ld_max_n >2 and egfr_max_val - egfr_l_val>=20 => 1},{=>0};
         
         egfr_rapid_decline : { egfr_decline=1 and egfr_slope2<-10 =>1},{=>0};
+        
+        #doc(
+            "calculate uacr metrics"
+        );
+        
+        acr_l => eadv.lab_ua_acr.val.lastdv();
+        
+        
+        acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
+        
+        #doc(
+            "check for eGFR and uACR persistence, based on KDIGO persistence definition "
+        );
+        
+        
+        
+        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_l_dt-90 and val<60);
+        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
+        
+        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
+        
+        
+        
         
         #doc(
             "Apply KDIGO 2012 staging"
@@ -271,27 +284,27 @@ BEGIN
         
         
         
-        rrt : {rrt0 is null =>0},{=>rrt0};
         
-        cga_g:  {egfrlv>=90 AND rrt=0 => `G1`},
-                {egfrlv<90 AND egfrlv>=60  AND rrt=0 => `G2`},
-                {egfrlv<60 AND egfrlv>=45  AND rrt=0 => `G3A`},
-                {egfrlv<45 AND egfrlv>=30  AND rrt=0 => `G3B`},
-                {egfrlv<30 AND egfrlv>=15  AND rrt=0 => `G4`},
-                {egfrlv<15 AND rrt=0 => `G5`},
+        
+        cga_g:  {egfr_l_val>=90 AND rrt=0 => `G1`},
+                {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => `G2`},
+                {egfr_l_val<60 AND egfr_l_val>=45  AND rrt=0 => `G3A`},
+                {egfr_l_val<45 AND egfr_l_val>=30  AND rrt=0 => `G3B`},
+                {egfr_l_val<30 AND egfr_l_val=15  AND rrt=0 => `G4`},
+                {egfr_l_val<15 AND rrt=0 => `G5`},
                 {=>`NA`};
             
-        cga_a: {acrlv<3 => `A1`},
-                {acrlv<30 AND acrlv>=3 => `A2`},
-                {acrlv<300 AND acrlv>=30 => `A3`},
-                {acrlv>300 => `A4`},{=>`NA`};
+        cga_a: {acr_l_val<3 => `A1`},
+                {acr_l_val<30 AND acr_l_val>=3 => `A2`},
+                {acr_l_val<300 AND acr_l_val>=30 => `A3`},
+                {acr_l_val>300 => `A4`},{=>`NA`};
                 
-        cga_a_val: {acrlv<3 => 1},
-                {acrlv<30 AND acrlv>=3 => 2},
-                {acrlv<300 AND acrlv>=30 => 3},
-                {acrlv>300 => 4},{=>0};
+        cga_a_val: {acr_l_val<3 => 1},
+                {acr_l_val<30 AND acr_l_val>=3 => 2},
+                {acr_l_val<300 AND acr_l_val>=30 => 3},
+                {acr_l_val>300 => 4},{=>0};
         
-        asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
+        
         
         #doc(
             "KDIGO 2012, string composite attribute"
@@ -408,8 +421,20 @@ BEGIN
             }
         );
         
-        /*  ICPC2+ coding , note that val has to set to ordered rank*/
+        
 
+        #doc(
+            "Gather careplan info and extract CKD specific component"
+        );
+        cp_l => eadv.careplan_h9_v1.val.lastdv();
+        
+        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
+        
+        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
+        
+        #doc(
+            "Gather ICPC2+ coding from EHR, note that val has to set to ordered rank"
+        );
         
         dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
         

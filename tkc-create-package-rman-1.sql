@@ -2196,9 +2196,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || ','' '') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || '_VAL '
-                                  || ', LISTAGG(TO_CHAR('
+--                                  || ', LISTAGG(TO_CHAR('
+                                  || ', LISTAGG('
                                   || dt_trans
-                                  || ',`YYYY-MM-DD`),'' '') WITHIN GROUP (ORDER BY DT DESC) AS '
+                                  || ','' '') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || '_DT ';
 
@@ -2818,9 +2819,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     WHEN 'DOC' THEN
                                         
                                         rdoc := rdoc
-                                        || '<strong>'
-                                        || initcap(trim(both '"' from trim(param_value)))
-                                        || '</strong><br/>';
+                                        || '<h4>'
+                                        || trim(both '"' from trim(param_value))
+                                        || '</h4><br/>';
                                         
                                     ELSE
                                     dbms_output.put_line('undefined comp dir');

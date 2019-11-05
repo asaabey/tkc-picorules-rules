@@ -8,7 +8,7 @@ declare
 begin
 
 --        eid:=&val;
-    eid:=9710;
+    eid:=24483;
     composition:=rman_pckg.get_composition_by_eid(eid,'neph002');
     
     
