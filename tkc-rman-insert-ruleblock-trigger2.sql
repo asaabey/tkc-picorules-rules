@@ -40,7 +40,11 @@ BEGIN
             }
         );
         
-        /*  Calculate information quotient */
+        
+        #doc(
+            Calculate information quantity
+        );
+        
         
         iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-365);
         iq_egfr => eadv.lab_bld_egfr.val.count(0).where(dt>sysdate-365);
@@ -58,25 +62,30 @@ BEGIN
                 {=>0};
         
         
-        /*  External bindings   */
+        
+        
+        
         rrt => rout_rrt.rrt.val.bind();
         dm => rout_cd_dm.dm.val.bind();
        
           
+        #doc(
+            "Exclude previously diagnosed nephrotic and if recent renal encounters"
+        );
         
         
-        /*  Exclude previously diagnosed nephrotic syndromes from coding */
         
         dx_nephrotic => eadv.[icd_n04%].dt.count(0);
         
-        /*  Exclude if renal encounters present */
-        
+                
         enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
         
                 
         ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 => 1},{=>0};
         
-        /*  Inclusion   */
+        #doc(
+            "Inclusions"
+        );
         
         uacr_n => eadv.lab_ua_acr.dt.count(0).where(val>300 and dt>sysdate-365);
         
@@ -84,7 +93,14 @@ BEGIN
         
         uacr2 => eadv.lab_ua_acr.val.last(1).where(dt>sysdate-365);
         
+        #doc(
+            "Use delta of log transformed uacr" 
+        );
         uacr_log_delta : {uacr1>0 and uacr2>0 => round(log(10,uacr1)-log(10,uacr2),1)};
+        
+        #doc(
+            "Nephrotic associations of albumin and cholesterol" 
+        );
         
         alb1 => eadv.lab_bld_albumin.val.last().where(dt>sysdate-365);
         
@@ -255,7 +271,7 @@ BEGIN
           
           
         #doc(
-            "Minima, Maxima and last")
+            "Minima Maxima and last")
         );
           cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365); 
           cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365); 
@@ -292,12 +308,26 @@ BEGIN
           
           cr_max_lv_1y_qt : {nvl(cr_lv,0)>0 => round(cr_max_1y/cr_lv,1) };
           
+          #doc(
+            "AKI Stage as per AKIN excluding stage 1"
+          );
           
           akin_stage : {rrt=0 and cr_base_max_1y_qt>2 => 3 },{rrt=0 and cr_base_max_1y_qt>1.5 => 2 },{=>0};
+          
+          #doc(
+            "AKI context as per baseline function"
+          );
           
           aki_context : { akin_stage>=1 and egfr_base_val>=60 => 1},
                         { akin_stage>=1 and egfr_base_val>30 and egfr_base_val<60 => 2},
                         { akin_stage>=1 and egfr_base_val<30 => 3},{=>0};
+        
+          #doc(
+            "AKI resolution to baseline"
+          );
+          
+
+          
           
           aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
@@ -351,6 +381,10 @@ BEGIN
             }
         );
         
+        #doc(
+            "Based only on ICD 10CM coding"
+        );
+        
         aki_icd => eadv.[icd_n17%].dt.count(0).where(dt>sysdate-180);
           
         tg4110 : {aki_icd>0 => 1},{=>0};
@@ -386,7 +420,7 @@ BEGIN
         
          #define_ruleblock(tg4610,
             {
-                description: "Algorithm to detect nephritic syndrome",
+                description: "Algorithm to generate CKD23 10 pa ",
                 version: "0.0.1.1",
                 blockid: "tg4610",
                 target_table:"rout_tg4610",
@@ -400,6 +434,9 @@ BEGIN
             }
         );
         
+        #doc(
+            "Get CKD G stage and slope"
+        );
         cga_g => rout_ckd.cga_g.val.bind();
         
         ckd => rout_ckd.ckd.val.bind();
@@ -420,6 +457,11 @@ BEGIN
         ckd_null : { nvl(ckd,0)=0 =>1},{=0};
         
         enc => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
+        
+        #doc(
+            "Triggered for stage 1 or 2 with eb of minus 20pc"
+        );  
+          
           
         tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null=> 1},{=>0};
         
@@ -466,6 +508,10 @@ BEGIN
                 
             }
         );
+        
+        #doc(
+            "Get CKD G stage and slope and AVF proc codes"
+        );
         ckd => rout_ckd.ckd.val.bind();
         
         ckd_stage =>rout_ckd.ckd_stage.val.bind();
@@ -476,7 +522,9 @@ BEGIN
         
         enc => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
           
-        
+        #doc(
+            "Triggered for stage 4+ with eb of minus 5pc or more and no avf proc"
+        );  
           
         tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null=> 1},{=>0};
         
@@ -563,11 +611,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to detect new RRT   */
+        /*  Algorithm medication safety concern in CKD   */
         
          #define_ruleblock(tg4660,
             {
-                description: "Algorithm to detect nephritic syndrome",
+                description: "Algorithm medication safety concern in CKD ",
                 version: "0.0.1.1",
                 blockid: "tg4660",
                 target_table:"rout_tg4660",
@@ -707,7 +755,7 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to detect untreated dm   */
+        /*  Algorithm to detect high haemoglobin while on ESA  */
         
          #define_ruleblock(tg4810,
             {

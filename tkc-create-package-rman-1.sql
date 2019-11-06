@@ -2804,9 +2804,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                         
                                         rdoc := rdoc
                                         || chr(10)
-                                        || '<i>TKC rman documentation for '
+                                        || '<i>TKC rman documentation for:</i><b>{ '
                                         || rpipe_col(i).blockid
-                                        || '</i><h2>Description: '
+                                        || '}</b><h2>Description: '
                                         || rb_def.description
                                         || '</h2><br/>'
                                         || 'Version: '
@@ -2819,9 +2819,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     WHEN 'DOC' THEN
                                         
                                         rdoc := rdoc
-                                        || '<h4>'
+                                        || '<h5>'
                                         || trim(both '"' from trim(param_value))
-                                        || '</h4><br/>';
+                                        || '</h5><br/>';
                                         
                                     ELSE
                                     dbms_output.put_line('undefined comp dir');

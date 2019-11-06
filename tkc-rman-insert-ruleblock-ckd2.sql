@@ -41,7 +41,7 @@ BEGIN
         );
 
         #doc(
-            "Haemodialysis episode ICD, proc codes and problem ICPC2p coding"
+            "Haemodialysis episode ICD proc codes and problem ICPC2p coding"
         );
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
@@ -72,7 +72,7 @@ BEGIN
         ren_enc => eadv.enc_op_renal.dt.max(1900);
         
         #doc(
-            "Determine RRT category based on chronology. RRT cat 1 (HD) requires more than 10 sessions
+            "Determine RRT category based on chronology. RRT cat 1 [HD] requires more than 10 sessions
             "
         );
         
@@ -81,6 +81,9 @@ BEGIN
             {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
             {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
             {=>0};
+        #doc(
+            "Generate binary variables for rrt categories"
+        );
             
         rrt_hd : {rrt=1 => 1},{=>0};
         
@@ -182,12 +185,12 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();        
         
-        hd_y1 => eadv.icd_z49_1.dt.count(0).where(dt>sysdate-365);
+        
                 
         
         
         #doc(
-            "Calculate information quantity(iq)"
+            "Calculate information quantity [iq]"
         );
         
         
@@ -206,7 +209,7 @@ BEGIN
         );
         
         #doc(
-            "Gather last, first and penultimate within 3-12 month windows with cardinality"
+            "Gather last first and penultimate within 3-12 month windows with cardinality"
         );
         
         egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
@@ -223,21 +226,23 @@ BEGIN
         egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
         
         #doc(
-            "check for egfr assumption violation"
+            "Check for 1 year egfr assumption violation"
         );
         
         egfr_1y_delta : {egfr_l1_val is not null => egfr_l_val-egfr_l1_val};
         
+        asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
+        
+        #doc(
+            "Check for 3 month egfr assumption violation"
+        );
         egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
         egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
         
         egfr_3m_qt : {egfr_3m_n2>=2 => round(egfr_l_val/egfr_3m_mu,2)};
         
         asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
-        
-        asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
-        
-        asm_viol_hd : {hd_y1 >0 => 1},{=>0};
+               
         
         #doc(
             "calculate egfr slope and related metrics"
@@ -248,6 +253,10 @@ BEGIN
         egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
         
         egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfr_l_dt);
+        
+        #doc(
+            "Slope between last and last maximum value, assuming last max represents baseline"
+        );
         
         egfr_slope2 : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};
         
@@ -265,7 +274,7 @@ BEGIN
         acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
         
         #doc(
-            "check for eGFR and uACR persistence, based on KDIGO persistence definition "
+            "check for eGFR and uACR persistence based on KDIGO persistence definition "
         );
         
         
@@ -307,7 +316,7 @@ BEGIN
         
         
         #doc(
-            "KDIGO 2012, string composite attribute"
+            "KDIGO 2012 string composite attribute"
         );
         
         ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
@@ -319,7 +328,7 @@ BEGIN
                 {=> null};
         
         #doc(
-            "KDIGO 2012, numeric composite attribute"
+            "KDIGO 2012 numeric composite attribute"
         );
         
         ckd :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => 1},
@@ -331,7 +340,7 @@ BEGIN
                 {=> 0};
         
         #doc(
-            "KDIGO 2012, binary attributes"
+            "KDIGO 2012 binary attributes"
         );
                 
         ckd_stage_1 : { ckd=1 => 1},{=>0}; 
@@ -538,8 +547,8 @@ BEGIN
             }
     );
      
-     #doc(
-        "External bindings"
+      #doc(
+        "Gather coding supporting DM2 HTN LN and other GN"
      );
      
      dm => rout_cd_dm.dm.val.bind(); 
@@ -547,7 +556,7 @@ BEGIN
      ckd => rout_ckd.ckd.val.bind();
      
      #doc(
-        "calculate dx information quantity "
+        "Calculate information quantity [IQ] "
      );
     
      
@@ -557,15 +566,17 @@ BEGIN
      iq_coding => eadv.[icd_%,icpc_%].dt.count(0); 
      iq_tier: {iq_coding>1 and least(iq_egfr,iq_uacr)>=2 => 4}, {least(iq_egfr,iq_uacr)>=2 => 3}, {least(iq_egfr,iq_uacr)>=1 => 2}, {iq_egfr>0 or iq_uacr>0 => 1}, {=>0}; 
      */ 
-     #doc(
-        "Gather coding supporting DM2, HTN, LN, and other GN"
-     );
+    
      
      gn_ln => eadv.icd_m32_14.dt.count(0); 
      gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
      
      
      aet_dm : {ckd>0 and dm>0 =>1},{=>0};
+     
+     #doc(
+        "CKD due to structural and Genetic disease needs to be included here"
+     );
      #define_attribute(
             aet_dm,
             {
@@ -666,14 +677,14 @@ BEGIN
     );
         
         #doc(
-            "External bindings"
+            "Get CKD status"
         );
         
                
         ckd => rout_ckd.ckd.val.bind();       
         
         #doc(
-            "Gather encounter, procedure and careplan"
+            "Gather encounter procedure and careplan"
         );
           
         enc_n => eadv.enc_op_renal.dt.count();
