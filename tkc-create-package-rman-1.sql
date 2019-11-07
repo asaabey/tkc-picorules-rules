@@ -175,6 +175,7 @@ Change Log
 05/11/2019  rman_ruleblocks added col rmdoc
 05/11/2019  compile_ruleblock in parse to rmdoc automatically
 05/11/2019  serializedv updated to output iso dates
+07/11/2019  map to template inject bitmap chart html segment
 
 */
     TYPE rman_tbl_type IS
@@ -318,6 +319,7 @@ Change Log
         jstr VARCHAR2,
         tmplt VARCHAR2
     ) RETURN VARCHAR2;
+    
 
     FUNCTION get_composition_by_eid (
         eid_in INT,
@@ -1410,9 +1412,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tag_operator       VARCHAR(2);
         ret_tmplt          VARCHAR2(32767) := tmplt;
         x_vals             VARCHAR2(1000) := '';
+        dt_tbl             tbl_type; 
+        x_vals_iso         VARCHAR2(1000) := '';
         y_vals             VARCHAR2(1000) := '';
         yscale_in          NUMBER;
-        xygraph            VARCHAR(1000);
+        xygraph_ascii      VARCHAR(1000);
+        xygraph_bitmap     VARCHAR(1000);
         xline_str_arr_in   VARCHAR(1000);
         yline_str_arr_in   VARCHAR(1000);
     BEGIN
@@ -1428,6 +1433,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             IF instr(tkey, '_graph_dt') > 0 THEN
                 x_vals := tval;
+                dt_tbl:=splitstr(tval,' ');
+                for j IN 1..dt_tbl.count loop
+                    x_vals_iso := x_vals_iso || to_char(to_date(dt_tbl(j),'DD/MM/YY'),'YYYY-MM-DD') || ' ';
+                end loop;
             END IF;
             IF instr(tkey, '_graph_val') > 0 THEN
                 y_vals := tval;
@@ -1449,8 +1458,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             END IF;
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
-                xygraph := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in, yline_str_arr
+                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in, yline_str_arr
                 => yline_str_arr_in);
+                
+                xygraph_bitmap := '
+                    <chart id="chartId" name="chartName" style="height:400px;width=600px" class="img-thumbnail" 
+                    x-vals="' || x_vals_iso || '" 
+                    y-vals="' || y_vals || '" 
+                    x-label="Date Recorded" 
+                    y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" 
+                    slope-line="2 6" line-colour="purple" slope-colour="green" />
+                ';
+                
             END IF;
 
             -- insertions
@@ -1462,10 +1481,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                    || html_tkey, tval);
             -- add graphs
 
-            IF length(xygraph) > 0 THEN
-                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph);
+            IF length(xygraph_ascii) > 0 THEN
+                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_bitmap);
+                x_vals_iso :='';
                 x_vals := '';
                 y_vals := '';
+                
             END IF;                                       
             
             -- toggle on
@@ -1572,6 +1593,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN ret_tmplt;
     END map_to_tmplt2;
 
+    
     FUNCTION get_composition_by_eid (
         eid_in INT,
         nlc_id VARCHAR2
@@ -1626,6 +1648,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'lt;', '<');
         composition := replace(composition, chr(38)
                                             || 'gt;', '>');
+        composition := replace(composition, chr(38)||'quot;', '"');
+        
         RETURN composition;
 --    EXCEPTION
 --        WHEN eid_not_found THEN

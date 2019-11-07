@@ -287,6 +287,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Temporal variation of eGFR  
     eGFR ml/min against time 
     <<br>><<xygraph>><</xygraph>><<br>>
+    <chart id="chartId" name="chartName" style="height:400px;width=600px" class="img-thumbnail" x-vals="2000-01-01 2001-01-01 2002-01-01 2003-01-01" y-vals="1.2 4.5 3.6 6.7" x-label="Date Recorded" y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" slope-line="2 6" line-colour="purple" slope-colour="green" />
+    
     '
     );
     
