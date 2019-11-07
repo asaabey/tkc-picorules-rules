@@ -8,8 +8,8 @@ declare
 begin
 
 --        eid:=&val;
-    eid:=24483;
-    composition:=rman_pckg.get_composition_by_eid(eid,'neph002');
+    eid:=40357;
+    composition:=rman_pckg.get_composition_by_eid(eid,'neph002_html');
     
     
     DBMS_OUTPUT.put_line('EID:' || eid);

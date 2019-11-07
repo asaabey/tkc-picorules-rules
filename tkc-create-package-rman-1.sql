@@ -1456,19 +1456,34 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           || ' '
                                           || tval);
             END IF;
+            
+--            x_vals_iso:='2000-01-01 2001-01-01 2002-01-01 2003-01-01';
+--            y_vals :='1.2 4.5 3.6 6.7';
+--            xygraph_bitmap := '<chart id="chartId" '
+--                    || 'name="chartName" style="height:400px;width=600px" '
+--                    || 'class="img-thumbnail" '
+--                    || 'x-vals="' || x_vals_iso || '" '
+--                    || 'y-vals="' || y_vals || '" '
+--                    || 'x-label="Date Recorded" '
+--                    || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
+--                    || 'line-colour="purple"  />';
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
                 xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in, yline_str_arr
                 => yline_str_arr_in);
                 
-                xygraph_bitmap := '
-                    <chart id="chartId" name="chartName" style="height:400px;width=600px" class="img-thumbnail" 
-                    x-vals="' || x_vals_iso || '" 
-                    y-vals="' || y_vals || '" 
-                    x-label="Date Recorded" 
-                    y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" 
-                    slope-line="2 6" line-colour="purple" slope-colour="green" />
-                ';
+                
+                xygraph_bitmap := '<chart id="chartId" '
+                    || 'name="chartName" style="height:400px;width=600px" '
+                    || 'class="img-thumbnail" '
+                    || 'x-vals="' || x_vals_iso || '" '
+                    || 'y-vals="' || y_vals || '" '
+                    || 'x-label="Date Recorded" '
+                    || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
+                    || 'slope-line="2 6" line-colour="purple" slope-colour="green" />';
+                
+                
+
                 
             END IF;
 
@@ -1479,13 +1494,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                    || html_tkey
                                                    || '<</'
                                                    || html_tkey, tval);
-            -- add graphs
-
+            
+                 -- add graphs
+--    IF length(xygraph_ascii) > 0 THEN
             IF length(xygraph_ascii) > 0 THEN
-                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_bitmap);
+                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_ascii);
+                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap>><</xygraph_bitmap>>', xygraph_bitmap);
                 x_vals_iso :='';
                 x_vals := '';
                 y_vals := '';
+            
                 
             END IF;                                       
             
@@ -1570,12 +1588,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                || '(.*?)'
                                                || '<</'
                                                || html_tkey, '');
-
-    
-                                                
-    -- remove unattended html segments
+    -- remove unattended tags
 
         ret_tmplt := regexp_replace(ret_tmplt, '<<[a-z0-9_\=]+>>(.*?)<<\/[a-z0-9_\=]+>>', '');
+     
     
     -- remove excess space and line feeds
         ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
@@ -1584,12 +1600,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
         ret_tmplt := regexp_replace(ret_tmplt, '\\n', chr(10));
-        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10)
-                                                    || chr(9));
+--        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10)
+--                                                    || chr(9));
         
     -- add tabs
 
         ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
+    -- other mods
+
+    
+                                                
+
+    
         RETURN ret_tmplt;
     END map_to_tmplt2;
 

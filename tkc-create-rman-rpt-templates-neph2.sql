@@ -286,18 +286,22 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     Temporal variation of eGFR  
     eGFR ml/min against time 
-    <<br>><<xygraph>><</xygraph>><<br>>
-    <chart id="chartId" name="chartName" style="height:400px;width=600px" class="img-thumbnail" x-vals="2000-01-01 2001-01-01 2002-01-01 2003-01-01" y-vals="1.2 4.5 3.6 6.7" x-label="Date Recorded" y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" slope-line="2 6" line-colour="purple" slope-colour="green" />
+    <<xygraph>><</xygraph>>
+    
+    <br/>
+    
+    <<xygraph_bitmap>><</xygraph_bitmap>>
+    
     
     '
     );
-    
+--    <chart id="chartId" name="chartName" style="height:400px;width=600px" class="img-thumbnail" x-vals="2000-01-01 2001-01-01 2002-01-01 2003-01-01" y-vals="1.2 4.5 3.6 6.7" x-label="Date Recorded" y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" slope-line="2 6" line-colour="purple" slope-colour="green" />
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002','egfr_metrics','egfr_metrics',651110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <<r1_stg=1>>Normal renal function of <<egfr_r1_val>><</egfr_r1_val>> ml/min at entry<</r1_stg=1>>
     <<r1_stg=2>>Near normal renal function of <<egfr_r1_val>><</egfr_r1_val>> ml/min at entry<</r1_stg=2>>
-    <<p3pg_signal=1>>Apparent progression from <<egfr60_last_val>><</egfr60_last_val>> ml/min to <<egfr_rn_val>><</egfr_rn_val>> ml/min during (<<egfr60_last_dt>><</egfr60_last_dt>>-<<egfr_rn_dt>><</egfr_rn_dt>>) <</p3pg_signal=1>>
+    <chart id="chartId" name="chartName" style="height:400px;width=600px" class="img-thumbnail" x-vals="2000-01-01 2001-01-01 2002-01-01 2003-01-01" y-vals="1.2 4.5 3.6 6.7" x-label="Date Recorded" y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" slope-line="2 6" line-colour="purple" slope-colour="green" /><<p3pg_signal=1>>Apparent progression from <<egfr60_last_val>><</egfr60_last_val>> ml/min to <<egfr_rn_val>><</egfr_rn_val>> ml/min during (<<egfr60_last_dt>><</egfr60_last_dt>>-<<egfr_rn_dt>><</egfr_rn_dt>>) <</p3pg_signal=1>>
     <<est_esrd_lapsed=0>><<est_esrd_dt>>Estimated ESRD around <<est_esrd_dt>><</est_esrd_dt>>.<</est_esrd_dt>><</est_esrd_lapsed=0>>
     <<est_esrd_lapsed=1>><<est_esrd_dt>>Imminent ESRD, with estimation boundry in the past<</est_esrd_lapsed=1>>
     '

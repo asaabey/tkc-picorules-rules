@@ -438,6 +438,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Temporal variation of eGFR  
     eGFR ml/min against time 
     <<br>><<xygraph>><</xygraph>><<br>>
+    
+    <<xygraph_bitmap>><</xygraph_bitmap>>
     '
     );
     
