@@ -40,8 +40,11 @@ BEGIN
             }
         );
 
-        #doc(
-            "Haemodialysis episode ICD proc codes and problem ICPC2p coding"
+        #doc(,
+            {
+                txt : "Haemodialysis episode ICD proc codes and problem ICPC2p coding",
+                cite : "rrt_hd_icd,rrt_pd_icd"
+            }
         );
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
@@ -52,28 +55,35 @@ BEGIN
         
         hd_dt_min => eadv.icd_z49_1.dt.min();
         
-        #doc(
-            "Peritoneal episode ICD and problem ICPC2p coding"
+        #doc(,
+            {   
+                txt : "Peritoneal episode ICD and problem ICPC2p coding"
+            }
         );
         
         pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
         
-        #doc(
-            "Transplant episode ICD and problem ICPC2p coding"
+        #doc(,
+            {
+                txt : "Transplant episode ICD and problem ICPC2p coding"
+            }
         );
         tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
         
-        #doc(
-            "Home-haemodialysis ICPC2p coding"
+        #doc(,
+            {
+                txt : "Home-haemodialysis ICPC2p coding"
+            }
         );
         homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
         
         
         ren_enc => eadv.enc_op_renal.dt.max(1900);
         
-        #doc(
-            "Determine RRT category based on chronology. RRT cat 1 [HD] requires more than 10 sessions
-            "
+        #doc(,
+            {
+                txt: "Determine RRT category based on chronology. RRT cat 1 [HD] requires more than 10 sessions"
+            }
         );
         
         rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10  and hd_dt>sysdate-365 => 1},
@@ -81,8 +91,10 @@ BEGIN
             {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
             {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
             {=>0};
-        #doc(
-            "Generate binary variables for rrt categories"
+        #doc(,
+            {
+                txt: "Generate binary variables for rrt categories"
+            }
         );
             
         rrt_hd : {rrt=1 => 1},{=>0};
@@ -93,8 +105,10 @@ BEGIN
         
         rrt_hhd : {rrt=4 => 1},{=>0};
         
-        #doc(
-            "Current transplant patient based on 2y encounter activity"
+        #doc(,
+            {
+                txt:"Current transplant patient based on 2y encounter activity"
+            }
         );
         
         tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
@@ -179,20 +193,20 @@ BEGIN
             }
         );
         
-        #doc(
-            "Gather RRT details for exclusion and check assumption violation"
+        #doc(,
+            {
+                txt:"Gather RRT details for exclusion and check assumption violation"
+            }
         );
         
         rrt => rout_rrt.rrt.val.bind();        
         
-        
-                
-        
-        
-        #doc(
-            "Calculate information quantity [iq]"
+        #doc(,
+            {
+                txt:"Calculate information quantity [iq]"
+            }
         );
-        
+                
         
         iq_uacr => eadv.lab_ua_acr.val.count(0);
         iq_egfr => eadv.lab_bld_egfr_c.val.count(0);
@@ -204,13 +218,19 @@ BEGIN
                 {iq_egfr>0 or iq_uacr>0 => 1},
                 {=>0};
         
-        #doc(
-            "Calculate egfr metrics"
+        
+        #doc(,
+            {
+                txt : "Calculate egfr metrics"
+            }
         );
         
-        #doc(
-            "Gather last first and penultimate within 3-12 month windows with cardinality"
+        #doc(,
+            {
+                txt : "Gather last first and penultimate within 3-12 month windows with cardinality"
+            }
         );
+        
         
         egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
         
@@ -225,17 +245,22 @@ BEGIN
         
         egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
         
-        #doc(
-            "Check for 1 year egfr assumption violation"
+        #doc(,
+            {
+                txt : "Check for 1 year egfr assumption violation"
+            }
         );
         
         egfr_1y_delta : {egfr_l1_val is not null => egfr_l_val-egfr_l1_val};
         
         asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
         
-        #doc(
-            "Check for 3 month egfr assumption violation"
+        #doc(,
+            {
+                txt : "Check for 3 month egfr assumption violation"
+            }
         );
+        
         egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
         egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
         
@@ -243,10 +268,12 @@ BEGIN
         
         asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
                
-        
-        #doc(
-            "calculate egfr slope and related metrics"
+        #doc(,
+            {
+                txt : "calculate egfr slope and related metrics"
+            }
         );
+
         
         
         
@@ -254,9 +281,13 @@ BEGIN
         
         egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfr_l_dt);
         
-        #doc(
-            "Slope between last and last maximum value, assuming last max represents baseline"
+        #doc(,
+            {
+                txt : "Slope between last and last maximum value, assuming last max represents baseline"
+            }
         );
+        
+        
         
         egfr_slope2 : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};
         
@@ -264,18 +295,25 @@ BEGIN
         
         egfr_rapid_decline : { egfr_decline=1 and egfr_slope2<-10 =>1},{=>0};
         
-        #doc(
-            "calculate uacr metrics"
+        #doc(,
+            {
+                txt : "calculate uacr metrics"
+            }
         );
         
+       
         acr_l => eadv.lab_ua_acr.val.lastdv();
         
         
         acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
         
-        #doc(
-            "check for eGFR and uACR persistence based on KDIGO persistence definition "
+        #doc(,
+            {
+                txt : "check for eGFR and uACR persistence based on KDIGO persistence definition "
+            }
         );
+        
+        
         
         
         
@@ -285,13 +323,11 @@ BEGIN
         pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
         
         
-        
-        
-        #doc(
-            "Apply KDIGO 2012 staging"
+        #doc(,
+            {
+                txt : "Apply KDIGO 2012 staging"
+            }
         );
-        
-        
         
         
         
@@ -313,11 +349,13 @@ BEGIN
                 {acr_l_val<300 AND acr_l_val>=30 => 3},
                 {acr_l_val>300 => 4},{=>0};
         
-        
-        
-        #doc(
-            "KDIGO 2012 string composite attribute"
+        #doc(,
+            {
+                txt : "KDIGO 2012 string composite attribute"
+            }
         );
+        
+        
         
         ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
                 {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => `2`},
@@ -326,10 +364,13 @@ BEGIN
                 {cga_g=`G4` => `4`},
                 {cga_g=`G5` => `5`},
                 {=> null};
-        
-        #doc(
-            "KDIGO 2012 numeric composite attribute"
+        #doc(,
+            {
+                txt : "KDIGO 2012 numeric composite attribute"
+            }
         );
+        
+        
         
         ckd :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => 1},
                 {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => 2},
@@ -338,10 +379,12 @@ BEGIN
                 {cga_g=`G4` => 5},
                 {cga_g=`G5` => 6},
                 {=> 0};
-        
-        #doc(
-            "KDIGO 2012 binary attributes"
+        #doc(,
+            {
+                txt : "KDIGO 2012 binary attributes"
+            }
         );
+        
                 
         ckd_stage_1 : { ckd=1 => 1},{=>0}; 
         
@@ -431,19 +474,24 @@ BEGIN
         );
         
         
-
-        #doc(
-            "Gather careplan info and extract CKD specific component"
+        #doc(,
+            {
+                txt : "Gather careplan info and extract CKD specific component"
+            }
         );
+        
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
         cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
         cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
-        #doc(
-            "Gather ICPC2+ coding from EHR, note that val has to set to ordered rank"
+        #doc(,
+            {
+                txt : "Gather ICPC2+ coding from EHR, note that val has to set to ordered rank"
+            }
         );
+        
         
         dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
         
@@ -480,14 +528,24 @@ BEGIN
             }
         );
         
-        /* Encounters with specialist services */
+        #doc(,
+            {
+                txt : " Encounters with specialist services"
+            }
+        );
+        
         enc_n => eadv.enc_op_renal.dt.count();
         enc_ld => eadv.enc_op_renal.dt.max();
         enc_fd => eadv.enc_op_renal.dt.min();
         
         enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
         
-        /*  AVF creation    */
+        #doc(,
+            {
+                txt : "Access formation"
+            }
+        );
+        
         avf => eadv.caresys_3450901.dt.max();
         
         cp_mis :{cp_ckd>0 and (ckd - cp_ckd)>=2 => 1},{=>0};
@@ -547,18 +605,24 @@ BEGIN
             }
     );
      
-      #doc(
-        "Gather coding supporting DM2 HTN LN and other GN"
-     );
+      #doc(,
+        {
+            txt :"Gather coding supporting DM2 HTN LN and other GN"
+        }
+        
+    );
      
      dm => rout_cd_dm.dm.val.bind(); 
      htn => rout_cd_htn.htn.val.bind();
      ckd => rout_ckd.ckd.val.bind();
      
-     #doc(
-        "Calculate information quantity [IQ] "
-     );
-    
+     #doc(,
+        {
+            txt :"Calculate information quantity [IQ]"
+        }
+        
+    );
+     
      
      /* 
      iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-730); 
@@ -574,9 +638,14 @@ BEGIN
      
      aet_dm : {ckd>0 and dm>0 =>1},{=>0};
      
-     #doc(
-        "CKD due to structural and Genetic disease needs to be included here"
-     );
+     #doc(,
+        {
+            txt :"CKD due to structural and Genetic disease needs to be included here"
+        }
+        
+    );
+     
+     
      #define_attribute(
             aet_dm,
             {
@@ -627,9 +696,13 @@ BEGIN
      
      aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
      
-     #doc(
-        "Determine causality"
-     );
+     #doc(,
+        {
+            txt :"Determine causality"
+        }
+        
+    );
+     
      ckd_cause : { ckd>0 and greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
      
      
@@ -676,15 +749,21 @@ BEGIN
             }
     );
         
-        #doc(
-            "Get CKD status"
+        #doc(,
+            {
+                txt :"Get CKD status"
+            }
         );
+        
+        
         
                
         ckd => rout_ckd.ckd.val.bind();       
         
-        #doc(
-            "Gather encounter procedure and careplan"
+        #doc(,
+            {
+                txt : "Gather encounter procedure and careplan"
+            }
         );
           
         enc_n => eadv.enc_op_renal.dt.count();
@@ -694,17 +773,24 @@ BEGIN
         
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
-        #doc(
-            "Extract renal specific careplan"
+        #doc(,
+            {
+                txt : "Extract renal specific careplan"
+            }
         );
+        
+       
         cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
         cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
-        
-        #doc(
-            "Gather Nursing and allied health encounters"
+        #doc(,
+            {
+                txt :"Gather Nursing and allied health encounters"
+            }
         );
+        
+        
         
         
         edu_init => eadv.enc_op_renal_edu.dt.min().where(val=31);
@@ -768,17 +854,17 @@ BEGIN
                 
             }
         );
-
-        #doc(
-            "External bindings"
-        );
-      
+             
         
         ckd => rout_ckd.ckd.val.bind();
         
-        #doc(
-            "Gather lab workup"
+        #doc(,
+            {
+                txt:"Gather lab workup"
+            }
         );
+        
+        
         
         acr_lv => eadv.lab_ua_acr.val.last();
         
@@ -837,15 +923,23 @@ BEGIN
         ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
                 { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
                 {=>0};
-        #doc(
-            "Determine radiology (regional imaging) encounters"
+        
+        #doc(,
+            {
+                txt:"Determine radiology (regional imaging) encounters"
+            }
         );
+        
         
         usk_null : { ris_usk_ld is null =>1},{=>0};
         
-        #doc(
-            "Determine renal biopsy status"
+        #doc(,
+            {
+                txt: "Determine renal biopsy status"
+            }
         );
+        
+        
         
         bxk_null : { ris_bxk_ld is null =>1},{=>0};
         
@@ -885,17 +979,17 @@ BEGIN
                 
             }
         );
-
-        #doc(
-            "External bindings"
-        );
         
         
         ckd => rout_ckd.ckd.val.bind(); 
         
-        #doc(
-            "Haematenics"
+        #doc(,
+            {
+                txt:"Haematenics"
+            }
         );
+        
+        
         
         hb_lv => eadv.lab_bld_hb.val.last();
         hb_ld => eadv.lab_bld_hb.dt.max();
@@ -912,9 +1006,12 @@ BEGIN
         esa_lv => eadv.rxnc_b03xa.val.last();
         esa_ld => eadv.rxnc_b03xa.dt.max();
         
-        #doc(
-            "Electrolytes"
+        #doc(,
+            {
+                txt:"Electrolytes"
+            }
         );
+        
         
         
         k_lv => eadv.lab_bld_potassium.val.last();
@@ -936,9 +1033,12 @@ BEGIN
         fer_lv => eadv.lab_bld_ferritin.val.last();
         fer_ld => eadv.lab_bld_ferritin.dt.max();
         
-        #doc(
-            "Determine haematenic complications"
+        #doc(,
+            {
+                txt:"Determine haematenic complications"
+            }
         );
+        
         
         hb_state : { nvl(hb_lv,0)>0 and nvl(hb_lv,0)<100 =>1},
                     { nvl(hb_lv,0)>=100 and nvl(hb_lv,0)<180 =>2},
@@ -958,9 +1058,12 @@ BEGIN
         
         esa_state : { esa_null=0 and esa_lv=1 => 1},{ esa_null=0 and esa_lv=0 => 2},{=>0};
         
-        #doc(
-            "Determine CKD-MBD complications"
+        #doc(,
+            {
+                txt:"Determine CKD-MBD complications"
+            }
         );
+        
         
         
         phos_null : {phos_lv is null =>1},{=>0};
@@ -969,16 +1072,22 @@ BEGIN
         pth_null : {pth_lv is null =>1},{=>0};
         pth_high : {pth_null=0 and pth_lv>=72 =>1},{=>0};
         
-        #doc(
-            "Determine CKD electrolyte and acid base complications"
+        #doc(,
+            {
+                txt:"Determine CKD electrolyte and acid base complications"
+            }
         );
+        
         
         k_null : {k_lv is null =>1},{=>0};
         k_high : {k_null=0 and k_lv>=6 =>1},{=>0};      
         
-        #doc(
-            "Need to include bicarbonate therapy"
+        #doc(,
+            {
+                txt:"Need to include bicarbonate therapy"
+            }
         );
+        
         
         hco3_null : {hco3_lv is null =>1},{=>0};
         hco3_low : {hco3_null=0 and hco3_lv<22 =>1},{=>0};

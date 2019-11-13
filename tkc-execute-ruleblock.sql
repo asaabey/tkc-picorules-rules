@@ -25,7 +25,7 @@ BEGIN
 --rman_pckg.compile_ruleblock('rrt',ret_val);
 ----
 --rman_pckg.compile_ruleblock(
---    bid_in =>'egfr_graph',
+--    bid_in =>'ckd',
 --    return_code => ret_val
 --);
 --
@@ -39,7 +39,7 @@ BEGIN
         eg :
         rman_pckg.compile_active_ruleblocks();
 */
---rman_pckg.compile_active_ruleblocks;
+rman_pckg.compile_active_ruleblocks;
 --
 
 /*
@@ -66,14 +66,14 @@ BEGIN
 
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
-rman_pckg.execute_ruleblock(
-        bid_in => 'egfr_graph',
-        create_wide_tbl => 1,
-        push_to_long_tbl =>1,
-        push_to_long_tbl2=>0,
-        recompile=>1,
-        return_code=>ret_val
-); 
+--rman_pckg.execute_ruleblock(
+--        bid_in => 'rrt',
+--        create_wide_tbl => 1,
+--        push_to_long_tbl =>0,
+--        push_to_long_tbl2=>0,
+--        recompile=>1,
+--        return_code=>ret_val
+--); 
 --    
 /*
     Execute all active ruleblock 

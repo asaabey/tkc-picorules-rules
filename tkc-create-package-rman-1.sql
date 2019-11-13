@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.1
+Version		    1.0.1.2
 Creation date	07/04/2019
-update on date  05/11/2019
+update on date  13/11/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -176,6 +176,7 @@ Change Log
 05/11/2019  compile_ruleblock in parse to rmdoc automatically
 05/11/2019  serializedv updated to output iso dates
 07/11/2019  map to template inject bitmap chart html segment
+13/11/2019  added citation ability to rpipe to rdoc
 
 */
     TYPE rman_tbl_type IS
@@ -200,6 +201,8 @@ Change Log
         TABLE OF VARCHAR2(30);
     tstack tstack_type := tstack_type();
     tstack_empty tstack_type := tstack_type();
+    TYPE cite_stack_type IS
+        TABLE OF VARCHAR2(100);
     cmpstat NVARCHAR2(4000);
     rman_index PLS_INTEGER := 0;
     assn_op CONSTANT VARCHAR2(2) := '=>';
@@ -226,29 +229,31 @@ Change Log
         left_tbl_name VARCHAR2(100),
         ext_col_name VARCHAR2(4000)
     );
-    
     TYPE rb_def_type IS RECORD (
-        description     VARCHAR2(400),
-        version         VARCHAR2(12),
-        blockid         VARCHAR2(100),
-        target_table    VARCHAR2(40),
-        environment     VARCHAR2(12),
-        rule_owner      VARCHAR2(100),
-        rule_author     VARCHAR2(100),
-        is_active       INT,
-        def_exit_prop   VARCHAR2(100),
-        def_predicate   VARCHAR2(100),
-        exec_order      INT
+        description VARCHAR2(400),
+        version VARCHAR2(12),
+        blockid VARCHAR2(100),
+        target_table VARCHAR2(40),
+        environment VARCHAR2(12),
+        rule_owner VARCHAR2(100),
+        rule_author VARCHAR2(100),
+        is_active INT,
+        def_exit_prop VARCHAR2(100),
+        def_predicate VARCHAR2(100),
+        exec_order INT
     );
-
     TYPE att_def_type IS RECORD (
-        label           VARCHAR2(400),
-        is_reportable   PLS_INTEGER,
-        is_trigger      PLS_INTEGER,
-        type            PLS_INTEGER,
-        priority        PLS_INTEGER
+        label VARCHAR2(400),
+        is_reportable PLS_INTEGER,
+        is_trigger PLS_INTEGER,
+        type PLS_INTEGER,
+        priority PLS_INTEGER
     );
-    
+    TYPE doc_def_type IS RECORD (
+        txt VARCHAR2(4000),
+        cite VARCHAR2(400),
+        section VARCHAR2(400)
+    );
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
     );
@@ -256,8 +261,6 @@ Change Log
     PROCEDURE get_composite_sql (
         cmpstat OUT NVARCHAR2
     );
-
-   
 
     FUNCTION sql_predicate (
         att_str VARCHAR2
@@ -319,7 +322,6 @@ Change Log
         jstr VARCHAR2,
         tmplt VARCHAR2
     ) RETURN VARCHAR2;
-    
 
     FUNCTION get_composition_by_eid (
         eid_in INT,
@@ -973,8 +975,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     END get_composite_sql;
 
-    
-
     PROCEDURE insert_rman (
         indx             INT,
         where_clause     NVARCHAR2,
@@ -1131,8 +1131,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         xline_tbl := rman_pckg.splitstr(xline_str_arr, ' ');
         yline_tbl := rman_pckg.splitstr(yline_str_arr, ' ');
         mspan := ( ceil((SYSDATE -(TO_DATE(dt_tbl(dt_tbl.count), 'dd/mm/yy'))) / 30.43) ) + 2;
-        
-        
 
         xscale := x_pixels / mspan;
         WHILE y > 0 LOOP
@@ -1412,7 +1410,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tag_operator       VARCHAR(2);
         ret_tmplt          VARCHAR2(32767) := tmplt;
         x_vals             VARCHAR2(1000) := '';
-        dt_tbl             tbl_type; 
+        dt_tbl             tbl_type;
         x_vals_iso         VARCHAR2(1000) := '';
         y_vals             VARCHAR2(1000) := '';
         yscale_in          NUMBER;
@@ -1433,11 +1431,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             IF instr(tkey, '_graph_dt') > 0 THEN
                 x_vals := tval;
-                dt_tbl:=splitstr(tval,' ');
-                for j IN 1..dt_tbl.count loop
-                    x_vals_iso := x_vals_iso || to_char(to_date(dt_tbl(j),'DD/MM/YY'),'YYYY-MM-DD') || ' ';
-                end loop;
+                dt_tbl := splitstr(tval, ' ');
+                FOR j IN 1..dt_tbl.count LOOP x_vals_iso := x_vals_iso
+                                                            || TO_CHAR(TO_DATE(dt_tbl(j), 'DD/MM/YY'), 'YYYY-MM-DD')
+                                                            || ' ';
+                END LOOP;
+
             END IF;
+
             IF instr(tkey, '_graph_val') > 0 THEN
                 y_vals := tval;
             END IF;
@@ -1469,22 +1470,22 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --                    || 'line-colour="purple"  />';
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
-                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in, yline_str_arr
-                => yline_str_arr_in);
-                
-                
-                xygraph_bitmap := '<chart id="chartId" '
-                    || 'name="chartName" style="height:400px;width=600px" '
-                    || 'class="img-thumbnail" '
-                    || 'x-vals="' || x_vals_iso || '" '
-                    || 'y-vals="' || y_vals || '" '
-                    || 'x-label="Date Recorded" '
-                    || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
-                    || 'slope-line="2 6" line-colour="purple" slope-colour="green" />';
-                
-                
+                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
+                , yline_str_arr => yline_str_arr_in);
 
-                
+                xygraph_bitmap := '<chart id="chartId" '
+                                  || 'name="chartName" style="height:400px;width=600px" '
+                                  || 'class="img-thumbnail" '
+                                  || 'x-vals="'
+                                  || x_vals_iso
+                                  || '" '
+                                  || 'y-vals="'
+                                  || y_vals
+                                  || '" '
+                                  || 'x-label="Date Recorded" '
+                                  || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
+                                  || 'slope-line="2 6" line-colour="purple" slope-colour="green" />';
+
             END IF;
 
             -- insertions
@@ -1497,14 +1498,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             
                  -- add graphs
 --    IF length(xygraph_ascii) > 0 THEN
+
             IF length(xygraph_ascii) > 0 THEN
                 ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_ascii);
                 ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap>><</xygraph_bitmap>>', xygraph_bitmap);
-                x_vals_iso :='';
+                x_vals_iso := '';
                 x_vals := '';
                 y_vals := '';
-            
-                
             END IF;                                       
             
             -- toggle on
@@ -1604,18 +1604,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --                                                    || chr(9));
         
     -- add tabs
-
         ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
     -- other mods
-
-    
-                                                
-
-    
         RETURN ret_tmplt;
     END map_to_tmplt2;
 
-    
     FUNCTION get_composition_by_eid (
         eid_in INT,
         nlc_id VARCHAR2
@@ -1670,8 +1663,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'lt;', '<');
         composition := replace(composition, chr(38)
                                             || 'gt;', '>');
-        composition := replace(composition, chr(38)||'quot;', '"');
-        
+        composition := replace(composition, chr(38)
+                                            || 'quot;', '"');
         RETURN composition;
 --    EXCEPTION
 --        WHEN eid_not_found THEN
@@ -2218,7 +2211,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 ) THEN
                     IF length(funcparam_str) > 0 THEN
                         val_trans := substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
-                        
+
                         dt_trans := substr(funcparam_str, instr(funcparam_str, '~') + 1);
 
 --                        dt_trans := to_char(substr(funcparam_str, instr(funcparam_str, '~') + 1),'YYYY-MM-DD');
@@ -2708,15 +2701,25 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         func_exp         func_exp_type;
         rb_def           rb_def_type;
         att_def          att_def_type;
+        doc_def          doc_def_type;
         cond_exp         VARCHAR2(4000);
         func_name        VARCHAR2(30);
         func_param       VARCHAR2(4000);
         param_key        VARCHAR2(100);
         param_value      VARCHAR2(4000);
-        counter          PLS_INTEGER:=1;
+        counter          PLS_INTEGER := 1;
+        cite_idx         PLS_INTEGER := 0;
+        section_idx      PLS_INTEGER := 0;
+        cite_tbl         tbl_type;
+        rdoc_cite        CLOB;
+        rdoc_header      VARCHAR2(4000);
+        rdoc_footer      VARCHAR2(4000);
+        rdoc_nav         VARCHAR2(400);
+        cite_rec         rman_ruleblocks_citation%rowtype;
+        dep_str          VARCHAR2(400);
+        rb_ts            timestamp;
     BEGIN
-        
-        
+        rdoc_cite := '<h2>References</h2><hr>';
         
         SELECT
             ruleid,
@@ -2729,7 +2732,23 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ORDER BY
             ruleid;
             
-        
+        --default header which is usually overidden
+        rdoc_header := '<i>TKC rman documentation for:</i><b>{ '
+                                            || rpipe_col(1).blockid
+                                            || '}</b><h2>'
+                                            || 'No metadata defined'
+                                            || '<br/>'
+                                            ||  'Dependencies:<i>'
+                                            ||  dep_str
+                                            || '</i><br/><small>'
+                                            || 'Last updated:<i>'
+                                            || rb_ts
+                                            || '</i></small><hr>';
+        --Get time stamp
+        select scn_to_timestamp(ora_rowscn) into rb_ts from rman_ruleblocks where blockid=rpipe_col(1).blockid;
+            
+        --Get dependencies    
+        dependency_walker(rpipe_col(1).blockid,dep_str);
     
     -- loop though each line
 
@@ -2747,8 +2766,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             -- loop through each statement in rule line
                 FOR j IN 1..statements_tbl.count LOOP
                     ss := statements_tbl(j);
-                    
-                            
                     IF length(trim(ss)) > 0 THEN
                     
                     --aggregate declaration
@@ -2760,174 +2777,338 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             => func_exp.predicate, constparam => func_exp.constparam, ext_col_name => func_exp.ext_col_name);
 
                             func_exp.avn := trim(substr(ss, 1, instr(ss, '=>', 1, 1) - length('=>')));
-                            
-                            SELECT * INTO rstack_row FROM rman_stack WHERE ruleid= rpipe_col(i).ruleid AND varid IS NOT NULL;
-                                    
-                            rdoc := rdoc || '<p>'  || counter || '. ';
-                            
+
+                            SELECT
+                                *
+                            INTO rstack_row
+                            FROM
+                                rman_stack
+                            WHERE
+                                ruleid = rpipe_col(i).ruleid
+                                AND varid IS NOT NULL;
+
+                            rdoc := rdoc
+                                    || '<p>'
+                                    || counter
+                                    || '. ';
                             CASE func_exp.func
-                            
-                            WHEN 'BIND' THEN
-                                rdoc := rdoc
-                                    || '<strong>Read</strong> from <strong>external rule</strong> '
-                                    || REPLACE(func_exp.tbl,'ROUT_','')
-                                    || ' the '
-                                    || func_exp.prop
-                                    || ' of '
-                                    || func_exp.att;
-                            ELSE
-                                rdoc := rdoc
-                                        || '<strong>Read</strong> the '
-                                        || func_exp.func
-                                        || ' '
-                                        || func_exp.prop
-                                        || ' of '
-                                        || func_exp.att;
-                            
+                                WHEN 'BIND' THEN
+                                    rdoc := rdoc
+                                            || '<strong>Read</strong> from <strong>external rule</strong> '
+                                            || replace(func_exp.tbl, 'ROUT_', '')
+                                            || ' the '
+                                            || func_exp.prop
+                                            || ' of '
+                                            || func_exp.att;
+                                ELSE
+                                    rdoc := rdoc
+                                            || '<strong>Read</strong> the '
+                                            || func_exp.func
+                                            || ' '
+                                            || func_exp.prop
+                                            || ' of '
+                                            || func_exp.att;
                             END CASE;
-                            
 
                             rdoc := rdoc
                                     || ' and <strong>Assign</strong> to "<mark>'
                                     || func_exp.avn
                                     || '</mark>"</p>'
                                     || chr(10);
-                                    
-                            ss:=replace(ss,'<',chr(38) || 'lt;');
-                            ss:=replace(ss,'>',chr(38) || 'gt;');
-                            rdoc := rdoc || chr(10) || '<code>'  || ss || '</code><br/><br/>' || chr(10);
-                            
-                                    
-                            rdoc := rdoc || chr(10)
+
+                            ss := replace(ss, '<', chr(38)
+                                                   || 'lt;');
+                            ss := replace(ss, '>', chr(38)
+                                                   || 'gt;');
+                            rdoc := rdoc
+                                    || chr(10)
+                                    || '<code>'
+                                    || ss
+                                    || '</code><br/><br/>'
+                                    || chr(10);
+
+                            rdoc := rdoc
+                                    || chr(10)
                                     || '<em>SQL construct :</em><br/><p style="font-family:courier;font-size:10">'
                                     || chr(10)
-                                    || '   SELECT ' || rstack_row.select_clause || chr(10)
-                                    || '   FROM ' || rstack_row.from_clause || chr(10);
-                                    
-                            IF rstack_row.where_clause IS NOT NULL THEN
-                            rdoc:=rdoc || chr(10)                        
-                                    || '   WHERE ' || rstack_row.where_clause;
-                            END IF;        
-                            
-                            IF rstack_row.groupby_clause IS NOT NULL THEN        
-                            rdoc:=rdoc || chr(10)                        
-                                    || '   GROUP BY ' || rstack_row.groupby_clause;
-                            END IF;
-                            
-                            rdoc:=rdoc || '</p><br/>';
-                            
-                            counter:=counter +1;
+                                    || '   SELECT '
+                                    || rstack_row.select_clause
+                                    || chr(10)
+                                    || '   FROM '
+                                    || rstack_row.from_clause
+                                    || chr(10);
 
+                            IF rstack_row.where_clause IS NOT NULL THEN
+                                rdoc := rdoc
+                                        || chr(10)
+                                        || '   WHERE '
+                                        || rstack_row.where_clause;
+                            END IF;
+
+                            IF rstack_row.groupby_clause IS NOT NULL THEN
+                                rdoc := rdoc
+                                        || chr(10)
+                                        || '   GROUP BY '
+                                        || rstack_row.groupby_clause;
+                            END IF;
+
+                            rdoc := rdoc || '</p><br/>';
+                            counter := counter + 1;
                         ELSIF instr(ss, '#') = 1 THEN
                         -- Compiler directive
-                            
-                           
                             func_name := upper(regexp_substr(ss, '(#)(\w+)(\(([^)]+)\))', 1, 1, 'i', 2));
 
                             func_param := regexp_substr(ss, '(\()([^)]+)', 1, 1, 'i', 2);
-                            
                             param_key := lower(trim(substr(func_param, 1, instr(func_param, ',') - 1)));
 
-                            param_value := substr(func_param, instr(func_param, ',') + 1);        
-                            
-                            
-                            
-                            SELECT JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2) INTO att_def.label FROM DUAL;
-                            
+                            param_value := substr(func_param, instr(func_param, ',') + 1);
+                            SELECT
+                                JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
+                            INTO
+                                att_def
+                            .label
+                            FROM
+                                dual;
+
                             CASE func_name
-                                    WHEN 'DEFINE_ATTRIBUTE' THEN
-                                        SELECT JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2) INTO att_def.label FROM DUAL;
-                                        rdoc := rdoc
-                                        || chr(10)
-                                        || param_key 
-                                        || ' label as  : '
-                                        || att_def.label
-                                        || chr(10);
-                                    WHEN 'DEFINE_RULEBLOCK' THEN
-                                        SELECT JSON_VALUE(param_value, '$.description' RETURNING VARCHAR2) INTO rb_def.description FROM DUAL;
-                                        SELECT JSON_VALUE(param_value, '$.version' RETURNING VARCHAR2) INTO rb_def.version FROM DUAL;
-                                        SELECT JSON_VALUE(param_value, '$.rule_author' RETURNING VARCHAR2) INTO rb_def.rule_author FROM DUAL;
-                                        
-                                        rdoc := rdoc
-                                        || chr(10)
-                                        || '<i>TKC rman documentation for:</i><b>{ '
-                                        || rpipe_col(i).blockid
-                                        || '}</b><h2>Description: '
-                                        || rb_def.description
-                                        || '</h2><br/>'
-                                        || 'Version: '
-                                        || rb_def.version
-                                        || chr(10)
-                                        || 'Author: '
-                                        || rb_def.rule_author
-                                        || '<br/><hr>';
+                                WHEN 'DEFINE_ATTRIBUTE' THEN
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
+                                    INTO
+                                        att_def
+                                    .label
+                                    FROM
+                                        dual;
+
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.is_reportable' RETURNING VARCHAR2)
+                                    INTO
+                                        att_def
+                                    .is_reportable
+                                    FROM
+                                        dual;
+
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.is_trigger' RETURNING VARCHAR2)
+                                    INTO
+                                        att_def
+                                    .is_trigger
+                                    FROM
+                                        dual;
+
+                                    rdoc := rdoc
+                                            || '<i>Meta-data for '
+                                            || param_key
+                                            || '</i><p>( label as  : '
+                                            || att_def.label
+                                            || ')</p>';
+
+                                WHEN 'DEFINE_RULEBLOCK' THEN
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.description' RETURNING VARCHAR2)
+                                    INTO
+                                        rb_def
+                                    .description
+                                    FROM
+                                        dual;
+
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.version' RETURNING VARCHAR2)
+                                    INTO
+                                        rb_def
+                                    .version
+                                    FROM
+                                        dual;
+
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.rule_author' RETURNING VARCHAR2)
+                                    INTO
+                                        rb_def
+                                    .rule_author
+                                    FROM
+                                        dual;
+
+                                    rdoc_header := '<i>TKC rman documentation for:</i><b>{ '
+                                            || rpipe_col(i).blockid
+                                            || '}</b><h2>'
+                                            || rb_def.description
+                                            || '</h2><br/>'
+                                            || 'Version: '
+                                            || rb_def.version
+                                            || chr(10)
+                                            || 'Author: '
+                                            || rb_def.rule_author
+                                            || '<br/>'
+                                            ||  'Dependencies:<i>'
+                                            ||  dep_str
+                                            || '</i><br/><small>'
+                                            || 'Last updated:<i>'
+                                            || rb_ts
+                                            || '</i></small><hr>';
+
+                                WHEN 'DOC' THEN
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.txt' RETURNING VARCHAR2)
+                                    INTO
+                                        doc_def
+                                    .txt
+                                    FROM
+                                        dual;
+
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.cite' RETURNING VARCHAR2)
+                                    INTO
+                                        doc_def
+                                    .cite
+                                    FROM
+                                        dual;
                                     
-                                    WHEN 'DOC' THEN
-                                        
-                                        rdoc := rdoc
-                                        || '<h5>'
-                                        || trim(both '"' from trim(param_value))
-                                        || '</h5><br/>';
-                                        
-                                    ELSE
+                                    SELECT
+                                        JSON_VALUE(param_value, '$.section' RETURNING VARCHAR2)
+                                    INTO
+                                        doc_def
+                                    .section
+                                    
+                                    FROM
+                                        dual;
+                                    
+                                    IF doc_def.section IS NOT NULL THEN
+                                    section_idx:=section_idx + 1;
+                                    rdoc_nav := rdoc_nav
+                                            || '<a href="#section'
+                                            || section_idx
+                                            || '">'
+                                            || doc_def.section
+                                            || '</a>' || chr(38) || 'nbsp;'
+                                            || chr(38) || 'nbsp;'
+                                            || chr(38) || 'nbsp;';
+                                    rdoc := rdoc
+                                            || '<h3 id="section' || section_idx || '">'
+                                            || doc_def.section
+                                            || '</h3><hr>';
+                                    END IF;
+    
+                                    
+                                    IF doc_def.txt IS NOT NULL THEN
+                                    rdoc := rdoc
+                                            || '<p>'
+                                            || trim(BOTH '"' FROM trim(doc_def.txt))
+                                            || '';
+                                    END IF;
+
+                                    IF doc_def.cite IS NOT NULL THEN
+                                        cite_tbl := splitstr(doc_def.cite, ',');
+                                        rdoc := rdoc || '<sup><i>';
+                                        FOR k IN 1..cite_tbl.count LOOP
+                                            SELECT
+                                                *
+                                            INTO cite_rec
+                                            FROM
+                                                rman_ruleblocks_citation
+                                            WHERE
+                                                citation_id = cite_tbl(k);
+
+                                            IF cite_rec.citation_id IS NOT NULL THEN
+                                                cite_idx := cite_idx + 1;
+                                                rdoc := rdoc
+                                                        || '<a href="#'
+                                                        || cite_tbl(k)
+                                                        || '">['
+                                                        || cite_idx
+                                                        || ']<a>';
+
+                                                rdoc_cite := rdoc_cite
+                                                             || '<p id="'
+                                                             || cite_tbl(k)
+                                                             || '">'
+                                                             || cite_idx
+                                                             || '. '
+                                                             || cite_rec.citation_body
+                                                             || '</p>';
+
+                                            END IF;
+
+                                        END LOOP;
+
+                                        rdoc := rdoc || '</sup></p><br \>';
+--                                        else
+--                                            rdoc:= rdoc 
+--                                            || '<sup><i>'
+--                                            || 'No citation'
+--                                            || '</i></sup></h5><br \>';
+                                    END IF;
+
+                                ELSE
                                     dbms_output.put_line('undefined comp dir');
                             END CASE;
-                          
-                            
-                        
 
                         ELSIF instr(ss, ':') > 0 THEN
                         -- Conditional form
                             func_exp.avn := trim(substr(ss, 1, instr(ss, ':', 1, 1) - length(':')));
 
-                            SELECT * INTO rstack_row FROM rman_stack WHERE ruleid= rpipe_col(i).ruleid AND varid IS NOT NULL;
+                            SELECT
+                                *
+                            INTO rstack_row
+                            FROM
+                                rman_stack
+                            WHERE
+                                ruleid = rpipe_col(i).ruleid
+                                AND varid IS NOT NULL;
 
-                            rdoc := rdoc || '<p>'  || counter || '. ';
-                            
+                            rdoc := rdoc
+                                    || '<p>'
+                                    || counter
+                                    || '. ';
                             rdoc := rdoc
                                     || '<strong>Evaluate</strong> and <strong>Assign</strong> to "<mark>'
                                     || func_exp.avn
                                     || '</mark>"<br/>'
                                     || chr(10);
-                            
+
                             cond_exp := trim(substr(ss, instr(ss, ':') + 1));
-                            
-                            
-                            
-                            cond_exp := regexp_replace(cond_exp,'},','<br/>' || chr(10));
-                            cond_exp := regexp_replace(cond_exp,'{=>','   <strong>ELSE ASSIGN</strong>');
-                            cond_exp := regexp_replace(cond_exp,'=>',' then ASSIGN ');
-                            cond_exp := regexp_replace(cond_exp,'{','   <strong>IF</strong> ');
-                            cond_exp := regexp_replace(cond_exp,'}',chr(10));
+
+                            cond_exp := regexp_replace(cond_exp, '},', '<br/>' || chr(10));
+                            cond_exp := regexp_replace(cond_exp, '{=>', '   <strong>ELSE ASSIGN</strong>');
+                            cond_exp := regexp_replace(cond_exp, '=>', ' then ASSIGN ');
+                            cond_exp := regexp_replace(cond_exp, '{', '   <strong>IF</strong> ');
+                            cond_exp := regexp_replace(cond_exp, '}', chr(10));
+                            rdoc := rdoc || cond_exp;
                             rdoc := rdoc
-                                    || cond_exp;
-                                    
-                            rdoc := rdoc || chr(10) || '<br/><code>'  || ss || '</code><br/><br/>' || chr(10);
-                            
-                                    
-                            rdoc := rdoc || chr(10)
+                                    || chr(10)
+                                    || '<br/><code>'
+                                    || ss
+                                    || '</code><br/><br/>'
+                                    || chr(10);
+
+                            rdoc := rdoc
+                                    || chr(10)
                                     || '<em>SQL construct :</em><br/><p style="font-family:courier;font-size:10">'
                                     || chr(10)
-                                    || '   SELECT ' || rstack_row.select_clause || chr(10)
-                                    || '   FROM ' || rstack_row.from_clause || chr(10);
-                                    
-                            IF rstack_row.where_clause IS NOT NULL THEN
-                            rdoc:=rdoc || chr(10)                        
-                                    || '   WHERE ' || rstack_row.where_clause;
-                            END IF;        
-                            
-                            IF rstack_row.groupby_clause IS NOT NULL THEN        
-                            rdoc:=rdoc || chr(10)                        
-                                    || '   GROUP BY ' || rstack_row.groupby_clause;
-                            END IF;
-                            
-                            rdoc:=rdoc || '</p><br/>';
-                            
-                            counter:=counter +1;
+                                    || '   SELECT '
+                                    || rstack_row.select_clause
+                                    || chr(10)
+                                    || '   FROM '
+                                    || rstack_row.from_clause
+                                    || chr(10);
 
+                            IF rstack_row.where_clause IS NOT NULL THEN
+                                rdoc := rdoc
+                                        || chr(10)
+                                        || '   WHERE '
+                                        || rstack_row.where_clause;
+                            END IF;
+
+                            IF rstack_row.groupby_clause IS NOT NULL THEN
+                                rdoc := rdoc
+                                        || chr(10)
+                                        || '   GROUP BY '
+                                        || rstack_row.groupby_clause;
+                            END IF;
+
+                            rdoc := rdoc || '</p><br/>';
+                            counter := counter + 1;
                         END IF;
-                        
-                        
+
                     END IF;
 
                 END LOOP;
@@ -2935,8 +3116,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             END IF;
 
         END LOOP;
+        
+        rdoc := rdoc_header || rdoc_nav || rdoc;
 
-        dbms_output.put_line(rdoc);
+        IF cite_idx > 0 THEN
+            rdoc := rdoc || rdoc_cite;
+        END IF;
+        
+        rdoc_footer := '<br/><sub><p>This page was auto-generated at ' || systimestamp || ' by the rb2rdoc translator.</sub>';
+        
+        rdoc := rdoc || rdoc_footer;
     END parse_rpipe_to_rdoc;
 
     PROCEDURE parse_ruleblocks (
@@ -3781,11 +3970,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         return_code   OUT           PLS_INTEGER
     ) IS
 
-        strsql   CLOB;
-        str_rmdoc    CLOB;
-        t0       INTEGER := dbms_utility.get_time;
-        rb       rman_ruleblocks%rowtype;
-        bid      rman_ruleblocks.blockid%TYPE;
+        strsql      CLOB;
+        str_rmdoc   CLOB;
+        t0          INTEGER := dbms_utility.get_time;
+        rb          rman_ruleblocks%rowtype;
+        bid         rman_ruleblocks.blockid%TYPE;
     BEGIN
         commit_log('Compile ruleblock', bid_in, 'compiling');
         DELETE FROM rman_rpipe;
@@ -3815,9 +4004,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         parse_ruleblocks(bid_in);
         parse_rpipe(strsql);
         parse_rpipe_to_rdoc(str_rmdoc);
-        
         dbms_output.put_line('rmdoc--->' || length(str_rmdoc));
-        
         UPDATE rman_ruleblocks
         SET
             sqlblock = strsql,

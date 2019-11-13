@@ -92,6 +92,8 @@ CREATE TABLE rman_rpt_templates
     --CONSTRAINT fk_template_ruleblock FOREIGN KEY(ruleblockid) REFERENCES rman_ruleblocks(blockid)
 );
 /
+
+
 DROP INDEX rman_rpt_templates_ruleblockid;
 /
 CREATE INDEX rman_rpt_templates_ruleblockid ON rman_rpt_templates(ruleblockid);

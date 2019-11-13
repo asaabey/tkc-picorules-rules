@@ -18,11 +18,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Ruleblock to detect diabetes */
+        /* Ruleblock to assess diabetes */
         
         #define_ruleblock(cd_dm,
             {
-                description: "Ruleblock to detect diabetes",
+                description: "Ruleblock to assess diabetes",
                 version: "0.0.2.1",
                 blockid: "cd_dm",
                 target_table:"rout_cd_dm",
@@ -37,8 +37,12 @@ BEGIN
             }
         );
         
-        #doc(
-            "External bindings"
+        
+        
+         #doc(,
+            {
+                txt:"Get careplan information"
+            }
         );
         
         cp_lv => eadv.careplan_h9_v1.val.last();
@@ -49,22 +53,39 @@ BEGIN
         
         cp_dm_ld : {cp_dm>0 => cp_ld};
         
-        
-        #doc(
-            "Calculate information quantity"
+        #doc(,
+            {
+                txt:"Calculate information quantity"
+            }
         );
+        
+       
         
         iq_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(dt>sysdate-730);
         
         iq_tier : {iq_hba1c>1 => 2},{iq_hba1c>0 => 1},{=>0};
         
-        #doc(
-            "Determine diagnosis by code, lab and rxn criteria"
+        #doc(,
+            {
+                section: "Diagnosis"
+            }
         );
         
-        #doc(
-            "code criteria"
+        
+        #doc(,
+            {
+                txt :"Determine diagnosis by code lab and rxn criteria",
+                cite:"dm_bmc_ehr_2019"
+            }
         );
+        
+        
+        #doc(,
+            {
+                txt:"code criteria"
+            }
+        );
+        
         
         
         dm_icd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.count(0);
@@ -73,17 +94,22 @@ BEGIN
         
         dm_code_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
         
-        #doc(
-            "lab criteria"
+        #doc(,
+            {
+                txt:"lab criteria"
+            }
         );
-        
+       
         
         
         dm_lab => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>65/10);
         dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min().where(val>65/10);
         
-        #doc(
-            "rxn criteria"
+        #doc(,
+            {
+                txt:"medication criteria based on rxnorm",
+                cite:"dm_rxn"
+            }
         );
         
         
@@ -97,10 +123,17 @@ BEGIN
         dm_rxn_dpp4 => eadv.[rxnc_a10bh].dt.count(0).where(val=1);
         dm_rxn_glp1 => eadv.[rxnc_a10bj].dt.count(0).where(val=1);
         dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
+           
                
-        
-        #doc(
-            "Determine dm chronology"
+        #doc(,
+            {
+                section: "Complications"
+            }
+        );
+        #doc(,
+            {
+                txt:"Determine dm chronology"
+            }
         );
         
         
@@ -112,9 +145,13 @@ BEGIN
 
         dm_type_1 => eadv.[icpc_t89%].dt.count(0);
         
-        #doc(
-            "Determine diabetic complications including retinopathy, neuropathy, dm foot"
+        #doc(,
+            {
+                txt:"Determine diabetic complications including retinopathy neuropathy dm foot",
+                cite:"dm_dmcare_2014"
+            }
         );
+        
         
         dm_micvas_retino => eadv.[icd_e11_3%,icpc_f83002].dt.count(0);
         
@@ -123,7 +160,11 @@ BEGIN
         
         dm_micvas :{ greatest(dm_micvas_neuro,dm_micvas_retino)>0 => 1},{=>0};
         
-        
+        #doc(,
+            {
+                txt:"Determine vintage"
+            }
+        );
         
         dm_vintage_yr_ : { dm_fd is not null => round((sysdate-dm_fd)/365,0)},{=>0};
         
@@ -147,9 +188,19 @@ BEGIN
         
         dm_dx_code : {dm=1 => (dm*1000 + dm_type*100 + dm_vintage_cat*10 + dm_micvas)},{=>0};
         
-        #doc(
-            "Diabetic glycaemic control"
+        #doc(,
+            {
+                section: "Glycaemic control"
+            }
         );
+        
+        #doc(,
+            {
+                txt:"Diabetic glycaemic control which includes short and long term control",
+                cite:"dm_pcd_2019,dm_ada_2018"
+            }
+        );
+        
         
         hba1c_n_tot0 => eadv.lab_bld_hba1c_ngsp.dt.count();
         hba1c_n_opt0 => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8);
@@ -157,6 +208,13 @@ BEGIN
         hba1c_n_opt :{hba1c_n_opt0 is not null => hba1c_n_opt0},{=>0};
         
         hba1c_n_tot : {hba1c_n_tot0 is not null => hba1c_n_tot0},{=>0};
+        
+        #doc(,
+            {
+                txt:"Calculate tir% of HbA1c",
+                cite:"dm_dmtech_2019"
+            }
+        );
         
         n_opt_qt :{hba1c_n_tot>0 => round((hba1c_n_opt/hba1c_n_tot),2)*100};
         
@@ -221,39 +279,52 @@ BEGIN
             }
         );
         
-        #doc(
-            "Calculate iq"
+        #doc(,
+            {
+                txt:"Calculate iq"
+            }
         );
+        
         
         iq_sbp => eadv.obs_bp_systolic.val.count(0).where(dt>sysdate-730);
         
         iq_tier : {iq_sbp>1 => 2},{iq_sbp>0 => 1},{=>0};
         
-        
-        #doc(
-            "Hypertension diagnosis: code criteria"
+        #doc(,
+            {
+                txt:"Hypertension diagnosis: code criteria"
+            }
         );
+       
         
         htn_icd => eadv.[icd_i10_%,icd_i15_%].dt.count(0);
         htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count(0);
         
-        
-        #doc(
-            "Hypertension diagnosis: observation criteria"
+        #doc(,
+            {
+                txt:"Hypertension diagnosis: observation criteria"
+            }
         );
+        
         htn_obs => eadv.obs_bp_systolic.val.count(0).where(val>140 and dt>sysdate-730);
         
-        #doc(
-            "Ancillary information for causality"
+        #doc(,
+            {
+                txt:"Ancillary information for causality"
+            }
         );
+        
         
         bld_k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
         
         bld_k_state : {nvl(bld_k_val,0)>5.2 =>3},{nvl(bld_k_val,0)>4.0 =>2},{=>1};
         
-        #doc(
-            "Hypertension diagnosis: rxn criteria"
+        #doc(,
+            {
+                txt:"Hypertension diagnosis: rxn criteria"
+            }
         );
+        
         htn_rxn_acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
         htn_rxn_arb => eadv.[rxnc_c09ca].dt.count(0).where(val=1);
         htn_rxn_bb => eadv.[rxnc_c07%].dt.count(0).where(val=1);
@@ -266,9 +337,12 @@ BEGIN
         
         htn_rxn : { coalesce(htn_rxn_acei, htn_rxn_arb, htn_rxn_bb, htn_rxn_ccb , htn_rxn_c02 , htn_rxn_diuretic_thiaz , htn_rxn_diuretic_loop) is not null =>1 },{=>0};
         
-        #doc(
-            "Hypertension diagnosis: vintage"
+        #doc(,
+            {
+                txt:"Hypertension diagnosis: vintage"
+            }
         );
+        
         
         htn_fd_code => eadv.[icd_i10_%,icd_i15_%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
         htn_fd_obs => eadv.obs_bp_systolic.dt.min().where(val>140);
@@ -279,10 +353,12 @@ BEGIN
         
         htn_type_2 => eadv.[icd_i15_%].dt.count(0);
         
-        
-        #doc(
-            "Hypertension complications"
+        #doc(,
+            {
+                txt:"Hypertension complications"
+            }
         );
+        
         
         htn_vintage_yr_ : { htn_fd is not null => round((sysdate-htn_fd)/365,0)},{=>0};
         
@@ -290,9 +366,12 @@ BEGIN
                             { htn_vintage_yr_>=10 and htn_vintage_yr_ <20 => 2 },
                             { htn_vintage_yr_>=20=> 3 },{=>0};
         
-        #doc(
-            "BP control"
+        #doc(,
+            {
+                txt:"BP control"
+            }
         );
+        
         
         sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365); 
         mu_2 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-730 and dt<sysdate-365);
@@ -365,9 +444,12 @@ BEGIN
         
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
-        #doc(
-            "Assign binary careplan attributes based on positional values "
+        #doc(,
+            {
+                txt:"Assign binary careplan attributes based on positional values "
+            }
         );
+        
         
         
         cp_cs : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-1,1))},{=>0};
@@ -417,10 +499,13 @@ BEGIN
             }
         );
         
+            #doc(,
+                {
+                    txt:"coronary insufficiency"
+                }
+            );    
             
-            #doc(
-                "coronary insufficiency"
-            );
+            
             
             cabg => eadv.[icd_z95_1%,icpc_k54007].dt.MIN();
             
@@ -429,10 +514,13 @@ BEGIN
             cad_chronic_icd => eadv.[icd_i24%,icd_i25%].dt.min();
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();        
-                     
-            #doc(
-                "valvular heart disease"
-            );
+                
+            #doc(,
+                {
+                    txt:"valvular heart disease"
+                }
+            );     
+            
             
             vhd_mv_icd => eadv.[icd_i34_%,icd_i05%].dt.min();
             
@@ -444,20 +532,23 @@ BEGIN
             
             vhd_icpc => eadv.[icpc_k83%].dt.min();
             
+            #doc(,
+                {
+                    txt:"Other atherosclerotic disease"
+                }
+            );   
             
-            #doc(
-                "Other atherosclerotic disease"
-            );
             
             cva => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
             
             pvd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min();
+           #doc(,
+            {
+                txt: "Medication"
+            }
+            ); 
             
             
-            #doc(
-                "Medications:
-                Anti-platelet agents, anti-coagulation including NOAC, anti-arrhythmic, diuretics, lipid lowering"
-            );
             /* Medication */
             /*  antiplatelet agents */
             
@@ -610,9 +701,7 @@ BEGIN
             }
         );
         
-        #doc(
-            "External bindings"
-        );
+        
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -626,9 +715,12 @@ BEGIN
         
         obesity => rout_cd_obesity.obesity.val.bind();
     
-        #doc(
-            "Gather risk factors from coding"
+        #doc(,
+            {
+                txt:"Gather risk factors from coding"
+            }
         );
+       
         
         
         lab_ld => eadv.[lab_bld%].dt.max().where(dt > sysdate-730);
@@ -647,9 +739,12 @@ BEGIN
         
         aki => eadv.[icd_n17%].dt.count(0);
         
-        #doc(
-            "Determine at risk for CKD, and active cohort"
+        #doc(,
+            {
+                txt:"Determine at risk for CKD, and active cohort"
+            }
         );
+        
             
         at_risk_ckd : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
         
@@ -717,9 +812,7 @@ BEGIN
             }
         );
         
-        #doc(
-            "External bindings"
-        );
+       
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -728,12 +821,13 @@ BEGIN
         bpc => rout_cd_htn.bp_control.val.bind();
         
         cad => rout_cd_cardiac.cardiac.val.bind();
-        
-        
-        #doc(
-            "Gather existing medications:
-            ACE-i, ARB, Beta-blockers, Calcium channel blockers, Central blocking agents, Thiazides, Loop diuretics, MRB"
+        #doc(,
+            {
+                txt:"Gather existing medications"
+            }
         );
+        
+        
         
 
         acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
@@ -745,10 +839,13 @@ BEGIN
         loop => eadv.[rxnc_c03c%].dt.count(0).where(val=1);
         mrb  => eadv.[rxnc_c03da].dt.count(0).where(val=1);
         
-        
-        #doc(
-            "Workout potential complications"
+        #doc(,
+            {
+                txt:"Deteremin potential complications"
+            }
         );
+        
+        
         k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
         
         k_state : {nvl(k_val,0)>5.2 =>3},{nvl(k_val,0)>4.0 =>2},{=>1};
@@ -762,8 +859,10 @@ BEGIN
                     { raas=1 and ccb>0 and greatest(bb,c02,thiaz,loop,mrb)=0 =>2},
                     { raas=1 and ccb>0 and thiaz>0 and greatest(bb,c02,loop,mrb)=0 =>3};
                     
-        #doc(
-            "Treatment recommendation as a code"
+        #doc(,
+            {
+                txt:"Treatment recommendation as a code"
+            }
         );
         
         htn_rcm :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },

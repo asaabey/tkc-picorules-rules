@@ -40,8 +40,11 @@ BEGIN
             }
         );
         
-        #doc(
-            "External bindings"
+        #doc(,
+            {
+                txt:"External bindings"
+            }
+            
         );
         
         
@@ -50,10 +53,15 @@ BEGIN
         cp_hicvr => rout_careplan.cp_hicvr.val.bind();
         
         
-        
-        #doc(
-            "Gather variables including existing assessment, demographics, diseases by coding"
+        #doc(,
+            {
+                txt:"Gather variables including existing assessment demographics and diseases by coding"
+            }
+            
         );
+        
+        
+        
         
         asm_cvra => eadv.asm_cvra.val.lastdv();
         
@@ -85,9 +93,14 @@ BEGIN
         
         lvh => const(0);
         
-        #doc(
-            "Determine if overide criteria are met"
+        
+        #doc(,
+            {
+                txt:"Determine if overide criteria are met"
+            }
+            
         );
+        
         
         dmckd1 : {dm=1 and ckd0>=1 => 1},{=>0};
         dm60 : {dm=1 and ckd0>=1 => 1},{=>0};
@@ -99,8 +112,14 @@ BEGIN
       
         risk_high_ovr : { greatest(dm60,dmckd1,ckd3,tc7,sbp180,age74,cvd_prev)>0 =>1},{=>0};
         
+        #doc(,
+            {
+                txt:"Otherwise calculate the 5 year risk for non-fatal MI, and CVE"
+            }
+            
+        );
         #doc(
-            "Otherwise calculate the 5 year risk for non-fatal MI, and CVE"
+            
         );
         
         risk_5_chd : {risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
@@ -163,15 +182,23 @@ BEGIN
         );
         
         
-        #doc(
-            "External bindings"
+        #doc(,
+            {
+                txt:"External bindings"
+            }
+            
         );
+        
         
         ckd => rout_ckd.ckd.val.bind();
         
-        #doc(
-            "Gather variables"
+        #doc(,
+            {
+                txt:"Gather variables"
+            }
+            
         );
+       
         
         dob => eadv.dmg_dob.dt.max();
         
@@ -185,9 +212,13 @@ BEGIN
         
         uacr_ld => eadv.lab_ua_acr.dt.max();
         
-        #doc(
-            "Determine if 4 variable equation is applicable"
+        #doc(,
+            {
+                txt:"Determine if 4 variable equation is applicable"
+            }
+            
         );
+        
         kfre4v_ap : { least(dob,egfr_ld,uacr_ld) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
         
         egfr_1 : { 1=1 => egfr_lv};
@@ -196,9 +227,13 @@ BEGIN
         
         age : { 1=1 => round(((egfr_ld-dob)/365.25),0)};
         
-        #doc(
-            "Apply equation"
+        #doc(,
+            {
+                txt:"Apply equation"
+            }
+            
         );
+        
         
         kfre4v_exp : { kfre4v_ap =1 => exp((-0.5567*(egfr_1/5-7.222))+(0.2467*(male - 0.5642))+(0.451*(ln_uacr_1-5.137))-(0.2201*(age/10-7.036)))},{=>0};
         
@@ -243,7 +278,13 @@ BEGIN
             }
         );
         
-        /*  External bindings*/
+        #doc(,
+            {
+                txt:"External bindings"
+            }
+            
+        );
+        
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -252,9 +293,14 @@ BEGIN
         cvra_calc => rout_cvra.cvra.val.bind();
         
         
+        #doc(,
+            {
+                txt:"Gather variables "
+            }
+            
+        );
         
         
-        /*  Gather variables */
         dob => eadv.dmg_dob.dt.max();
         
         male => eadv.dmg_gender.val.max();
