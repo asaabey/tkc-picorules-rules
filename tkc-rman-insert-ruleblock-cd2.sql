@@ -55,7 +55,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Calculate information quantity"
+                txt:"Calculate information entropy"
             }
         );
         
@@ -259,7 +259,7 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to detect hypertension  */
+        /* Algorithm to assess hypertension  */
         
         #define_ruleblock(cd_htn,
             {
@@ -281,7 +281,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Calculate iq"
+                txt:"Calculate information entropy"
             }
         );
         
@@ -289,6 +289,12 @@ BEGIN
         iq_sbp => eadv.obs_bp_systolic.val.count(0).where(dt>sysdate-730);
         
         iq_tier : {iq_sbp>1 => 2},{iq_sbp>0 => 1},{=>0};
+        
+        #doc(,
+            {
+                section: "Diagnosis"
+            }
+        );
         
         #doc(,
             {
@@ -339,6 +345,13 @@ BEGIN
         
         #doc(,
             {
+                section: "Complications"
+            }
+        );
+        
+        
+        #doc(,
+            {
                 txt:"Hypertension diagnosis: vintage"
             }
         );
@@ -366,6 +379,12 @@ BEGIN
                             { htn_vintage_yr_>=10 and htn_vintage_yr_ <20 => 2 },
                             { htn_vintage_yr_>=20=> 3 },{=>0};
         
+        
+        #doc(,
+            {
+                section: "Management"
+            }
+        );
         #doc(,
             {
                 txt:"BP control"
@@ -384,7 +403,11 @@ BEGIN
         slice140_1_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-365);
         
         
-        /* Time in therapeutic range */
+        #doc(,
+            {
+                txt:"BP control: Time in therapeutic range"
+            }
+        );
         n_qt_1 : {sigma_1>0 => 1-round(slice140_1_n/sigma_1,1)};
         
         mu_qt : {slice140_2_mu>0 =>round(slice140_1_mu/slice140_2_mu,2)};
@@ -501,7 +524,12 @@ BEGIN
         
             #doc(,
                 {
-                    txt:"coronary insufficiency"
+                    section:"CAD"
+                }
+            );
+            #doc(,
+                {
+                    txt:"coronary insufficiency based on coding"
                 }
             );    
             
@@ -515,9 +543,15 @@ BEGIN
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();        
                 
+                
             #doc(,
                 {
-                    txt:"valvular heart disease"
+                    section:"VHD"
+                }
+            );
+            #doc(,
+                {
+                    txt:"valvular heart disease based on coding"
                 }
             );     
             
@@ -532,6 +566,13 @@ BEGIN
             
             vhd_icpc => eadv.[icpc_k83%].dt.min();
             
+            
+            #doc(,
+                {
+                    section:"other CVD"
+                }
+            );
+            
             #doc(,
                 {
                     txt:"Other atherosclerotic disease"
@@ -542,6 +583,12 @@ BEGIN
             cva => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
             
             pvd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min();
+           
+           #doc(,
+                {
+                    section:"Management"
+                }
+            );
            #doc(,
             {
                 txt: "Medication"
@@ -550,19 +597,41 @@ BEGIN
             
             
             /* Medication */
-            /*  antiplatelet agents */
+            #doc(,
+                {
+                    txt: "antiplatelet agents"
+                }
+            ); 
+            
+            
             
             rxn_ap => eadv.[rxnc_b01ac].dt.min().where(val=1);
             
-            /*  anticoagulation */
+            
+            #doc(,
+                {
+                    txt: "anti-coagulation including NOAC"
+                }
+            ); 
+            
             
             rxn_anticoag => eadv.[rxnc_b01aa,rxnc_b01af,rxnc_b01ae,rxnc_b01ab].dt.min().where(val=1);
             
-            /* anti-arrhytmics */
+            #doc(,
+                {
+                    txt: "anti-arrhythmic"
+                }
+            ); 
+            
+        
             
             rxn_chrono => eadv.[rxnc_c01%].dt.min().where(val=1);
             
-            /* diuretics */
+            #doc(,
+                {
+                    txt: "diuretics"
+                }
+            ); 
             
             rxn_diu_loop => eadv.[rxnc_c03c%].dt.min().where(val=1);
             
@@ -570,7 +639,11 @@ BEGIN
             
             rxn_diu_k_sp => eadv.[rxnc_c03d%].dt.min().where(val=1);
             
-            /*  lipid lowering */
+            #doc(,
+                {
+                    txt: "lipid lowering"
+                }
+            ); 
             
             rxn_statin => eadv.[rxnc_c10aa,rxnc_c10bx,rxnc_c10ba].dt.min().where(val=1);
             

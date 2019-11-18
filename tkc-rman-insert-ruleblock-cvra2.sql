@@ -103,7 +103,7 @@ BEGIN
         
         
         dmckd1 : {dm=1 and ckd0>=1 => 1},{=>0};
-        dm60 : {dm=1 and ckd0>=1 => 1},{=>0};
+        dm60 : {dm=1 and age>=60 => 1},{=>0};
         ckd3 : {ckd0>=3 => 1},{=>0};
         tc7 : {tc>=7 => 1},{=>0};
         sbp180 : {sbp >=180 => 1},{=>0};
@@ -118,9 +118,7 @@ BEGIN
             }
             
         );
-        #doc(
-            
-        );
+
         
         risk_5_chd : {risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
             (-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+(-0.2767*smoke)+(-0.7181*LN(tc/hdl))+
@@ -204,13 +202,11 @@ BEGIN
         
         male => eadv.dmg_gender.val.max();
         
-        egfr_lv => eadv.lab_bld_egfr_c.val.last();
+        egfr => eadv.lab_bld_egfr_c.val.lastdv();
         
-        egfr_ld => eadv.lab_bld_egfr_c.dt.max();
+        uacr => eadv.lab_ua_acr.val.lastdv();
         
-        uacr_lv => eadv.lab_ua_acr.val.last();
-        
-        uacr_ld => eadv.lab_ua_acr.dt.max();
+
         
         #doc(,
             {
@@ -219,13 +215,15 @@ BEGIN
             
         );
         
-        kfre4v_ap : { least(dob,egfr_ld,uacr_ld) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
+        kfre4v_ap : { least(dob,egfr_dt,uacr_dt) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
         
-        egfr_1 : { 1=1 => egfr_lv};
+        egfr_1 : { 1=1 => egfr_val};
         
-        ln_uacr_1 : { nvl(uacr_lv,0)>0  => ln(uacr_lv * 8.84)};
         
-        age : { 1=1 => round(((egfr_ld-dob)/365.25),0)};
+        ln_uacr_1 : { nvl(uacr_val,0)>0  => ln(uacr_val * 8.84)};
+        
+        
+        age : { 1=1 => round(((egfr_dt-dob)/365.25),0)};
         
         #doc(,
             {
