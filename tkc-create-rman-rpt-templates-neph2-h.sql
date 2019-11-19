@@ -171,24 +171,24 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_htn_rec_1','htn_rcm',703100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<htn_icpc=0>>Recommendation [3.1] Update diagnosis to hypertension<</htn_icpc=0>>
-    <<bpc=2>>Recommendation [3.4] Optimize BP control<</bpc=2>><<bpc=3>>Recommendation [3.4] Optimize BP control<</bpc=3>>
-    <<htn_rcm=11>>Recommendation [3.4.1] Consider adding ACEi or ARB (RAAS blockade) which is recommended as first line therapy<</htn_rcm=11>>
-    <<htn_rcm=12>>Recommendation [3.4.1] Consider adding DHP-CCB instead of RAAS blockade as there is a risk worsening hyperkalaemia<</htn_rcm=12>>
-    <<htn_rcm=22>>Recommendation [3.4.1] Consider adding CCB which is recommended as second line therapy<</htn_rcm=22>>
-    <<htn_rcm=33>>Recommendation [3.4.1] Consider adding low dose thiazide which is recommended as third line therapy<</htn_rcm=33>>
-    <<htn_rcm=34>>Recommendation [3.4.1] Consider adding Aldosterone antagonist instead of low dose thiazide as there is a risk of worsening hypokalaemia<</htn_rcm=34>>
-    <<htn_rcm=35>>Recommendation [3.4.1] Consider adding beta blocker or central blocker instead of Aldosterone Antagonist as there is a risk of worsening hyperkalaemia<</htn_rcm=35>>
-    <<htn_rcm=44>>Recommendation [3.4.1] Consider adding Aldosterone antagonist which is recommended as fourth line therapy<</htn_rcm=44>>
-    <<htn_rcm=55>>Recommendation [3.4.1] Consider adding Beta blocker or Central blocker as 5th line therapy<</htn_rcm=55>>
-    <<htn_rcm=99>>Recommendation [3.4.1] Best combination cannot be determined<</htn_rcm=99>>
+    <<htn_icpc=0>><div>Recommendation [3.1] Update diagnosis to hypertension</div><</htn_icpc=0>>
+    <<bpc=2><div>>Recommendation [3.4] Optimize BP control<</bpc=2>><<bpc=3>>Recommendation [3.4] Optimize BP control</div><</bpc=3>>
+    <<htn_rcm=11>><div>Recommendation [3.4.1] Consider adding ACEi or ARB (RAAS blockade) which is recommended as first line therapy</div><</htn_rcm=11>>
+    <<htn_rcm=12>><div>Recommendation [3.4.1] Consider adding DHP-CCB instead of RAAS blockade as there is a risk worsening hyperkalaemia</div><</htn_rcm=12>>
+    <<htn_rcm=22>><div>Recommendation [3.4.1] Consider adding CCB which is recommended as second line therapy</div><</htn_rcm=22>>
+    <<htn_rcm=33>><div>Recommendation [3.4.1] Consider adding low dose thiazide which is recommended as third line therapy</div><</htn_rcm=33>>
+    <<htn_rcm=34>><div>Recommendation [3.4.1] Consider adding Aldosterone antagonist instead of low dose thiazide as there is a risk of worsening hypokalaemia</div><</htn_rcm=34>>
+    <<htn_rcm=35>><div>Recommendation [3.4.1] Consider adding beta blocker or central blocker instead of Aldosterone Antagonist as there is a risk of worsening hyperkalaemia</div><</htn_rcm=35>>
+    <<htn_rcm=44>><div>Recommendation [3.4.1] Consider adding Aldosterone antagonist which is recommended as fourth line therapy</div><</htn_rcm=44>>
+    <<htn_rcm=55>><div>Recommendation [3.4.1] Consider adding Beta blocker or Central blocker as 5th line therapy</div><</htn_rcm=55>>
+    <<htn_rcm=99>><div>Recommendation [3.4.1] Best combination cannot be determined</div><</htn_rcm=99>>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_htn_footnote_1','cd_htn',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<iq_tier>>Note [3.1] This is based on <<iq_sbp>><</iq_sbp>> blood pressure readings within the last 2 years<</iq_tier>>
-    <<bp_control>>Note [3.3] Based on time in therapeutic range (TITR)<</bp_control>>
+    <<iq_tier>><div>Note [3.1] This is based on <<iq_sbp>><</iq_sbp>> blood pressure readings within the last 2 years</div><</iq_tier>>
+    <<bp_control>><div>Note [3.3] Based on time in therapeutic range (TITR)</div><</bp_control>>
 
     '
     );
@@ -275,14 +275,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    Medications(<<rxn_0>><</rxn_0>>)
-    --------------
-    <<rx_name_obj>><</rx_name_obj>>
-    '
-    );
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
+--    '
+--    Medications(<<rxn_0>><</rxn_0>>)
+--    --------------
+--    <<rx_name_obj>><</rx_name_obj>>
+--    '
+--    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
     '<ul>
@@ -305,62 +305,62 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_recm_1','ckd',701100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<dx_ckd_diff>>Recommendation [1.2] Update diagnosis to CKD stage <<ckd_stage>><</ckd_stage>><</dx_ckd_diff>>
-    <<egfr_outdated>>Recommendation [1.3] Repeat renal function tests.<</egfr_outdated>>
-    <<cp_mis>>Recommendation [1.7] Update care plan to include appropriate stage of CKD<</cp_mis>>
+    <<dx_ckd_diff>><div>Recommendation [1.2] Update diagnosis to CKD stage </div><<ckd_stage>><</ckd_stage>><</dx_ckd_diff>>
+    <<egfr_outdated>><div>Recommendation [1.3] Repeat renal function tests.</div><</egfr_outdated>>
+    <<cp_mis>><div>Recommendation [1.7] Update care plan to include appropriate stage of CKD</div><</cp_mis>>
     
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_recm_2','ckd_complications',701200,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<hco3_low>>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis<</hco3_low>>
-    <<phos_high>>Recommendation [1.5.2] Consider adding oral phsophate binder therapy<</phos_high>>
+    <<hco3_low>><div>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</div><</hco3_low>>
+    <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phsophate binder therapy</div><</phos_high>>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_footnote_1','ckd',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<egfr_single>>Note [1.1] This is based on a single egfr value on <<egfrld>><</egfrld>><</egfr_single>>
-    <<egfr_multiple>>Note [1.1] This is based on <<iq_egfr>><</iq_egfr>> egfr values between <<egfrfd>><</egfrfd>> and <<egfrld>><</egfrld>><</egfr_multiple>>
-    <<egfr_outdated>>Note [1.2.1] Last egfr on <<egfrld>><</egfrld>><</egfr_outdated>>
-    <<acr_outdated>>Note [1.2.2] Last uACR on <<acrld>><</acrld>><</acr_outdated>>
-    <<asm_viol_3m>>Note [1.2.3] Assumption violation present. +/- 20% fluctuation in last 30 days <</asm_viol_3m>>
-    <<egfr_decline>>Note [1.3] Maximum eGFR of <<egfr_max_v>><</egfr_max_v>> ml/min/1.73m2 on <<egfr_max_ld>><</egfr_max_ld>>  with the most recent value being <<egfrlv>><</egfrlv>><</egfr_decline>>
-    <<iq_tier=4>>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR value (Tier 4).<</iq_tier=4>>
-    <<iq_tier=3>>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). <</iq_tier=3>>
-    <<iq_tier=2>>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3). <</iq_tier=2>>
-    <<iq_tier=1>>Note [1.0] This was based on at least one eGFR or uACR value (Tier 4). <</iq_tier=1>>
+    <<egfr_single>><div>Note [1.1] This is based on a single egfr value on <<egfrld>><</egfrld>></div><</egfr_single>>
+    <<egfr_multiple>><div>Note [1.1] This is based on <<iq_egfr>><</iq_egfr>> egfr values between <<egfrfd>><</egfrfd>> and <<egfrld>><</egfrld>></div><</egfr_multiple>>
+    <<egfr_outdated>><div>Note [1.2.1] Last egfr on <<egfrld>><</egfrld>></div><</egfr_outdated>>
+    <<acr_outdated>><div>Note [1.2.2] Last uACR on <<acrld>><</acrld>></div><</acr_outdated>>
+    <<asm_viol_3m>><div>Note [1.2.3] Assumption violation present. +/- 20% fluctuation in last 30 days </div><</asm_viol_3m>>
+    <<egfr_decline>><div>Note [1.3] Maximum eGFR of <<egfr_max_v>><</egfr_max_v>> ml/min/1.73m2 on <<egfr_max_ld>><</egfr_max_ld>>  with the most recent value being <<egfrlv>><</egfrlv>></div><</egfr_decline>>
+    <<iq_tier=4>><div>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR value (Tier 4).</div><</iq_tier=4>>
+    <<iq_tier=3>><div>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). </div><</iq_tier=3>>
+    <<iq_tier=2>><div>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3).</div> <</iq_tier=2>>
+    <<iq_tier=1>><div>Note [1.0] This was based on at least one eGFR or uACR value (Tier 4). </div><</iq_tier=1>>
     '
     );
 
 
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_cvra_syn_1','cvra',604100,'dev','tkc',TO_DATE(SYSDATE),
-    '   |
-    +-- Cardiovascular risk (CVR)
-    <<risk_high_ovr=0>>|        +-- CVR status was calculated using FRE [4.1]<</risk_high_ovr=0>>
-    <<risk_5>>|        +-- Composite 5 year CVD risk is <</risk_5>><<risk_5>><</risk_5>><<risk_5>> ,which is <</risk_5>>
-    <<risk_high_ovr=1>>|        +-- The composite 5 year CVD risk is<</risk_high_ovr=1>><<cvra=3>> high <</cvra=3>>
-    <<cvra=2>>|        +-- The composite 5 year CVD risk is<<cvra=2>><<cvra=2>> moderate risk<</cvra=2>>
-    <<cvra=1>>|        +-- The composite 5 year CVD risk is<<cvra=1>><<cvra=1>> low risk<</cvra=1>> 
-    <<risk_high_ovr>>|        +-- The patient meets criteria for high CVR without calculation<</risk_high_ovr>>
-    <<cvd_prev>>|            +--  previous documented CVD event<</cvd_prev>>
-    <<dm60>>|            +-- Diabetes and age more than 60 <</dm60>>
-    <<dmckd1>>|            +-- Diabetes and albuminuria <</dmckd1>>
-    <<ckd3>>|            +-- CKD 3b or above <</ckd3>>
-    <<tc7>>|            +-- total cholesterol more than 7.5 <</tc7>>
-    <<sbp180>>|            +-- systolic bp more than 180mmHg <</sbp180>>
-    <<age74>>|            +--  age more than 74 and ATSI.<</age74>>
-    <<cp_hicvr=0>>|        +-- There is no cv careplan.<</cp_hicvr=0>><<cp_hicvr=1>>|        +-- A high CVR careplan is already in place.<</cp_hicvr=1>>
-    '
-    );
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','cd_cvra_syn_1','cvra',604100,'dev','tkc',TO_DATE(SYSDATE),
+--    '   |
+--    +-- Cardiovascular risk (CVR)
+--    <<risk_high_ovr=0>>|        +-- CVR status was calculated using FRE [4.1]<</risk_high_ovr=0>>
+--    <<risk_5>>|        +-- Composite 5 year CVD risk is <</risk_5>><<risk_5>><</risk_5>><<risk_5>> ,which is <</risk_5>>
+--    <<risk_high_ovr=1>>|        +-- The composite 5 year CVD risk is<</risk_high_ovr=1>><<cvra=3>> high <</cvra=3>>
+--    <<cvra=2>>|        +-- The composite 5 year CVD risk is<<cvra=2>><<cvra=2>> moderate risk<</cvra=2>>
+--    <<cvra=1>>|        +-- The composite 5 year CVD risk is<<cvra=1>><<cvra=1>> low risk<</cvra=1>> 
+--    <<risk_high_ovr>>|        +-- The patient meets criteria for high CVR without calculation<</risk_high_ovr>>
+--    <<cvd_prev>>|            +--  previous documented CVD event<</cvd_prev>>
+--    <<dm60>>|            +-- Diabetes and age more than 60 <</dm60>>
+--    <<dmckd1>>|            +-- Diabetes and albuminuria <</dmckd1>>
+--    <<ckd3>>|            +-- CKD 3b or above <</ckd3>>
+--    <<tc7>>|            +-- total cholesterol more than 7.5 <</tc7>>
+--    <<sbp180>>|            +-- systolic bp more than 180mmHg <</sbp180>>
+--    <<age74>>|            +--  age more than 74 and ATSI.<</age74>>
+--    <<cp_hicvr=0>>|        +-- There is no cv careplan.<</cp_hicvr=0>><<cp_hicvr=1>>|        +-- A high CVR careplan is already in place.<</cp_hicvr=1>>
+--    '
+--    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cvra_rec_1','cvra',704100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<cvra=3>><<cp_hicvr=0>>Recommendation [4.1]  Update care plan to include High CVR <</cp_hicvr=0>><</cvra=3>>
-    <<cvra=3>><<smoke0=30>>Recommendation [4.2]  Given high cvr status the smoking cessation is strongly advised <</smoke0=30>><</cvra=3>>
-    <<cvra=2>><<smoke0=30>>Recommendation [4.2]  Given moderate cvr status the smoking cessation is advised <</smoke0=30>><</cvra=2>>
+    <<cvra=3>><<cp_hicvr=0>><div>Recommendation [4.1]  Update care plan to include High CVR <</cp_hicvr=0>></div><</cvra=3>>
+    <<cvra=3>><<smoke0=30>><div>Recommendation [4.2]  Given high cvr status the smoking cessation is strongly advised </div><</smoke0=30>><</cvra=3>>
+    <<cvra=2>><<smoke0=30>><div>Recommendation [4.2]  Given moderate cvr status the smoking cessation is advised </div><</smoke0=30>><</cvra=2>>
 
     '
     );
@@ -432,16 +432,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    Temporal variation of eGFR  
-    eGFR ml/min against time 
-    <<br>><<xygraph>><</xygraph>><<br>>
-    
-    <<xygraph_bitmap>><</xygraph_bitmap>>
-    '
-    );
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
+--    '
+--    Temporal variation of eGFR  
+--    eGFR ml/min against time 
+--    <<br>><<xygraph>><</xygraph>><<br>>
+--    
+--    <<xygraph_bitmap>><</xygraph_bitmap>>
+--    '
+--    );
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','egfr_metrics','egfr_metrics',651110,'dev','tkc',TO_DATE(SYSDATE),
