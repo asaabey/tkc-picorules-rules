@@ -177,6 +177,7 @@ Change Log
 05/11/2019  serializedv updated to output iso dates
 07/11/2019  map to template inject bitmap chart html segment
 13/11/2019  added citation ability to rpipe to rdoc
+21/11/2019  map_to_tmplt2 function fixed to output valid xml
 
 */
     TYPE rman_tbl_type IS
@@ -313,10 +314,6 @@ Change Log
         param           VARCHAR2 DEFAULT NULL
     ) RETURN VARCHAR2;
 
-    FUNCTION map_to_tmplt (
-        jstr VARCHAR2,
-        tmplt VARCHAR2
-    ) RETURN VARCHAR2;
 
     FUNCTION map_to_tmplt2 (
         jstr VARCHAR2,
@@ -1220,181 +1217,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN str;
     END ascii_graph_dv;
 
-    FUNCTION map_to_tmplt (
-        jstr VARCHAR2,
-        tmplt VARCHAR2
-    ) RETURN VARCHAR2 AS
 
-        key_tbl            tbl_type;
-        t                  VARCHAR2(4000);
-        tkey               VARCHAR2(100);
-        tval               VARCHAR2(4000);
-        html_tkey          VARCHAR2(4000);
-        tag_param          VARCHAR2(100);
-        tag_operator       VARCHAR(2);
-        ret_tmplt          VARCHAR2(32767) := tmplt;
-        x_vals             VARCHAR2(1000) := '';
-        y_vals             VARCHAR2(1000) := '';
-        yscale_in          NUMBER;
-        xygraph            VARCHAR(1000);
-        xline_str_arr_in   VARCHAR(1000);
-        yline_str_arr_in   VARCHAR(1000);
-    BEGIN
---jstr into collection
-        t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i', 1);
-        key_tbl := rman_pckg.splitstr(t, ',');
-        FOR i IN 1..key_tbl.count LOOP
-            tkey := lower(regexp_substr(substr(key_tbl(i), 1, instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i', 1));
-
-            tval := regexp_substr(substr(key_tbl(i), instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i', 1);
-
-            -- extract graphing param if present and draw graph
-
-            IF instr(tkey, '_graph_dt') > 0 THEN
-                x_vals := tval;
-            END IF;
-            IF instr(tkey, '_graph_val') > 0 THEN
-                y_vals := tval;
-            END IF;
-            IF instr(tkey, '_graph_yscale') > 0 THEN
-                yscale_in := to_number(tval, '9999.999');
-            END IF;
-
-            IF instr(tkey, '_graph_xline_') > 0 THEN
-                xline_str_arr_in := ltrim(xline_str_arr_in
-                                          || ' '
-                                          || tval);
-            END IF;
-
-            IF instr(tkey, '_graph_yline_') > 0 THEN
-                yline_str_arr_in := ltrim(yline_str_arr_in
-                                          || ' '
-                                          || tval);
-            END IF;
-
-            IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
-                xygraph := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in, yline_str_arr
-                => yline_str_arr_in);
-            END IF;
-
-            -- insertions
-
-            html_tkey := tkey || '>';
-            ret_tmplt := regexp_replace(ret_tmplt, '<'
-                                                   || html_tkey
-                                                   || '</'
-                                                   || html_tkey, tval);
-            -- add graphs
-
-            IF length(xygraph) > 0 THEN
-                ret_tmplt := regexp_replace(ret_tmplt, '<xygraph></xygraph>', xygraph);
-                x_vals := '';
-                y_vals := '';
-            END IF;                                       
-            
-            -- toggle on
-
-            IF nvl(length(tval), 0) > 0 AND nvl(length(tval), 0) < 13 AND nvl(tval, '0') <> '0' THEN
-                -- without tag param
-                html_tkey := tkey || '>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<' || html_tkey, '', 1, 0, 'i');
-
-                ret_tmplt := regexp_replace(ret_tmplt, '</' || html_tkey, '', 1, 0, 'i');
-
-                html_tkey := tkey
-                             || '='
-                             || tval
-                             || '>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<' || html_tkey, '', 1, 0, 'i');
-
-                ret_tmplt := regexp_replace(ret_tmplt, '</' || html_tkey, '', 1, 0, 'i');
-
-                html_tkey := tkey
-                             || '(=[a-z0-9]+)?'
-                             || '>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<'
-                                                       || html_tkey
-                                                       || '(.*?)'
-                                                       || '</'
-                                                       || html_tkey, '');
-
-            ELSE
-                
-                -- tval null or 0
-                 
-                -- if param is 0 then toggle text on 
-                html_tkey := tkey
-                             || '=0'
-                             || '>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<' || html_tkey, '', 1, 0, 'i');
-
-                ret_tmplt := regexp_replace(ret_tmplt, '</' || html_tkey, '', 1, 0, 'i');
-                
-                -- if param<>0 then toggle text off 
-
-                html_tkey := tkey
-                             || '(=[a-z0-9]+)?'
-                             || '>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<'
-                                                       || html_tkey
-                                                       || '(.*?)'
-                                                       || '</'
-                                                       || html_tkey, '');
-                
-                -- if no parameter toggle off other tags
-
-                html_tkey := tkey || '>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<'
-                                                       || html_tkey
-                                                       || '(.*?)'
-                                                       || '</'
-                                                       || html_tkey, '');
-
-            END IF;
-
-        END LOOP;
-        
-        -- remove remaining tags and content
-
-        ret_tmplt := regexp_replace(ret_tmplt, '<(.*?)>'
-                                               || '</'
-                                               || html_tkey, '');
-    -- if param is 0 then toggle text on 
-        html_tkey := '\w+=0' || '>';
-        ret_tmplt := regexp_replace(ret_tmplt, '<' || html_tkey, '', 1, 0, 'i');
-
-        ret_tmplt := regexp_replace(ret_tmplt, '</' || html_tkey, '', 1, 0, 'i');
-    
-    --if no param specified text is toggled off
-
-        html_tkey := '^[h1|h2]\w+' || '>';
-        ret_tmplt := regexp_replace(ret_tmplt, '<'
-                                               || html_tkey
-                                               || '(.*?)'
-                                               || '</'
-                                               || html_tkey, '');
-
-    
-                                                
-    -- remove unattended html segments
-
-        ret_tmplt := regexp_replace(ret_tmplt, '<[a-z0-9_\=]+>(.*?)<\/[a-z0-9_\=]+>', '*');
-    
-    -- remove excess space and line feeds
-        ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
-                                                                                                           || '{2,}', chr(10));
-    -- add line breaks
-
-        ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
-        ret_tmplt := regexp_replace(ret_tmplt, '\\n', chr(10));
-        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10)
-                                                    || chr(9));
-        
-    -- add tabs
-
-        ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
-        RETURN ret_tmplt;
-    END map_to_tmplt;
 
     FUNCTION map_to_tmplt2 (
         jstr VARCHAR2,
@@ -1419,6 +1242,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         xline_str_arr_in   VARCHAR(1000);
         yline_str_arr_in   VARCHAR(1000);
     BEGIN
+        
+        ret_tmplt:=replace(ret_tmplt, chr(10), '');
+        ret_tmplt:=replace(ret_tmplt, chr(13), '');
+        ret_tmplt:=replace(ret_tmplt, chr(11), '');
 --jstr into collection
         t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i', 1);
         key_tbl := rman_pckg.splitstr(t, ',');
@@ -1458,16 +1285,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           || tval);
             END IF;
             
---            x_vals_iso:='2000-01-01 2001-01-01 2002-01-01 2003-01-01';
---            y_vals :='1.2 4.5 3.6 6.7';
---            xygraph_bitmap := '<chart id="chartId" '
---                    || 'name="chartName" style="height:400px;width=600px" '
---                    || 'class="img-thumbnail" '
---                    || 'x-vals="' || x_vals_iso || '" '
---                    || 'y-vals="' || y_vals || '" '
---                    || 'x-label="Date Recorded" '
---                    || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
---                    || 'line-colour="purple"  />';
+
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
                 xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
@@ -1496,12 +1314,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                    || '<</'
                                                    || html_tkey, tval);
             
-                 -- add graphs
---    IF length(xygraph_ascii) > 0 THEN
+            html_tkey := '<<' || tkey || ' />>';
+            ret_tmplt := regexp_replace(ret_tmplt,html_tkey, tval);
+            
+
 
             IF length(xygraph_ascii) > 0 THEN
-                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_ascii);
-                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap>><</xygraph_bitmap>>', xygraph_bitmap);
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_ascii);
+                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap>><</xygraph_bitmap>>', xygraph_bitmap);
+                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
                 x_vals_iso := '';
                 x_vals := '';
                 y_vals := '';
@@ -1524,6 +1346,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                 ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0, 'i');
 
+                -- with tag param
                 html_tkey := tkey
                              || '(=[a-z0-9]+)?'
                              || '>>';
@@ -1559,9 +1382,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 -- if no parameter toggle off other tags
 
                 html_tkey := tkey || '>>';
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<'
+--                                                       || html_tkey
+--                                                       || '(.*?)'
+--                                                       || '<</'
+--                                                       || html_tkey, '');
+                                                       
                 ret_tmplt := regexp_replace(ret_tmplt, '<<'
                                                        || html_tkey
-                                                       || '(.*?)'
+                                                       || '[\s\S]+'
                                                        || '<</'
                                                        || html_tkey, '');
 
@@ -1582,21 +1411,22 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     
     --if no param specified text is toggled off
 
-        html_tkey := '^[h1|h2]\w+' || '>>';
-        ret_tmplt := regexp_replace(ret_tmplt, '<<'
-                                               || html_tkey
-                                               || '(.*?)'
-                                               || '<</'
-                                               || html_tkey, '');
+--        html_tkey := '^[h1|h2]\w+' || '>>';
+--        ret_tmplt := regexp_replace(ret_tmplt, '<<'
+--                                               || html_tkey
+--                                               || '(.*?)'
+--                                               || '<</'
+--                                               || html_tkey, '');
     -- remove unattended tags
 
         ret_tmplt := regexp_replace(ret_tmplt, '<<[a-z0-9_\=]+>>(.*?)<<\/[a-z0-9_\=]+>>', '');
-     
+--     ret_tmplt := regexp_replace(ret_tmplt, '<<[a-z0-9_\=]+>>[\s\S]+<<\/[a-z0-9_\=]+>>', '');
     
     -- remove excess space and line feeds
         ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
                                                                                                            || '{2,}', chr(10));
     -- add line breaks
+
 
         ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
         ret_tmplt := regexp_replace(ret_tmplt, '\\n', chr(10));
@@ -1606,6 +1436,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     -- add tabs
         ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
     -- other mods
+    
+        ret_tmplt := replace(ret_tmplt,'<<','{{');
+        ret_tmplt := replace(ret_tmplt,'>>','}}');
+        
         RETURN ret_tmplt;
     END map_to_tmplt2;
 
@@ -1665,6 +1499,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'gt;', '>');
         composition := replace(composition, chr(38)
                                             || 'quot;', '"');
+        composition := '<syn_body>' || composition || '</syn_body>';
+        
         RETURN composition;
 --    EXCEPTION
 --        WHEN eid_not_found THEN
