@@ -86,7 +86,7 @@ BEGIN
         
         loc_mode_full => vw_eadv_loc.dmg_location.val.stats_mode();
         
-        loc_last_full => vw_eadv_loc.dmg_location.val.last();
+        loc_last => vw_eadv_loc.dmg_location.val.lastdv();
         
         loc_n => vw_eadv_loc.dmg_location.val.count();
         
@@ -94,6 +94,9 @@ BEGIN
         
         mode_pct : {loc_n>0 => round(loc_mode_n/loc_n,2)};
         
+        episode_single : { loc_n=1 => 1},{=>0};
+        
+        loc_single : { mode_pct=1 =>1},{=>0}; 
         
         dmg_loc : { 1=1 =>loc_mode_full };    
         

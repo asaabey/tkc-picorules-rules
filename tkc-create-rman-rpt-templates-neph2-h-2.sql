@@ -24,6 +24,17 @@
 DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','dmg_loc_summary','dmg_loc',200010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <div class="syn_alert_box">
+        <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
+        <<episode_single=0><<loc_single>>There have been <<loc_n />> visits to <<loc_mode_full />> <</loc_single><</episode_single=0>>
+        <<episode_single=0><<loc_single=0>>visited <<loc_mode_full />> (<<loc_mode_n />>/<<loc_n />>)<</loc_single=0><</episode_single=0>>
+    </div>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4810','tg4810',304810,'dev','tkc',TO_DATE(SYSDATE),
     '
     Alert : High haemoglobin on the background of ESA therapy  (Trigger 4810)
@@ -282,7 +293,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <div>Medications(<<rxn_0>><</rxn_0>>)
+    <div>Medications
+        <p>number <<rxn_0 />></p>
+        <p>number <<rxn_0$test_rxn />></p>
     <<rx_name_obj />>
     </div>
     '

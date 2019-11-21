@@ -5,7 +5,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.2
+Version		    1.0.1.3
 Creation date	07/04/2019
 update on date  13/11/2019
 Author		    asaabey@gmail.com
@@ -178,6 +178,7 @@ Change Log
 07/11/2019  map to template inject bitmap chart html segment
 13/11/2019  added citation ability to rpipe to rdoc
 21/11/2019  map_to_tmplt2 function fixed to output valid xml
+21/11/2019  implemented function lookup_key
 
 */
     TYPE rman_tbl_type IS
@@ -314,6 +315,10 @@ Change Log
         param           VARCHAR2 DEFAULT NULL
     ) RETURN VARCHAR2;
 
+    FUNCTION lookup_key (
+        res VARCHAR2,
+        in_str VARCHAR2
+    ) RETURN VARCHAR2;
 
     FUNCTION map_to_tmplt2 (
         jstr VARCHAR2,
@@ -1217,6 +1222,51 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         RETURN str;
     END ascii_graph_dv;
 
+    FUNCTION lookup_key (
+        res VARCHAR2,
+        in_str VARCHAR2
+    ) RETURN VARCHAR2 AS
+
+        out_tbl    tbl_type;
+        sql_stmt   VARCHAR2(1000);
+        key_col    VARCHAR2(30);
+        val_col    VARCHAR2(30);
+        tbl_name   VARCHAR2(30);
+        ret        VARCHAR2(4000);
+    BEGIN
+        SELECT
+            res_target,
+            key_col,
+            val_col
+        INTO
+            tbl_name,
+            key_col,
+            val_col
+        FROM
+            rman_resource_lookup
+        WHERE
+            res_name = res;
+
+        sql_stmt := 'SELECT '
+                    || val_col
+                    || ' FROM '
+                    || tbl_name
+                    || ' WHERE '
+                    || key_col
+                    || ' IN ('
+                    || in_str
+                    || ') ';
+
+        EXECUTE IMMEDIATE sql_stmt BULK COLLECT
+        INTO out_tbl;
+        FOR i IN 1..out_tbl.count LOOP ret := ret
+                                               || ','
+                                               || out_tbl(i);
+        END LOOP;
+
+        ret := trim(BOTH ',' FROM ret);
+        RETURN ret;
+    END lookup_key;
 
 
     FUNCTION map_to_tmplt2 (
@@ -1229,6 +1279,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tkey               VARCHAR2(100);
         tval               VARCHAR2(4000);
         html_tkey          VARCHAR2(4000);
+        tkey_lu_key        VARCHAR2(100); 
+        tkey_lu_val        VARCHAR2(4000);
+        tkey_lu_res        VARCHAR2(100); 
+        tkey_lu_str        VARCHAR2(400); 
         tag_param          VARCHAR2(100);
         tag_operator       VARCHAR(2);
         ret_tmplt          VARCHAR2(32767) := tmplt;
@@ -1308,21 +1362,40 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             -- insertions
 
---            html_tkey := tkey || '>>';
---            ret_tmplt := regexp_replace(ret_tmplt, '<<'
---                                                   || html_tkey
---                                                   || '<</'
---                                                   || html_tkey, tval);
+
             
             html_tkey := '<<' || tkey || ' />>';
             ret_tmplt := regexp_replace(ret_tmplt,html_tkey, tval);
             
+            -- lookup insertionsup
+            -- tkey$tkey_lookup
+            html_tkey := '<<' || tkey || '\$([a-z0-9_]+)? />>';
+            
+            
+            tkey_lu_str:=regexp_substr(ret_tmplt,html_tkey);
+            
+            if length(tkey_lu_str)>0 then
+                
+                dbms_output.put_line('***->'|| tkey_lu_str);
+                
+                tkey_lu_key := tkey;
+                
+                tkey_lu_res := trim(leading '$' from regexp_substr(tkey_lu_str,'\$([a-z0-9_]+)?'));
+                
+                tkey_lu_val := lookup_key(tkey_lu_res,tval);
+                
+--                dbms_output.put_line('***->'|| tkey_lu_str || ' res:' || tkey_lu_res || ' key:' || tkey_lu_key || ' val:' || tkey_lu_val);
+                
+                --replace of tkey_lu_str didnt work. hence using html_tkey
+                ret_tmplt := regexp_replace(ret_tmplt,html_tkey, tkey_lu_val);
+                             
+            end if;                 
 
 
             IF length(xygraph_ascii) > 0 THEN
---                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph>><</xygraph>>', xygraph_ascii);
+
                 ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
---                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap>><</xygraph_bitmap>>', xygraph_bitmap);
+
                 ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
                 x_vals_iso := '';
                 x_vals := '';
