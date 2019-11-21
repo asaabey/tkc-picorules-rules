@@ -18,7 +18,7 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to detect chronic disease entities */
+        /* Algorithm to assess demographics */
         
         #define_ruleblock(dmg,
             {
@@ -63,7 +63,7 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to detect chronic disease entities */
+        /* Algorithm to assess demographics */
         
         #define_ruleblock(dmg_loc,
             {
@@ -82,14 +82,20 @@ BEGIN
         );
         
         
-        loc_mode_24 => eadv_loc.dmg_location.val.stats_mode().where(dt > sysdate- 730);
+        loc_mode_24 => vw_eadv_loc.dmg_location.val.stats_mode().where(dt > sysdate- 730);
         
-        loc_mode_full => eadv_loc.dmg_location.val.stats_mode();
+        loc_mode_full => vw_eadv_loc.dmg_location.val.stats_mode();
         
-        loc_last_full => eadv_loc.dmg_location.val.last();
+        loc_last_full => vw_eadv_loc.dmg_location.val.last();
+        
+        loc_n => vw_eadv_loc.dmg_location.val.count();
+        
+        loc_mode_n => vw_eadv_loc.dmg_location.val.count().where(val=loc_mode_full);
+        
+        mode_pct : {loc_n>0 => round(loc_mode_n/loc_n,2)};
         
         
-        dmg_loc : { 1=1 => 1},{=>0};    
+        dmg_loc : { 1=1 =>loc_mode_full };    
         
                 
     ';

@@ -56,7 +56,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4100','tg4100',304100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <div style="border-style: solid;border-color: green;border-radius: 10px;padding: 10px">
+    <div class="syn_alert_box">
     
     <h5>Alert : Acute kidney injury in community (Trigger 4100)</h5>
     Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>
@@ -115,7 +115,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-        <<dm_dx_code_flag>><li>Diagnosed<</dm_dx_code_flag>><<dm_dx_uncoded>>Undiagnosed<</dm_dx_uncoded>> Diabetes type <<dm_type />>
+        <li><b><<dm_dx_code_flag>>Diagnosed<</dm_dx_code_flag>><<dm_dx_uncoded>>Undiagnosed<</dm_dx_uncoded>> Diabetes type <<dm_type />></b>
         <ul>
             <<dm_fd_t>><li>since <<dm_fd_t />></li><</dm_fd_t>>
             <<dm_micvas>><li>Non-renal microvascular complications present</li><</dm_micvas>>
@@ -150,7 +150,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_htn_syn_1','cd_htn',603100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-        <li>Hypertension
+        <li><b>Hypertension</b>
         <ul>
             <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
             <<mu_1>><li>Average systolic BP during last year was <<mu_1 />> mmHg</li><</mu_1>>
@@ -201,7 +201,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_cardiac_syn','cd_cardiac',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-        <li>Cardiac disease
+        <li><b>Cardiac disease</b>
         <ul>
             <<cad>><li>Coronary artery disease
             <ul>
@@ -238,7 +238,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','rrt_syn','rrt',601000,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li>End-stage renal failure (ESRD)
+    <li><b>End-stage renal failure (ESRD)</b>
     <ul>
     <li><<rrt=1>>Currently on haemodialysis, since <<hd_dt />><</rrt=1>></li>
     <li><<rrt=2>>Currently on peritoneal dialysis, since <<pd_dt />><</rrt=2>></li>
@@ -252,7 +252,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_ckd_syn_1','ckd',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li>CKD stage <strong><<ckd_stage />></strong>
+    <li><b>CKD stage <<ckd_stage />></b>
     <ul>
     <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
     <<dx_ckd=0>><li>No coded diagnosis on the EHR [1.2]</li><</dx_ckd=0>>
@@ -279,14 +279,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
---INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
---    VALUES('neph002_html','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
---    '
---    Medications(<<rxn_0>><</rxn_0>>)
---    --------------
---    <<rx_name_obj>><</rx_name_obj>>
---    '
---    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <div>Medications(<<rxn_0>><</rxn_0>>)
+    <<rx_name_obj />>
+    </div>
+    '
+    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
     '<ul>
@@ -338,26 +338,33 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 
---INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
---    VALUES('neph002_html','cd_cvra_syn_1','cvra',604100,'dev','tkc',TO_DATE(SYSDATE),
---    '   |
---    +-- Cardiovascular risk (CVR)
---    <<risk_high_ovr=0>>|        +-- CVR status was calculated using FRE [4.1]<</risk_high_ovr=0>>
---    <<risk_5>>|        +-- Composite 5 year CVD risk is <</risk_5>><<risk_5>><</risk_5>><<risk_5>> ,which is <</risk_5>>
---    <<risk_high_ovr=1>>|        +-- The composite 5 year CVD risk is<</risk_high_ovr=1>><<cvra=3>> high <</cvra=3>>
---    <<cvra=2>>|        +-- The composite 5 year CVD risk is<<cvra=2>><<cvra=2>> moderate risk<</cvra=2>>
---    <<cvra=1>>|        +-- The composite 5 year CVD risk is<<cvra=1>><<cvra=1>> low risk<</cvra=1>> 
---    <<risk_high_ovr>>|        +-- The patient meets criteria for high CVR without calculation<</risk_high_ovr>>
---    <<cvd_prev>>|            +--  previous documented CVD event<</cvd_prev>>
---    <<dm60>>|            +-- Diabetes and age more than 60 <</dm60>>
---    <<dmckd1>>|            +-- Diabetes and albuminuria <</dmckd1>>
---    <<ckd3>>|            +-- CKD 3b or above <</ckd3>>
---    <<tc7>>|            +-- total cholesterol more than 7.5 <</tc7>>
---    <<sbp180>>|            +-- systolic bp more than 180mmHg <</sbp180>>
---    <<age74>>|            +--  age more than 74 and ATSI.<</age74>>
---    <<cp_hicvr=0>>|        +-- There is no cv careplan.<</cp_hicvr=0>><<cp_hicvr=1>>|        +-- A high CVR careplan is already in place.<</cp_hicvr=1>>
---    '
---    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_cvra_syn_1','cvra',604100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <li><b>Cardiovascular risk (CVR)</b></li>
+        <ul>
+        <<risk_high_ovr=0>><li>CVR status was calculated using FRE [4.1]</li><</risk_high_ovr=0>>
+        <<risk_5>><li>Composite 5 year CVD risk is <</risk_5>><<risk_5>><</risk_5>><<risk_5>> ,which is <</risk_5>>
+        <<cvra=2>><li>The composite 5 year CVD risk is high</li><</cvra=3>>
+        <<cvra=2>><li>The composite 5 year CVD risk is moderate</li><</cvra=2>>
+        <<cvra=1>><li>The composite 5 year CVD risk is low</li><</cvra=1>> 
+        <<risk_high_ovr>><li>The patient meets criteria for high CVR without calculation</li>
+        <ul>
+            <<cvd_prev>><li>previous documented CVD event</li><</cvd_prev>>
+            <<dm60>><li>Diabetes and age more than 60</li><</dm60>>
+            <<dmckd1>><li>Diabetes and albuminuria</li><</dmckd1>>
+            <<ckd3>><li>CKD 3b or above</li><</ckd3>>
+            <<tc7>><li>total cholesterol more than 7.5</li><</tc7>>
+            <<sbp180>><li>systolic bp more than 180mmHg</li><</sbp180>>
+            <<age74>><li>age more than 74 and ATSI</li><</age74>>
+        </ul><</risk_high_ovr>>
+        <<cp_hicvr=0>><li>There is no cv careplan</li><</cp_hicvr=0>>
+        <<cp_hicvr=1>><li>A high CVR careplan is already in place</li><</cp_hicvr=1>>
+        </ul>
+    </ul>
+    '
+    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cvra_rec_1','cvra',704100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -378,7 +385,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <ul>
         <li>Renal services engagement</li>
-        <<enc_multi=0>><li><<enc_ld>>Nephrologist review <<enc_ld />><</enc_ld>></li>><</enc_multi=0>>
+        <<enc_multi=0>><li><<enc_ld>>Nephrologist review <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
         <<enc_multi>><li>Nephrologist reviews :\t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li> <</enc_multi>>
         <<edu_init>><li>CKD Education (initial) :\t<<edu_init />></li></edu_init>>
         <<edu_rv>><li>CKD Education review (last) :\t<<edu_rv />></li><</edu_rv>>
@@ -394,7 +401,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
     <li>diagnostic workup
     <ul>
-    <li>Basic urinalysis : <<ua_null=1>>not performed<</ua_null=1>><<ua_rbc_ld>>last performed on <</ua_rbc_ld>><<ua_rbc_ld />><<ua_rbc_ld>> and shows <</ua_rbc_ld>><<ua_null=0>><<ua_pos=0>>no significance<</ua_pos=0>><<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>><<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>><</ua_null=0>></li>
+    <li>Basic urinalysis<<ua_null=1>>not performed<</ua_null=1>><<ua_rbc_ld>>last performed on <</ua_rbc_ld>><<ua_rbc_ld />><<ua_rbc_ld>> and shows <</ua_rbc_ld>><<ua_null=0>><<ua_pos=0>>no significance<</ua_pos=0>><<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>><<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>><</ua_null=0>></li>
     <li>ANA Serology : <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
     <li>ANCA Serology : <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld />><</anca_null=0>></li>
     <li>Complements : <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld />><</c3c4_null=0>></li>
@@ -417,11 +424,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
     <<hb_lv>><li>Last haemoglobin on <<hb_ld />> is <<hb_lv />> g/L</li><</hb_lv>>
     <<hb_state=2>><li>acceptable range</li><</hb_state=2>>
-    <<hb_state=1>><li><<mcv_state=11>>consistent with severe microcytic anaemia <</mcv_state=11>></li><</hb_state=1>>
-    <<hb_state=1>></li><<mcv_state=12>>consistent with microcytic anaemia<</mcv_state=12>></li><</hb_state=1>>
-    <<hb_state=1>><li><<mcv_state=20>>consistent with normocytic anaemia<</mcv_state=20>></li><</hb_state=1>>
-    <<hb_state=1>><li><<mcv_state=31>>consistent with macrocytic anaemia<</mcv_state=31>></li><</hb_state=1>>
-    <<hb_state=1>><li><<mcv_state=0>>consistent with anaemia<</mcv_state=0>></li><</hb_state=1>>
+    <<hb_state=1>><<mcv_state=11>><li>consistent with severe microcytic anaemia</li><</mcv_state=11>><</hb_state=1>>
+    <<hb_state=1>><<mcv_state=12>><li>consistent with microcytic anaemia</li><</mcv_state=12>><</hb_state=1>>
+    <<hb_state=1>><<mcv_state=20>><li>consistent with normocytic anaemia</li><</mcv_state=20>><</hb_state=1>>
+    <<hb_state=1>><<mcv_state=31>><li>consistent with macrocytic anaemia</li><</mcv_state=31>><</hb_state=1>>
+    <<hb_state=1>><<mcv_state=0>><li>consistent with anaemia<</mcv_state=0>></li><</hb_state=1>>
     <<esa_state=0>><li>No ESA use</li><</esa_state=0>>
     <<esa_state=1>><li>current ESA use</li><</esa_state=1>>
     <<esa_state=2>><li>Past ESA use but not current</li><</esa_state=2>>
@@ -445,10 +452,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Temporal variation of eGFR  
     eGFR ml/min against time 
     <div>
-    <<xygraph>><</xygraph>>
-    </div>
-    <div>
-    <<xygraph_bitmap>><</xygraph_bitmap>>
+    <<xygraph_bitmap />>
     </div>
     </div>
     '
@@ -469,7 +473,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     Temporal variation of uACR  
     Log(uACR) mg/mmol against time
-    <<br>><<xygraph />><br />
+    <<xygraph />>
     '
     );
 @"tkc-create-package-rman-1.sql";

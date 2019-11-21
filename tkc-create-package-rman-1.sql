@@ -1302,17 +1302,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || '" '
                                   || 'x-label="Date Recorded" '
                                   || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
-                                  || 'slope-line="2 6" line-colour="purple" slope-colour="green" />';
+                                  || 'slope-line="30 30" line-colour="blue" slope-colour="gray" />';
 
             END IF;
 
             -- insertions
 
-            html_tkey := tkey || '>>';
-            ret_tmplt := regexp_replace(ret_tmplt, '<<'
-                                                   || html_tkey
-                                                   || '<</'
-                                                   || html_tkey, tval);
+--            html_tkey := tkey || '>>';
+--            ret_tmplt := regexp_replace(ret_tmplt, '<<'
+--                                                   || html_tkey
+--                                                   || '<</'
+--                                                   || html_tkey, tval);
             
             html_tkey := '<<' || tkey || ' />>';
             ret_tmplt := regexp_replace(ret_tmplt,html_tkey, tval);
@@ -1429,6 +1429,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
         ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
+        ret_tmplt := regexp_replace(ret_tmplt, '<br />', chr(10));
         ret_tmplt := regexp_replace(ret_tmplt, '\\n', chr(10));
 --        ret_tmplt := regexp_replace(ret_tmplt, ';', chr(10)
 --                                                    || chr(9));
@@ -1450,6 +1451,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         composition        CLOB;
         compositionid_in   VARCHAR2(100) := nlc_id;
+        composition_head   varchar2(4000);
         eid_not_found EXCEPTION;
         PRAGMA exception_init ( eid_not_found, 100 );
     BEGIN
@@ -1499,7 +1501,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'gt;', '>');
         composition := replace(composition, chr(38)
                                             || 'quot;', '"');
-        composition := '<syn_body>' || composition || '</syn_body>';
+                                            
+         
+        composition_head :='<style>.syn_alert_box {border-style: solid;border-color: green;border-radius: 10px;padding: 10px}</style>' ;
+                                            
+        composition := composition_head || '<syn_body>' || composition || '</syn_body>';
         
         RETURN composition;
 --    EXCEPTION
