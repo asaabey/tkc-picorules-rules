@@ -82,17 +82,17 @@ BEGIN
         );
         
         
-        loc_mode_24 => vw_eadv_loc.dmg_location.val.stats_mode().where(dt > sysdate- 730);
+        loc_mode_24 => eadv.dmg_location.val.stats_mode().where(dt > sysdate- 730);
         
-        loc_mode_full => vw_eadv_loc.dmg_location.val.stats_mode();
+        loc_mode_full => eadv.dmg_location.val.stats_mode();
         
-        loc_last => vw_eadv_loc.dmg_location.val.lastdv();
+        loc_last => eadv.dmg_location.val.lastdv();
         
-        loc_n => vw_eadv_loc.dmg_location.val.count();
+        loc_n => eadv.dmg_location.val.count();
         
-        loc_mode_n => vw_eadv_loc.dmg_location.val.count().where(val=loc_mode_full);
+        loc_mode_n => eadv.dmg_location.val.count().where(val=loc_mode_full);
         
-        mode_pct : {loc_n>0 => round(loc_mode_n/loc_n,2)};
+        mode_pct : {loc_n>0 => round(loc_mode_n/loc_n,2)*100};
         
         episode_single : { loc_n=1 => 1},{=>0};
         

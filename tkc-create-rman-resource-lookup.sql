@@ -22,9 +22,9 @@ CREATE TABLE rman_resource_lookup (
 /
 
     INSERT INTO rman_resource_lookup VALUES (
-        'test_rxn',
+        'loc_sublocality',
         'table',
-        'rman_comp_map',
+        'location_sublocalities',
         'id',
         'name'
     );

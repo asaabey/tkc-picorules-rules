@@ -7,7 +7,7 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 Package		    rman_pckg
 Version		    1.0.1.3
 Creation date	07/04/2019
-update on date  13/11/2019
+update on date  22/11/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -1576,7 +1576,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'quot;', '"');
                                             
          
-        composition_head :='<style>.syn_alert_box {border-style: solid;border-color: green;border-radius: 10px;padding: 10px}</style>' ;
+        composition_head :='
+            <style>
+                .syn_alert_box {border-style: solid;border-color: brown;border-radius: 10px;padding: 10px}
+                .syn_dmg_box {border-style: solid;border-color: green;border-radius: 10px;padding: 10px}
+            </style>
+            ' ;
                                             
         composition := composition_head || '<syn_body>' || composition || '</syn_body>';
         
@@ -4962,35 +4967,35 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END IF;
 
-        SELECT
-            COUNT(*)
-        INTO table_exist
-        FROM
-            all_views
-        WHERE
-            owner = schemaname
-            AND lower(view_name) = 'vw_eadv_locality';
-
-        commit_log('populate_eadv_tables', '', 'Create Supporting Views if not exisiting');
-        IF table_exist = 0 THEN
-            BEGIN
-                dbms_output.put_line('creating view: vw_eadv_locality');
-                EXECUTE IMMEDIATE '
-            CREATE VIEW vw_eadv_locality AS (
-                select distinct
-                        lr.linked_registrations_id as eid,   
-                        ''dmg_location'' as att,
-                        date_recorded as dt,
-                        initcap(shcm.reference_location) as val
-                FROM    patient_results_numeric prn
-                JOIN    patient_registrations pr on pr.id=prn.patient_registration_id
-                JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
-                JOIN    system_health_centre_metadata shcm on shcm.health_centre_name=prn.location
-                )'
-                ;
-            END;
-        END IF;
-    
+--        SELECT
+--            COUNT(*)
+--        INTO table_exist
+--        FROM
+--            all_views
+--        WHERE
+--            owner = schemaname
+--            AND lower(view_name) = 'vw_eadv_locality';
+--
+--        commit_log('populate_eadv_tables', '', 'Create Supporting Views if not exisiting');
+--        IF table_exist = 0 THEN
+--            BEGIN
+--                dbms_output.put_line('creating view: vw_eadv_locality');
+--                EXECUTE IMMEDIATE '
+--            CREATE VIEW vw_eadv_locality AS (
+--                select distinct
+--                        lr.linked_registrations_id as eid,   
+--                        ''dmg_location'' as att,
+--                        date_recorded as dt,
+--                        initcap(shcm.reference_location) as val
+--                FROM    patient_results_numeric prn
+--                JOIN    patient_registrations pr on pr.id=prn.patient_registration_id
+--                JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+--                JOIN    system_health_centre_metadata shcm on shcm.health_centre_name=prn.location
+--                )'
+--                ;
+--            END;
+--        END IF;
+--    
     
     --2: Disable Indexs
 
@@ -5353,6 +5358,64 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     WHEN NOT MATCHED THEN
         INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
+        --90  location 
+        commit_log('populate_eadv_tables', '', 'Merge patient demographics location history');
+        
+        EXECUTE IMMEDIATE 'MERGE INTO eadv t1 USING (
+                                    WITH cte1 AS (
+                                        SELECT
+                                            pn.patient_registration_id   pid,
+                                            pn.date_recorded             dt,
+                                            pn.location                  loc
+                                        FROM
+                                            patient_results_numeric pn
+                                        UNION
+                                        SELECT
+                                            pn.patient_registration_id   pid,
+                                            pn.date_recorded             dt,
+                                            pn.location                  loc
+                                        FROM
+                                            patient_results_coded pn
+                                        UNION
+                                        SELECT
+                                            pn.patient_registration_id   pid,
+                                            pn.date_recorded             dt,
+                                            pn.location                  loc
+                                        FROM
+                                            patient_results_text pn
+                                    ),cte2 AS (
+                                        SELECT DISTINCT
+                                            lr.linked_registrations_id   eid,
+                                            ''dmg_location'' AS att,
+                                            c.dt                         dt,
+                                            coalesce(lm.sublocality_id,s.dflt_sublocality_id) val
+                                        FROM
+                                            cte1 c
+                                            INNER JOIN patient_registrations pr ON pr.id = c.pid
+                                            INNER JOIN linked_registrations lr ON c.pid = lr.patient_registration_id
+                                            INNER JOIN sources s ON pr.source_id = s.id
+                                            LEFT JOIN location_mappings lm ON lm.result_location = upper(c.loc)
+                                    )
+                                    SELECT
+                                        eid,
+                                        att,
+                                        dt,
+                                        val
+                                    FROM
+                                        cte2
+                                )
+        t2 ON ( t1.eid = t2.eid
+                AND t1.att = t2.att
+                AND t1.dt = t2.dt )
+        WHEN NOT MATCHED THEN INSERT (
+            eid,
+            att,
+            dt,
+            val ) VALUES (
+            t2.eid,
+            t2.att,
+            t2.dt,
+            t2.val )';
         commit_log('populate_eadv_tables', '', 'Applying Bitmap indexing and compute statistics');
     --17: Re-create indexs
         dbms_output.put_line('Recreate indexs');
