@@ -2134,15 +2134,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                         dt_trans := substr(funcparam_str, instr(funcparam_str, '~') + 1);
 
---                        dt_trans := to_char(substr(funcparam_str, instr(funcparam_str, '~') + 1),'YYYY-MM-DD');
-                        dbms_output.put_line('build_func ->'
-                                             || assnvar
-                                             || ' serializedv-> val_trans: '
-                                             || val_trans);
-                        dbms_output.put_line('build_func ->'
-                                             || assnvar
-                                             || ' serializedv-> dt_trans: '
-                                             || dt_trans);
+
                     END IF;
 
                     where_txt := att || predicate;

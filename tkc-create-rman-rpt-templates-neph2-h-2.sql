@@ -29,7 +29,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <div class="syn_dmg_box">
         <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
         <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full />></b> <</loc_single>><</episode_single=0>>
-        <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b> (<<loc_mode_n />>/<<loc_n />>)<</loc_single=0>><</episode_single=0>>
+        <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
     </div>
     <hr />
     '
