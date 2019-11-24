@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.3
+Version		    1.0.1.4
 Creation date	07/04/2019
-update on date  22/11/2019
+update on date  24/11/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -179,6 +179,7 @@ Change Log
 13/11/2019  added citation ability to rpipe to rdoc
 21/11/2019  map_to_tmplt2 function fixed to output valid xml
 21/11/2019  implemented function lookup_key
+24/11/2019  improved serializer2 to use listagg for performance
 
 */
     TYPE rman_tbl_type IS
@@ -211,6 +212,11 @@ Change Log
     like_op CONSTANT CHAR := '%';
     comment_open_chars CONSTANT VARCHAR(2) := '/*';
     comment_close_chars CONSTANT VARCHAR(2) := '*/';
+    
+--    serialize_delimiter CONSTANT VARCHAR(1) := '|';
+    
+    serialize_delimiter CONSTANT VARCHAR(1) := ' ';
+    
     entity_id_col CONSTANT VARCHAR2(32) := 'EID';
     att_col CONSTANT VARCHAR2(32) := 'ATT';
     val_col CONSTANT VARCHAR2(32) := 'VAL';
@@ -1247,6 +1253,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             res_name = res;
 
+        
+        
         sql_stmt := 'SELECT '
                     || val_col
                     || ' FROM '
@@ -1254,9 +1262,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     || ' WHERE '
                     || key_col
                     || ' IN ('
-                    || in_str
+                    || translate(in_str,serialize_delimiter,',')
                     || ') ';
 
+        dbms_output.put_line('-> ' || sql_stmt);
+        
         EXECUTE IMMEDIATE sql_stmt BULK COLLECT
         INTO out_tbl;
         FOR i IN 1..out_tbl.count LOOP ret := ret
@@ -1312,7 +1322,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             IF instr(tkey, '_graph_dt') > 0 THEN
                 x_vals := tval;
-                dt_tbl := splitstr(tval, ' ');
+                dt_tbl := splitstr(tval, serialize_delimiter);
                 FOR j IN 1..dt_tbl.count LOOP x_vals_iso := x_vals_iso
                                                             || TO_CHAR(TO_DATE(dt_tbl(j), 'DD/MM/YY'), 'YYYY-MM-DD')
                                                             || ' ';
@@ -1578,12 +1588,45 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
          
         composition_head :='
             <style>
-                .syn_alert_box {border-style: solid;border-color: brown;border-radius: 10px;padding: 10px}
-                .syn_dmg_box {border-style: solid;border-color: green;border-radius: 10px;padding: 10px}
+                .syn_alert_box {
+                    border-style: solid;border-color: brown;border-radius: 10px;padding: 10px
+                }
+                .syn_dmg_box {
+                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
+                }
+                .rTable {
+                   display: table;
+                   width: 100%;
+                }
+                .rTableRow {
+                   display: table-row;
+                }
+                .rTableHeading {
+                   display: table-header-group;
+                   background-color: #ddd;
+                }
+                .rTableCell, .rTableHead {
+                   display: table-cell;
+                   padding: 3px 10px;
+                   border: 1px solid #999999;
+                }
+                .rTableHeading {
+                   display: table-header-group;
+                   background-color: #ddd;
+                   font-weight: bold;
+                }
+                .rTableFoot {
+                   display: table-footer-group;
+                   font-weight: bold;
+                   background-color: #ddd;
+                }
+                .rTableBody {
+                   display: table-row-group;
+                }
             </style>
             ' ;
                                             
-        composition := composition_head || '<syn_body>' || composition || '</syn_body>';
+        composition := '<syn_body>'|| composition_head || composition || '</syn_body>';
         
         RETURN composition;
 --    EXCEPTION
@@ -1771,64 +1814,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     BEGIN
     
     
-    -- parse txt string
---        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '[', ']');
---
---        IF varr.count = 5 THEN
---            tbl := upper(varr(1));
---            att := varr(2);
---            prop := varr(3);
---            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
---
---
---            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
---
---            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
---
---            IF upper(substr(varr(5), 1, 5)) = 'WHERE' THEN
---                predicate := ' AND '
---                             || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
---            END IF;
---
---        ELSIF varr.count = 4 THEN
---            tbl := upper(varr(1));
---            att := varr(2);
---            prop := varr(3);
---            func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
---
---
---
---            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
---
---            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
---
---            ext_col_name := varr(2);
---        ELSIF varr.count = 3 THEN
---            tbl := upper(varr(1));
---            att := varr(2);
---            prop := varr(3);
---            func := 'LAST';
---            funcparam := 0;
---        ELSIF varr.count = 2 THEN
---            tbl := upper(varr(1));
---            att := varr(2);
---            prop := val_col;
---            func := 'LAST';
---            funcparam := 0;
---        ELSIF varr.count = 1 THEN
---            IF upper(substr(varr(1), 1, 5)) = 'CONST' THEN
---                tbl := def_tbl_name;
---                func := 'CONST';
---                constparam := regexp_substr(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
---
---            ELSE
---                tbl := def_tbl_name;
---                att := varr(1);
---                prop := val_col;
---                func := 'LAST';
---                funcparam := 0;
---            END IF;
---        END IF;
+ 
         decompose_func_exp(txtin => txtin, tbl => tbl, att => att, prop => prop, func => func, funcparam => funcparam, funcparam_str
         => funcparam_str, predicate => predicate, ext_col_name => ext_col_name, constparam => constparam);
 
@@ -2113,7 +2099,34 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || entity_id_col
                                   || ', RTRIM(XMLAGG(XMLELEMENT(e,'
                                   || prop
-                                  || ','';'').EXTRACT(''//text()'') ORDER BY DT DESC).GETCLOBVAL(),'','') AS '
+                                  || ','''
+                                  || serialize_delimiter
+                                  || ''').EXTRACT(''//text()'') ORDER BY DT DESC).GETCLOBVAL(),'','') AS '
+                                  || assnvar
+                                  || ' ';
+
+                    groupby_txt := tbl
+                                   || '.'
+                                   || entity_id_col;
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
+                    , ruleid);
+
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
+                    rows_added := 1;
+                    push_vstack(assnvar, indx, 2, func, TO_CHAR(funcparam));
+                WHEN func IN (
+                    'SERIALIZE2'
+                ) THEN
+                    where_txt := att || predicate;
+                    from_txt := from_clause;
+                    select_txt := tbl
+                                  || '.'
+                                  || entity_id_col
+                                  || ', LISTAGG('
+                                  || prop
+                                  || ','''
+                                  || serialize_delimiter
+                                  || ''') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || ' ';
 
@@ -2144,13 +2157,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || entity_id_col
                                   || ', LISTAGG('
                                   || val_trans
-                                  || ','' '') WITHIN GROUP (ORDER BY DT DESC) AS '
+                                  || ','''
+                                  || serialize_delimiter
+                                  || ''') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || '_VAL '
---                                  || ', LISTAGG(TO_CHAR('
                                   || ', LISTAGG('
                                   || dt_trans
-                                  || ','' '') WITHIN GROUP (ORDER BY DT DESC) AS '
+                                  || ','''
+                                  || serialize_delimiter
+                                  || ''') WITHIN GROUP (ORDER BY DT DESC) AS '
                                   || assnvar
                                   || '_DT ';
 
@@ -4067,6 +4083,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         COMMIT;
         IF push_to_long_tbl = 1 THEN
             commit_log('Execute ruleblock', rb.blockid, 'exec_dsql_dstore');
+            
+            EXECUTE IMMEDIATE 'DELETE FROM eadvx where att=''' || rb.def_exit_prop || '''';
+            
             exec_dsql_dstore_singlecol(rb.blockid, 'SELECT * FROM ' || rb.target_table, 'eadvx', rb.def_exit_prop, rb.def_predicate
             );
 

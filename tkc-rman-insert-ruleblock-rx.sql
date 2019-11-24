@@ -41,9 +41,11 @@ BEGIN
             
             rxn_0 => eadv.[rxnc_%].dt.count().where(val=1);
             
-            rx_name_obj => vw_eadv_rx.rx_desc.val.serialize();
+            rx_name_obj => eadv.rx_desc.val.serialize2();
             
-            rx_desc : {nvl(rxn_0,0)>0 =>1},{=>0};
+            rx_n => eadv.rx_desc.val.count(0);
+            
+            rx_desc : {rx_n>0 =>1},{=>0};
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

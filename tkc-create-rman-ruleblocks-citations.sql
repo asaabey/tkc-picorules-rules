@@ -1,3 +1,6 @@
+DROP TABLE rman_ruleblocks_citation;
+/
+
 CREATE TABLE rman_ruleblocks_citation (
     citation_id     VARCHAR2(100),
     citation_body   VARCHAR2(4000),

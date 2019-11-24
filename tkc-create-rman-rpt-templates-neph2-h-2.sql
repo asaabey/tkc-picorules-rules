@@ -1,6 +1,6 @@
 --TKC Composition
 --Version 	0.0.2.0
---Creation date	4/10/2019
+--Creation date	24/11/2019
 --Authour		ASAABEY
 --
 --Purpose
@@ -8,68 +8,103 @@
 --PlacementId : 6 digit code that is used to anchor the template in the composition
 --
 --Placement Codebook
+--10    Header
 --30	Alert
 --60	Synthesis
 --70	Recommendations 
 --80	Notes
+--90    Footer
 --
 --Disease codes
+--00    reserved
 --10	Chronic disease : RRT
 --11	Chronic disease : CKD
 --21	Chronic disease : DM2
 --31	Chronic disease : HTN
 --41	Chronic disease : HTN
+--90    reserved
 
 
 DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_synthesis_begin','dmg_loc',600010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <div class="rTable">
+        <div class="rTableRow">
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_synthesis_left_begin','dmg_loc',600011,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <div class="rTableCell">
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_synthesis_left_end','dmg_loc',609001,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    </div>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_synthesis_end','dmg_loc',609010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    </div></div>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','dmg_loc_summary','dmg_loc',200010,'dev','tkc',TO_DATE(SYSDATE),
     '
+    
     <div class="syn_dmg_box">
         <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
         <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full />></b> <</loc_single>><</episode_single=0>>
         <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
     </div>
     <hr />
+    
     '
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4810','tg4810',304810,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Alert : High haemoglobin on the background of ESA therapy  (Trigger 4810)
-    --------------------------------------------------------------------------
+    <div class="syn_alert_box">
+    <h5>Alert : High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
     Current haemoglobin is <<hb_i_val />> g/L which has increased from a previous hb of <<hb_i1_val />> g/L.<br /> 
     The ESA was last prescribed on \t <<esa_dt />>
     This finding is associated with a higher all-cause mortality in CKD and RRT patients.\n
     It is possible that the medication is not administered,or an undocumented dose reduction has occured.<br />
+    </div>
+    
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4620','tg4620',304620,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Alert : Unmanaged advanced CKD with rapid progression (Trigger 4620)
-    --------------------------------------------------------------------
+    <div class="syn_alert_box">
+    <h5>Alert : Unmanaged advanced CKD with rapid progression (Trigger 4620)</h5>
     There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter
     <<avf>>Please note the AVF creation on <</avf>><<avf />>
+    </div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4610','tg4610',304610,'dev','tkc',TO_DATE(SYSDATE),
     '
-    Alert : Unmanaged possible early CKD with rapid progression (Trigger 4610)
-    --------------------------------------------------------------------------
+    <div class="syn_alert_box">
+    <h5>Alert : Unmanaged possible early CKD with rapid progression (Trigger 4610)</h5>
     The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb /> ml/min/yr without a recent specialist encounter
     <<egfrlv>>The last eGFR was <<egfrlv />> ml/min on <</egfrlv>><<egfrld />><<egfr_max_v>> with a decline from <<egfr_max_v />><<egfr_max_v />> ml/min on <</egfr_max_ld />><</egfr_max_ld>> 
     <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria.<</ckd_null>>
+    </div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4100','tg4100',304100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div class="syn_alert_box">
-    
     <h5>Alert : Acute kidney injury in community (Trigger 4100)</h5>
     Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>
     This is consistent with an acute kidney injury (AKIN stage 2 or above).
@@ -84,42 +119,54 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4410','tg4410',304410,'dev','tkc',TO_DATE(SYSDATE),
     '
+    <div class="syn_alert_box">
+    <h5>
     Alert : Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
-    -----------------------------------------------------------------------------
+    </h5>
     The last uACR was <<uacr1 />> mg/mmol and the one before was <<uacr2 />> mg/mmol.
     <<iq_tier=3>>Serum Albumin and Cholesterol have been checked <<low_alb>> and there is hypoalbuminaemia<</low_alb>><<higl_chol>> and hypercholesterolaemia<</higl_chol>><</iq_tier=3>>
     This is consistent with a primary nephrotic syndrome
     <<iq_tier=4>>It is noted that autoimmune and other relevant serological tests have been performed<</iq_tier=4>>
+    </div>
     '
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4720','tg4720',304720,'dev','tkc',TO_DATE(SYSDATE),
     '
+    <div class="syn_alert_box">
+    <h5>
     Alert : New commencement on Renal replacement therapy (Trigger 4720)
-    --------------------------------------------------------------------
+    </h5>
     <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min />><<hd_start>>
+    </div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg4660','tg4660',304660,'dev','tkc',TO_DATE(SYSDATE),
     '
+    <div class="syn_alert_box">
+    <h5>
     Alert : Medication safety concern (Trigger 4660)
-    ------------------------------------------------
+    </h5>
     This patient is on <<dm_rxn_bg>>a biguanide,<</dm_rxn_bg>><<dm_rxn_sglt2>> SGLT2 inhibitor,<</dm_rxn_sglt2>><<rx_nsaids>> NSAIDS,<</rx_nsaids>> which is inconsistent with the current renal function.
     <<dm_rxn_bg>>Biguanides may be rarely associated with lactic acidosis at this level of renal function<</dm_rxn_bg>>
     <<dm_rxn_sglt2>>SGLT2 inhibitors are relatively contra-indicated at this level of renal function<</dm_rxn_sglt2>>
     <<rx_nsaids>>NSAIDS may cause additional renal injury<</rx_nsaids>>
+    </div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','alert_tg2610','tg2610',302610,'dev','tkc',TO_DATE(SYSDATE),
     '
+    <div class="syn_alert_box">
+    <h5>
     Alert : Potentially untreated chronic disease (Trigger 2610)
-    ------------------------------------------------------------
+    </h5>
     <<dm_untreat>>Likely to require pharmacotherapy for glycaemic control. No active medications are detected.<</dm_untreat>>
     <<ckd_untreat>>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease<</ckd_untreat>>
     <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />) and serum potassium is <<k_val />> mmol/l (<<k_dt />>)<</ckd_untreat>>
+    </div>
     '
     );
 
@@ -292,13 +339,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','rx_syn_1','rx_desc',691100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','rx_syn_1','rx_desc',651010,'dev','tkc',TO_DATE(SYSDATE),
     '
+    
     <div>Medications
         <p>number <<rxn_0 />></p>
-        <p>number <<rxn_0$test_rxn />></p>
-    <<rx_name_obj />>
+    <<rx_name_obj$rx_desc />>
     </div>
+    
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -401,7 +449,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <li>Renal services engagement</li>
         <<enc_multi=0>><li><<enc_ld>>Nephrologist review <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
         <<enc_multi>><li>Nephrologist reviews :\t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li> <</enc_multi>>
-        <<edu_init>><li>CKD Education (initial) :\t<<edu_init />></li></edu_init>>
+        <<edu_init>><li>CKD Education (initial) :\t<<edu_init />></li><</edu_init>>
         <<edu_rv>><li>CKD Education review (last) :\t<<edu_rv />></li><</edu_rv>>
         <<dietn>><li>Renal Dietician review (last) :\t<<dietn />></li><</dietn>>
         <<sw>><li>Renal social work review (last) :\t<<sw />></li><</sw>>
@@ -462,11 +510,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
     '
+    <div class="rTableCell">
     <div>
     Temporal variation of eGFR  
     eGFR ml/min against time 
     <div>
+    <<xygraph />>
+    </div>
+    <div>
     <<xygraph_bitmap />>
+    </div>
     </div>
     </div>
     '

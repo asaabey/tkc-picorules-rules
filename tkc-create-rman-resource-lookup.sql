@@ -29,3 +29,12 @@ CREATE TABLE rman_resource_lookup (
         'name'
     );
 /
+
+    INSERT INTO rman_resource_lookup VALUES (
+        'rx_desc',
+        'table',
+        'system_rxcui_map',
+        'id',
+        'prescription'
+    );
+/

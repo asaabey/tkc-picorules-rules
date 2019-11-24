@@ -145,7 +145,9 @@ BEGIN
             
             esa => eadv.rxnc_b03xa.val.lastdv();
             
-            hb_graph => eadv.lab_bld_hb.val.serializedv(round(val,0)~dt).where(dt>sysdate-365);    
+            hb_graph => eadv.lab_bld_hb.val.serializedv(round(val,0)~dt).where(dt>sysdate-730);    
+            
+            hb_distinct => eadv.lab_bld_hb.val.serialize2();
                        
             hb_n => eadv.lab_bld_hb.val.count(0).where(dt>sysdate-365);
             

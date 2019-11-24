@@ -506,8 +506,8 @@ BEGIN
         
         
         
-        egfrld => rout_ckd.egfr_last_dt.val.bind();
-        egfrlv => rout_ckd.egfr_last_val.val.bind();
+        egfrld => rout_ckd.egfr_l_dt.val.bind();
+        egfrlv => rout_ckd.egfr_l_val.val.bind();
         
         ckd_null : { nvl(ckd,0)=0 =>1},{=0};
         
