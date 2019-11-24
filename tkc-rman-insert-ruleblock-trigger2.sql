@@ -193,18 +193,29 @@ BEGIN
         
         #doc(,
             {
-                txt:"Exclusions"
+                txt:"Exclusions RRT"
             }
         );
         
         rrt => rout_rrt.rrt.val.bind();
         
+        #doc(,
+            {
+                txt:"Exclude previously diagnosed nephrotic syndromes from coding"
+            }
+        );
         
-        /*  Exclude previously diagnosed nephrotic syndromes from coding */
+      
         
         dx_nephritic => eadv.[icd_n0%].dt.count(0);
         
-        /*  Exclude if renal encounters present */
+        #doc(,
+            {
+                txt:"Exclude if renal encounters present"
+            }
+        );
+        
+        
         
         enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
         
@@ -217,6 +228,11 @@ BEGIN
             }
         );
         
+        #doc(,
+            {
+                txt:"Inclusion by urine rbc"
+            }
+        );
         
         /*  Urine analysis */        
         
@@ -226,7 +242,11 @@ BEGIN
         
         ua_acr => eadv.lab_ua_acr.val.last().where(dt>sysdate-365);
         
-        
+        #doc(,
+            {
+                txt:"urine rbc threshold more than 100 provided leucs less than 40"
+            }
+        );vvvv
         
         t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
                     {ua_rbc>100 and ua_leu<40 => 1},    
@@ -515,11 +535,15 @@ BEGIN
         
         #doc(,
             {
-                txt:"Triggered for stage 1 or 2 with eb of minus 20pc"
+                txt:"Triggered for stage 1 or 2 with eb of minus 20pc provided no renal encounter"
             }
         );
         
-        
+        #doc(,
+            {
+                txt:"only if slope x is more than 180 and egfr last value less than 80 and max is known"
+            }
+        );
           
         tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null=> 1},{=>0};
         
@@ -696,13 +720,34 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
+        #doc(,
+            {
+                txt:"Exclude if previous cse action"
+            }
+        );
+        
+        
+        
         csu_act => eadv.csu_action_tg4660_tg4660.val.lastdv();
+        
+        #doc(,
+            {
+                txt:"presence of biguanide sglt2 nsaids "
+            }
+        );
+        
         
         dm_rxn_bg => rout_cd_dm.dm_rxn_bg.val.bind();
         
         dm_rxn_sglt2 => rout_cd_dm.dm_rxn_sglt2.val.bind();
         
         rx_nsaids => eadv.[rxnc_m01a%].dt.count(0).where(val=1);
+        
+        #doc(,
+            {
+                txt:"activate if ckd3+ and above present"
+            }
+        );
         
           
         tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 => 1},{=>0};
