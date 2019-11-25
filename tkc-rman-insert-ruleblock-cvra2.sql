@@ -26,7 +26,7 @@ BEGIN
         #define_ruleblock(cvra,
             {
                 description: "Ruleblock to apply Framingham equations",
-                version: "0.0.1.1",
+                version: "0.1.1.1",
                 blockid: "cvra",
                 target_table:"rout_cvra",
                 environment:"PROD",
@@ -38,6 +38,14 @@ BEGIN
                 exec_order:5
                 
             }
+        );
+        
+        #doc(,
+            {
+                txt:"Will  update ruleblock when validated CV risk assessment equation is available for Indigenous patients",
+                cite:"cvra_hlc_2019,cvra_circ_2018"
+            }
+            
         );
         
         #doc(,
@@ -96,7 +104,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Determine if overide criteria are met"
+                txt:"Determine if overide criteria are met",
+                cite:"cvra_nsf_2019"
             }
             
         );
@@ -114,7 +123,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Otherwise calculate the 5 year risk for non-fatal MI, and CVE"
+                txt:"Otherwise calculate the 5 year risk for non-fatal MI, and CVE",
+                cite:"cvra_ahj_1991"
             }
             
         );
@@ -140,7 +150,7 @@ BEGIN
         cvra :  {risk_high_ovr=1 => 3},
                     { risk_5 >=15 => 3},
                     { risk_5 >=10 and risk_5 <15 => 2},
-                    { risk_5 <15 => 1},{=>0};
+                    { risk_5 <10 => 1},{=>0};
         cvra_dx_uncoded : {cvra=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
         
             

@@ -86,3 +86,160 @@ Patients with Diabetes. Diabetes Technol Ther. 2019 Feb;21(2):81-85. doi:
 10.1089/dia.2018.0310. Epub 2018 Dec 21. PubMed PMID: 30575414.'
 );
 /
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_mja_2012',
+'d Emden MC, Shaw JE, Colman PG, Colagiuri S, Twigg SM, Jones GR, et al. 
+The role of HbA1c in the diagnosis of diabetes mellitus in Australia. 
+The Medical journal of Australia. 2012;197(4):220-1'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_nhmrc_2009',
+'Colagiuri S, Davies D, Girgis S, Colagiuri R. National Evidence Based Guideline for Case Detection and Diagnosis of Type 2 Diabetes Canberra: Diabetes Australia and the NHMRC; 2009 [cited 2019 November]'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_tg_2019',
+'Therapeutic Guidelines. Diabetes Melbourne: Therapeutic Guidelines Limited; 2019 [cited 2019 November]'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_dm_comp_2018',
+'Nanayakkara N, Ranasinha S, Gadowski A, Heritier S, Flack JR, Wischer N, et al. Age, age at diagnosis and diabetes duration are all associated with vascular complications in type 2 diabetes. Journal of diabetes and its complications. 2018;32(3):279-90'
+);
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_diabetologia_2014',
+'Zoungas S, Woodward M, Li Q, Cooper ME, Hamet P, Harrap S, et al. Impact of age, age at diagnosis and duration of diabetes on the risk of macrovascular and microvascular complications and death in type 2 diabetes. Diabetologia. 2014;57(12):2465-74'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_ada_2016',
+'Gunton JE, Cheung NW, Davis TME, Colagiuri S, Zoungas S. Position statement: A new blood glucose management algorithm for type 2 diabetes: Australian Diabetes Society; 2016 [cited 2019 November]'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_bmj_2011',
+'Boussageon R, Bejan-Angoulvant T, Saadatian-Elahi M, Lafont S, Bergeonneau C, Kassai B, et al. Effect of intensive glucose lowering treatment on all cause mortality, cardiovascular death, and microvascular events in type 2 diabetes: meta-analysis of randomised controlled trials. BMJ (Clinical research ed). 2011;343:d4169'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_nejm_2008',
+'Action to Control Cardiovascular Risk in Diabetes (ACCORD) Study Group. Effects of Intensive Glucose Lowering in Type 2 Diabetes. New England Journal of Medicine. 2008;358(24):2545-59'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_aihw_2019',
+'Australian Institute of Health and Welfare. National Key Performance Indicators for Aboriginal and Torres Strait Islander Primary Health Care: Results to June 2018 Canberra: Australian Institute of Health and Welfare,; 2019 [cited 2019 November]'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_dmrr_2018',
+'Luo M, Tan KHX, Tan CS, Lim WY, Tai ES, Venkataraman K. Longitudinal trends in
+HbA(1c) patterns and association with outcomes: A systematic review. Diabetes
+Metab Res Rev. 2018 Sep;34(6):e3015. doi: 10.1002/dmrr.3015. Epub 2018 May 22.
+PubMed PMID: 29663623; PubMed Central PMCID: PMC6175395'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'dm_aihwa_atsi_kpi_2018',
+'National Key Performance Indicators for Aboriginal and Torres Strait Islander Primary Health Care: Results to June 2018'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cvd_tg_2019',
+'Therapeutic Guidelines. Cardiovascular Melbourne: Therapeutic Guidelines Limited; 2019 [cited 2019 November].'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cvd_heart_foundation_2012',
+'National Heart Foundation of Australia and the Cardiac Society of Australia and New Zealand. Reducing risk in heart disease: an expert guide to clinical practice for secondary prevention of coronary heart disease Melbourne: National Heart Foundation of Australia; 2012 [cited 2019 November]'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_nhf_2016',
+'National Heart Foundation of Australia. Guide to management of hypertension in adults - 2016 Melbourne: National Heart Foundation of Australia; 2016 [cited 2019 November]'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_aha_2018',
+'Whelton PK, Carey RM, Aronow WS, Casey DE, Collins KJ, Himmelfarb CD, et al. 2017 ACC/AHA/AAPA/ABC/ACPM/AGS/APhA/ASH/ASPC/NMA/PCNA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults: A Report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines. Hypertension. 2018;71(6):e13-e115.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_mja_2016',
+'Gabb GM, Mangoni AA, Anderson CS, Cowley D, Dowden JS, Golledge J, et al. Guideline for the diagnosis and management of hypertension in adults - 2016. The Medical journal of Australia. 2016;205(2):85-9.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_tga_2019',
+'Therapeutic Guidelines. Cardiovascular Melbourne: Therapeutic Guidelines Limited; 2019 [cited 2019 November]'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_jnc_2014',
+'James PA, Oparil S, Carter BL, Cushman WC, Dennison-Himmelfarb C, Handler J, et al. 2014 evidence-based guideline for the management of high blood pressure in adults: report from the panel members appointed to the Eighth Joint National Committee (JNC 8). Jama. 2014;311(5):507-20'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_plos_2018',
+'Chung S-C, Pujades-Rodriguez M, Duyx B, Denaxas SC, Pasea L, Hingorani A, et al. Time spent at blood pressure target and the risk of death and cardiovascular diseases. PLOS ONE. 2018;13(9):e0202359'
+);
+/
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cvra_hlc_2019',
+'Tran-Duy A, McDermott R, Knight J, Hua X, Barr ELM, Arabena K, et al. Development and Use of Prediction Models for Classification of Cardiovascular Risk of Remote Indigenous Australians. Heart, Lung and Circulation. 2019'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cvra_circ_2018',
+'Barr EL, Barzi F, Rohit A, Cunningham J, Tatipata S, McDermott R, et al. Abstract 14374: Performance of ACC/AHA Cardiovascular Disease Risk Equations in Indigenous Australians With and Without Diabetes: The CRISP Study Collaboration. Circulation. 2018;138(Suppl_1):A14374-A.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cvra_nsf_2019',
+'National Vascular Disease Prevention Alliance. Guidelines for the management of absolute cardiovascular disease risk: National Stroke Foundation; 2012 [cited 2019 November]'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cvra_ahj_1991',
+'Anderson KM, Odell PM, Wilson PW, Kannel WB. Cardiovascular disease risk profiles. American heart journal. 1991;121(1 Pt 2):293-8'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_rcm_amh_2019',
+'Australian Medicines Handbook. Cardiovascular Drugs - Antihypertensives Adelaide: Australian Medicines Handbook; 2019 [cited 2019 November]'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_rcm_aacb_2019',
+'Australasian Association of Clinical Biochemists. Reference Intervals - an Overview Sydney: Lab Tests Online Australasia; 2019 [cited 2019 November]'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_rcm_compmethods_2000',
+'Persson M, Bohlin J, Eklund P. Development and maintenance of guideline-based 
+decision support for pharmacological treatment of hypertension. Comput Methods
+Programs Biomed. 2000 Mar;61(3):209-19. PubMed PMID: 10710183'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'htn_rcm_amia_2017',
+'Tso GJ, Tu SW, Oshiro C, Martins S, Ashcraft M, Yuen KW, Wang D, Robinson A,
+Heidenreich PA, Goldstein MK. Automating Guidelines for Clinical Decision
+Support: Knowledge Engineering and Implementation. AMIA Annu Symp Proc. 2017 Feb 
+10;2016:1189-1198. eCollection 2016. PubMed PMID: 28269916; PubMed Central PMCID:
+PMC5333329'
+);
+/

@@ -92,6 +92,8 @@ BEGIN
         
         loc_mode_n => eadv.dmg_location.val.count().where(val=loc_mode_full);
         
+        loc_last_2y => eadv.dmg_location.val.serialize2().where(val<>loc_mode_full and dt>sysdate-730);
+        
         mode_pct : {loc_n>0 => round(loc_mode_n/loc_n,2)*100};
         
         episode_single : { loc_n=1 => 1},{=>0};

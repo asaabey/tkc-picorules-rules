@@ -23,7 +23,7 @@ BEGIN
         #define_ruleblock(cd_dm,
             {
                 description: "Ruleblock to assess diabetes",
-                version: "0.0.2.1",
+                version: "0.1.2.1",
                 blockid: "cd_dm",
                 target_table:"rout_cd_dm",
                 environment:"PROD",
@@ -96,7 +96,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"lab criteria"
+                txt:"lab criteria with hba1c(ngsp) threshold at 6.5",
+                cite:"dm_mja_2012,dm_nhmrc_2009"
             }
         );
        
@@ -107,8 +108,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"medication criteria based on rxnorm",
-                cite:"dm_rxn"
+                txt:"medication criteria based on rxnorm based on WHO ATC A10",
+                cite:"dm_rxn,dm_tg_2019"
             }
         );
         
@@ -132,10 +133,17 @@ BEGIN
         );
         #doc(,
             {
-                txt:"Determine dm chronology"
+                txt:"Determine dm diabetes start date using earliest trigger for diagnosis",
+                cite:"dm_dm_comp_2018,dm_diabetologia_2014"
             }
         );
         
+        #doc(,
+            {
+                txt:"Level of certainity of diagnosis !(TBA)",
+                
+            }
+        );
         
         dm_fd :{coalesce(dm_code_fd,dm_lab_fd) is not null => 
                     (least(nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
@@ -201,6 +209,13 @@ BEGIN
             }
         );
         
+        #doc(,
+            {
+                txt:"Australian guidelines set target glycaemic control as 7 but range from 6-8 in specific populations. However intensive glycaemic control 6pct has limited additional outcome benefits",
+                cite:"dm_bmj_2011,dm_nejm_2008,dm_ada_2016"
+            }
+        );
+        
         
         hba1c_n_tot0 => eadv.lab_bld_hba1c_ngsp.dt.count();
         hba1c_n_opt0 => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8);
@@ -211,8 +226,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Calculate tir% of HbA1c",
-                cite:"dm_dmtech_2019"
+                txt:"Calculate tir of HbA1c",
+                cite:"dm_dmtech_2019,dm_dmrr_2018"
             }
         );
         
@@ -222,6 +237,12 @@ BEGIN
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
         
+        #doc(,
+            {
+                txt:"Categories control into 4 classes",
+                cite:"dm_aihwa_atsi_kpi_2018"
+            }
+        );
         
         
         n0_st : { hba1c_n0_val <6 => 1},
@@ -264,7 +285,7 @@ BEGIN
         #define_ruleblock(cd_htn,
             {
                 description: "Algorithm to assess hypertension",
-                version: "0.0.2.1",
+                version: "0.1.2.1",
                 blockid: "cd_htn",
                 target_table:"rout_cd_htn",
                 environment:"PROD",
@@ -308,7 +329,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: observation criteria"
+                txt:"Hypertension diagnosis: observation criteria within 2 years",
+                cite:"htn_nhf_2016,htn_aha_2018,htn_mja_2016"
             }
         );
         
@@ -327,7 +349,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: rxn criteria"
+                txt:"Hypertension diagnosis: rxn criteria based on WHO ATC code C09"
             }
         );
         
@@ -352,7 +374,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: vintage"
+                txt:"Hypertension diagnosis: vintage or date of onset"
             }
         );
         
@@ -368,7 +390,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension complications"
+                txt:"Hypertension chronology"
             }
         );
         
@@ -387,7 +409,8 @@ BEGIN
         );
         #doc(,
             {
-                txt:"BP control"
+                txt:"BP control : Assessing BP control in past 2 years: time  Proportion? outside of target range SBP >140",
+                cite:"htn_plos_2018"
             }
         );
         
@@ -416,7 +439,7 @@ BEGIN
         
         bp_control : { n_qt_1 >=0.75 => 3},{ n_qt_1<0.75 and n_qt_1>=0.25 => 2 },{ n_qt_1<0.25 => 1},{=>0};
         
-        htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>=2 =>1},{=>0};
+        htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>2 =>1},{=>0};
         
         htn_dx_uncoded : {htn_obs>=2 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
         
@@ -507,8 +530,8 @@ BEGIN
         
         #define_ruleblock(cd_cardiac,
             {
-                description: "Algorithm to assess careplan",
-                version: "0.0.2.1",
+                description: "Algorithm to assess cardiac disease",
+                version: "0.1.2.1",
                 blockid: "cd_cardiac",
                 target_table:"rout_cd_cardiac",
                 environment:"PROD",
@@ -529,15 +552,23 @@ BEGIN
             );
             #doc(,
                 {
-                    txt:"coronary insufficiency based on coding"
+                    txt:"first date of coronary insufficiency based on coding (ICD and ICPC)"
                 }
             );    
             
             
             
-            cabg => eadv.[icd_z95_1%,icpc_k54007].dt.MIN();
+            cabg => eadv.[icd_z95_1%,icpc_k54007].dt.min();
             
             cad_mi_icd => eadv.[icd_i21%,icd_i22%,icd_i23%].dt.min();
+            
+            #doc(,
+                {
+                    txt:"first date of type 2 AMI"
+                }
+            );   
+            
+            mi_type2_icd => eadv.icd_i21_a1.dt.min();
             
             cad_chronic_icd => eadv.[icd_i24%,icd_i25%].dt.min();
             
@@ -555,17 +586,36 @@ BEGIN
                 }
             );     
             
+             #doc(,
+                {
+                    txt:"mitral and aortic"
+                }
+            ); 
             
             vhd_mv_icd => eadv.[icd_i34_%,icd_i05%].dt.min();
             
             vhd_av_icd => eadv.[icd_i35_%,icd_i06%].dt.min();
             
+             #doc(,
+                {
+                    txt:"other valvular including rheumatic heart disease and infective endocarditis"
+                }
+            ); 
             vhd_ov_icd => eadv.[icd_i07%,icd_i08%,icd_i09%,icd_i36%,icd_i37%].dt.min();
             
             vhd_ie_icd => eadv.[icd_i33%,icd_i38%,icd_i39%].dt.min();
             
             vhd_icpc => eadv.[icpc_k83%].dt.min();
             
+            #doc(,
+                {
+                    txt:"atrial fibrillation based on coding"
+                }
+            );  
+            
+            af_icd => eadv.[icd_i48_%].dt.min();
+            
+            af_icpc => eadv.[icpc_k78%].dt.min();
             
             #doc(,
                 {
@@ -591,12 +641,13 @@ BEGIN
             );
            #doc(,
             {
-                txt: "Medication"
+                txt: "Medication",
+                cite: "cvd_tg_2019,cvd_heart_foundation_2012"
             }
             ); 
             
             
-            /* Medication */
+            
             #doc(,
                 {
                     txt: "antiplatelet agents"
@@ -871,7 +922,7 @@ BEGIN
         #define_ruleblock(htn_rcm,
             {
                 description: "Ruleblock to assess hypertension pharmacology recommendations",
-                version: "0.0.2.1",
+                version: "0.1.2.1",
                 blockid: "htn_rcm",
                 target_table:"rout_htn_rcm",
                 environment:"PROD",
@@ -896,7 +947,8 @@ BEGIN
         cad => rout_cd_cardiac.cardiac.val.bind();
         #doc(,
             {
-                txt:"Gather existing medications"
+                txt:"Gather existing medications",
+                cite:"htn_tga_2019,htn_jnc_2014"
             }
         );
         
@@ -914,7 +966,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Deteremin potential complications"
+                txt:"Determine potential complications (Needs more work)",
+                cite:"htn_rcm_compmethods_2000,htn_rcm_amia_2017"
             }
         );
         
@@ -934,7 +987,8 @@ BEGIN
                     
         #doc(,
             {
-                txt:"Treatment recommendation as a code"
+                txt:"Treatment recommendation as a code",
+                cite:"htn_rcm_amh_2019"
             }
         );
         
@@ -948,12 +1002,7 @@ BEGIN
                     { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and mrb=1 => 55 },
                     {htn=1 and bpc>1 =>99},
                     {=>0};
-                    
-        
-        
-        
-        
-        
+
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
