@@ -69,7 +69,7 @@ BEGIN
 rman_pckg.execute_ruleblock(
         bid_in => 'cvra',
         create_wide_tbl => 1,
-        push_to_long_tbl =>0,
+        push_to_long_tbl =>1,
         push_to_long_tbl2=>0,
         recompile=>1,
         return_code=>ret_val

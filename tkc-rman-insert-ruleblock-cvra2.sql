@@ -95,7 +95,7 @@ BEGIN
 
         
         
-        age : { dob<sysdate => round(((sysdate-dob)/365.25),0)};
+        age : { dob < sysdate => round(((sysdate-dob)/365.25),0)};
         
         smoke : {smoke0>=29 =>1},{0};
         
