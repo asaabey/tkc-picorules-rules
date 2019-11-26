@@ -11,11 +11,12 @@ CREATE TABLE EADVX
     vald    DATE,
     evhash  VARCHAR2(32),
     typ     NUMBER(*,0),
-    src     VARCHAR2(100),  
+    src     VARCHAR2(100)
+--    src     VARCHAR2(100),  
     
 --    CONSTRAINT EADVX_PK PRIMARY KEY (id),
-    CONSTRAINT EADVX_UC UNIQUE (eid,evhash),
-    CONSTRAINT EADVX_VALC_JSON_CHK CHECK (valc IS JSON)
+--    CONSTRAINT EADVX_UC UNIQUE (eid,evhash),
+--    CONSTRAINT EADVX_VALC_JSON_CHK CHECK (valc IS JSON)
 );
 /
 --DROP SEQUENCE EADVX_seq;
@@ -36,6 +37,8 @@ CREATE TABLE EADVX
 --   FROM   dual;
 --END;
 
-DROP INDEX eadvx_att_idx;
+--DROP INDEX eadvx_att_idx;
+
+CREATE BITMAP INDEX "EADVX_ATT_IDX" ON "EADVX" ("ATT");
+CREATE BITMAP INDEX "EADVX_EID_IDX" ON "EADVX" ("EID");
 /
-CREATE INDEX eadvx_att_idx ON EADVX(att);

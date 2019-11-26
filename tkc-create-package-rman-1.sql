@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.4
+Version		    1.0.1.5
 Creation date	07/04/2019
-update on date  24/11/2019
+update on date  27/11/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -180,8 +180,12 @@ Change Log
 21/11/2019  map_to_tmplt2 function fixed to output valid xml
 21/11/2019  implemented function lookup_key
 24/11/2019  improved serializer2 to use listagg for performance
+27/11/2019  dbms_sql writes to eadvx optimized with plsql bulk operator
 
 */
+    TYPE eadvx_tbl_type IS
+        TABLE OF eadvx%rowtype;
+    
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
     TYPE rpipe_tbl_type IS
@@ -3360,11 +3364,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || ''')';
                             
                                             
---                            insert_tbl_sql_str := insert_tbl_sql_str || ' INSERT INTO ' || tbl_name || '(eid, att, dt, val) VALUES('
---                                            || TO_CHAR(row_eid) || ', ''' || att ||''','
---                                            || dt || ',' 
---                                            || TO_CHAR(typ02_val) 
---                                            || ');' || chr(13);                
+             
                             insert_tbl_sql_str := ' INSERT INTO '
                                                   || tbl_name
                                                   || '(eid, att, dt, val) VALUES('
@@ -3647,6 +3647,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         insert_sql_jstr      VARCHAR2(4000);
         tbl_exists_val       PLS_INTEGER;
         src_id               VARCHAR2(32) := blockid;
+        
+        eadvx_tbl            eadvx_tbl_type:=eadvx_tbl_type();
+        idx                  PLS_INTEGER:=1;
+        
     BEGIN
         IF src_id IS NULL THEN
             src_id := 'undefined';
@@ -3688,6 +3692,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             fetched_rows := dbms_sql.fetch_rows(select_cursor);
             EXIT WHEN fetched_rows = 0;
             i := tbl_desc.first;
+            
             insert_jstr := '{';
 
         --for each col loop
@@ -3780,26 +3785,55 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 END CASE;
 
                 i := tbl_desc.next(i);
+                
+                
+--                dbms_output.put_line('dbms_sql --> i ' || i || ' --> idx ' || idx );
             END LOOP;
+            
+            /*
+            Performance tuning considerations
+            disable indexes including json chk
+            append hint, nologging hint, parallel hint
+            */
 
             insert_jstr := insert_jstr || '}';
-            insert_sql_jstr := 'INSERT /*+ ignore_row_on_dupkey_index(eadvx,EADVX_UC) */ INTO '
-                               || tbl_name
-                               || '(eid, att, dt, valc,typ,src,evhash) VALUES(:eid, :att, :dt, :val,:typ,:src,:evhash)';
-            dbms_sql.parse(insert_cursor, insert_sql_jstr, dbms_sql.native);
-            dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
-            dbms_sql.bind_variable(insert_cursor, ':att', disc_col);
-            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
-            dbms_sql.bind_variable(insert_cursor, ':val', insert_jstr);
-            dbms_sql.bind_variable(insert_cursor, ':typ', 2);
-            dbms_sql.bind_variable(insert_cursor, ':src', src_id);
-            dbms_sql.bind_variable(insert_cursor, ':evhash', get_hash(insert_jstr));
-            status := dbms_sql.execute(insert_cursor);
+            
+            
+--            insert_sql_jstr := 'INSERT /*+ ignore_row_on_dupkey_index(eadvx,EADVX_UC) */ INTO '
+--                               || tbl_name
+--                               || '(eid, att, dt, valc,typ,src,evhash) VALUES(:eid, :att, :dt, :val,:typ,:src,:evhash)';
+--          
+
+            eadvx_tbl.extend;
+            
+            eadvx_tbl(idx).eid:=row_eid;
+            eadvx_tbl(idx).att:=disc_col;
+            eadvx_tbl(idx).dt:=sysdate;
+            eadvx_tbl(idx).valc:=insert_jstr;
+            eadvx_tbl(idx).typ:=2;
+            eadvx_tbl(idx).src:=src_id;
+            eadvx_tbl(idx).evhash:=get_hash(insert_jstr);
+            
+            idx:=idx+1;
+                               
+--            dbms_sql.parse(insert_cursor, insert_sql_jstr, dbms_sql.native);
+--            dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
+--            dbms_sql.bind_variable(insert_cursor, ':att', disc_col);
+--            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
+--            dbms_sql.bind_variable(insert_cursor, ':val', insert_jstr);
+--            dbms_sql.bind_variable(insert_cursor, ':typ', 2);
+--            dbms_sql.bind_variable(insert_cursor, ':src', src_id);
+--            dbms_sql.bind_variable(insert_cursor, ':evhash', get_hash(insert_jstr));
+--            status := dbms_sql.execute(insert_cursor);
             insert_sql_jstr := '';
             insert_jstr := '';
         END LOOP;
 
-        dbms_sql.close_cursor(insert_cursor);
+        forall j in eadvx_tbl.FIRST..eadvx_tbl.LAST
+            INSERT INTO eadvx(eid,att,dt,valc,typ,src,evhash)
+            VALUES (eadvx_tbl(j).eid,eadvx_tbl(j).att,eadvx_tbl(j).dt,eadvx_tbl(j).valc,eadvx_tbl(j).typ,eadvx_tbl(j).src,eadvx_tbl(j).evhash);
+            
+--        dbms_sql.close_cursor(insert_cursor);
         dbms_sql.close_cursor(select_cursor);
     END exec_dsql_dstore_singlecol;
 
@@ -4086,6 +4120,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             
             EXECUTE IMMEDIATE 'DELETE FROM eadvx where att=''' || rb.def_exit_prop || '''';
             
+            
             exec_dsql_dstore_singlecol(rb.blockid, 'SELECT * FROM ' || rb.target_table, 'eadvx', rb.def_exit_prop, rb.def_predicate
             );
 
@@ -4130,6 +4165,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
+            
+            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_ATT_IDX"';
+            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_EID_IDX"';
+            
+            
             FOR i IN rbs.first..rbs.last LOOP BEGIN
                 bid := rbs(i).blockid;
                 execute_ruleblock(bid, 1, 1, 0, 0, execute_return_code);
@@ -4143,7 +4183,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                          || ' and errors logged to rman_ruleblocks_log !');
             END;
             END LOOP;
-
+            
+            
+            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_ATT_IDX" ON "EADVX" ("ATT")';
+            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_EID_IDX" ON "EADVX" ("EID")';
 --            drop_rout_tables;
 
         ELSE

@@ -246,13 +246,13 @@ BEGIN
             {
                 txt:"urine rbc threshold more than 100 provided leucs less than 40"
             }
-        );vvvv
+        );
         
         t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
                     {ua_rbc>100 and ua_leu<40 => 1},    
                     {=>0};
         
-        tg4420 : {t4420_code>=2 => 1},{=>0};            
+        tg4420 : { t4420_code >=2 => 1},{=>0};            
         
         #define_attribute(
             tg4420,

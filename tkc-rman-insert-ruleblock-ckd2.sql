@@ -82,11 +82,11 @@ BEGIN
         
         #doc(,
             {
-                txt: "Determine RRT category based on chronology. RRT cat 1 [HD] requires more than 10 sessions"
+                txt: "Determine RRT category based on chronology. RRT cat 1 [HD] requires more than 10 sessions within last year"
             }
         );
         
-        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_n>10  and hd_dt>sysdate-365 => 1},
+        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365 => 1},
             {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
             {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
             {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
