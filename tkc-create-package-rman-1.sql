@@ -1356,8 +1356,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
-                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
-                , yline_str_arr => yline_str_arr_in);
+--                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
+--                , yline_str_arr => yline_str_arr_in);
 
                 xygraph_bitmap := '<chart id="chartId" '
                                   || 'name="chartName" style="height:400px;width=600px" '

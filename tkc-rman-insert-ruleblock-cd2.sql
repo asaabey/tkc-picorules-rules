@@ -114,7 +114,7 @@ BEGIN
         );
         
         
-        dm_rxn => eadv.[rxnc_a10%].dt.count(0).where(val=1);
+        dm_rxn_n => eadv.[rxnc_a10%].dt.count(0).where(val=1);
         dm_rxn_su => eadv.[rxnc_a10bb].dt.count(0).where(val=1);
         dm_rxn_ins_long => eadv.[rxnc_a10ae].dt.count(0).where(val=1);
         dm_rxn_ins_int => eadv.[rxnc_a10ac].dt.count(0).where(val=1);
@@ -126,6 +126,8 @@ BEGIN
         dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
            
                
+        dm_rxn : { dm_rxn_n >0 => 1},{=>0};
+        
         #doc(,
             {
                 section: "Complications"

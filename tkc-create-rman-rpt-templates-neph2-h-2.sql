@@ -59,8 +59,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     
     <div class="syn_dmg_box">
         <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
-        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full />></b> <</loc_single>><</episode_single=0>>
+        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
         <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
+        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_mode_full$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>
+        <<episode_single=0>><<diff_mode2y_mode=1>>The most visited site in the last 2y is <<loc_mode_24$loc_sublocality />> and the most visited overall is <<loc_mode_full$loc_sublocality />> <</diff_mode2y_mode=1>> <</episode_single=0>>
+        
+        <<loc_last_2y>><<loc_single=0>>Other sites visited within the last 2 years include <<loc_last_2y$loc_sublocality />><</loc_last_2y>>
+        
     </div>
     <hr />
     
@@ -179,18 +184,26 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<dm_fd_t>><li>since <<dm_fd_t />></li><</dm_fd_t>>
             <<dm_micvas>><li>Non-renal microvascular complications present</li><</dm_micvas>>
             <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val />> % (<<hba1c_n0_dt />>)</li><</hba1c_n_tot>>
-            <<dm_rxn=0>><li>Non-medicated</li><</dm_rxn=0>>
-            <<dm_rxn>><li>Current medication classes
-            <ul>
-                <<dm_rxn_su>><li>sulphonylurea</li><</dm_rxn_su>>
-                <<dm_rxn_ins_long>><li>long-acting insulin</li><</dm_rxn_ins_long>>
-                <<dm_rxn_glp1>><li>GLP1 analogue</li><</dm_rxn_glp1>>
-                <<dm_rxn_dpp4>><li>DPP4 inhibitor</li><</dm_rxn_dpp4>>
-                <<dm_rxn_sglt2>><li>SGLT2 inhibitor</li><</dm_rxn_sglt2>>
-            </ul>
-            </li><</dm_rxn>>
-            <<cp_dm=0>><li>Diabetes careplan was not detected [2.4]</li><</cp_dm=0>>
-            <<cp_dm>><li>Diabetes careplan was updated on <<cp_dm_ld />></li><</cp_dm>>
+            <<dm_rxn=0>>
+                <li>Non-medicated</li>
+            <</dm_rxn=0>>
+            <<dm_rxn>>
+                <li>Current medication classes
+                <ul>
+                    <<dm_rxn_su>><li>sulphonylurea</li><</dm_rxn_su>>
+                    <<dm_rxn_ins_long>><li>long-acting insulin</li><</dm_rxn_ins_long>>
+                    <<dm_rxn_glp1>><li>GLP1 analogue</li><</dm_rxn_glp1>>
+                    <<dm_rxn_dpp4>><li>DPP4 inhibitor</li><</dm_rxn_dpp4>>
+                    <<dm_rxn_sglt2>><li>SGLT2 inhibitor</li><</dm_rxn_sglt2>>
+                </ul>
+                </li>
+            <</dm_rxn>>
+            <<cp_dm=0>>
+                <li>Diabetes careplan was not detected [2.4]</li>
+            <</cp_dm=0>>
+            <<cp_dm>>
+                <li>Diabetes careplan was updated on <<cp_dm_ld />></li>
+            <</cp_dm>>
         </ul>
         </li>
     </ul>
@@ -353,15 +366,18 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
     '<ul>
         <li>aetiology
-        <ul>
-            <<aet_multiple=1>><li>Multiple aetiology is suggested
             <ul>
-                <<aet_dm=1>><li>diabetes mellitus</li><</aet_dm=1>>
-                <<aet_htn=1>><li>hypertension</li><</aet_htn=1>>
-                <<aet_gn_ln=1>><li>lupus nephritis</li><</aet_gn_ln=1>>
-                <<aet_gn_x=1>><li>glomerulopathy NOS</li><</aet_gn_x=1>>
-            </ul><</aet_multiple=1>>
-            <<aet_multiple=0>><li>The likely cause is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>><<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong></li><</aet_multiple=0>>
+                <<aet_multiple=1>><li>Multiple aetiology is suggested
+                <ul>
+                    <<aet_dm=1>><li>diabetes mellitus</li><</aet_dm=1>>
+                    <<aet_htn=1>><li>hypertension</li><</aet_htn=1>>
+                    <<aet_gn_ln=1>><li>lupus nephritis</li><</aet_gn_ln=1>>
+                    <<aet_gn_x=1>><li>glomerulopathy NOS</li><</aet_gn_x=1>>
+                </ul></li>
+                <</aet_multiple=1>>
+                <<aet_multiple=0>>
+                    <li>The likely cause is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>><<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong></li>
+                <</aet_multiple=0>>
             </ul>
         </li>
     </ul>
@@ -386,12 +402,12 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_footnote_1','ckd',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<egfr_single>><div>Note [1.1] This is based on a single egfr value on <<egfrld />></div><</egfr_single>>
-    <<egfr_multiple>><div>Note [1.1] This is based on <<iq_egfr />> egfr values between <<egfrfd />> and <<egfrld />></div><</egfr_multiple>>
-    <<egfr_outdated>><div>Note [1.2.1] Last egfr on <<egfrld />></div><</egfr_outdated>>
-    <<acr_outdated>><div>Note [1.2.2] Last uACR on <<acrld />></div><</acr_outdated>>
+    <<egfr_single>><div>Note [1.1] This is based on a single egfr value on <<egfr_l_dt />></div><</egfr_single>>
+    <<egfr_multiple>><div>Note [1.1] This is based on <<iq_egfr />> egfr values between <<egfr_f_dt />> and <<egfr_l_dt />></div><</egfr_multiple>>
+    <<egfr_outdated>><div>Note [1.2.1] Last egfr on <<egfr_l_dt />></div><</egfr_outdated>>
+    <<acr_outdated>><div>Note [1.2.2] Last uACR on <<acr_l_dt />></div><</acr_outdated>>
     <<asm_viol_3m>><div>Note [1.2.3] Assumption violation present. +/- 20% fluctuation in last 30 days </div><</asm_viol_3m>>
-    <<egfr_decline>><div>Note [1.3] Maximum eGFR of <<egfr_max_v />> ml/min/1.73m2 on <<egfr_max_ld />>  with the most recent value being <<egfrlv />></div><</egfr_decline>>
+    <<egfr_decline>><div>Note [1.3] Maximum eGFR of <<egfr_max_val />> ml/min/1.73m2 on <<egfr_max_dt />>  with the most recent value being <<egfr_l_val />></div><</egfr_decline>>
     <<iq_tier=4>><div>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR value (Tier 4).</div><</iq_tier=4>>
     <<iq_tier=3>><div>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). </div><</iq_tier=3>>
     <<iq_tier=2>><div>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3).</div> <</iq_tier=2>>
@@ -407,11 +423,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <li><b>Cardiovascular risk (CVR)</b></li>
         <ul>
         <<risk_high_ovr=0>><li>CVR status was calculated using FRE [4.1]</li><</risk_high_ovr=0>>
-        <<risk_5>><li>Composite 5 year CVD risk is <</risk_5>><<risk_5>><</risk_5>><<risk_5>> ,which is <</risk_5>>
+        <<risk_5>><li>Composite 5 year CVD risk is <<risk_5 />>%</li><</risk_5>>
         <<cvra=2>><li>The composite 5 year CVD risk is high</li><</cvra=3>>
         <<cvra=2>><li>The composite 5 year CVD risk is moderate</li><</cvra=2>>
         <<cvra=1>><li>The composite 5 year CVD risk is low</li><</cvra=1>> 
-        <<risk_high_ovr>><li>The patient meets criteria for high CVR without calculation</li>
+        <<risk_high_ovr>><li>The patient meets criteria for high CVR without calculation
         <ul>
             <<cvd_prev>><li>previous documented CVD event</li><</cvd_prev>>
             <<dm60>><li>Diabetes and age more than 60</li><</dm60>>
@@ -420,7 +436,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<tc7>><li>total cholesterol more than 7.5</li><</tc7>>
             <<sbp180>><li>systolic bp more than 180mmHg</li><</sbp180>>
             <<age74>><li>age more than 74 and ATSI</li><</age74>>
-        </ul><</risk_high_ovr>>
+        </ul></li><</risk_high_ovr>>
         <<cp_hicvr=0>><li>There is no cv careplan</li><</cp_hicvr=0>>
         <<cp_hicvr=1>><li>A high CVR careplan is already in place</li><</cp_hicvr=1>>
         </ul>
@@ -463,7 +479,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
     <li>diagnostic workup
     <ul>
-    <li>Basic urinalysis<<ua_null=1>>not performed<</ua_null=1>><<ua_rbc_ld>>last performed on <</ua_rbc_ld>><<ua_rbc_ld />><<ua_rbc_ld>> and shows <</ua_rbc_ld>><<ua_null=0>><<ua_pos=0>>no significance<</ua_pos=0>><<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>><<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>><</ua_null=0>></li>
+    <li>Basic urinalysis
+    <<ua_null=1>> not performed <</ua_null=1>>
+    <<ua_rbc_ld>> last performed on <<ua_rbc_ld />> and shows<</ua_rbc_ld>>
+    <<ua_null=0>>
+        <<ua_pos=0>> no significance<</ua_pos=0>>
+        <<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>>
+        <<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>>
+    <</ua_null=0>></li>
     <li>ANA Serology : <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
     <li>ANCA Serology : <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld />><</anca_null=0>></li>
     <li>Complements : <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld />><</c3c4_null=0>></li>
@@ -515,9 +538,6 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     Temporal variation of eGFR  
     eGFR ml/min against time 
     <div>
-    <<xygraph />>
-    </div>
-    <div>
     <<xygraph_bitmap />>
     </div>
     </div>
@@ -540,7 +560,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     Temporal variation of uACR  
     Log(uACR) mg/mmol against time
-    <<xygraph />>
+
     '
     );
 @"tkc-create-package-rman-1.sql";
