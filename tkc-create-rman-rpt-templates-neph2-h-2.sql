@@ -651,18 +651,23 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         </tr>
         <tr>
             <td>Calcium (mmol/l)</td>
-            <td><strong><<calcium1_val />></strong> (<<calcium1_dt />>)</td>
-            <td><strong><<calcium2_val />></strong> (<<calcium2_dt />>)</td>
-            <td><strong><<calcium3_val />></strong> (<<calcium3_dt />>)</td>
-            <td><div><strong><<calcium_min_val />></strong>(<<calcium_min_dt />>)</div><div><strong><<calcium_max_val />></strong>(<<calcium_max_dt />>)</div></td>
+            <td><<calcium1_val>><strong><<calcium1_val />></strong> (<<calcium1_dt />>)<</calcium1_val>></td>
+            <td><<calcium2_val>><strong><<calcium2_val />></strong> (<<calcium2_dt />>)<</calcium2_val>></td>
+            <td><<calcium3_val>><strong><<calcium3_val />></strong> (<<calcium3_dt />>)<</calcium3_val>></td>
+            <td>
+                <<calcium_min_val>><div><strong><<calcium_min_val />></strong>(<<calcium_min_dt />>)</div><</calcium_min_val>>
+                <<calcium_max_val>><div><strong><<calcium_max_val />></strong>(<<calcium_max_dt />>)</div><</calcium_max_val>></td>
             <td> </td>
         </tr>
         <tr>
             <td>Phosphate (mmol/l)</td>
-            <td><strong><<phos1_val />></strong> (<<phos1_dt />>)</td>
-            <td><strong><<phos2_val />></strong> (<<phos2_dt />>)</td>
-            <td><strong><<phos3_val />></strong> (<<phos3_dt />>)</td>
-            <td><div><strong><<phos_min_val />></strong>(<<phos_min_dt />>)</div><div><strong><<phos_max_val />></strong>(<<phos_max_dt />>)</div></td>
+            <td><<phos1_val>><strong><<phos1_val />></strong> (<<phos1_dt />>)<</phos1_val>></td>
+            <td><<phos2_val>><strong><<phos2_val />></strong> (<<phos2_dt />>)<</phos2_val>></td>
+            <td><<phos3_val>><strong><<phos3_val />></strong> (<<phos3_dt />>)<</phos3_val>></td>
+            <td>
+                <<phos_min_val>><div><strong><<phos_min_val />></strong>(<<phos_min_dt />>)</div><</phos_min_val>>
+                <<phos_max_val>><div><strong><<phos_max_val />></strong>(<<phos_max_dt />>)</div><</phos_max_val>>
+            </td>
         <td> </td>
         </tr>
         </tbody>
