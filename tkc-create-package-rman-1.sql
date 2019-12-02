@@ -1356,8 +1356,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
---                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
---                , yline_str_arr => yline_str_arr_in);
+                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
+                , yline_str_arr => yline_str_arr_in);
 
                 xygraph_bitmap := '<chart id="chartId" '
                                   || 'name="chartName" style="height:400px;width=600px" '
@@ -4959,15 +4959,23 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END modify_temp_tbls;
 
     BEGIN
+        commit_log('executing gen_cube', null, 'initialising');
         mock_mode := false;
         -- get time slices into collection
+        
         get_slices(slices_str);
         cube_in_rbstack;
+        commit_log('executing gen_cube', null, 'creating eadv views as per time slices');
         create_temp_eadv_views;
+        commit_log('executing gen_cube', null, 'executing ruleblocks');
         execute_ndsql_temp_tbls;
+        commit_log('executing gen_cube', null, 'modifying staging tables');
         modify_temp_tbls;
+        commit_log('executing gen_cube', null, 'executing union for each ruleblock');
         union_temp_tbls;
+        commit_log('executing gen_cube', null, 'executing join on all ruleblocks');
         join_temp_tbls;
+        commit_log('executing gen_cube', null, 'cleaning up staging tables');
         cleanup_objects;
     END gen_cube_from_ruleblock;
 

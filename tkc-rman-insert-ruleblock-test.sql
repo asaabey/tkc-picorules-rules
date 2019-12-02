@@ -38,8 +38,13 @@ BEGIN
                 out_att : "test1"
             }
         );
-        
+        /*
         neg_def_point => eadv.lab_bld_egfr_c.val.max_neg_delta_dv();
+        */
+        
+        creat_last => eadv.lab_bld_creatinine.val.lastdv();
+        
+        creat_seq => eadv.lab_bld_creatinine.val.serialize2().where(dt>creat_last_dt-3000);
         
         test1 : { 1=1 => 1},{=>0};
         

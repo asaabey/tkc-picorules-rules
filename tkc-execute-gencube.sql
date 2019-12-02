@@ -47,6 +47,18 @@ rman_pckg.compile_active_ruleblocks;
 --    cvra.cvra_dx_uncoded
 --    ','01072019,01072018,01072017','rep126');
 
+rman_pckg.gen_cube_from_ruleblock('
+    rrt.rrt
+    dmg.dob,
+    dmg.dod,
+    at_risk_ckd.ckd,
+    at_risk_ckd.dm,
+    at_risk_ckd.htn,
+    at_risk_ckd.obesity,
+    cvra.cvra
+    ','01072019,01072018','rep126');
+
+
 
 
 END;

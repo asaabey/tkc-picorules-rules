@@ -1170,6 +1170,119 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_labs';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to gather lab tests */
+        
+        #define_ruleblock(ckd_labs,
+            {
+                description: "Rule block to gather lab tests",
+                version: "0.0.2.1",
+                blockid: "ckd_labs",
+                target_table:"rout_ckd_labs",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"ckd_labs",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+
+       egfr1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt>sysdate-730);
+       egfr2 => eadv.lab_bld_egfr_c.val.lastdv(1).where(dt>sysdate-730);
+       egfr3 => eadv.lab_bld_egfr_c.val.lastdv(2).where(dt>sysdate-730);
+       
+       creat1 => eadv.lab_bld_creatinine.val.lastdv().where(dt>sysdate-730);
+       creat2 => eadv.lab_bld_creatinine.val.lastdv(1).where(dt>sysdate-730);
+       creat3 => eadv.lab_bld_creatinine.val.lastdv(2).where(dt>sysdate-730);
+       
+      
+       
+       creat_min => eadv.lab_bld_creatinine.val.minldv();
+       creat_max => eadv.lab_bld_creatinine.val.maxldv();
+       
+       
+       uacr1 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-730);
+       uacr2 => eadv.lab_ua_acr.val.lastdv(1).where(dt>sysdate-730);
+       uacr3 => eadv.lab_ua_acr.val.lastdv(2).where(dt>sysdate-730);
+       
+       uacr_min => eadv.lab_ua_acr.val.minldv();
+       uacr_max => eadv.lab_ua_acr.val.maxldv();
+       
+       
+       sodium1 => eadv.lab_bld_sodium.val.lastdv().where(dt>sysdate-730);
+       sodium2 => eadv.lab_bld_sodium.val.lastdv(1).where(dt>sysdate-730);
+       sodium3 => eadv.lab_bld_sodium.val.lastdv(2).where(dt>sysdate-730);
+       
+       sodium_min => eadv.lab_bld_sodium.val.minldv();
+       sodium_max => eadv.lab_bld_sodium.val.maxldv();
+       
+       
+       potassium1 => eadv.lab_bld_potassium.val.lastdv().where(dt>sysdate-730);
+       potassium2 => eadv.lab_bld_potassium.val.lastdv(1).where(dt>sysdate-730);
+       potassium3 => eadv.lab_bld_potassium.val.lastdv(2).where(dt>sysdate-730);
+       
+       potassium_min => eadv.lab_bld_potassium.val.minldv();
+       potassium_max => eadv.lab_bld_potassium.val.maxldv();
+       
+       bicarb1 => eadv.lab_bld_bicarbonate.val.lastdv().where(dt>sysdate-730);
+       bicarb2 => eadv.lab_bld_bicarbonate.val.lastdv(1).where(dt>sysdate-730);
+       bicarb3 => eadv.lab_bld_bicarbonate.val.lastdv(2).where(dt>sysdate-730);
+       
+       bicarb_min => eadv.lab_bld_bicarbonate.val.minldv();
+       bicarb_max => eadv.lab_bld_bicarbonate.val.maxldv();
+       
+       calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
+       calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
+       calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
+       
+       calcium_min => eadv.lab_bld_calcium.val.minldv();
+       calcium_max => eadv.lab_bld_calcium.val.maxldv();
+       
+       phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
+       phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
+       phos3 => eadv.lab_bld_phosphate.val.lastdv(2).where(dt>sysdate-730);
+       
+       phos_min => eadv.lab_bld_phosphate.val.minldv();
+       phos_max => eadv.lab_bld_phosphate.val.maxldv();
+       
+       hb1 => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-730);
+       hb2 => eadv.lab_bld_hb.val.lastdv(1).where(dt>sysdate-730);
+       hb3 => eadv.lab_bld_hb.val.lastdv(2).where(dt>sysdate-730);
+       
+       hb_min => eadv.lab_bld_hb.val.minldv();
+       hb_max => eadv.lab_bld_hb.val.maxldv();
+       
+       
+       ferritin1 => eadv.lab_bld_ferritin.val.lastdv().where(dt>sysdate-730);
+       ferritin2 => eadv.lab_bld_ferritin.val.lastdv(1).where(dt>sysdate-730);
+       ferritin3 => eadv.lab_bld_ferritin.val.lastdv(2).where(dt>sysdate-730);
+       
+       ferritin_min => eadv.lab_bld_phosphate.val.minldv();
+       ferritin_max => eadv.lab_bld_phosphate.val.maxldv();
+       
+       
+       ckd_labs : {coalesce(egfr1_val,egfr2_val,egfr3_val)>0 =>1 },{=>0};
+       
+       
+     
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

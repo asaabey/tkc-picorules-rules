@@ -67,7 +67,7 @@ BEGIN
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
 rman_pckg.execute_ruleblock(
-        bid_in => 'dmg_loc',
+        bid_in => 'ckd_labs',
         create_wide_tbl => 1,
         push_to_long_tbl =>1,
         push_to_long_tbl2=>0,
@@ -85,7 +85,7 @@ rman_pckg.execute_ruleblock(
 --        rman_pckg.execute_active_ruleblocks;
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');
