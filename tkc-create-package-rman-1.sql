@@ -181,6 +181,8 @@ Change Log
 21/11/2019  implemented function lookup_key
 24/11/2019  improved serializer2 to use listagg for performance
 27/11/2019  dbms_sql writes to eadvx optimized with plsql bulk operator
+03/12/2019  moved styling into template
+
 
 */
     TYPE eadvx_tbl_type IS
@@ -1356,8 +1358,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
-                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
-                , yline_str_arr => yline_str_arr_in);
+--                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
+--                , yline_str_arr => yline_str_arr_in);
 
                 xygraph_bitmap := '<chart id="chartId" '
                                   || 'name="chartName" style="height:400px;width=600px" '
@@ -1371,6 +1373,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || 'x-label="Date Recorded" '
                                   || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
                                   || 'slope-line="30 30" line-colour="blue" slope-colour="gray" />';
+                
 
             END IF;
 
@@ -1390,7 +1393,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             
             if length(tkey_lu_str)>0 then
                 
-                dbms_output.put_line('***->'|| tkey_lu_str);
+--                dbms_output.put_line('***->'|| tkey_lu_str);
                 
                 tkey_lu_key := tkey;
                 
@@ -1406,11 +1409,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             end if;                 
 
 
-            IF length(xygraph_ascii) > 0 THEN
+            IF length(x_vals_iso) > 0 THEN
 
                 ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
 
-                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
+                
+                ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
+                
+                ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
                 x_vals_iso := '';
                 x_vals := '';
                 y_vals := '';

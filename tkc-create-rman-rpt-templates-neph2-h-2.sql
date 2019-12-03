@@ -28,7 +28,7 @@
 DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_synthesis_begin','dmg_loc',600010,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_main_header','dmg_loc',200001,'dev','tkc',TO_DATE(SYSDATE),
     '
     <style>
                 .syn_alert_box {
@@ -37,18 +37,38 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 .syn_dmg_box {
                     border-style: solid;border-color: green;border-radius: 10px;padding: 10px
                 }
+                .syn_synopsis_box {
+                    border-style: solid;border-color: darkgray;border-radius: 10px;padding: 10px
+                }
+                .syn_recm_box {
+                    border-style: solid;border-color: darkorange;border-radius: 10px;padding: 10px
+                }
+                .syn_notes_box {
+                    border-style: solid;background-color: mintcream; border-color: #ccffe6 ;border-radius: 10px;padding: 10px
+                }
                 .syn_table {
                   border-collapse: collapse;
                   border-spacing: 0;
-                  width: 100%;
+                  width: 80%;
                   border: 1px solid #ddd;
+                  padding: 10px;
                 }
                 
                 .syn_tr:nth-child(even) {
                     background-color: #f2f2f2;
                 }
     </style>
-    <div>
+    
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_synthesis_begin','dmg_loc',600010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    
+    <div class="syn_synopsis_box">
+        <h3>Relevant Diagnoses</h3>
+        <hr />
         <div>
     '
     );
@@ -70,6 +90,38 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </div></div>
     '
     );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_recm_begin','dmg_loc',700001,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_recm_box">
+    <h3>Recommendations</h3>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_recm_end','dmg_loc',799999,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    </div>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_notes_begin','dmg_loc',800001,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_notes_box">
+    <h4>Footnotes</h4>
+    <small>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','frame_notes_end','dmg_loc',899999,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    </small>
+    </div>
+    '
+    );
+
+
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','dmg_loc_summary','dmg_loc',200010,'dev','tkc',TO_DATE(SYSDATE),
@@ -245,6 +297,21 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
             <<mu_1>><li>Average systolic BP during last year was <<mu_1 />> mmHg</li><</mu_1>>
             <<mu_2>><li>Average systolic BP the year before was <<mu_2 />> mmHg.</li><</mu_2>>
+            <<bp_trend>>
+            <li>
+                <<bp_trend=1>>Hypertension control appears to have improved compared to last year<</bp_trend=1>>
+                <<bp_trend=2>>Hypertension control appears to have worsened compared to last year<</bp_trend=2>>        
+            </li>
+            <</bp_trend>>
+            <<bp_control>>
+            <li>
+                BP control <<bp_control=3>>appears to be adequate<</bp_control=3>>
+                <<bp_control=2>>can be optimized<</bp_control=2>>
+                <<bp_control=1>>appears to sub-optimal<</bp_control=1>>
+                <<bp_control=0>>could not be determined<</bp_control=0>>[3.3]
+            </li>
+            <</bp_control>>
+    
             <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
             <ul>
                 <<htn_rxn_arb>><li>Angiotensin receptor blocker (ARB)</li><</htn_rxn_arb>>
@@ -347,8 +414,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
     <<dx_ckd=0>><li>No coded diagnosis on the EHR [1.2]</li><</dx_ckd=0>>
     <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>
-    <<egfrlv>><li>Last eGFR is <strong><<egfrlv />></strong> ml/min/1.73m2 (<<egfrld />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfrlv>>
-    <<acrlv>><li>Last uACR is <<acrlv />> mg/mmol (<<acrld />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acrlv>>
+    <<egfr_l_val>><li>Last eGFR is <strong><<egfr_l_val />></strong> ml/min/1.73m2 (<<egfr_l_dt />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfr_l_val>>
+    <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
     <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
     <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
     <<enc_ld>><li>Last encounter with renal services was on <<enc_ld />>and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
@@ -372,10 +439,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','rx_syn_1','rx_desc',651010,'dev','tkc',TO_DATE(SYSDATE),
     '
-    
-    <div><h5>Medications</h5>
-        <p>number <<rxn_0 />></p>
-    <<rx_name_obj$rx_desc />>
+    <hr/>
+    <div class="syn_synopsis_box"><h3>Medications</h3>
+        <<rx_name_obj$rx_desc />>
     </div>
     
     '
@@ -401,6 +467,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
+    
+
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_recm_1','ckd',701100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -417,6 +485,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phsophate binder therapy</div><</phos_high>>
     '
     );
+
+
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_footnote_1','ckd',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -552,11 +622,24 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
-    <div>
+    <div class="syn_synopsis_box">
     <h5>Temporal variation of eGFR</h5>
     eGFR ml/min against time 
     <div>
-    <<xygraph_bitmap />>
+    
+    <chart id="chartId" 
+        name="chartName" 
+        style="height:400px;width=600px" 
+        class="img-thumbnail"
+        x-vals="<<x_vals_iso />>"
+        y-vals="<<y_vals />>"
+        x-label="Date Recorded" 
+        y-label="umols/Litre" 
+        x-grid-lines="3" 
+        y-grid-lines="2" 
+        slope-line="30 30" 
+        line-colour="blue" 
+        slope-colour="gray" />
     </div>
     </div>
     
@@ -568,7 +651,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <<r1_stg=1>>Normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=1>>
     <<r1_stg=2>>Near normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=2>>
-    <<p3pg_signal=1>>Apparent progression from <<egfr60_last_val />> ml/min to <<egfr_rn_val>><</egfr_rn_val>> ml/min during (<<egfr60_last_dt>><</egfr60_last_dt>>-<<egfr_rn_dt>><</egfr_rn_dt>>) <</p3pg_signal=1>>
+    <<p3pg_signal=1>>Apparent progression from <<egfr60_last_val />> ml/min to <<egfr_rn_val />> ml/min during (<<egfr60_last_dt />>-<<egfr_rn_dt />>) <</p3pg_signal=1>>
     <<est_esrd_lapsed=0>><<est_esrd_dt>>Estimated ESRD around <<est_esrd_dt />>.<</est_esrd_dt>><</est_esrd_lapsed=0>>
     <<est_esrd_lapsed=1>><<est_esrd_dt>>Imminent ESRD, with estimation boundry in the past<</est_esrd_lapsed=1>>
     '
@@ -579,6 +662,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','ckd_labs_tbl1','ckd_labs',661100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
+    <div class="syn_synopsis_box">
     <h5>Lab data panel</h5>
     <table class="syn_table">
         <tbody>
@@ -696,7 +780,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         </tr>
         </tbody>
     </table>
-    <p> </p>
+    </div>
     '
     );
 --@"tkc-create-package-rman-1.sql";

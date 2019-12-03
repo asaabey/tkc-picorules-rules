@@ -335,7 +335,7 @@ BEGIN
                 {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => `G2`},
                 {egfr_l_val<60 AND egfr_l_val>=45  AND rrt=0 => `G3A`},
                 {egfr_l_val<45 AND egfr_l_val>=30  AND rrt=0 => `G3B`},
-                {egfr_l_val<30 AND egfr_l_val=15  AND rrt=0 => `G4`},
+                {egfr_l_val<30 AND egfr_l_val>=15  AND rrt=0 => `G4`},
                 {egfr_l_val<15 AND rrt=0 => `G5`},
                 {=>`NA`};
             
