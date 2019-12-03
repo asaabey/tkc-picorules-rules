@@ -1590,45 +1590,27 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'quot;', '"');
                                             
          
-        composition_head :='
-            <style>
-                .syn_alert_box {
-                    border-style: solid;border-color: brown;border-radius: 10px;padding: 10px
-                }
-                .syn_dmg_box {
-                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
-                }
-                .rTable {
-                   display: table;
-                   width: 100%;
-                }
-                .rTableRow {
-                   display: table-row;
-                }
-                .rTableHeading {
-                   display: table-header-group;
-                   background-color: #ddd;
-                }
-                .rTableCell, .rTableHead {
-                   display: table-cell;
-                   padding: 3px 10px;
-                   border: 1px solid #999999;
-                }
-                .rTableHeading {
-                   display: table-header-group;
-                   background-color: #ddd;
-                   font-weight: bold;
-                }
-                .rTableFoot {
-                   display: table-footer-group;
-                   font-weight: bold;
-                   background-color: #ddd;
-                }
-                .rTableBody {
-                   display: table-row-group;
-                }
-            </style>
-            ' ;
+--        composition_head :='
+--            <style>
+--                .syn_alert_box {
+--                    border-style: solid;border-color: brown;border-radius: 10px;padding: 10px
+--                }
+--                .syn_dmg_box {
+--                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
+--                }
+--                .syn_table {
+--                  border-collapse: collapse;
+--                  border-spacing: 0;
+--                  width: 100%;
+--                  border: 1px solid #ddd;
+--                }
+--                
+--                .syn_tr:nth-child(even) {
+--                    background-color: #f2f2f2;
+--                }
+--            </style>
+--            ' ;
+        composition_head :='' ;
                                             
         composition := '<syn_body>'|| composition_head || composition || '</syn_body>';
         

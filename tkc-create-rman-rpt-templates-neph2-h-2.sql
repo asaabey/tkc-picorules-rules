@@ -30,14 +30,32 @@ DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','frame_synthesis_begin','dmg_loc',600010,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <div class="rTable">
-        <div class="rTableRow">
+    <style>
+                .syn_alert_box {
+                    border-style: solid;border-color: brown;border-radius: 10px;padding: 10px
+                }
+                .syn_dmg_box {
+                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
+                }
+                .syn_table {
+                  border-collapse: collapse;
+                  border-spacing: 0;
+                  width: 100%;
+                  border: 1px solid #ddd;
+                }
+                
+                .syn_tr:nth-child(even) {
+                    background-color: #f2f2f2;
+                }
+    </style>
+    <div>
+        <div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','frame_synthesis_left_begin','dmg_loc',600011,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <div class="rTableCell">
+    <div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -346,7 +364,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_ckd_syn_1z','ckd',601199,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','cd_ckd_syn_2','ckd',601199,'dev','tkc',TO_DATE(SYSDATE),
     '
     </ul>
     '
@@ -355,7 +373,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','rx_syn_1','rx_desc',651010,'dev','tkc',TO_DATE(SYSDATE),
     '
     
-    <div>Medications
+    <div><h5>Medications</h5>
         <p>number <<rxn_0 />></p>
     <<rx_name_obj$rx_desc />>
     </div>
@@ -533,15 +551,15 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <div class="rTableCell">
+    <hr />
     <div>
-    Temporal variation of eGFR  
+    <h5>Temporal variation of eGFR</h5>
     eGFR ml/min against time 
     <div>
     <<xygraph_bitmap />>
     </div>
     </div>
-    </div>
+    
     '
     );
     
@@ -560,88 +578,86 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','ckd_labs_tbl1','ckd_labs',661100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <table>
+    <hr />
+    <h5>Lab data panel</h5>
+    <table class="syn_table">
         <tbody>
-        <tr>
+        <tr class="syn_tr">
             <td><strong>Lab</strong></td>
-            <td><strong>1</strong></td>
-            <td><strong>2</strong></td>
-            <td><strong>3</strong></td>
+            <td><strong>Last</strong></td>
+            <td><strong>Penultimate</strong></td>
+            <td><strong>Antepenultimate</strong></td>
             <td><strong>Last min and max</strong></td>
             <td><strong>trend</strong></td>
         </tr>
-        <tr>
+        <tr class="syn_tr">
             <td>Creatinine (umol)</td>
-            <td><strong><<creat1_val />></strong> (<<creat1_dt />>)</td>
-            <td><strong><<creat2_val />></strong> (<<creat2_dt />>)</td>
-            <td><strong><<creat3_val />></strong> (<<creat3_dt />>)</td>
-            <td><div><strong><<creat_min_val />></strong>(<<creat_min_dt />>)</div><div><strong><<creat_max_val />></strong>(<<creat_max_dt />>)</div></td>
+            <td><<creat1_val>><strong><<creat1_val />></strong> (<<creat1_dt />>)<</creat1_val>></td>
+            <td><<creat2_val>><strong><<creat2_val />></strong> (<<creat2_dt />>)<</creat2_val>></td>
+            <td><<creat3_val>><strong><<creat3_val />></strong> (<<creat3_dt />>)<</creat3_val>></td>
+            <td>
+                <<creat_min_val>><div><strong><<creat_min_val />></strong>(<<creat_min_dt />>)</div><</creat_min_val>>
+                <<creat_max_val>><div><strong><<creat_max_val />></strong>(<<creat_max_dt />>)</div><</creat_max_val>>
+            </td>
             <td></td>
         </tr>
-        <tr>
+        <tr class="syn_tr">
             <td>eGFR (ml/min/1.72m)</td>
-            <td><strong><<egfr1_val />></strong> (<<egfr1_dt />>)</td>
-            <td><strong><<egfr2_val />></strong> (<<egfr2_dt />>)</td>
-            <td><strong><<egfr3_val />></strong> (<<egfr3_dt />>)</td>
+            <td><<egfr1_val>><strong><<egfr1_val />></strong> (<<egfr1_dt />>)<</egfr1_val>></td>
+            <td><<egfr2_val>><strong><<egfr2_val />></strong> (<<egfr2_dt />>)<</egfr2_val>></td>
+            <td><<egfr3_val>><strong><<egfr3_val />></strong> (<<egfr3_dt />>)<</egfr3_val>></td>
             <td> </td>
             <td> </td>
         </tr>
-        <tr>
+        <tr class="syn_tr">
             <td>uACR (mg/mmol)</td>
-            <td><strong><<uacr1_val />></strong> (<<uacr1_dt />>)</td>
-            <td><strong><<uacr2_val />></strong> (<<uacr2_dt />>)</td>
-            <td><strong><<uacr3_val />></strong> (<<uacr3_dt />>)</td>
-            <td><div><strong><<uacr_min_val />></strong>(<<uacr_min_dt />>)</div><div><strong><<uacr_max_val />></strong>(<<uacr_max_dt />>)</div></td>
+            <td><<uacr1_val>><strong><<uacr1_val />></strong> (<<uacr1_dt />>)<</uacr1_val>></td>
+            <td><<uacr2_val>><strong><<uacr2_val />></strong> (<<uacr2_dt />>)<</uacr2_val>></td>
+            <td><<uacr3_val>><strong><<uacr3_val />></strong> (<<uacr3_dt />>)<</uacr3_val>></td>
+            <td>
+                <<uacr_min_val>><div><strong><<uacr_min_val />></strong>(<<uacr_min_dt />>)</div><</uacr_min_val>>
+                <<uacr_max_val>><div><strong><<uacr_max_val />></strong>(<<uacr_max_dt />>)</div><</uacr_max_val>>
+            </td>
             <td></td>
         </tr>
-        <tr>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-        </tr>
-        <tr>
-            <td>Sodium (mmol/l)</td>
-            <td><strong><<sodium1_val />></strong> (<<sodium1_dt />>)</td>
-            <td><strong><<sodium2_val />></strong> (<<sodium2_dt />>)</td>
-            <td><strong><<sodium3_val />></strong> (<<sodium3_dt />>)</td>
-            <td><div><strong><<sodium_min_val />></strong>(<<sodium_min_dt />>)</div><div><strong><<sodium_max_val />></strong>(<<sodium_max_dt />>)</div></td>
-            <td> </td>
-        </tr>
-        <tr>
-            <td>Potassium (mmol/l)</td>
-            <td><strong><<potassium1_val />></strong> (<<potassium1_dt />>)</td>
-            <td><strong><<potassium2_val />></strong> (<<potassium2_dt />>)</td>
-            <td><strong><<potassium3_val />></strong> (<<potassium3_dt />>)</td>
-            <td><div><strong><<potassium_min_val />></strong>(<<potassium_min_dt />>)</div><div><strong><<potassium_max_val />></strong>(<<potassium_max_dt />>)</div></td>
-        <td> </td>
-        </tr>
-        <tr>
-            <td>CO2 (mmol/l)</td>
-            <td><strong><<bicarb1_val />></strong> (<<bicarb1_dt />>)</td>
-            <td><strong><<bicarb1_val />></strong> (<<bicarb1_dt />>)</td>
-            <td><strong><<bicarb1_val />></strong> (<<bicarb1_dt />>)</td>
-            <td><div><strong><<bicarb_min_val />></strong>(<<bicarb_min_dt />>)</div><div><strong><<bicarb_max_val />></strong>(<<bicarb_max_dt />>)</div></td>
-            <td> </td>
-        </tr>
-        <tr>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-        </tr>
-        
+
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','ckd_labs_tbl2','ckd_labs',661101,'dev','tkc',TO_DATE(SYSDATE),
     '
-    
-        <tr>
+        <tr class="syn_tr">
+            <td>Sodium (mmol/l)</td>
+            <td><<sodium1_val>><strong><<sodium1_val />></strong> (<<sodium1_dt />>)<</sodium1_val>></td>
+            <td><<sodium2_val>><strong><<sodium2_val />></strong> (<<sodium2_dt />>)<</sodium2_val>></td>
+            <td><<sodium3_val>><strong><<sodium3_val />></strong> (<<sodium3_dt />>)<</sodium3_val>></td>
+            <td>
+                <<sodium_min_val>><div><strong><<sodium_min_val />></strong>(<<sodium_min_dt />>)</div><</sodium_min_val>>
+                <<sodium_max_val>><div><strong><<sodium_max_val />></strong>(<<sodium_max_dt />>)</div></td><</sodium_max_val>>
+            <td> </td>
+        </tr>
+        <tr class="syn_tr">
+            <td>Potassium (mmol/l)</td>
+            <td><<potassium1_val>><strong><<potassium1_val />></strong> (<<potassium1_dt />>)<</potassium1_val>></td>
+            <td><<potassium2_val>><strong><<potassium2_val />></strong> (<<potassium2_dt />>)<</potassium2_val>></td>
+            <td><<potassium3_val>><strong><<potassium3_val />></strong> (<<potassium3_dt />>)<</potassium3_val>></td>
+            <td>
+                <<potassium_min_val>><div><strong><<potassium_min_val />></strong>(<<potassium_min_dt />>)</div><</potassium_min_val>>
+                <<potassium_max_val>><div><strong><<potassium_max_val />></strong>(<<potassium_max_dt />>)</div><</potassium_max_val>>
+            </td>
+        <td> </td>
+        </tr>
+        <tr class="syn_tr">
+            <td>CO2 (mmol/l)</td>
+            <td><<bicarb1_val>><strong><<bicarb1_val />></strong> (<<bicarb1_dt />>)<</bicarb1_val>></td>
+            <td><<bicarb2_val>><strong><<bicarb2_val />></strong> (<<bicarb2_dt />>)<</bicarb2_val>></td>
+            <td><<bicarb3_val>><strong><<bicarb3_val />></strong> (<<bicarb3_dt />>)<</bicarb3_val>></td>
+            <td>
+                <<bicarb_min_val>><div><strong><<bicarb_min_val />></strong>(<<bicarb_min_dt />>)</div><</bicarb_min_val>>
+                <<bicarb_max_val>><div><strong><<bicarb_max_val />></strong>(<<bicarb_max_dt />>)</div></td><</bicarb_max_val>>
+            <td> </td>
+        </tr>
+        <tr class="syn_tr">
             <td> </td>
             <td> </td>
             <td> </td>
@@ -649,7 +665,15 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <td> </td>
             <td> </td>
         </tr>
-        <tr>
+        <tr class="syn_tr">
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr class="syn_tr">
             <td>Calcium (mmol/l)</td>
             <td><<calcium1_val>><strong><<calcium1_val />></strong> (<<calcium1_dt />>)<</calcium1_val>></td>
             <td><<calcium2_val>><strong><<calcium2_val />></strong> (<<calcium2_dt />>)<</calcium2_val>></td>
@@ -659,7 +683,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <<calcium_max_val>><div><strong><<calcium_max_val />></strong>(<<calcium_max_dt />>)</div><</calcium_max_val>></td>
             <td> </td>
         </tr>
-        <tr>
+        <tr class="syn_tr">
             <td>Phosphate (mmol/l)</td>
             <td><<phos1_val>><strong><<phos1_val />></strong> (<<phos1_dt />>)<</phos1_val>></td>
             <td><<phos2_val>><strong><<phos2_val />></strong> (<<phos2_dt />>)<</phos2_val>></td>
