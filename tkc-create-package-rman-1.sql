@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.5
+Version		    1.0.1.6
 Creation date	07/04/2019
-update on date  27/11/2019
+update on date  05/12/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -182,12 +182,11 @@ Change Log
 24/11/2019  improved serializer2 to use listagg for performance
 27/11/2019  dbms_sql writes to eadvx optimized with plsql bulk operator
 03/12/2019  moved styling into template
-
+05/12/2019  populate eadv is running of rman_admin_sqlblocks
 
 */
     TYPE eadvx_tbl_type IS
         TABLE OF eadvx%rowtype;
-    
     TYPE rman_tbl_type IS
         TABLE OF rman_stack%rowtype;
     TYPE rpipe_tbl_type IS
@@ -220,53 +219,51 @@ Change Log
     comment_close_chars CONSTANT VARCHAR(2) := '*/';
     
 --    serialize_delimiter CONSTANT VARCHAR(1) := '|';
-    
     serialize_delimiter CONSTANT VARCHAR(1) := ' ';
-    
     entity_id_col CONSTANT VARCHAR2(32) := 'EID';
     att_col CONSTANT VARCHAR2(32) := 'ATT';
     val_col CONSTANT VARCHAR2(32) := 'VAL';
     dt_col CONSTANT VARCHAR2(32) := 'DT';
     def_tbl_name CONSTANT VARCHAR2(32) := 'EADV';
     TYPE func_exp_type IS RECORD (
-        func VARCHAR2(32),
-        funcparam PLS_INTEGER,
-        funcparam_str VARCHAR2(400),
-        att VARCHAR2(4000),
-        att_str VARCHAR2(256),
-        tbl VARCHAR2(100),
-        prop VARCHAR2(100),
-        assnvar VARCHAR2(100),
-        avn VARCHAR2(100),
-        predicate VARCHAR2(4000),
-        constparam VARCHAR2(4000),
-        left_tbl_name VARCHAR2(100),
-        ext_col_name VARCHAR2(4000)
+        func            VARCHAR2(32),
+        funcparam       PLS_INTEGER,
+        funcparam_str   VARCHAR2(400),
+        att             VARCHAR2(4000),
+        att_str         VARCHAR2(256),
+        tbl             VARCHAR2(100),
+        prop            VARCHAR2(100),
+        assnvar         VARCHAR2(100),
+        avn             VARCHAR2(100),
+        predicate       VARCHAR2(4000),
+        constparam      VARCHAR2(4000),
+        left_tbl_name   VARCHAR2(100),
+        ext_col_name    VARCHAR2(4000)
     );
     TYPE rb_def_type IS RECORD (
-        description VARCHAR2(400),
-        version VARCHAR2(12),
-        blockid VARCHAR2(100),
-        target_table VARCHAR2(40),
-        environment VARCHAR2(12),
-        rule_owner VARCHAR2(100),
-        rule_author VARCHAR2(100),
-        is_active INT,
-        def_exit_prop VARCHAR2(100),
-        def_predicate VARCHAR2(100),
-        exec_order INT
+        description     VARCHAR2(400),
+        version         VARCHAR2(12),
+        blockid         VARCHAR2(100),
+        target_table    VARCHAR2(40),
+        environment     VARCHAR2(12),
+        rule_owner      VARCHAR2(100),
+        rule_author     VARCHAR2(100),
+        is_active       INT,
+        def_exit_prop   VARCHAR2(100),
+        def_predicate   VARCHAR2(100),
+        exec_order      INT
     );
     TYPE att_def_type IS RECORD (
-        label VARCHAR2(400),
-        is_reportable PLS_INTEGER,
-        is_trigger PLS_INTEGER,
-        type PLS_INTEGER,
-        priority PLS_INTEGER
+        label           VARCHAR2(400),
+        is_reportable   PLS_INTEGER,
+        is_trigger      PLS_INTEGER,
+        type            PLS_INTEGER,
+        priority        PLS_INTEGER
     );
     TYPE doc_def_type IS RECORD (
-        txt VARCHAR2(4000),
-        cite VARCHAR2(400),
-        section VARCHAR2(400)
+        txt       VARCHAR2(4000),
+        cite      VARCHAR2(400),
+        section   VARCHAR2(400)
     );
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
@@ -285,17 +282,17 @@ Change Log
     ) RETURN VARCHAR2;
 
     FUNCTION splitstr (
-        list           IN             VARCHAR2,
-        delimiter      IN             VARCHAR2 DEFAULT ',',
-        ignore_left    IN             CHAR DEFAULT '[',
-        ignore_right   IN             CHAR DEFAULT ']'
+        list           IN   VARCHAR2,
+        delimiter      IN   VARCHAR2 DEFAULT ',',
+        ignore_left    IN   CHAR DEFAULT '[',
+        ignore_right   IN   CHAR DEFAULT ']'
     ) RETURN tbl_type;
 
     FUNCTION splitclob (
-        list           IN             CLOB,
-        delimiter      IN             VARCHAR2 DEFAULT ',',
-        ignore_left    IN             CHAR DEFAULT '[',
-        ignore_right   IN             CHAR DEFAULT ']'
+        list           IN   CLOB,
+        delimiter      IN   VARCHAR2 DEFAULT ',',
+        ignore_left    IN   CHAR DEFAULT '[',
+        ignore_right   IN   CHAR DEFAULT ']'
     ) RETURN tbl_type2;
 
     FUNCTION sanitise_clob (
@@ -328,18 +325,18 @@ Change Log
     ) RETURN VARCHAR2;
 
     FUNCTION lookup_key (
-        res VARCHAR2,
-        in_str VARCHAR2
+        res      VARCHAR2,
+        in_str   VARCHAR2
     ) RETURN VARCHAR2;
 
     FUNCTION map_to_tmplt2 (
-        jstr VARCHAR2,
-        tmplt VARCHAR2
+        jstr    VARCHAR2,
+        tmplt   VARCHAR2
     ) RETURN VARCHAR2;
 
     FUNCTION get_composition_by_eid (
-        eid_in INT,
-        nlc_id VARCHAR2
+        eid_in   INT,
+        nlc_id   VARCHAR2
     ) RETURN CLOB;
 
     FUNCTION is_not_last_selected_var (
@@ -347,8 +344,8 @@ Change Log
     ) RETURN BOOLEAN;
 
     FUNCTION is_selected_var (
-        txtin VARCHAR2,
-        sub PLS_INTEGER
+        txtin   VARCHAR2,
+        sub     PLS_INTEGER
     ) RETURN BOOLEAN;
 
     PROCEDURE insert_rman (
@@ -359,28 +356,28 @@ Change Log
         groupby_clause   NVARCHAR2,
         varid            NVARCHAR2,
         is_sub           INT,
-        sqlstat          OUT              NVARCHAR2,
+        sqlstat          OUT NVARCHAR2,
         agg_func         VARCHAR2,
         func_param       VARCHAR2,
         ruleid           VARCHAR2
     );
 
     PROCEDURE build_func_sql_exp (
-        blockid      IN           VARCHAR2,
-        indx         IN           INT,
+        blockid      IN    VARCHAR2,
+        indx         IN    INT,
         txtin        VARCHAR2,
-        sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER,
-        ruleid       IN           VARCHAR2
+        sqlstat      OUT   VARCHAR2,
+        rows_added   OUT   PLS_INTEGER,
+        ruleid       IN    VARCHAR2
     );
 
     PROCEDURE build_cond_sql_exp (
-        blockid      IN           VARCHAR2,
+        blockid      IN    VARCHAR2,
         indx         PLS_INTEGER,
-        txtin        IN           VARCHAR2,
-        sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER,
-        ruleid       IN           VARCHAR2
+        txtin        IN    VARCHAR2,
+        sqlstat      OUT   VARCHAR2,
+        rows_added   OUT   PLS_INTEGER,
+        ruleid       IN    VARCHAR2
     );
 
     PROCEDURE parse_rpipe_to_rdoc (
@@ -396,8 +393,8 @@ Change Log
     );
 
     PROCEDURE exec_dsql (
-        sqlstmt CLOB,
-        tbl_name VARCHAR2
+        sqlstmt    CLOB,
+        tbl_name   VARCHAR2
     );
 
     PROCEDURE exec_dsql_dstore2 (
@@ -433,24 +430,24 @@ Change Log
     );
 
     PROCEDURE exec_ndsql (
-        sqlstmt CLOB,
-        tbl_name VARCHAR2
+        sqlstmt    CLOB,
+        tbl_name   VARCHAR2
     );
 
     PROCEDURE compile_ruleblock (
-        bid_in        IN            VARCHAR2,
-        return_code   OUT           PLS_INTEGER
+        bid_in        IN    VARCHAR2,
+        return_code   OUT   PLS_INTEGER
     );
 
     PROCEDURE compile_active_ruleblocks;
 
     PROCEDURE execute_ruleblock (
-        bid_in              IN                  VARCHAR2,
-        create_wide_tbl     IN                  PLS_INTEGER,
-        push_to_long_tbl    IN                  PLS_INTEGER,
-        push_to_long_tbl2   IN                  PLS_INTEGER,
-        recompile           IN                  PLS_INTEGER,
-        return_code         OUT                 PLS_INTEGER
+        bid_in              IN    VARCHAR2,
+        create_wide_tbl     IN    PLS_INTEGER,
+        push_to_long_tbl    IN    PLS_INTEGER,
+        push_to_long_tbl2   IN    PLS_INTEGER,
+        recompile           IN    PLS_INTEGER,
+        return_code         OUT   PLS_INTEGER
     );
 
     PROCEDURE execute_active_ruleblocks;
@@ -458,31 +455,33 @@ Change Log
     PROCEDURE drop_rout_tables;
 
     PROCEDURE commit_log (
-        moduleid   IN         VARCHAR2,
-        blockid    IN         VARCHAR2,
-        log_msg    IN         VARCHAR2
+        moduleid   IN   VARCHAR2,
+        blockid    IN   VARCHAR2,
+        log_msg    IN   VARCHAR2
     );
 
     PROCEDURE dependency_walker (
-        rb_in_str    IN           VARCHAR2,
-        dep_rb_str   OUT          VARCHAR2
+        rb_in_str    IN    VARCHAR2,
+        dep_rb_str   OUT   VARCHAR2
     );
 
     PROCEDURE gen_cube_from_ruleblock (
-        rb_att_str     IN             VARCHAR2,
-        slices_str     IN             VARCHAR2,
-        ret_tbl_name   IN             VARCHAR2
+        rb_att_str     IN   VARCHAR2,
+        slices_str     IN   VARCHAR2,
+        ret_tbl_name   IN   VARCHAR2
     );
 
     PROCEDURE build_compiler_exp (
-        ruleblockid   IN            VARCHAR2,
-        indx          IN            INT,
+        ruleblockid   IN   VARCHAR2,
+        indx          IN   INT,
         txtin         VARCHAR2
     );
 
     /* Truncates and populates the contens of EADV, the primary data source for RMAN */
 
     PROCEDURE populate_eadv_tables;
+
+    PROCEDURE populate_eadv_tables2;
 
     PROCEDURE compile_templates;
 
@@ -570,10 +569,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END sanitise_varname;
 
     FUNCTION splitstr (
-        list           IN             VARCHAR2,
-        delimiter      IN             VARCHAR2 DEFAULT ',',
-        ignore_left    IN             CHAR DEFAULT '[',
-        ignore_right   IN             CHAR DEFAULT ']'
+        list           IN   VARCHAR2,
+        delimiter      IN   VARCHAR2 DEFAULT ',',
+        ignore_left    IN   CHAR DEFAULT '[',
+        ignore_right   IN   CHAR DEFAULT ']'
     ) RETURN tbl_type AS
 
         splitted           tbl_type := tbl_type();
@@ -612,10 +611,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END splitstr;
 
     FUNCTION splitclob (
-        list           IN             CLOB,
-        delimiter      IN             VARCHAR2 DEFAULT ',',
-        ignore_left    IN             CHAR DEFAULT '[',
-        ignore_right   IN             CHAR DEFAULT ']'
+        list           IN   CLOB,
+        delimiter      IN   VARCHAR2 DEFAULT ',',
+        ignore_left    IN   CHAR DEFAULT '[',
+        ignore_right   IN   CHAR DEFAULT ']'
     ) RETURN tbl_type2 AS
 
         splitted           tbl_type2 := tbl_type2();
@@ -781,8 +780,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END is_not_last_selected_var;
 
     FUNCTION is_selected_var (
-        txtin VARCHAR2,
-        sub PLS_INTEGER
+        txtin   VARCHAR2,
+        sub     PLS_INTEGER
     ) RETURN BOOLEAN AS
         txt_tmp   VARCHAR2(100);
         retval    BOOLEAN := false;
@@ -810,8 +809,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END is_selected_var;
 
     FUNCTION match_varname (
-        txtbody VARCHAR2,
-        elem VARCHAR2
+        txtbody   VARCHAR2,
+        elem      VARCHAR2
     ) RETURN BOOLEAN AS
         ret   BOOLEAN := false;
         rgx   VARCHAR2(100);
@@ -997,7 +996,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         groupby_clause   NVARCHAR2,
         varid            NVARCHAR2,
         is_sub           INT,
-        sqlstat          OUT              NVARCHAR2,
+        sqlstat          OUT NVARCHAR2,
         agg_func         VARCHAR2,
         func_param       VARCHAR2,
         ruleid           VARCHAR2
@@ -1031,12 +1030,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END insert_rman;
 
     PROCEDURE insert_ruleblocks_dep (
-        blockid_s      IN             VARCHAR2,
-        dep_table_s    IN             VARCHAR2,
-        dep_column_s   IN             VARCHAR2,
-        dep_att_s      IN             VARCHAR2,
-        dep_func_s     IN             VARCHAR2,
-        att_name_s     IN             VARCHAR2
+        blockid_s      IN   VARCHAR2,
+        dep_table_s    IN   VARCHAR2,
+        dep_column_s   IN   VARCHAR2,
+        dep_att_s      IN   VARCHAR2,
+        dep_func_s     IN   VARCHAR2,
+        att_name_s     IN   VARCHAR2
     ) IS
     BEGIN
         DELETE FROM rman_ruleblocks_dep
@@ -1144,7 +1143,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         val_tbl := rman_pckg.splitstr(vals, ' ');
         xline_tbl := rman_pckg.splitstr(xline_str_arr, ' ');
         yline_tbl := rman_pckg.splitstr(yline_str_arr, ' ');
-        mspan := ( ceil((SYSDATE -(TO_DATE(dt_tbl(dt_tbl.count), 'dd/mm/yy'))) / 30.43) ) + 2;
+        mspan := ( ceil((sysdate -(to_date(dt_tbl(dt_tbl.count), 'dd/mm/yy'))) / 30.43) ) + 2;
 
         xscale := x_pixels / mspan;
         WHILE y > 0 LOOP
@@ -1155,7 +1154,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             WHILE x < x_pixels LOOP
                 FOR i IN 1..dt_tbl.count LOOP
-                    dt_x := round(x_pixels -(ceil((SYSDATE - TO_DATE(dt_tbl(i), 'dd/mm/yy')) / 30.43) * xscale), 0);
+                    dt_x := round(x_pixels -(ceil((sysdate - to_date(dt_tbl(i), 'dd/mm/yy')) / 30.43) * xscale), 0);
 
                     val_y := to_number(val_tbl(i));
                     IF dt_x = x THEN
@@ -1163,8 +1162,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             dot := '*';
                         ELSE
                             FOR k IN 1..xline_tbl.count LOOP
-                                xline_x := round(x_pixels -(ceil((SYSDATE - TO_DATE(xline_tbl(k), 'dd/mm/yy')) / 30.43) * xscale)
-                                , 0);
+                                xline_x := round(x_pixels -(ceil((sysdate - to_date(xline_tbl(k), 'dd/mm/yy')) / 30.43) * xscale), 0
+                                );
 
                                 IF xline_x = x THEN
                                     dot := '.';
@@ -1219,7 +1218,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                || chr(9)
                || dt_tbl(dt_tbl.count)
                || rpad(' ', x_pixels - 12, ' ')
-               || SYSDATE
+               || sysdate
                || chr(10);
 
         str := str
@@ -1235,8 +1234,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END ascii_graph_dv;
 
     FUNCTION lookup_key (
-        res VARCHAR2,
-        in_str VARCHAR2
+        res      VARCHAR2,
+        in_str   VARCHAR2
     ) RETURN VARCHAR2 AS
 
         out_tbl    tbl_type;
@@ -1259,8 +1258,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         WHERE
             res_name = res;
 
-        
-        
         sql_stmt := 'SELECT '
                     || val_col
                     || ' FROM '
@@ -1268,26 +1265,24 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     || ' WHERE '
                     || key_col
                     || ' IN ('
-                    || translate(in_str,serialize_delimiter,',')
+                    || translate(in_str, serialize_delimiter, ',')
                     || ') ';
 
         dbms_output.put_line('-> ' || sql_stmt);
-        
         EXECUTE IMMEDIATE sql_stmt BULK COLLECT
         INTO out_tbl;
         FOR i IN 1..out_tbl.count LOOP ret := ret
-                                               || ','
-                                               || out_tbl(i);
+                                              || ','
+                                              || out_tbl(i);
         END LOOP;
 
         ret := trim(BOTH ',' FROM ret);
         RETURN ret;
     END lookup_key;
 
-
     FUNCTION map_to_tmplt2 (
-        jstr VARCHAR2,
-        tmplt VARCHAR2
+        jstr    VARCHAR2,
+        tmplt   VARCHAR2
     ) RETURN VARCHAR2 AS
 
         key_tbl            tbl_type;
@@ -1295,10 +1290,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tkey               VARCHAR2(100);
         tval               VARCHAR2(4000);
         html_tkey          VARCHAR2(4000);
-        tkey_lu_key        VARCHAR2(100); 
+        tkey_lu_key        VARCHAR2(100);
         tkey_lu_val        VARCHAR2(4000);
-        tkey_lu_res        VARCHAR2(100); 
-        tkey_lu_str        VARCHAR2(400); 
+        tkey_lu_res        VARCHAR2(100);
+        tkey_lu_str        VARCHAR2(400);
         tag_param          VARCHAR2(100);
         tag_operator       VARCHAR(2);
         ret_tmplt          VARCHAR2(32767) := tmplt;
@@ -1312,17 +1307,19 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         xline_str_arr_in   VARCHAR(1000);
         yline_str_arr_in   VARCHAR(1000);
     BEGIN
-        
-        ret_tmplt:=replace(ret_tmplt, chr(10), '');
-        ret_tmplt:=replace(ret_tmplt, chr(13), '');
-        ret_tmplt:=replace(ret_tmplt, chr(11), '');
+        ret_tmplt := replace(ret_tmplt, chr(10), '');
+        ret_tmplt := replace(ret_tmplt, chr(13), '');
+        ret_tmplt := replace(ret_tmplt, chr(11), '');
 --jstr into collection
-        t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i', 1);
+        t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i',
+              1);
         key_tbl := rman_pckg.splitstr(t, ',');
         FOR i IN 1..key_tbl.count LOOP
-            tkey := lower(regexp_substr(substr(key_tbl(i), 1, instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i', 1));
+            tkey := lower(regexp_substr(substr(key_tbl(i), 1, instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i',
+              1));
 
-            tval := regexp_substr(substr(key_tbl(i), instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i', 1);
+            tval := regexp_substr(substr(key_tbl(i), instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i',
+              1);
 
             -- extract graphing param if present and draw graph
 
@@ -1330,7 +1327,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 x_vals := tval;
                 dt_tbl := splitstr(tval, serialize_delimiter);
                 FOR j IN 1..dt_tbl.count LOOP x_vals_iso := x_vals_iso
-                                                            || TO_CHAR(TO_DATE(dt_tbl(j), 'DD/MM/YY'), 'YYYY-MM-DD')
+                                                            || to_char(to_date(dt_tbl(j), 'DD/MM/YY'), 'YYYY-MM-DD')
                                                             || ' ';
                 END LOOP;
 
@@ -1354,13 +1351,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           || ' '
                                           || tval);
             END IF;
-            
-
 
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
 --                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
 --                , yline_str_arr => yline_str_arr_in);
-
                 xygraph_bitmap := '<chart id="chartId" '
                                   || 'name="chartName" style="height:400px;width=600px" '
                                   || 'class="img-thumbnail" '
@@ -1373,50 +1367,39 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                   || 'x-label="Date Recorded" '
                                   || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
                                   || 'slope-line="30 30" line-colour="blue" slope-colour="gray" />';
-                
-
             END IF;
 
             -- insertions
 
-
-            
-            html_tkey := '<<' || tkey || ' />>';
-            ret_tmplt := regexp_replace(ret_tmplt,html_tkey, tval);
+            html_tkey := '<<'
+                         || tkey
+                         || ' />>';
+            ret_tmplt := regexp_replace(ret_tmplt, html_tkey, tval);
             
             -- lookup insertionsup
             -- tkey$tkey_lookup
-            html_tkey := '<<' || tkey || '\$([a-z0-9_]+)? />>';
-            
-            
-            tkey_lu_str:=regexp_substr(ret_tmplt,html_tkey);
-            
-            if length(tkey_lu_str)>0 then
+            html_tkey := '<<'
+                         || tkey
+                         || '\$([a-z0-9_]+)? />>';
+            tkey_lu_str := regexp_substr(ret_tmplt, html_tkey);
+            IF length(tkey_lu_str) > 0 THEN
                 
 --                dbms_output.put_line('***->'|| tkey_lu_str);
-                
                 tkey_lu_key := tkey;
-                
-                tkey_lu_res := trim(leading '$' from regexp_substr(tkey_lu_str,'\$([a-z0-9_]+)?'));
-                
-                tkey_lu_val := lookup_key(tkey_lu_res,tval);
+                tkey_lu_res := trim(LEADING '$' FROM regexp_substr(tkey_lu_str, '\$([a-z0-9_]+)?'));
+                tkey_lu_val := lookup_key(tkey_lu_res, tval);
                 
 --                dbms_output.put_line('***->'|| tkey_lu_str || ' res:' || tkey_lu_res || ' key:' || tkey_lu_key || ' val:' || tkey_lu_val);
                 
                 --replace of tkey_lu_str didnt work. hence using html_tkey
-                ret_tmplt := regexp_replace(ret_tmplt,html_tkey, tkey_lu_val);
-                             
-            end if;                 
-
+                ret_tmplt := regexp_replace(ret_tmplt, html_tkey, tkey_lu_val);
+            END IF;
 
             IF length(x_vals_iso) > 0 THEN
-
                 ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
 
 --                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
-                
                 ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
-                
                 ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
                 x_vals_iso := '';
                 x_vals := '';
@@ -1428,19 +1411,24 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             IF nvl(length(tval), 0) > 0 AND nvl(length(tval), 0) < 13 AND nvl(tval, '0') <> '0' THEN
                 -- without tag param
                 html_tkey := tkey || '>>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0, 'i');
+                ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0,
+               'i');
 
-                ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0, 'i');
+                ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0,
+               'i');
 
                 html_tkey := tkey
                              || '='
                              || tval
                              || '>>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0, 'i');
+                ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0,
+               'i');
 
-                ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0, 'i');
+                ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0,
+               'i');
 
                 -- with tag param
+
                 html_tkey := tkey
                              || '(=[a-z0-9]+)?'
                              || '>>';
@@ -1458,9 +1446,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 html_tkey := tkey
                              || '=0'
                              || '>>';
-                ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0, 'i');
+                ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0,
+               'i');
 
-                ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0, 'i');
+                ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0,
+               'i');
                 
                 -- if param<>0 then toggle text off 
 
@@ -1481,7 +1471,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --                                                       || '(.*?)'
 --                                                       || '<</'
 --                                                       || html_tkey, '');
-                                                       
                 ret_tmplt := regexp_replace(ret_tmplt, '<<'
                                                        || html_tkey
                                                        || '[\s\S]+'
@@ -1499,9 +1488,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                || html_tkey, '');
     -- if param is 0 then toggle text on 
         html_tkey := '\w+=0' || '>>';
-        ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0, 'i');
+        ret_tmplt := regexp_replace(ret_tmplt, '<<' || html_tkey, '', 1, 0,
+               'i');
 
-        ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0, 'i');
+        ret_tmplt := regexp_replace(ret_tmplt, '<</' || html_tkey, '', 1, 0,
+               'i');
     
     --if no param specified text is toggled off
 
@@ -1517,10 +1508,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --     ret_tmplt := regexp_replace(ret_tmplt, '<<[a-z0-9_\=]+>>[\s\S]+<<\/[a-z0-9_\=]+>>', '');
     
     -- remove excess space and line feeds
-        ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0, 'm'), chr(10)
-                                                                                                           || '{2,}', chr(10));
+        ret_tmplt := regexp_replace(regexp_replace(ret_tmplt, '^[[:space:][:cntrl:]]+$', NULL, 1, 0,
+               'm'), chr(10)
+                     || '{2,}', chr(10));
     -- add line breaks
-
 
         ret_tmplt := regexp_replace(ret_tmplt, '<br>', chr(10));
         ret_tmplt := regexp_replace(ret_tmplt, '<br />', chr(10));
@@ -1531,21 +1522,19 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     -- add tabs
         ret_tmplt := regexp_replace(ret_tmplt, '\\t', chr(9));
     -- other mods
-    
-        ret_tmplt := replace(ret_tmplt,'<<','{{');
-        ret_tmplt := replace(ret_tmplt,'>>','}}');
-        
+        ret_tmplt := replace(ret_tmplt, '<<', '{{');
+        ret_tmplt := replace(ret_tmplt, '>>', '}}');
         RETURN ret_tmplt;
     END map_to_tmplt2;
 
     FUNCTION get_composition_by_eid (
-        eid_in INT,
-        nlc_id VARCHAR2
+        eid_in   INT,
+        nlc_id   VARCHAR2
     ) RETURN CLOB AS
 
         composition        CLOB;
         compositionid_in   VARCHAR2(100) := nlc_id;
-        composition_head   varchar2(4000);
+        composition_head   VARCHAR2(4000);
         eid_not_found EXCEPTION;
         PRAGMA exception_init ( eid_not_found, 100 );
     BEGIN
@@ -1617,10 +1606,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --                }
 --            </style>
 --            ' ;
-        composition_head :='' ;
-                                            
-        composition := '<syn_body>'|| composition_head || composition || '</syn_body>';
-        
+        composition_head := '';
+        composition := '<syn_body>'
+                       || composition_head
+                       || composition
+                       || '</syn_body>';
         RETURN composition;
 --    EXCEPTION
 --        WHEN eid_not_found THEN
@@ -1633,11 +1623,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END get_composition_by_eid;
 
     PROCEDURE build_assn_var2 (
-        txtin           IN              VARCHAR2,
-        delim           IN              VARCHAR2,
-        left_tbl_name   IN              VARCHAR2,
-        from_clause     OUT             VARCHAR2,
-        avn             OUT             VARCHAR2
+        txtin           IN    VARCHAR2,
+        delim           IN    VARCHAR2,
+        left_tbl_name   IN    VARCHAR2,
+        from_clause     OUT   VARCHAR2,
+        avn             OUT   VARCHAR2
     ) IS
 
         txt              VARCHAR2(4000);
@@ -1678,11 +1668,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END build_assn_var2;
 
     PROCEDURE push_vstack (
-        varname          IN               VARCHAR2,
-        indx             IN               INTEGER,
-        calling_proc     IN               INTEGER,
-        var_func         IN               VARCHAR2,
-        var_func_param   IN               VARCHAR2
+        varname          IN   VARCHAR2,
+        indx             IN   INTEGER,
+        calling_proc     IN   INTEGER,
+        var_func         IN   VARCHAR2,
+        var_func_param   IN   VARCHAR2
     ) AS
     BEGIN
         IF varname IS NOT NULL THEN
@@ -1697,16 +1687,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END push_vstack;
 
     PROCEDURE decompose_func_exp (
-        txtin           IN              VARCHAR2,
-        tbl             OUT             VARCHAR2,
-        att             OUT             VARCHAR2,
-        prop            OUT             VARCHAR2,
-        func            OUT             VARCHAR2,
-        funcparam       OUT             VARCHAR2,
-        funcparam_str   OUT             VARCHAR2,
-        predicate       OUT             VARCHAR2,
-        ext_col_name    OUT             VARCHAR2,
-        constparam      OUT             VARCHAR2
+        txtin           IN    VARCHAR2,
+        tbl             OUT   VARCHAR2,
+        att             OUT   VARCHAR2,
+        prop            OUT   VARCHAR2,
+        func            OUT   VARCHAR2,
+        funcparam       OUT   VARCHAR2,
+        funcparam_str   OUT   VARCHAR2,
+        predicate       OUT   VARCHAR2,
+        ext_col_name    OUT   VARCHAR2,
+        constparam      OUT   VARCHAR2
     ) AS
         varr tbl_type;
     BEGIN
@@ -1718,13 +1708,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             prop := varr(3);
             func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
 
-            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i',
+              1), 0);
 
-            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i',
+              1), '');
 
             IF upper(substr(varr(5), 1, 5)) = 'WHERE' THEN
                 predicate := ' AND '
-                             || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i', 1);
+                             || regexp_substr(varr(5), '\((.*)?\)', 1, 1, 'i',
+              1);
             END IF;
 
         ELSIF varr.count = 4 THEN
@@ -1733,9 +1726,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             prop := varr(3);
             func := upper(substr(varr(4), 1, instr(varr(4), '(', 1, 1) - 1));
 
-            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i', 1), 0);
+            funcparam := nvl(regexp_substr(varr(4), '\(([0-9]+)?\)', 1, 1, 'i',
+              1), 0);
 
-            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i', 1), '');
+            funcparam_str := nvl(regexp_substr(varr(4), '\((.*)?\)', 1, 1, 'i',
+              1), '');
 
             ext_col_name := varr(2);
         ELSIF varr.count = 3 THEN
@@ -1754,7 +1749,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             IF upper(substr(varr(1), 1, 5)) = 'CONST' THEN
                 tbl := def_tbl_name;
                 func := 'CONST';
-                constparam := regexp_substr(varr(1), '\((.*)?\)', 1, 1, 'i', 1);
+                constparam := regexp_substr(varr(1), '\((.*)?\)', 1, 1, 'i',
+              1);
 
             ELSE
                 tbl := def_tbl_name;
@@ -1768,12 +1764,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END decompose_func_exp;
 
     PROCEDURE build_func_sql_exp (
-        blockid      IN           VARCHAR2,
-        indx         IN           INT,
+        blockid      IN    VARCHAR2,
+        indx         IN    INT,
         txtin        VARCHAR2,
-        sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER,
-        ruleid       IN           VARCHAR2
+        sqlstat      OUT   VARCHAR2,
+        rows_added   OUT   PLS_INTEGER,
+        ruleid       IN    VARCHAR2
     ) IS
 
         idx_                   NUMBER;
@@ -1805,11 +1801,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         dt_trans               VARCHAR2(400) := dt_col;
         ude_function_undefined EXCEPTION;
     BEGIN
-    
-    
- 
-        decompose_func_exp(txtin => txtin, tbl => tbl, att => att, prop => prop, func => func, funcparam => funcparam, funcparam_str
-        => funcparam_str, predicate => predicate, ext_col_name => ext_col_name, constparam => constparam);
+        decompose_func_exp(txtin => txtin, tbl => tbl, att => att, prop => prop, func => func,
+                           funcparam => funcparam, funcparam_str => funcparam_str, predicate => predicate, ext_col_name => ext_col_name
+                           , constparam => constparam);
 
         att0 := att;
         att := sql_predicate(att);
@@ -1834,10 +1828,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                           || ' ';
 
             groupby_txt := '';
-            insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam, ruleid
-            );
+            insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                        assnvar, is_sub_val, sqlstat, func, funcparam,
+                        ruleid);
 
-            insert_ruleblocks_dep(blockid, tbl, ext_col_name, NULL, func, assnvar);
+            insert_ruleblocks_dep(blockid, tbl, ext_col_name, NULL, func,
+                                  assnvar);
             rows_added := 1;
             push_vstack(assnvar, indx, 2, NULL, NULL);
         ELSE
@@ -1867,12 +1863,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                    , ruleid);
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                assnvar, is_sub_val, sqlstat, func, funcparam,
+                                ruleid);
 
-                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                          assnvar);
                     rows_added := 1;
-                    push_vstack(assnvar, indx, 2, func, TO_CHAR(funcparam));
+                    push_vstack(assnvar, indx, 2, func, to_char(funcparam));
                 WHEN func = 'LAST' OR func = 'FIRST' OR func = 'EXISTS' THEN
                     DECLARE
                         rankindx        NUMBER;
@@ -1910,10 +1908,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                         groupby_txt := '';
                         is_sub_val := 1;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, NULL, is_sub_val, sqlstat, func, funcparam
-                        , ruleid);
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                    NULL, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
 
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar);
                         where_txt := 'rank=' || rankindx;
                         from_txt := ctename;
                         IF func = 'EXISTS' THEN
@@ -1931,8 +1931,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                         groupby_txt := '';
                         is_sub_val := 0;
-                        insert_rman(indx + 1, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                        , ruleid);
+                        insert_rman(indx + 1, where_txt, from_txt, select_txt, groupby_txt,
+                                    assnvar, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
 
                         rows_added := 2;
                         push_vstack(assnvar, indx + 1, 2, NULL, NULL);
@@ -2019,14 +2020,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                         groupby_txt := '';
                         is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                        , ruleid);
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                    assnvar, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
 
                         rows_added := 1;
                         push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
                         push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_val');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_dt');
                     END;
                 WHEN func = 'CONST' THEN
                     DECLARE BEGIN
@@ -2041,8 +2045,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                         groupby_txt := entity_id_col;
                         is_sub_val := 0;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                        , ruleid);
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                    assnvar, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
 
                         rows_added := 1;
                         push_vstack(assnvar, indx, 2, NULL, NULL);
@@ -2076,12 +2081,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                    , ruleid);
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                assnvar, is_sub_val, sqlstat, func, funcparam,
+                                ruleid);
 
-                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                          assnvar);
                     rows_added := 1;
-                    push_vstack(assnvar, indx, 2, func, TO_CHAR(funcparam));
+                    push_vstack(assnvar, indx, 2, func, to_char(funcparam));
                 WHEN func IN (
                     'SERIALIZE'
                 ) THEN
@@ -2101,12 +2108,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                    , ruleid);
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                assnvar, is_sub_val, sqlstat, func, funcparam,
+                                ruleid);
 
-                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                          assnvar);
                     rows_added := 1;
-                    push_vstack(assnvar, indx, 2, func, TO_CHAR(funcparam));
+                    push_vstack(assnvar, indx, 2, func, to_char(funcparam));
                 WHEN func IN (
                     'SERIALIZE2'
                 ) THEN
@@ -2126,12 +2135,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     groupby_txt := tbl
                                    || '.'
                                    || entity_id_col;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                    , ruleid);
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                assnvar, is_sub_val, sqlstat, func, funcparam,
+                                ruleid);
 
-                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar);
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                          assnvar);
                     rows_added := 1;
-                    push_vstack(assnvar, indx, 2, func, TO_CHAR(funcparam));
+                    push_vstack(assnvar, indx, 2, func, to_char(funcparam));
                 WHEN func IN (
                     'SERIALIZEDV'
                 ) THEN
@@ -2139,8 +2150,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         val_trans := substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
 
                         dt_trans := substr(funcparam_str, instr(funcparam_str, '~') + 1);
-
-
                     END IF;
 
                     where_txt := att || predicate;
@@ -2167,14 +2176,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                    || '.'
                                    || entity_id_col;
                     is_sub_val := 2;
-                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                    , ruleid);
+                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                assnvar, is_sub_val, sqlstat, func, funcparam,
+                                ruleid);
 
                     rows_added := 1;
                     push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
                     push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
-                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
-                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                          assnvar || '_val');
+                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                          assnvar || '_dt');
                 WHEN func IN (
                     'MAX_POS_DELTA_DV',
                     'MAX_NEG_DELTA_DV'
@@ -2254,14 +2266,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                         groupby_txt := '';
                         is_sub_val := 2;
-                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt, assnvar, is_sub_val, sqlstat, func, funcparam
-                        , ruleid);
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                    assnvar, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
 
                         rows_added := 1;
                         push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
                         push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_val');
-                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func, assnvar || '_dt');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_val');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_dt');
                     END;
                 ELSE
                     RAISE ude_function_undefined;
@@ -2279,12 +2294,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END build_func_sql_exp;
 
     PROCEDURE build_cond_sql_exp (
-        blockid      IN           VARCHAR2,
+        blockid      IN    VARCHAR2,
         indx         PLS_INTEGER,
-        txtin        IN           VARCHAR2,
-        sqlstat      OUT          VARCHAR2,
-        rows_added   OUT          PLS_INTEGER,
-        ruleid       IN           VARCHAR2
+        txtin        IN    VARCHAR2,
+        sqlstat      OUT   VARCHAR2,
+        rows_added   OUT   PLS_INTEGER,
+        ruleid       IN    VARCHAR2
     ) IS
 
         t1              tbl_type;
@@ -2323,7 +2338,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             --split to expression array
             FOR i IN 1..expr_tbl.count LOOP
                 --check if properly formed by curly brackets
-                expr := regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1, 1, NULL, 1);
+                expr := regexp_substr(expr_tbl(i), '\{([^}]+)\}', 1, 1, NULL,
+              1);
                 
 
                 --split minor assignment
@@ -2361,9 +2377,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                            || ' ';
 
             push_vstack(avn, indx, 1, NULL, NULL);
-            insert_rman(indx, '', from_clause, select_text, '', avn, 0, sqlstat, '', '', ruleid);
+            insert_rman(indx, '', from_clause, select_text, '',
+                        avn, 0, sqlstat, '', '',
+                        ruleid);
 
-            insert_ruleblocks_dep(blockid, NULL, NULL, NULL, NULL, avn);
+            insert_ruleblocks_dep(blockid, NULL, NULL, NULL, NULL,
+                                  avn);
             rows_added := 1;
         END IF;
 
@@ -2374,8 +2393,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END build_cond_sql_exp;
 
     PROCEDURE build_compiler_exp (
-        ruleblockid   IN            VARCHAR2,
-        indx          IN            INT,
+        ruleblockid   IN   VARCHAR2,
+        indx          IN   INT,
         txtin         VARCHAR2
     ) AS
 
@@ -2388,9 +2407,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         rb_dep           rman_ruleblocks_dep%rowtype;
         rb               rman_ruleblocks%rowtype;
     BEGIN
-        func_name := upper(regexp_substr(txtin, '(#)(\w+)(\(([^)]+)\))', 1, 1, 'i', 2));
+        func_name := upper(regexp_substr(txtin, '(#)(\w+)(\(([^)]+)\))', 1, 1, 'i',
+              2));
 
-        func_param := regexp_substr(txtin, '(\()([^)]+)', 1, 1, 'i', 2);
+        func_param := regexp_substr(txtin, '(\()([^)]+)', 1, 1, 'i',
+              2);
         param_key := lower(trim(substr(func_param, 1, instr(func_param, ',') - 1)));
 
         param_value := substr(func_param, instr(func_param, ',') + 1);
@@ -2401,9 +2422,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --          not working on 12.1.0.2 as a plsql statement
                 SELECT
                     JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
-                INTO
-                    rb_dep
-                .att_label
+                INTO rb_dep.att_label
                 FROM
                     dual;
 
@@ -2418,9 +2437,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             WHEN 'DEFINE_RULEBLOCK' THEN
                 SELECT
                     JSON_VALUE(param_value, '$.blockid' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .blockid
+                INTO rb.blockid
                 FROM
                     dual;
             
@@ -2428,65 +2445,49 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
                 SELECT
                     upper(JSON_VALUE(param_value, '$.target_table' RETURNING VARCHAR2))
-                INTO
-                    rb
-                .target_table
+                INTO rb.target_table
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.environment' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .environment
+                INTO rb.environment
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.rule_owner' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .rule_owner
+                INTO rb.rule_owner
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.is_active' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .is_active
+                INTO rb.is_active
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.def_exit_prop' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .def_exit_prop
+                INTO rb.def_exit_prop
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.def_predicate' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .def_predicate
+                INTO rb.def_predicate
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.exec_order' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .exec_order
+                INTO rb.exec_order
                 FROM
                     dual;
 
                 SELECT
                     JSON_VALUE(param_value, '$.out_att' RETURNING VARCHAR2)
-                INTO
-                    rb
-                .out_att
+                INTO rb.out_att
                 FROM
                     dual;
 
@@ -2569,7 +2570,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         IF instr(ss, ':') = 0 AND instr(ss, '=>') > 0 THEN
                         -- functional form
                             rows_added := 0;
-                            build_func_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added, rpipe_col(i).ruleid);
+                            build_func_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added,
+                                               rpipe_col(i).ruleid);
 
                             indx := indx + rows_added;
                         ELSIF instr(ss, '#') = 1 THEN
@@ -2578,7 +2580,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ELSIF instr(ss, ':') > 0 THEN
                         -- Conditional form
                             rows_added := 0;
-                            build_cond_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added, rpipe_col(i).ruleid);
+                            build_cond_sql_exp(rpipe_col(i).blockid, indx, ss, sqlout, rows_added,
+                                               rpipe_col(i).ruleid);
 
                             indx := indx + rows_added;
                         END IF;
@@ -2638,10 +2641,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         rdoc_nav         VARCHAR2(400);
         cite_rec         rman_ruleblocks_citation%rowtype;
         dep_str          VARCHAR2(400);
-        rb_ts            timestamp;
+        rb_ts            TIMESTAMP;
     BEGIN
         rdoc_cite := '<h2>References</h2><hr>';
-        
         SELECT
             ruleid,
             rulebody,
@@ -2654,25 +2656,33 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             ruleid;
             
         --default header which is usually overidden
+
         rdoc_header := '<i>TKC rman documentation for:</i><b>{ '
-                                            || rpipe_col(1).blockid
-                                            || '}</b><h2>'
-                                            || 'No metadata defined'
-                                            || '<br/>'
-                                            ||  'Dependencies:<i>'
-                                            ||  dep_str
-                                            || '</i><br/><small>'
-                                            || 'Last updated:<i>'
-                                            || rb_ts
-                                            || '</i></small><hr>';
+                       || rpipe_col(1).blockid
+                       || '}</b><h2>'
+                       || 'No metadata defined'
+                       || '<br/>'
+                       || 'Dependencies:<i>'
+                       || dep_str
+                       || '</i><br/><small>'
+                       || 'Last updated:<i>'
+                       || rb_ts
+                       || '</i></small><hr>';
         --Get time stamp
-        select scn_to_timestamp(ora_rowscn) into rb_ts from rman_ruleblocks where blockid=rpipe_col(1).blockid;
+
+        SELECT
+            scn_to_timestamp(ora_rowscn)
+        INTO rb_ts
+        FROM
+            rman_ruleblocks
+        WHERE
+            blockid = rpipe_col(1).blockid;
             
         --Get dependencies    
-        dependency_walker(rpipe_col(1).blockid,dep_str);
+
+        dependency_walker(rpipe_col(1).blockid, dep_str);
     
     -- loop though each line
-
         FOR i IN 1..rpipe_col.count LOOP
             rs := rpipe_col(i).rulebody;
         
@@ -2694,8 +2704,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         IF instr(ss, ':') = 0 AND instr(ss, '=>') > 0 THEN
                         -- functional form
                             decompose_func_exp(txtin => ss, func => func_exp.func, funcparam => func_exp.funcparam, funcparam_str
-                            => func_exp.funcparam_str, att => func_exp.att, tbl => func_exp.tbl, prop => func_exp.prop, predicate
-                            => func_exp.predicate, constparam => func_exp.constparam, ext_col_name => func_exp.ext_col_name);
+                            => func_exp.funcparam_str, att => func_exp.att,
+                                               tbl => func_exp.tbl, prop => func_exp.prop, predicate => func_exp.predicate, constparam
+                                               => func_exp.constparam, ext_col_name => func_exp.ext_col_name);
 
                             func_exp.avn := trim(substr(ss, 1, instr(ss, '=>', 1, 1) - length('=>')));
 
@@ -2777,17 +2788,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             counter := counter + 1;
                         ELSIF instr(ss, '#') = 1 THEN
                         -- Compiler directive
-                            func_name := upper(regexp_substr(ss, '(#)(\w+)(\(([^)]+)\))', 1, 1, 'i', 2));
+                            func_name := upper(regexp_substr(ss, '(#)(\w+)(\(([^)]+)\))', 1, 1, 'i',
+              2));
 
-                            func_param := regexp_substr(ss, '(\()([^)]+)', 1, 1, 'i', 2);
+                            func_param := regexp_substr(ss, '(\()([^)]+)', 1, 1, 'i',
+              2);
                             param_key := lower(trim(substr(func_param, 1, instr(func_param, ',') - 1)));
 
                             param_value := substr(func_param, instr(func_param, ',') + 1);
                             SELECT
                                 JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
-                            INTO
-                                att_def
-                            .label
+                            INTO att_def.label
                             FROM
                                 dual;
 
@@ -2795,25 +2806,19 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                 WHEN 'DEFINE_ATTRIBUTE' THEN
                                     SELECT
                                         JSON_VALUE(param_value, '$.label' RETURNING VARCHAR2)
-                                    INTO
-                                        att_def
-                                    .label
+                                    INTO att_def.label
                                     FROM
                                         dual;
 
                                     SELECT
                                         JSON_VALUE(param_value, '$.is_reportable' RETURNING VARCHAR2)
-                                    INTO
-                                        att_def
-                                    .is_reportable
+                                    INTO att_def.is_reportable
                                     FROM
                                         dual;
 
                                     SELECT
                                         JSON_VALUE(param_value, '$.is_trigger' RETURNING VARCHAR2)
-                                    INTO
-                                        att_def
-                                    .is_trigger
+                                    INTO att_def.is_trigger
                                     FROM
                                         dual;
 
@@ -2827,94 +2832,88 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                 WHEN 'DEFINE_RULEBLOCK' THEN
                                     SELECT
                                         JSON_VALUE(param_value, '$.description' RETURNING VARCHAR2)
-                                    INTO
-                                        rb_def
-                                    .description
+                                    INTO rb_def.description
                                     FROM
                                         dual;
 
                                     SELECT
                                         JSON_VALUE(param_value, '$.version' RETURNING VARCHAR2)
-                                    INTO
-                                        rb_def
-                                    .version
+                                    INTO rb_def.version
                                     FROM
                                         dual;
 
                                     SELECT
                                         JSON_VALUE(param_value, '$.rule_author' RETURNING VARCHAR2)
-                                    INTO
-                                        rb_def
-                                    .rule_author
+                                    INTO rb_def.rule_author
                                     FROM
                                         dual;
 
                                     rdoc_header := '<i>TKC rman documentation for:</i><b>{ '
-                                            || rpipe_col(i).blockid
-                                            || '}</b><h2>'
-                                            || rb_def.description
-                                            || '</h2><br/>'
-                                            || 'Version: '
-                                            || rb_def.version
-                                            || chr(10)
-                                            || 'Author: '
-                                            || rb_def.rule_author
-                                            || '<br/>'
-                                            ||  'Dependencies:<i>'
-                                            ||  dep_str
-                                            || '</i><br/><small>'
-                                            || 'Last updated:<i>'
-                                            || rb_ts
-                                            || '</i></small><hr>';
+                                                   || rpipe_col(i).blockid
+                                                   || '}</b><h2>'
+                                                   || rb_def.description
+                                                   || '</h2><br/>'
+                                                   || 'Version: '
+                                                   || rb_def.version
+                                                   || chr(10)
+                                                   || 'Author: '
+                                                   || rb_def.rule_author
+                                                   || '<br/>'
+                                                   || 'Dependencies:<i>'
+                                                   || dep_str
+                                                   || '</i><br/><small>'
+                                                   || 'Last updated:<i>'
+                                                   || rb_ts
+                                                   || '</i></small><hr>';
 
                                 WHEN 'DOC' THEN
                                     SELECT
                                         JSON_VALUE(param_value, '$.txt' RETURNING VARCHAR2)
-                                    INTO
-                                        doc_def
-                                    .txt
+                                    INTO doc_def.txt
                                     FROM
                                         dual;
 
                                     SELECT
                                         JSON_VALUE(param_value, '$.cite' RETURNING VARCHAR2)
-                                    INTO
-                                        doc_def
-                                    .cite
+                                    INTO doc_def.cite
                                     FROM
                                         dual;
-                                    
+
                                     SELECT
                                         JSON_VALUE(param_value, '$.section' RETURNING VARCHAR2)
-                                    INTO
-                                        doc_def
-                                    .section
-                                    
+                                    INTO doc_def.section
                                     FROM
                                         dual;
-                                    
+
                                     IF doc_def.section IS NOT NULL THEN
-                                    section_idx:=section_idx + 1;
-                                    rdoc_nav := rdoc_nav
-                                            || '<a href="#section'
-                                            || section_idx
-                                            || '">'
-                                            || doc_def.section
-                                            || '</a>' || chr(38) || 'nbsp;'
-                                            || chr(38) || 'nbsp;'
-                                            || chr(38) || 'nbsp;';
-                                    rdoc := rdoc
-                                            || '<h3 id="section' || section_idx || '">'
-                                            || doc_def.section
-                                            || '</h3><hr>';
+                                        section_idx := section_idx + 1;
+                                        rdoc_nav := rdoc_nav
+                                                    || '<a href="#section'
+                                                    || section_idx
+                                                    || '">'
+                                                    || doc_def.section
+                                                    || '</a>'
+                                                    || chr(38)
+                                                    || 'nbsp;'
+                                                    || chr(38)
+                                                    || 'nbsp;'
+                                                    || chr(38)
+                                                    || 'nbsp;';
+
+                                        rdoc := rdoc
+                                                || '<h3 id="section'
+                                                || section_idx
+                                                || '">'
+                                                || doc_def.section
+                                                || '</h3><hr>';
+
                                     END IF;
-    
-                                    
+
                                     IF doc_def.txt IS NOT NULL THEN
-                                    rdoc := rdoc
-                                            || '<p>'
-                                            || trim(BOTH '"' FROM trim(doc_def.txt))
-                                            || '';
+                                        rdoc := rdoc
+                                                || '<p>'
+                                                || trim(BOTH '"' FROM trim(doc_def.txt))
+                                                || '';
                                     END IF;
 
                                     IF doc_def.cite IS NOT NULL THEN
@@ -3037,15 +3036,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             END IF;
 
         END LOOP;
-        
-        rdoc := rdoc_header || rdoc_nav || rdoc;
 
+        rdoc := rdoc_header
+                || rdoc_nav
+                || rdoc;
         IF cite_idx > 0 THEN
             rdoc := rdoc || rdoc_cite;
         END IF;
-        
-        rdoc_footer := '<br/><sub><p>This page was auto-generated at ' || systimestamp || ' by the rb2rdoc translator.</sub>';
-        
+        rdoc_footer := '<br/><sub><p>This page was auto-generated at '
+                       || systimestamp
+                       || ' by the rb2rdoc translator.</sub>';
         rdoc := rdoc || rdoc_footer;
     END parse_rpipe_to_rdoc;
 
@@ -3064,8 +3064,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid,
             picoruleblock
         INTO
-                rbt
-            .blockid,
+            rbt.blockid,
             rbt.picoruleblock
         FROM
             rman_ruleblocks
@@ -3105,8 +3104,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END parse_ruleblocks;
 
     PROCEDURE exec_dsql (
-        sqlstmt CLOB,
-        tbl_name VARCHAR2
+        sqlstmt    CLOB,
+        tbl_name   VARCHAR2
     ) IS
 
         colcount             PLS_INTEGER;
@@ -3154,7 +3153,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           || chr(10);
 
                 WHEN 12 THEN --date
-                    dbms_sql.define_column(select_cursor, i, SYSDATE);
+                    dbms_sql.define_column(select_cursor, i, sysdate);
                     create_tbl_sql_str := create_tbl_sql_str
                                           || format_column_name(tbl_desc(i).col_name)
                                           || ' DATE '
@@ -3313,7 +3312,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             WHEN 2 THEN --number
                 dbms_sql.define_column(select_cursor, i, 1);
             WHEN 12 THEN --date
-                dbms_sql.define_column(select_cursor, i, SYSDATE);
+                dbms_sql.define_column(select_cursor, i, sysdate);
             WHEN 96 THEN --char
                 dbms_sql.define_column(select_cursor, i, 'a', 32);
             ELSE
@@ -3349,21 +3348,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                                        || tbl_desc(i).col_name);
 
                             dt := 'TO_DATE('''
-                                  || SYSDATE
+                                  || sysdate
                                   || ''')';
-                            
-                                            
-             
                             insert_tbl_sql_str := ' INSERT INTO '
                                                   || tbl_name
                                                   || '(eid, att, dt, val) VALUES('
-                                                  || TO_CHAR(row_eid)
+                                                  || to_char(row_eid)
                                                   || ', '''
                                                   || att
                                                   || ''','
                                                   || dt
                                                   || ','
-                                                  || TO_CHAR(typ02_val)
+                                                  || to_char(typ02_val)
                                                   || ');'
                                                   || chr(13);
 
@@ -3446,7 +3442,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             WHEN 2 THEN --number
                 dbms_sql.define_column(select_cursor, i, 1);
             WHEN 12 THEN --date
-                dbms_sql.define_column(select_cursor, i, SYSDATE);
+                dbms_sql.define_column(select_cursor, i, sysdate);
             WHEN 96 THEN --char
                 dbms_sql.define_column(select_cursor, i, 'a', 32);
             ELSE
@@ -3482,7 +3478,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(typ01_val)
+                                           || to_char(typ01_val)
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3492,7 +3488,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
                             dbms_sql.bind_variable(insert_cursor, ':att', format_bindvar_name(tbl_desc(i).col_name));
 
-                            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
+                            dbms_sql.bind_variable(insert_cursor, ':dt', sysdate);
                             dbms_sql.bind_variable(insert_cursor, ':val', typ01_val);
                             dbms_sql.bind_variable(insert_cursor, ':typ', 1);
                             dbms_sql.bind_variable(insert_cursor, ':src', src_id);
@@ -3510,7 +3506,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(round(typ02_val, 2))
+                                           || to_char(round(typ02_val, 2))
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3520,7 +3516,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
                             dbms_sql.bind_variable(insert_cursor, ':att', format_bindvar_name(tbl_desc(i).col_name));
 
-                            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
+                            dbms_sql.bind_variable(insert_cursor, ':dt', sysdate);
                             dbms_sql.bind_variable(insert_cursor, ':val', typ02_val);
                             dbms_sql.bind_variable(insert_cursor, ':typ', 2);
                             dbms_sql.bind_variable(insert_cursor, ':src', src_id);
@@ -3536,7 +3532,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(typ12_val, 'DD/MM/YYYY')
+                                           || to_char(typ12_val, 'DD/MM/YYYY')
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3546,7 +3542,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
                             dbms_sql.bind_variable(insert_cursor, ':att', format_bindvar_name(tbl_desc(i).col_name));
 
-                            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
+                            dbms_sql.bind_variable(insert_cursor, ':dt', sysdate);
                             dbms_sql.bind_variable(insert_cursor, ':val', typ12_val);
                             dbms_sql.bind_variable(insert_cursor, ':typ', 12);
                             dbms_sql.bind_variable(insert_cursor, ':src', src_id);
@@ -3562,7 +3558,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(typ96_val)
+                                           || to_char(typ96_val)
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3572,7 +3568,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
                             dbms_sql.bind_variable(insert_cursor, ':att', format_bindvar_name(tbl_desc(i).col_name));
 
-                            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
+                            dbms_sql.bind_variable(insert_cursor, ':dt', sysdate);
                             dbms_sql.bind_variable(insert_cursor, ':val', typ96_val);
                             dbms_sql.bind_variable(insert_cursor, ':typ', 96);
                             dbms_sql.bind_variable(insert_cursor, ':src', src_id);
@@ -3593,7 +3589,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             dbms_sql.parse(insert_cursor, insert_sql_jstr, dbms_sql.native);
             dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
             dbms_sql.bind_variable(insert_cursor, ':att', 'META');
-            dbms_sql.bind_variable(insert_cursor, ':dt', SYSDATE);
+            dbms_sql.bind_variable(insert_cursor, ':dt', sysdate);
             dbms_sql.bind_variable(insert_cursor, ':val', insert_jstr);
             dbms_sql.bind_variable(insert_cursor, ':typ', 2);
             dbms_sql.bind_variable(insert_cursor, ':src', src_id);
@@ -3636,10 +3632,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         insert_sql_jstr      VARCHAR2(4000);
         tbl_exists_val       PLS_INTEGER;
         src_id               VARCHAR2(32) := blockid;
-        
-        eadvx_tbl            eadvx_tbl_type:=eadvx_tbl_type();
-        idx                  PLS_INTEGER:=1;
-        
+        eadvx_tbl            eadvx_tbl_type := eadvx_tbl_type();
+        idx                  PLS_INTEGER := 1;
     BEGIN
         IF src_id IS NULL THEN
             src_id := 'undefined';
@@ -3662,7 +3656,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             WHEN 2 THEN --number
                 dbms_sql.define_column(select_cursor, i, 1);
             WHEN 12 THEN --date
-                dbms_sql.define_column(select_cursor, i, SYSDATE);
+                dbms_sql.define_column(select_cursor, i, sysdate);
             WHEN 112 THEN --date
                 dbms_sql.define_column(select_cursor, i, typ112_val);
             WHEN 96 THEN --char
@@ -3681,7 +3675,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             fetched_rows := dbms_sql.fetch_rows(select_cursor);
             EXIT WHEN fetched_rows = 0;
             i := tbl_desc.first;
-            
             insert_jstr := '{';
 
         --for each col loop
@@ -3698,7 +3691,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(typ01_val)
+                                           || to_char(typ01_val)
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3713,7 +3706,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(round(typ02_val, 2))
+                                           || to_char(round(typ02_val, 2))
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3728,7 +3721,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(typ12_val, 'DD/MM/YYYY')
+                                           || to_char(typ12_val, 'DD/MM/YYYY')
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3761,7 +3754,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                            || '"'
                                            || format_bindvar_name(tbl_desc(i).col_name)
                                            || '":"'
-                                           || TO_CHAR(typ96_val)
+                                           || to_char(typ96_val)
                                            || '"';
 
                             IF i < tbl_desc.count THEN
@@ -3792,18 +3785,15 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --                               || tbl_name
 --                               || '(eid, att, dt, valc,typ,src,evhash) VALUES(:eid, :att, :dt, :val,:typ,:src,:evhash)';
 --          
-
             eadvx_tbl.extend;
-            
-            eadvx_tbl(idx).eid:=row_eid;
-            eadvx_tbl(idx).att:=disc_col;
-            eadvx_tbl(idx).dt:=sysdate;
-            eadvx_tbl(idx).valc:=insert_jstr;
-            eadvx_tbl(idx).typ:=2;
-            eadvx_tbl(idx).src:=src_id;
-            eadvx_tbl(idx).evhash:=get_hash(insert_jstr);
-            
-            idx:=idx+1;
+            eadvx_tbl(idx).eid := row_eid;
+            eadvx_tbl(idx).att := disc_col;
+            eadvx_tbl(idx).dt := sysdate;
+            eadvx_tbl(idx).valc := insert_jstr;
+            eadvx_tbl(idx).typ := 2;
+            eadvx_tbl(idx).src := src_id;
+            eadvx_tbl(idx).evhash := get_hash(insert_jstr);
+            idx := idx + 1;
                                
 --            dbms_sql.parse(insert_cursor, insert_sql_jstr, dbms_sql.native);
 --            dbms_sql.bind_variable(insert_cursor, ':eid', row_eid);
@@ -3818,11 +3808,27 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             insert_jstr := '';
         END LOOP;
 
-        forall j in eadvx_tbl.FIRST..eadvx_tbl.LAST
-            INSERT INTO eadvx(eid,att,dt,valc,typ,src,evhash)
-            VALUES (eadvx_tbl(j).eid,eadvx_tbl(j).att,eadvx_tbl(j).dt,eadvx_tbl(j).valc,eadvx_tbl(j).typ,eadvx_tbl(j).src,eadvx_tbl(j).evhash);
+        FORALL j IN eadvx_tbl.first..eadvx_tbl.last
+            INSERT INTO eadvx (
+                eid,
+                att,
+                dt,
+                valc,
+                typ,
+                src,
+                evhash
+            ) VALUES (
+                eadvx_tbl(j).eid,
+                eadvx_tbl(j).att,
+                eadvx_tbl(j).dt,
+                eadvx_tbl(j).valc,
+                eadvx_tbl(j).typ,
+                eadvx_tbl(j).src,
+                eadvx_tbl(j).evhash
+            );
             
 --        dbms_sql.close_cursor(insert_cursor);
+
         dbms_sql.close_cursor(select_cursor);
     END exec_dsql_dstore_singlecol;
 
@@ -3866,8 +3872,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END check_sql_syntax;
 
     PROCEDURE exec_ndsql (
-        sqlstmt CLOB,
-        tbl_name VARCHAR2
+        sqlstmt    CLOB,
+        tbl_name   VARCHAR2
     ) IS
         status               PLS_INTEGER;
         create_tbl_sql_str   CLOB;
@@ -3917,8 +3923,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END init_global_vstack;
 
     PROCEDURE compile_ruleblock (
-        bid_in        IN            VARCHAR2,
-        return_code   OUT           PLS_INTEGER
+        bid_in        IN    VARCHAR2,
+        return_code   OUT   PLS_INTEGER
     ) IS
 
         strsql      CLOB;
@@ -3978,9 +3984,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END compile_ruleblock;
 
     PROCEDURE compile_ruleblock_ext (
-        bid_in        IN            VARCHAR2,
-        out_att_str   IN            VARCHAR2,
-        sqlstmt       OUT           CLOB
+        bid_in        IN    VARCHAR2,
+        out_att_str   IN    VARCHAR2,
+        sqlstmt       OUT   CLOB
     ) IS
 
         strsql   CLOB;
@@ -4072,12 +4078,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END compile_active_ruleblocks;
 
     PROCEDURE execute_ruleblock (
-        bid_in              IN                  VARCHAR2,
-        create_wide_tbl     IN                  PLS_INTEGER,
-        push_to_long_tbl    IN                  PLS_INTEGER,
-        push_to_long_tbl2   IN                  PLS_INTEGER,
-        recompile           IN                  PLS_INTEGER,
-        return_code         OUT                 PLS_INTEGER
+        bid_in              IN    VARCHAR2,
+        create_wide_tbl     IN    PLS_INTEGER,
+        push_to_long_tbl    IN    PLS_INTEGER,
+        push_to_long_tbl2   IN    PLS_INTEGER,
+        recompile           IN    PLS_INTEGER,
+        return_code         OUT   PLS_INTEGER
     ) IS
 
         compile_return_code   PLS_INTEGER;
@@ -4106,10 +4112,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         COMMIT;
         IF push_to_long_tbl = 1 THEN
             commit_log('Execute ruleblock', rb.blockid, 'exec_dsql_dstore');
-            
-            EXECUTE IMMEDIATE 'DELETE FROM eadvx where att=''' || rb.def_exit_prop || '''';
-            
-            
+            EXECUTE IMMEDIATE 'DELETE FROM eadvx where att='''
+                              || rb.def_exit_prop
+                              || '''';
             exec_dsql_dstore_singlecol(rb.blockid, 'SELECT * FROM ' || rb.target_table, 'eadvx', rb.def_exit_prop, rb.def_predicate
             );
 
@@ -4154,14 +4159,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
-            
             EXECUTE IMMEDIATE 'DROP INDEX "EADVX_ATT_IDX"';
             EXECUTE IMMEDIATE 'DROP INDEX "EADVX_EID_IDX"';
-            
-            
             FOR i IN rbs.first..rbs.last LOOP BEGIN
                 bid := rbs(i).blockid;
-                execute_ruleblock(bid, 1, 1, 0, 0, execute_return_code);
+                execute_ruleblock(bid, 1, 1, 0, 0,
+                                  execute_return_code);
                 dbms_output.put_line('rb: ' || bid);
             EXCEPTION
                 WHEN OTHERS THEN
@@ -4172,12 +4175,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                          || ' and errors logged to rman_ruleblocks_log !');
             END;
             END LOOP;
-            
-            
+
             EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_ATT_IDX" ON "EADVX" ("ATT")';
             EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_EID_IDX" ON "EADVX" ("EID")';
 --            drop_rout_tables;
-
         ELSE
             commit_log('execute_active_ruleblocks', '', 'Exiting with NULL Ruleblocks');
         END IF;
@@ -4214,9 +4215,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END drop_rout_tables;
 
     PROCEDURE commit_log (
-        moduleid   IN         VARCHAR2,
-        blockid    IN         VARCHAR2,
-        log_msg    IN         VARCHAR2
+        moduleid   IN   VARCHAR2,
+        blockid    IN   VARCHAR2,
+        log_msg    IN   VARCHAR2
     ) IS
         msg VARCHAR2(100) := log_msg;
         PRAGMA autonomous_transaction;
@@ -4241,8 +4242,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END commit_log;
 
     PROCEDURE dependency_walker (
-        rb_in_str    IN           VARCHAR2,
-        dep_rb_str   OUT          VARCHAR2
+        rb_in_str    IN    VARCHAR2,
+        dep_rb_str   OUT   VARCHAR2
     ) AS
 
         TYPE blockid_tbl_t IS
@@ -4311,9 +4312,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END process_stack;
 
         PROCEDURE fetch_rb (
-            rb_in_tbl        IN               tbl_type,
-            blockid_tbl      OUT              blockid_tbl_t,
-            exec_order_tbl   OUT              exec_order_tbl_t
+            rb_in_tbl        IN    tbl_type,
+            blockid_tbl      OUT   blockid_tbl_t,
+            exec_order_tbl   OUT   exec_order_tbl_t
         ) AS
         BEGIN
             SELECT
@@ -4338,8 +4339,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END fetch_rb;
 
         PROCEDURE init_stack (
-            rb_in_str    IN           VARCHAR2,
-            rb_out_str   OUT          VARCHAR2
+            rb_in_str    IN    VARCHAR2,
+            rb_out_str   OUT   VARCHAR2
         ) AS
             blockid_tbl      blockid_tbl_t;
             exec_order_tbl   exec_order_tbl_t;
@@ -4384,9 +4385,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END dependency_walker;
 
     PROCEDURE get_min_dep_att_str (
-        rb                IN                VARCHAR2,
-        rb_add_tbl        IN                tbl_type,
-        min_dep_att_str   OUT               VARCHAR2
+        rb                IN    VARCHAR2,
+        rb_add_tbl        IN    tbl_type,
+        min_dep_att_str   OUT   VARCHAR2
     ) AS
     BEGIN
         WITH t1 AS (
@@ -4428,9 +4429,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END get_min_dep_att_str;
 
     PROCEDURE gen_cube_from_ruleblock (
-        rb_att_str     IN             VARCHAR2,
-        slices_str     IN             VARCHAR2,
-        ret_tbl_name   IN             VARCHAR2
+        rb_att_str     IN   VARCHAR2,
+        slices_str     IN   VARCHAR2,
+        ret_tbl_name   IN   VARCHAR2
     ) AS
 
         slice_tbl        tbl_type;
@@ -4948,23 +4949,22 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         END modify_temp_tbls;
 
     BEGIN
-        commit_log('executing gen_cube', null, 'initialising');
+        commit_log('executing gen_cube', NULL, 'initialising');
         mock_mode := false;
         -- get time slices into collection
-        
         get_slices(slices_str);
         cube_in_rbstack;
-        commit_log('executing gen_cube', null, 'creating eadv views as per time slices');
+        commit_log('executing gen_cube', NULL, 'creating eadv views as per time slices');
         create_temp_eadv_views;
-        commit_log('executing gen_cube', null, 'executing ruleblocks');
+        commit_log('executing gen_cube', NULL, 'executing ruleblocks');
         execute_ndsql_temp_tbls;
-        commit_log('executing gen_cube', null, 'modifying staging tables');
+        commit_log('executing gen_cube', NULL, 'modifying staging tables');
         modify_temp_tbls;
-        commit_log('executing gen_cube', null, 'executing union for each ruleblock');
+        commit_log('executing gen_cube', NULL, 'executing union for each ruleblock');
         union_temp_tbls;
-        commit_log('executing gen_cube', null, 'executing join on all ruleblocks');
+        commit_log('executing gen_cube', NULL, 'executing join on all ruleblocks');
         join_temp_tbls;
-        commit_log('executing gen_cube', null, 'cleaning up staging tables');
+        commit_log('executing gen_cube', NULL, 'cleaning up staging tables');
         cleanup_objects;
     END gen_cube_from_ruleblock;
 
@@ -5147,23 +5147,23 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     --7: OP encounters
         dbms_output.put_line('Merge OP encounters');
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1
-    USING (
-    SELECT
-        lr.linked_registrations_id   as eid,
-        rcm.ncomp                    as att,
-        date_recorded                as dt,
-        null as                       val
-    FROM
-        patient_results_text prt
-    JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
-    JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
-    JOIN    rman_comp_map rcm on rcm.id=prt.component_id
-    WHERE   prt.component_id=47
-    AND regexp_substr(text_result,''(TEAM: )([A-Z]{3})'',1,1,''i'',2)=''REN''
-    ) t2
-    ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
-    WHEN NOT MATCHED THEN
-        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
+            USING (
+            SELECT
+                lr.linked_registrations_id   as eid,
+                rcm.ncomp                    as att,
+                date_recorded                as dt,
+                null as                       val
+            FROM
+                patient_results_text prt
+            JOIN    patient_registrations pr on pr.id=prt.patient_registration_id
+            JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+            JOIN    rman_comp_map rcm on rcm.id=prt.component_id
+            WHERE   prt.component_id=47
+            AND regexp_substr(text_result,''(TEAM: )([A-Z]{3})'',1,1,''i'',2)=''REN''
+            ) t2
+            ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+            WHEN NOT MATCHED THEN
+                INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)'
         ;
         commit_log('populate_eadv_tables', '', 'Merge patient rxclass');
     --8: RxClass
@@ -5411,7 +5411,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ;
         --90  location 
         commit_log('populate_eadv_tables', '', 'Merge patient demographics location history');
-        
         EXECUTE IMMEDIATE 'MERGE INTO eadv t1 USING (
                                     WITH cte1 AS (
                                         SELECT
@@ -5466,7 +5465,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             t2.eid,
             t2.att,
             t2.dt,
-            t2.val )';
+            t2.val )'
+        ;
         commit_log('populate_eadv_tables', '', 'Applying Bitmap indexing and compute statistics');
     --17: Re-create indexs
         dbms_output.put_line('Recreate indexs');
@@ -5484,6 +5484,36 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
     END populate_eadv_tables;
+
+    PROCEDURE populate_eadv_tables2 AS
+        TYPE r_adm_s_t IS
+            TABLE OF rman_admin_sqlblocks%rowtype;
+        r_adm_s   r_adm_s_t;
+        sdesc     VARCHAR2(100);
+    BEGIN
+        SELECT
+            *
+        BULK COLLECT
+        INTO r_adm_s
+        FROM
+            rman_admin_sqlblocks
+        WHERE
+            activity = 'build eadv'
+        ORDER BY
+            id;
+
+        FOR i IN 1..r_adm_s.count LOOP BEGIN
+            sdesc := r_adm_s(i).desc_txt;
+            rman_pckg.commit_log(r_adm_s(i).activity, '', r_adm_s(i).desc_txt);
+
+            EXECUTE IMMEDIATE r_adm_s(i).sqlblock;
+        EXCEPTION
+            WHEN OTHERS THEN
+                rman_pckg.commit_log('build eadv', sdesc, 'Error:');
+        END;
+        END LOOP;
+
+    END populate_eadv_tables2;
 
     PROCEDURE compile_templates AS
 
@@ -5546,7 +5576,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             FOR i IN tp.first..tp.last LOOP
                 k_tbl := rman_pckg.splitstr(tp(i).templatehtml, '>');
                 FOR j IN 1..k_tbl.count LOOP
-                    k := regexp_substr(k_tbl(j), '(<)([a-z0-9_]+)', 1, 1, 'i', 2);
+                    k := regexp_substr(k_tbl(j), '(<)([a-z0-9_]+)', 1, 1, 'i',
+              2);
 
                     IF length(k) > 0 THEN
 --                        dbms_output.put_line('***-> ' || k);

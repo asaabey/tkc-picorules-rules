@@ -1,7 +1,8 @@
 --cd C:\Users\abeya\Documents\Oracle11g\tkc-master\tkc-picorules;
-cd C:\Users\ora\Documents\GitHub\tkc-picorules;
+--cd C:\Users\ora\Documents\GitHub\tkc-picorules;
 
 @"tkc-create-eadvx.sql";
+
 @"tkc-create-rman.sql";
 @"tkc-create-rman-rpt-templates-neph1.sql";
 @"tkc-create-rman-rpt-templates-neph2.sql";
@@ -17,6 +18,8 @@ cd C:\Users\ora\Documents\GitHub\tkc-picorules;
 @"tkc-rman-insert-ruleblock-rx.sql";
 @"tkc-rman-insert-ruleblock-graph.sql";
 
+
+@"tkc-create-insert-rman-admin-sqlblocks";
 @"tkc-create-rman-resource-lookup.sql";
 @"tkc-create-rman-ruleblocks-citations.sql";
 
