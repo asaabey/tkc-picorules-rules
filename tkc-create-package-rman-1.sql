@@ -185,6 +185,7 @@ Change Log
 27/11/2019  dbms_sql writes to eadvx optimized with plsql bulk operator
 03/12/2019  moved styling into template
 05/12/2019  populate eadv is running of rman_admin_sqlblocks
+06/12/2019  svg_graph functions
 
 */
     TYPE eadvx_tbl_type IS
