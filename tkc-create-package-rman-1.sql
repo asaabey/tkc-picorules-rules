@@ -1,5 +1,7 @@
 CLEAR SCREEN;
 
+
+
 CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 
 /*
@@ -1268,7 +1270,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     || translate(in_str, serialize_delimiter, ',')
                     || ') ';
 
-        dbms_output.put_line('-> ' || sql_stmt);
+--        dbms_output.put_line('-> ' || sql_stmt);
         EXECUTE IMMEDIATE sql_stmt BULK COLLECT
         INTO out_tbl;
         FOR i IN 1..out_tbl.count LOOP ret := ret
@@ -1279,6 +1281,48 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ret := trim(BOTH ',' FROM ret);
         RETURN ret;
     END lookup_key;
+
+    FUNCTION svg_graph_xy (
+        xstr   VARCHAR2,
+        ystr   VARCHAR2,
+        tmplt  VARCHAR2
+    ) RETURN VARCHAR2 AS
+
+        x_in_tbl   tbl_type;
+        y_in_tbl   tbl_type;
+        xy         VARCHAR2(4000);
+        xscale     NUMBER;
+        yscale     NUMBER;
+        x          INTEGER;
+        y          INTEGER;
+        xmax_px    INTEGER := 600;
+        ymax_px    INTEGER := 400;
+        dt_fmt     varchar2(15):='DD/MM/YY';
+        ret_tmplt          VARCHAR2(32767):=tmplt;
+    BEGIN
+        x_in_tbl := rman_pckg.splitstr(xstr, ' ');
+        y_in_tbl := rman_pckg.splitstr(ystr, ' ');
+        
+        xscale := xmax_px / round(to_date(x_in_tbl(x_in_tbl.first), dt_fmt) - to_date(x_in_tbl(x_in_tbl.last), dt_fmt));
+
+        yscale := ymax_px / 150;
+        FOR i IN 1..x_in_tbl.count LOOP
+            x := round(to_date(x_in_tbl(i), dt_fmt) - to_date(x_in_tbl(x_in_tbl.last), dt_fmt)) * xscale;
+
+            y := (150 - y_in_tbl(i)) * yscale;
+            xy := xy
+                  || x
+                  || ','
+                  || y
+                  || ' ';
+        END LOOP;
+        
+        
+        
+        ret_tmplt := regexp_replace(ret_tmplt, '<<xy_coords />>', trim(xy));
+
+        RETURN ret_tmplt;
+    END svg_graph_xy;
 
     FUNCTION map_to_tmplt2 (
         jstr    VARCHAR2,
@@ -1310,6 +1354,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ret_tmplt := replace(ret_tmplt, chr(10), '');
         ret_tmplt := replace(ret_tmplt, chr(13), '');
         ret_tmplt := replace(ret_tmplt, chr(11), '');
+        ret_tmplt := replace(ret_tmplt, '  ', '');
 --jstr into collection
         t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i',
               1);
@@ -1335,6 +1380,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             IF instr(tkey, '_graph_val') > 0 THEN
                 y_vals := tval;
+                
             END IF;
             IF instr(tkey, '_graph_yscale') > 0 THEN
                 yscale_in := to_number(tval, '9999.999');
@@ -1352,21 +1398,23 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           || tval);
             END IF;
 
-            IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
+
+
+
+--            IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
+            IF length(x_vals) > 0 AND length(y_vals) > 0 THEN
+            
 --                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
 --                , yline_str_arr => yline_str_arr_in);
-                xygraph_bitmap := '<chart id="chartId" '
-                                  || 'name="chartName" style="height:400px;width=600px" '
-                                  || 'class="img-thumbnail" '
-                                  || 'x-vals="'
-                                  || x_vals_iso
-                                  || '" '
-                                  || 'y-vals="'
-                                  || y_vals
-                                  || '" '
-                                  || 'x-label="Date Recorded" '
-                                  || 'y-label="umols/Litre" x-grid-lines="3" y-grid-lines="2" '
-                                  || 'slope-line="30 30" line-colour="blue" slope-colour="gray" />';
+
+
+                                  
+                        ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
+                        ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
+                
+                        ret_tmplt := svg_graph_xy(x_vals,y_vals,ret_tmplt);
+                
+                
             END IF;
 
             -- insertions
@@ -1395,16 +1443,16 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 ret_tmplt := regexp_replace(ret_tmplt, html_tkey, tkey_lu_val);
             END IF;
 
-            IF length(x_vals_iso) > 0 THEN
-                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
-
---                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
-                ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
-                ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
-                x_vals_iso := '';
-                x_vals := '';
-                y_vals := '';
-            END IF;                                       
+--            IF length(x_vals_iso) > 0 THEN
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
+--
+----                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
+--                ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
+--                x_vals_iso := '';
+----                x_vals := '';
+----                y_vals := '';
+--            END IF;                                       
             
             -- toggle on
 

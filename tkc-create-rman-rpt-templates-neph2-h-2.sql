@@ -647,6 +647,40 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','graph_egfr2','egfr_graph',651101,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>Temporal variation of eGFR</h5>
+    eGFR ml/min against time 
+    <div>
+    <svg height="400" width="600">
+    <defs>
+    
+        <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+            markerWidth="5" markerHeight="5">
+          <circle cx="5" cy="5" r="10" fill="blue" />
+        </marker>
+      </defs>
+      <polyline points="<<xy_coords />>" 
+      style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+     
+     <line x1="1" x2="600" y1="200" y2="200" style="fill:none;stroke:black;stroke-width:1;stroke-dasharray: 1 2"/> 
+     <text x="400" y="180" ></text>
+      
+     <line x1="1" x2="600" y1="400" y2="400" style="fill:none;stroke:black;stroke-width:4"/>
+     <line x1="1" x2="1" y1="1" y2="400" style="fill:none;stroke:black;stroke-width:4"/>
+        
+      
+    </svg>
+
+    </div>
+    </div>
+    
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','egfr_metrics','egfr_metrics',651110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <<r1_stg=1>>Normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=1>>
