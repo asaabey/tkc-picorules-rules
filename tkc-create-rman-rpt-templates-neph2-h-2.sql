@@ -21,7 +21,7 @@
 --11	Chronic disease : CKD
 --21	Chronic disease : DM2
 --31	Chronic disease : HTN
---41	Chronic disease : HTN
+--41	Chronic disease : CVD
 --90    reserved
 
 
@@ -56,6 +56,22 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 
                 .syn_tr:nth-child(even) {
                     background-color: #f2f2f2;
+                }
+                
+                .syn_container {
+                    width : 90%;
+                    margin : auto;
+                }
+                
+                .syn_col_left {
+                    width:350;
+                    float: left;
+                }
+                
+                .syn_col_right {
+                    margin-left:350;
+                    width:200;
+                    
                 }
     </style>
     
@@ -618,43 +634,43 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
+--    '
+--    <hr />
+--    <div class="syn_synopsis_box">
+--    <h5>Temporal variation of eGFR</h5>
+--    eGFR ml/min against time 
+--    <div>
+--    
+--    <chart id="chartId" 
+--        name="chartName" 
+--        style="height:400px;width=600px" 
+--        class="img-thumbnail"
+--        x-vals="<<x_vals_iso />>"
+--        y-vals="<<y_vals />>"
+--        x-label="Date Recorded" 
+--        y-label="umols/Litre" 
+--        x-grid-lines="3" 
+--        y-grid-lines="2" 
+--        slope-line="30 30" 
+--        line-colour="blue" 
+--        slope-colour="gray" />
+--    </div>
+--    </div>
+--    
+--    '
+--    );
+    
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','graph_egfr2','egfr_graph2',651101,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_synopsis_box">
     <h5>Temporal variation of eGFR</h5>
     eGFR ml/min against time 
     <div>
-    
-    <chart id="chartId" 
-        name="chartName" 
-        style="height:400px;width=600px" 
-        class="img-thumbnail"
-        x-vals="<<x_vals_iso />>"
-        y-vals="<<y_vals />>"
-        x-label="Date Recorded" 
-        y-label="umols/Litre" 
-        x-grid-lines="3" 
-        y-grid-lines="2" 
-        slope-line="30 30" 
-        line-colour="blue" 
-        slope-colour="gray" />
-    </div>
-    </div>
-    
-    '
-    );
-    
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','graph_egfr2','egfr_graph',651101,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    <hr />
-    <div class="syn_synopsis_box">
-    <h5>Temporal variation of eGFR</h5>
-    eGFR ml/min against time 
-    <div>
-    <svg height="400" width="600">
+    <svg height=<<egfr_graph_canvas_y />> width=<<egfr_graph_canvas_x />>>
     <defs>
     
         <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
@@ -665,14 +681,69 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
       <polyline points="<<xy_coords />>" 
       style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
      
-     <line x1="1" x2="600" y1="200" y2="200" style="fill:none;stroke:black;stroke-width:1;stroke-dasharray: 1 2"/> 
-     <text x="400" y="180" ></text>
+     <line x1="<<line1_x1 />>" x2="<<line1_x2 />>" y1="<<line1_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
+     
       
-     <line x1="1" x2="600" y1="400" y2="400" style="fill:none;stroke:black;stroke-width:4"/>
-     <line x1="1" x2="1" y1="1" y2="400" style="fill:none;stroke:black;stroke-width:4"/>
         
       
     </svg>
+
+    </div>
+    </div>
+    
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','graph_bp','bp_graph',653110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>Blood pressure profile for the last 2 years</h5>
+    
+    <div class="syn_container">
+   
+    <div class="syn_col_left">
+        
+        
+        <svg height=<<bp_graph_canvas_y />> width=<<bp_graph_canvas_x />>>
+        <defs>
+            <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                markerWidth="5" markerHeight="5">
+              <circle cx="5" cy="5" r="10" fill="blue" />
+            </marker>
+        </defs>
+    <polyline points="<<xy_coords />>" 
+      style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+      <line x1="0" x2="<<bp_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+      
+      <line x1="0" x2="<<bp_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+      <rect x="0" y="<<line_target_upper_y />>"  width="<<bp_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+      
+      <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<bp_graph_y_max />></text>
+      <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<bp_graph_y_min />></text>
+    </svg>
+ 
+    </div>
+     <div class="syn_col_right">
+
+        <svg height="200" width="200">
+        
+        <circle r="50" cx="120" cy="50" fill="white" stroke="<<pie_colour />>" />
+        <circle r="<<radius />>" cx="120" cy="50" fill="white" 
+              stroke="<<pie_colour />>"
+              stroke-width="49"
+              stroke-dasharray="<<tir_arc />> <<circum />>"
+              />
+        <text x="70" y="150" style="font-size:24px;">TIR% <<tir_pct />>%</text>
+      
+    </svg>
+    </div>
+    
+    
+
+    
+      
 
     </div>
     </div>
@@ -817,4 +888,4 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </div>
     '
     );
---@"tkc-create-package-rman-1.sql";
+@"tkc-create-package-rman-1.sql";

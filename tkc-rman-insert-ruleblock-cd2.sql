@@ -433,6 +433,15 @@ BEGIN
                 txt:"BP control: Time in therapeutic range"
             }
         );
+        
+        sbp_max_2y => eadv.obs_bp_systolic.val.max().where(dt>=sysdate-730);
+        
+        sbp_min_2y => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-730);
+        
+        sbp_target_max : {1=1 => 140};
+        
+        sbp_target_min : {1=1 => 100};
+        
         n_qt_1 : {sigma_1>0 => 1-round(slice140_1_n/sigma_1,1)};
         
         mu_qt : {slice140_2_mu>0 =>round(slice140_1_mu/slice140_2_mu,2)};

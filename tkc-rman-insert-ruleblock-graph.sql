@@ -14,50 +14,180 @@ BEGIN
     
     
     
-     -- BEGINNING OF RULEBLOCK --
+--     -- BEGINNING OF RULEBLOCK --
+--
+--    rb.blockid:='egfr_graph';
+--
+--    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+--    
+--    rb.picoruleblock:='
+--    
+--        /* Algorithm to compute egfr graph  */
+--        
+--            
+--             #define_ruleblock(egfr_graph,
+--                {
+--                    description: "Algorithm to serialize egfr",
+--                    version: "0.0.1.1",
+--                    blockid: "egfr_graph",
+--                    target_table:"rout_egfr_graph",
+--                    environment:"DEV_2",
+--                    rule_owner:"TKCADMIN",
+--                    is_active:2,
+--                    def_exit_prop:"egfr_graph",
+--                    def_predicate:">0",
+--                    exec_order:1
+--                    
+--                }
+--            );
+--            
+--            rrt => rout_rrt.rrt.val.bind();
+--            
+--            
+--            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
+--            
+--            egfr_n => eadv.lab_bld_egfr_c.val.count(0);
+--            
+--                        
+--            egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
+--            
+--            egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
+--            
+--            dspan : {1=1 => egfr_l_dt - egfr_f_dt };
+--            
+--            s1_mu => eadv.lab_bld_egfr_c.val.avg().where(dt < (egfr_l_dt -(dspan/2)));
+--            
+--            s2_mu => eadv.lab_bld_egfr_c.val.avg().where(dt > (egfr_f_dt +(dspan/2)));
+--            
+--            mu_delta_30 : { s1_mu - s2_mu >30 =>1},{=>0};
+--            
+--            egfr_graph_xline_60 => eadv.lab_bld_egfr_c.dt.max().where(val>60);
+--            
+--            egfr60_last => eadv.lab_bld_egfr_c.val.lastdv().where(val>60);
+--   
+--            graph_canvas_x : {1=1 => 600};
+--            
+--            graph_canvas_y : {1=1 => 400};
+--            
+--            graph_y_max : {1=1 => 150};
+--            
+--            graph_y_min : {1=1 => 0};
+--            
+--            x_scale : {dspan>0 => round(graph_canvas_x/dspan,1)};
+--            
+--            
+--            y_scale : {1=1 => round(graph_canvas_y/graph_y_max,1)};
+--            
+--            
+--            line1_x1 : {1=1 => round(( egfr60_last_dt - egfr_f_dt )* x_scale,0) };
+--            
+--            line1_x2 : {1=1 => round(( egfr_l_dt - egfr_f_dt )* x_scale,0) };
+--            
+--            line1_y1 : {1=1 => round((graph_y_max-egfr60_last_val) * y_scale,0) };
+--            
+--            line1_y2 : {1=1 => round((graph_y_max-egfr_l_val) * y_scale,0) };
+--                
+--            
+--
+--            mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
+--            
+--            egfr_graph_yscale : {1=1 => 10};
+--            
+--            egfr_graph : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
+--            
+--    ';
+--    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+--    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+--    
+--    COMMIT;
+--    -- END OF RULEBLOCK --
+    
+      -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='egfr_graph';
+    rb.blockid:='egfr_graph2';
 
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute egfr graph  */
+        /* Algorithm to compute egfr graph 2 */
         
             
-             #define_ruleblock(egfr_graph,
+             #define_ruleblock(egfr_graph2,
                 {
                     description: "Algorithm to serialize egfr",
                     version: "0.0.1.1",
-                    blockid: "egfr_graph",
-                    target_table:"rout_egfr_graph",
+                    blockid: "egfr_graph2",
+                    target_table:"rout_egfr_graph2",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
                     is_active:2,
-                    def_exit_prop:"egfr_graph",
+                    def_exit_prop:"egfr_graph2",
                     def_predicate:">0",
-                    exec_order:1
+                    exec_order:2
                     
                 }
             );
             
             rrt => rout_rrt.rrt.val.bind();
             
-            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
-            
             egfr_n => eadv.lab_bld_egfr_c.val.count(0);
             
-            egfr_fd => eadv.lab_bld_egfr_c.dt.min();
+            egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
             
-            egfr_ld => eadv.lab_bld_egfr_c.dt.max();
+            egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
             
-            egfr_graph_xline_60 => eadv.lab_bld_egfr_c.dt.max().where(val>60);
             
-            mspan : { egfr_n>0 => round((egfr_ld-egfr_fd)/12,0)};
+            egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
             
-            egfr_graph_yscale : {1=1 => 10};
+            egfr_min => eadv.lab_bld_egfr_c.val.minldv();
             
-            egfr_graph : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
+            
+            egfr60_last => eadv.lab_bld_egfr_c.val.lastdv().where(val>60);
+            
+            
+            
+            dspan : {1=1 => egfr_l_dt - egfr_f_dt };
+            
+            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
+            
+            egfr_graph_canvas_x : {1=1 => 600};
+            
+            egfr_graph_canvas_y : {1=1 => 400};
+            
+            egfr_graph_y_max : {1=1 => 150};
+            
+            egfr_graph_y_min : {1=1 => 0};
+            
+            
+            
+            x_scale : { dspan >0 => round(egfr_graph_canvas_x / dspan,5)};
+            
+            
+            y_scale : {1=1 => round( egfr_graph_canvas_y /( egfr_graph_y_max - egfr_graph_y_min),5)};
+            
+            
+            line1_x1 : {1=1 => round(( egfr60_last_dt - egfr_f_dt )* x_scale,0) };
+            
+            line1_x2 : {1=1 => round(( egfr_l_dt - egfr_f_dt )* x_scale,0) };
+            
+            line1_y1 : {1=1 => round((egfr_graph_y_max-egfr60_last_val) * y_scale,0) };
+            
+            line1_y2 : {1=1 => round((egfr_graph_y_max-egfr_l_val) * y_scale,0) };
+                
+            slope1 : { egfr_l_dt - egfr60_last_dt>0 =>round(((egfr_l_val - egfr60_last_val)/(egfr_l_dt - egfr60_last_dt))*365.25,2) },{=>0};
+            
+            show_slope1 : { slope1 <-5 => 1 },{=>0};
+            
+            txt_slope1_x : {1=1 => round((line1_x1 + ((egfr_l_dt-egfr60_last_dt)/2))*x_scale,0)};
+            
+            txt_slope1_y : {1=1 => round((150-50)* y_scale,0)};
+
+            mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
+            
+            
+            
+            egfr_graph2 : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -65,6 +195,83 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+--         -- BEGINNING OF RULEBLOCK --
+--
+--    rb.blockid:='egfr_graph2';
+--
+--    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+--    
+--    rb.picoruleblock:='
+--    
+--        /* Algorithm to compute egfr graph 2 */
+--        
+--            
+--             #define_ruleblock(egfr_graph2,
+--                {
+--                    description: "Algorithm to serialize egfr",
+--                    version: "0.0.1.1",
+--                    blockid: "egfr_graph2",
+--                    target_table:"rout_egfr_graph2",
+--                    environment:"DEV_2",
+--                    rule_owner:"TKCADMIN",
+--                    is_active:2,
+--                    def_exit_prop:"egfr_graph2",
+--                    def_predicate:">0",
+--                    exec_order:2
+--                    
+--                }
+--            );
+--            
+--            rrt => rout_rrt.rrt.val.bind();
+--            
+--            egfr_n => rout_egfr_metrics.egfr_n.val.bind();
+--            
+--            egfr_f_dt => rout_egfr_metrics.egfr_r1_dt.val.bind();
+--            
+--            egfr_f_val => rout_egfr_metrics.egfr_r1_val.val.bind();
+--            
+--            egfr_l_dt => rout_egfr_metrics.egfr_rn_dt.val.bind();
+--            
+--            egfr_l_val => rout_egfr_metrics.egfr_rn_val.val.bind();
+--            
+--            egfr_max_dt => rout_egfr_metrics.egfr_max_dt.val.bind();
+--            
+--            egfr_max_val => rout_egfr_metrics.egfr_max_val.val.bind();
+--            
+--            egfr_min_dt => rout_egfr_metrics.egfr_min_dt.val.bind();
+--            
+--            egfr_min_val => rout_egfr_metrics.egfr_min_val.val.bind();
+--            
+--            egfr60_last_dt => rout_egfr_metrics.egfr60_last_dt.val.bind();
+--            
+--            egfr60_last_val => rout_egfr_metrics.egfr60_last_val.val.bind();
+--            
+--            
+--            
+--            
+--            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
+--            
+--            dspan : {1=1 => egfr_l_dt - egfr_f_dt };
+--            
+--        
+--            
+--   
+--   
+--           
+--
+--            mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
+--            
+--            
+--            
+--            egfr_graph2 : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
+--            
+--    ';
+--    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+--    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+--    
+--    COMMIT;
+--    -- END OF RULEBLOCK --
+   
    
      -- BEGINNING OF RULEBLOCK --
 
@@ -160,6 +367,101 @@ BEGIN
             hb_graph_yscale : {1=1 => 10};
             
             hb_graph : {nvl(esa_val,0)>0 and hb_graph_val is not null and hb_n>2 and mspan>=3 =>1},{=>0};
+            
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    
+       
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='bp_graph';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to compute bp graph  */
+        
+            
+             #define_ruleblock(bp_graph,
+                {
+                    description: "Algorithm to show BP TIR",
+                    version: "0.0.1.1",
+                    blockid: "bp_graph",
+                    target_table:"rout_bp_graph",
+                    environment:"DEV_2",
+                    rule_owner:"TKCADMIN",
+                    is_active:2,
+                    def_exit_prop:"bp_graph",
+                    def_predicate:">0",
+                    exec_order:2
+                    
+                }
+            );
+            
+            rrt => rout_rrt.rrt.val.bind();  
+            
+            bp_graph_canvas_x : {1=1 => 350};
+            
+            bp_graph_canvas_y : {1=1 => 100};
+            
+            htn => rout_cd_htn.htn.val.bind();
+            
+            sigma_1 => rout_cd_htn.sigma_1.val.bind();
+            
+            sbp_max => rout_cd_htn.sbp_max_2y.val.bind();
+            
+            sbp_min => rout_cd_htn.sbp_min_2y.val.bind();
+            
+            sbp_target_max => rout_cd_htn.sbp_target_max.val.bind();
+            
+            sbp_target_min => rout_cd_htn.sbp_target_min.val.bind();
+            
+            tir => rout_cd_htn.n_qt_1.val.bind();
+            
+            sbp_graph => eadv.obs_bp_systolic.val.serializedv(round(val,0)~dt).where(dt>sysdate-730);    
+            
+            
+            bp_graph_y_max : {1=1 => sbp_max};
+            
+            bp_graph_y_min : {sbp_min < sbp_target_min => sbp_min},{=> sbp_target_min};
+            
+            bp_graph_x_scale : {1=1 => round(bp_graph_canvas_x/730,5)};
+            
+            bp_graph_y_scale : { bp_graph_y_max > bp_graph_y_min => round(bp_graph_canvas_y/(bp_graph_y_max-bp_graph_y_min),5)},{=>round(bp_graph_canvas_y/10,5)};
+            
+            
+            
+            tir_pct : {1=1 => tir*100};
+            
+            
+            
+            radius : {1=1 => 25};
+            
+            circum : {1=1 => radius * 2* 3.14159 };
+            
+            tir_arc : {1=1 => tir_pct * circum/100};
+            
+            pie_colour : { tir>=0.7 => `green`},{ tir>=0.5 and tir<0.7=> `orange`},{ tir<0.5 => `tomato`};
+            
+            
+            line_upper_y : {1=1 => 0};
+            
+            line_lower_y : {1=1 => (bp_graph_y_max-bp_graph_y_min) * bp_graph_y_scale};
+            
+            line_target_upper_y : {bp_graph_y_min< sbp_target_max and bp_graph_y_max> sbp_target_max => (bp_graph_y_max-140) * bp_graph_y_scale};
+            
+            
+            
+            
+            bp_graph : { (htn >0 and sigma_1 >1) or rrt>0 =>1},{=>0};
+            
+            
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

@@ -7,9 +7,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.6
+Version		    1.0.1.7
 Creation date	07/04/2019
-update on date  05/12/2019
+update on date  10/12/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -186,6 +186,7 @@ Change Log
 03/12/2019  moved styling into template
 05/12/2019  populate eadv is running of rman_admin_sqlblocks
 06/12/2019  svg_graph functions
+09/12/2019  graph_obj_type added
 
 */
     TYPE eadvx_tbl_type IS
@@ -268,6 +269,15 @@ Change Log
         cite      VARCHAR2(400),
         section   VARCHAR2(400)
     );
+    TYPE graph_obj_type IS RECORD (
+        xstr   VARCHAR2(4000),
+        ystr   VARCHAR2(4000),
+        y_min   NUMBER,
+        y_max   NUMBER,
+        canvas_x PLS_INTEGER,
+        canvas_y PLS_INTEGER
+    );
+    
     PROCEDURE parse_rpipe (
         sqlout OUT VARCHAR2
     );
@@ -330,6 +340,11 @@ Change Log
     FUNCTION lookup_key (
         res      VARCHAR2,
         in_str   VARCHAR2
+    ) RETURN VARCHAR2;
+
+    FUNCTION svg_graph_xy (
+        graph_obj_in   graph_obj_type,
+        tmplt  VARCHAR2
     ) RETURN VARCHAR2;
 
     FUNCTION map_to_tmplt2 (
@@ -1284,11 +1299,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END lookup_key;
 
     FUNCTION svg_graph_xy (
-        xstr   VARCHAR2,
-        ystr   VARCHAR2,
+        graph_obj_in   graph_obj_type,
         tmplt  VARCHAR2
     ) RETURN VARCHAR2 AS
-
+        graph_obj  graph_obj_type:=graph_obj_in; 
         x_in_tbl   tbl_type;
         y_in_tbl   tbl_type;
         xy         VARCHAR2(4000);
@@ -1296,21 +1310,28 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         yscale     NUMBER;
         x          INTEGER;
         y          INTEGER;
-        xmax_px    INTEGER := 600;
-        ymax_px    INTEGER := 400;
+        xmax_px    PLS_INTEGER := graph_obj.canvas_x;
+        ymax_px    PLS_INTEGER := graph_obj.canvas_y;
         dt_fmt     varchar2(15):='DD/MM/YY';
         ret_tmplt          VARCHAR2(32767):=tmplt;
     BEGIN
-        x_in_tbl := rman_pckg.splitstr(xstr, ' ');
-        y_in_tbl := rman_pckg.splitstr(ystr, ' ');
+
+        
+        x_in_tbl := rman_pckg.splitstr(graph_obj.xstr, ' ');
+        y_in_tbl := rman_pckg.splitstr(graph_obj.ystr, ' ');
         
         xscale := xmax_px / round(to_date(x_in_tbl(x_in_tbl.first), dt_fmt) - to_date(x_in_tbl(x_in_tbl.last), dt_fmt));
 
-        yscale := ymax_px / 150;
+        
+
+        IF graph_obj.y_max>graph_obj.y_min THEN
+            yscale := ymax_px / (graph_obj.y_max-graph_obj.y_min);
+        END IF;
+        
         FOR i IN 1..x_in_tbl.count LOOP
             x := round(to_date(x_in_tbl(i), dt_fmt) - to_date(x_in_tbl(x_in_tbl.last), dt_fmt)) * xscale;
 
-            y := (150 - y_in_tbl(i)) * yscale;
+            y := (graph_obj.y_max - y_in_tbl(i)) * yscale;
             xy := xy
                   || x
                   || ','
@@ -1318,7 +1339,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                   || ' ';
         END LOOP;
         
-        
+
         
         ret_tmplt := regexp_replace(ret_tmplt, '<<xy_coords />>', trim(xy));
 
@@ -1347,10 +1368,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         x_vals_iso         VARCHAR2(1000) := '';
         y_vals             VARCHAR2(1000) := '';
         yscale_in          NUMBER;
+        y_max              NUMBER; 
+        y_min              NUMBER;
         xygraph_ascii      VARCHAR(1000);
         xygraph_bitmap     VARCHAR(1000);
         xline_str_arr_in   VARCHAR(1000);
         yline_str_arr_in   VARCHAR(1000);
+        
+        graph_obj          graph_obj_type:=graph_obj_type();
     BEGIN
         ret_tmplt := replace(ret_tmplt, chr(10), '');
         ret_tmplt := replace(ret_tmplt, chr(13), '');
@@ -1370,7 +1395,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             -- extract graphing param if present and draw graph
 
             IF instr(tkey, '_graph_dt') > 0 THEN
+                
                 x_vals := tval;
+                graph_obj.xstr := x_vals;
+                
                 dt_tbl := splitstr(tval, serialize_delimiter);
                 FOR j IN 1..dt_tbl.count LOOP x_vals_iso := x_vals_iso
                                                             || to_char(to_date(dt_tbl(j), 'DD/MM/YY'), 'YYYY-MM-DD')
@@ -1381,8 +1409,26 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
             IF instr(tkey, '_graph_val') > 0 THEN
                 y_vals := tval;
+                graph_obj.ystr := y_vals;
                 
             END IF;
+            IF instr(tkey, '_graph_y_min') > 0 THEN
+                y_min := to_number(tval, '9999.999');
+                graph_obj.y_min := y_min;
+            END IF;
+            IF instr(tkey, '_graph_y_max') > 0 THEN
+                y_max := to_number(tval, '9999.999');
+                graph_obj.y_max := y_max;
+            END IF;
+            IF instr(tkey, '_graph_canvas_x') > 0 THEN
+                graph_obj.canvas_x := to_number(tval, '9999.999');
+            END IF;
+            IF instr(tkey, '_graph_canvas_y') > 0 THEN
+                graph_obj.canvas_y := to_number(tval, '9999.999');
+            END IF;
+            
+            
+            
             IF instr(tkey, '_graph_yscale') > 0 THEN
                 yscale_in := to_number(tval, '9999.999');
             END IF;
@@ -1403,7 +1449,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
 --            IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
-            IF length(x_vals) > 0 AND length(y_vals) > 0 THEN
+            IF length(x_vals) > 0 AND length(y_vals) > 0 AND y_max>y_min THEN
             
 --                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
 --                , yline_str_arr => yline_str_arr_in);
@@ -1413,7 +1459,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
                         ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
                 
-                        ret_tmplt := svg_graph_xy(x_vals,y_vals,ret_tmplt);
+--                        ret_tmplt := svg_graph_xy(x_vals,y_vals,y_min,y_max,ret_tmplt);
+                        ret_tmplt := svg_graph_xy(graph_obj,ret_tmplt);
                 
                 
             END IF;
@@ -2138,6 +2185,64 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           assnvar);
                     rows_added := 1;
                     push_vstack(assnvar, indx, 2, func, to_char(funcparam));
+--                WHEN func IN (
+--                    'REGRESS'
+--                ) THEN
+--                    where_txt := att || predicate;
+--                    from_txt := from_clause;
+--                    select_txt := tbl
+--                                  || '.'
+--                                  || entity_id_col
+--                                  || ','
+--                                  || 'REGR_SLOPE'
+--                                  || '('
+--                                  || prop
+--                                  || ', SYSDATE-'
+--                                  || dt_col
+--                                  || ') AS '
+--                                  || assnvar || '_b1'
+--                                  || ', '
+--                                  || 'REGR_INTERCEPT'
+--                                  || '('
+--                                  || prop
+--                                  || ', SYSDATE-'
+--                                  || dt_col
+--                                  || ') AS '
+--                                  || assnvar || '_b0'
+--                                  || ', '
+--                                  || 'REGR_R2'
+--                                  || '('
+--                                  || prop
+--                                  || ', SYSDATE-'
+--                                  || dt_col
+--                                  || ') AS '
+--                                  || assnvar || '_r2'
+--                                  || ' ';
+--
+--                    groupby_txt := tbl
+--                                   || '.'
+--                                   || entity_id_col;
+--                    
+--                    is_sub_val := 2;
+--                    
+--                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+--                                assnvar, is_sub_val, sqlstat, func, funcparam,
+--                                ruleid);
+--
+--
+--                    
+--                    rows_added := 1;
+--                    
+--                    
+--                    push_vstack(assnvar || '_b1', indx, 2, NULL, NULL);
+--                    push_vstack(assnvar || '_b0', indx, 2, NULL, NULL);
+--                    push_vstack(assnvar || '_r2', indx, 2, NULL, NULL);
+--                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+--                                              assnvar || '_b1');
+--                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+--                                              assnvar || '_b0');
+--                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+--                                              assnvar || '_r2');
                 WHEN func IN (
                     'SERIALIZE'
                 ) THEN
