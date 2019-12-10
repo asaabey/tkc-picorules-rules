@@ -2185,64 +2185,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                           assnvar);
                     rows_added := 1;
                     push_vstack(assnvar, indx, 2, func, to_char(funcparam));
---                WHEN func IN (
---                    'REGRESS'
---                ) THEN
---                    where_txt := att || predicate;
---                    from_txt := from_clause;
---                    select_txt := tbl
---                                  || '.'
---                                  || entity_id_col
---                                  || ','
---                                  || 'REGR_SLOPE'
---                                  || '('
---                                  || prop
---                                  || ', SYSDATE-'
---                                  || dt_col
---                                  || ') AS '
---                                  || assnvar || '_b1'
---                                  || ', '
---                                  || 'REGR_INTERCEPT'
---                                  || '('
---                                  || prop
---                                  || ', SYSDATE-'
---                                  || dt_col
---                                  || ') AS '
---                                  || assnvar || '_b0'
---                                  || ', '
---                                  || 'REGR_R2'
---                                  || '('
---                                  || prop
---                                  || ', SYSDATE-'
---                                  || dt_col
---                                  || ') AS '
---                                  || assnvar || '_r2'
---                                  || ' ';
---
---                    groupby_txt := tbl
---                                   || '.'
---                                   || entity_id_col;
---                    
---                    is_sub_val := 2;
---                    
---                    insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
---                                assnvar, is_sub_val, sqlstat, func, funcparam,
---                                ruleid);
---
---
---                    
---                    rows_added := 1;
---                    
---                    
---                    push_vstack(assnvar || '_b1', indx, 2, NULL, NULL);
---                    push_vstack(assnvar || '_b0', indx, 2, NULL, NULL);
---                    push_vstack(assnvar || '_r2', indx, 2, NULL, NULL);
---                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
---                                              assnvar || '_b1');
---                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
---                                              assnvar || '_b0');
---                    insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
---                                              assnvar || '_r2');
+
                 WHEN func IN (
                     'SERIALIZE'
                 ) THEN

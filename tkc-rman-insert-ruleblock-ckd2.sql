@@ -1207,12 +1207,6 @@ BEGIN
        creat2 => eadv.lab_bld_creatinine.val.lastdv(1).where(dt>sysdate-730);
        creat3 => eadv.lab_bld_creatinine.val.lastdv(2).where(dt>sysdate-730);
        
-      
-       
-       creat_min => eadv.lab_bld_creatinine.val.minldv();
-       creat_max => eadv.lab_bld_creatinine.val.maxldv();
-       
-       
        uacr1 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-730);
        uacr2 => eadv.lab_ua_acr.val.lastdv(1).where(dt>sysdate-730);
        uacr3 => eadv.lab_ua_acr.val.lastdv(2).where(dt>sysdate-730);
@@ -1220,7 +1214,7 @@ BEGIN
        uacr_min => eadv.lab_ua_acr.val.minldv();
        uacr_max => eadv.lab_ua_acr.val.maxldv();
        
-       
+      
        sodium1 => eadv.lab_bld_sodium.val.lastdv().where(dt>sysdate-730);
        sodium2 => eadv.lab_bld_sodium.val.lastdv(1).where(dt>sysdate-730);
        sodium3 => eadv.lab_bld_sodium.val.lastdv(2).where(dt>sysdate-730);
@@ -1243,12 +1237,16 @@ BEGIN
        bicarb_min => eadv.lab_bld_bicarbonate.val.minldv();
        bicarb_max => eadv.lab_bld_bicarbonate.val.maxldv();
        
-       calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
+        calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
        calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
        calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
        
        calcium_min => eadv.lab_bld_calcium.val.minldv();
        calcium_max => eadv.lab_bld_calcium.val.maxldv();
+       
+       
+       
+       
        
        phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
        phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
@@ -1273,7 +1271,7 @@ BEGIN
        ferritin_max => eadv.lab_bld_phosphate.val.maxldv();
        
        
-       ckd_labs : {coalesce(egfr1_val,egfr2_val,egfr3_val)>0 =>1 },{=>0};
+       ckd_labs : {1=1 =>1 };
        
        
      
