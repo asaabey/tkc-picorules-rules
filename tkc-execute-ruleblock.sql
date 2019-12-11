@@ -66,15 +66,15 @@ BEGIN
 
 --    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
---rman_pckg.execute_ruleblock(
---        bid_in => 'egfr_graph2',
---        create_wide_tbl => 1,
---        push_to_long_tbl =>0,
---        push_to_long_tbl2=>0,
---        recompile=>1,
---        return_code=>ret_val
---); 
-----    
+rman_pckg.execute_ruleblock(
+        bid_in => 'multi_graph',
+        create_wide_tbl => 1,
+        push_to_long_tbl =>0,
+        push_to_long_tbl2=>0,
+        recompile=>1,
+        return_code=>ret_val
+); 
+--    
 /*
     Execute all active ruleblock 
     order determined by execution order
@@ -85,7 +85,7 @@ BEGIN
 --        rman_pckg.execute_active_ruleblocks;
 */
 
-        rman_pckg.execute_active_ruleblocks; 
+--        rman_pckg.execute_active_ruleblocks; 
 
 
     DBMS_OUTPUT.PUT_LINE('Exec');

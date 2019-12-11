@@ -1199,6 +1199,7 @@ BEGIN
             }
         );
 
+
        egfr1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt>sysdate-730);
        egfr2 => eadv.lab_bld_egfr_c.val.lastdv(1).where(dt>sysdate-730);
        egfr3 => eadv.lab_bld_egfr_c.val.lastdv(2).where(dt>sysdate-730);
@@ -1206,6 +1207,8 @@ BEGIN
        creat1 => eadv.lab_bld_creatinine.val.lastdv().where(dt>sysdate-730);
        creat2 => eadv.lab_bld_creatinine.val.lastdv(1).where(dt>sysdate-730);
        creat3 => eadv.lab_bld_creatinine.val.lastdv(2).where(dt>sysdate-730);
+       
+
        
        uacr1 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-730);
        uacr2 => eadv.lab_ua_acr.val.lastdv(1).where(dt>sysdate-730);
@@ -1222,6 +1225,13 @@ BEGIN
        sodium_min => eadv.lab_bld_sodium.val.minldv();
        sodium_max => eadv.lab_bld_sodium.val.maxldv();
        
+       sodium_ref_u : {1=1 =>140};
+       sodium_ref_l : {1=1 =>130};
+       sodium_mu : {1=1 => (sodium_ref_u + sodium_ref_l)/2};
+       
+       sodium1_x : { 1=1 => round(( 200/sodium_mu) * sodium1_val,0)};
+       sodium2_x : { 1=1 => round(( 200/sodium_mu) * sodium2_val,0)};
+       
        
        potassium1 => eadv.lab_bld_potassium.val.lastdv().where(dt>sysdate-730);
        potassium2 => eadv.lab_bld_potassium.val.lastdv(1).where(dt>sysdate-730);
@@ -1237,17 +1247,13 @@ BEGIN
        bicarb_min => eadv.lab_bld_bicarbonate.val.minldv();
        bicarb_max => eadv.lab_bld_bicarbonate.val.maxldv();
        
-        calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
+       calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
        calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
        calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
        
        calcium_min => eadv.lab_bld_calcium.val.minldv();
        calcium_max => eadv.lab_bld_calcium.val.maxldv();
-       
-       
-       
-       
-       
+
        phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
        phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
        phos3 => eadv.lab_bld_phosphate.val.lastdv(2).where(dt>sysdate-730);
@@ -1269,9 +1275,8 @@ BEGIN
        
        ferritin_min => eadv.lab_bld_phosphate.val.minldv();
        ferritin_max => eadv.lab_bld_phosphate.val.maxldv();
-       
-       
-       ckd_labs : {1=1 =>1 };
+
+       ckd_labs : {egfr1_val is not null => 1 },{=>0};
        
        
      

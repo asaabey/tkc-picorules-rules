@@ -469,6 +469,66 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='multi_graph';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to compute multi_graph  */
+        
+            
+             #define_ruleblock(multi_graph,
+                {
+                    description: "Algorithm to show multi_graph",
+                    version: "0.0.1.1",
+                    blockid: "multi_graph",
+                    target_table:"rout_multi_graph",
+                    environment:"DEV_2",
+                    rule_owner:"TKCADMIN",
+                    is_active:2,
+                    def_exit_prop:"multi_graph",
+                    def_predicate:">0",
+                    exec_order:2
+                    
+                }
+            );
+            
+
+            
+            hb0 => eadv.lab_bld_hb.val.lastdv();
+            
+            hb1 => eadv.lab_bld_hb.val.lastdv(1);
+            
+            hb_ref_u : {1=1 =>150};
+            
+            hb_ref_l : {1=1 =>100};
+            
+            hb_mu : {1=1 => (hb_ref_u + hb_ref_l)/2};
+            
+            hb0_y : { 1=1 => (300/hb_mu) * hb0_val};
+            
+            hb1_y : { 1=1 => (300/hb_mu) * hb1_val};
+            
+            multi_graph_canvas_x : {1=1 => 350};
+            
+            multi_graph_canvas_y : {1=1 => 100};
+            
+            
+            
+            multi_graph : { hb0_val>0 =>1},{=>0};
+            
+            
+            
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

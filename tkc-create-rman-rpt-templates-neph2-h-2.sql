@@ -816,14 +816,25 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','ckd_labs_tbl2','ckd_labs',661101,'dev','tkc',TO_DATE(SYSDATE),
     '
         <tr class="syn_tr">
-            <td>Sodium (mmol/l)</td>
+            <td>
+                Sodium (mmol/l)
+                <svg height="60" width="400">
+                  <rect x="150" y="30" width="100" height="30" style="fill:green;stroke:green;stroke-width:2;fill-opacity:0.1;stroke-opacity:0.9" />
+                  <circle cx="<<sodium2_x />>" cy="45" r="10" stroke="none" stroke-width="2" fill="red" fill-opacity="0.3" />
+                  <circle cx="<<sodium1_x />>" cy="45" r="10" stroke="black" stroke-width="2" fill="red" />
+                  <line x1="<<sodium2_x />>" y1="45" x2="<<sodium1_x />>" y2="45" style="stroke:black;stroke-width:2;stroke-dasharray:1,2" />
+                  
+                  <text x="150" y="15" text-anchor="middle" font-size="smaller"><<sodium_ref_l />></text>
+                  <text x="250" y="15" text-anchor="middle" font-size="smaller"><<sodium_ref_u />></text>
+    
+                </svg>
+            </td>
             <td><<sodium1_val>><strong><<sodium1_val />></strong> (<<sodium1_dt />>)<</sodium1_val>></td>
             <td><<sodium2_val>><strong><<sodium2_val />></strong> (<<sodium2_dt />>)<</sodium2_val>></td>
             <td><<sodium3_val>><strong><<sodium3_val />></strong> (<<sodium3_dt />>)<</sodium3_val>></td>
             <td>
                 <<sodium_min_val>><div><strong><<sodium_min_val />></strong>(<<sodium_min_dt />>)</div><</sodium_min_val>>
                 <<sodium_max_val>><div><strong><<sodium_max_val />></strong>(<<sodium_max_dt />>)</div></td><</sodium_max_val>>
-            <td> </td>
         </tr>
         <tr class="syn_tr">
             <td>Potassium (mmol/l)</td>
@@ -836,6 +847,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             </td>
         <td> </td>
         </tr>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','ckd_labs_tbl3','ckd_labs',661102,'dev','tkc',TO_DATE(SYSDATE),
+    '
         <tr class="syn_tr">
             <td>CO2 (mmol/l)</td>
             <td><<bicarb1_val>><strong><<bicarb1_val />></strong> (<<bicarb1_dt />>)<</bicarb1_val>></td>
