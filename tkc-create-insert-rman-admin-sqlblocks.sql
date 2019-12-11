@@ -163,6 +163,31 @@ INSERT INTO rman_admin_sqlblocks VALUES(
 );
 
 INSERT INTO rman_admin_sqlblocks VALUES(
+    139,
+    'MERGE INTO eadv t1
+        USING (
+        SELECT
+            lr.linked_registrations_id as eid,
+            rcm.ncomp  as att,
+            date_recorded as dt,
+            round(result,0) as val
+        FROM
+            patient_results_derived prd
+        JOIN    patient_registrations pr on pr.id=prd.patient_registration_id
+        JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
+        JOIN    rman_comp_map rcm on rcm.key=prd.derivedresultname
+        WHERE   prd.derivedresultname in (''eGFR KDIGO'',''BMI'')
+        ) t2
+        ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
+        WHEN NOT MATCHED THEN
+        INSERT (EID,ATT,DT,VAL) VALUES (t2.eid, t2.att,t2.dt,t2.val)',
+    'Merge derived results',
+    'build eadv',
+    1,
+    ''    
+);
+
+INSERT INTO rman_admin_sqlblocks VALUES(
     123,
     'MERGE INTO eadv t1
         USING (

@@ -1375,7 +1375,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         xline_str_arr_in   VARCHAR(1000);
         yline_str_arr_in   VARCHAR(1000);
         
-        graph_obj          graph_obj_type:=graph_obj_type();
+        graph_obj          graph_obj_type;
     BEGIN
         ret_tmplt := replace(ret_tmplt, chr(10), '');
         ret_tmplt := replace(ret_tmplt, chr(13), '');

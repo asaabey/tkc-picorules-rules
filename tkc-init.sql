@@ -9,7 +9,6 @@
 @"tkc-create-rman-rpt-templates-neph2-h-2.sql";
 @"tkc-create-rman-comp-map.sql";
 
-
 @"tkc-rman-insert-ruleblock-cd2.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
@@ -17,6 +16,7 @@
 @"tkc-rman-insert-ruleblock-dmg.sql";
 @"tkc-rman-insert-ruleblock-rx.sql";
 @"tkc-rman-insert-ruleblock-graph.sql";
+@"tkc-rman-insert-ruleblock-metrics";
 
 
 @"tkc-create-insert-rman-admin-sqlblocks";
@@ -24,6 +24,8 @@
 @"tkc-create-rman-ruleblocks-citations.sql";
 
 @"tkc-create-package-rman-1.sql";
+
+ANALYZE table eadv compute statistics;
 
 exec rman_pckg.compile_active_ruleblocks;
 
