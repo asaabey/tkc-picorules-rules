@@ -32,7 +32,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"dm",
                 def_predicate:">0",
-                exec_order:2
+                exec_order:1
                 
             }
         );

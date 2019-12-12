@@ -73,6 +73,56 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                     width:200;
                     
                 }
+                
+                .svg_lab_panel {
+                    height:60;
+                    width:400;
+                }
+                
+                .svg_lab_panel_rect {
+                    width:100;
+                    height:30;
+                    fill:green;
+                    stroke:green;
+                    stroke-width:2;
+                    fill-opacity:0.1;
+                    stroke-opacity:0.9;
+                    x:150;
+                    y:30;
+                }
+                
+                .svg_lab_panel_circle1 {
+                    cy:45;
+                    r:10;
+                    stroke:none;
+                    stroke-width:2;
+                    fill:red;
+                    fill-opacity:0.3;
+                }
+                
+                .svg_lab_panel_circle2 {
+                    cy:45;
+                    r:10;
+                    stroke:none;
+                    stroke-width:2;
+                    fill:red;
+                }
+                
+                .svg_lab_panel_line {
+                    y1:45;
+                    y2:45;
+                    stroke:black;
+                    stroke-width:2;
+                    stroke-dasharray:1,2;
+                }
+                
+                .svg_lab_panel_text {
+                    text-anchor:middle;
+                    font-size:smaller;
+                    
+                }
+                
+                
     </style>
     
     '
@@ -473,10 +523,30 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                     <<aet_htn=1>><li>hypertension</li><</aet_htn=1>>
                     <<aet_gn_ln=1>><li>lupus nephritis</li><</aet_gn_ln=1>>
                     <<aet_gn_x=1>><li>glomerulopathy NOS</li><</aet_gn_x=1>>
+                    <<c_n00>><li>Acute nephritic syndrome <<c_n00 />></li><</c_n00>>
+                    <<c_n01>><li>Rapidly progressive nephritic syndrome <<c_n01 />></li><</c_n01>>
+                    <<c_n03>><li>Chronic nephritic syndrome <<c_n03 />></li><</c_n03>>
+                    <<c_n04>><li>Nephrotic syndrome <<c_n04 />></li><</c_n04>>
+                    <<c_n05>><li>Unspecified nephritic syndrome <<c_n05 />></li><</c_n05>>
+                    <<c_n07>><li>Hereditary nephropathy, not elsewhere classified <<c_n07 />></li><</c_n07>>
+                    <<c_n08>><li>Glomerular disorders in diseases classified elsewhere <<c_n08 />></li><</c_n08>>
+                    <<c_n10_n16>><li>Renal tubulo-interstitial diseases <<c_n10_n16 />></li><</c_n10_n16>>
+                    <<c_n17>><li>Acute kidney failure and chronic kidney disease <<c_n17 />></li><</c_n17>>
+                    <<c_n20_n23>><li>Urolithiasis <<c_n20_n23 />></li><</c_n20_n23>>
+                    <<c_n26_n26>><li>Unspecified contracted kidney <<c_n26_n27 />></li><</c_n26_n27>>
+                    <<c_n30_n39>><li>Other diseases of the urinary system including bladder dysfunction<<c_n30_n39 />></li><</c_n30_n39>>
+                    <<c_n40>><li>Benign prostatic hyperplasia <<c_n40 />></li><</c_n40>>
+                    <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_c_q60>>
+                    <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
+                    <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
+                    <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_c_q63>>
+                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_c_q64>>
                 </ul></li>
                 <</aet_multiple=1>>
                 <<aet_multiple=0>>
-                    <li>The likely cause is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>><<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong></li>
+                    <li>
+                        The likely cause is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>>
+                        <<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong></li>
                 <</aet_multiple=0>>
             </ul>
         </li>
@@ -817,9 +887,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
         <tr class="syn_tr">
             <td>
-                Sodium (mmol/l)
-                <svg height="60" width="400">
-                  <rect x="150" y="30" width="100" height="30" style="fill:green;stroke:green;stroke-width:2;fill-opacity:0.1;stroke-opacity:0.9" />
+                <div>Sodium (mmol/l)</div>
+                <svg class="svg_lab_panel">
+                  <rect class="svg_lab_panel_rect" />
                   <circle cx="<<sodium2_x />>" cy="45" r="10" stroke="none" stroke-width="2" fill="red" fill-opacity="0.3" />
                   <circle cx="<<sodium1_x />>" cy="45" r="10" stroke="black" stroke-width="2" fill="red" />
                   <line x1="<<sodium2_x />>" y1="45" x2="<<sodium1_x />>" y2="45" style="stroke:black;stroke-width:2;stroke-dasharray:1,2" />
@@ -837,7 +907,20 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <<sodium_max_val>><div><strong><<sodium_max_val />></strong>(<<sodium_max_dt />>)</div></td><</sodium_max_val>>
         </tr>
         <tr class="syn_tr">
-            <td>Potassium (mmol/l)</td>
+            <td>
+            <div>Potassium (mmol/l)</div>
+                <svg class="svg_lab_panel">
+                  <rect class="svg_lab_panel_rect" />
+                  <circle class="svg_lab_panel_circle1" cx="<<potassium1_x />>" />
+                  <circle class="svg_lab_panel_circle2" cx="<<potassium2_x />>" />
+                  <line class="svg_lab_panel_line" x1="<<potassium2_x />>" x2="<<potassium1_x />>"  />
+                  
+                  <text x="150" y="15" class="svg_lab_panel_text"><<potassium_ref_l />></text>
+                  <text x="250" y="15" class="svg_lab_panel_text"><<potassium_ref_u />></text>
+    
+                </svg>
+            
+            </td>
             <td><<potassium1_val>><strong><<potassium1_val />></strong> (<<potassium1_dt />>)<</potassium1_val>></td>
             <td><<potassium2_val>><strong><<potassium2_val />></strong> (<<potassium2_dt />>)<</potassium2_val>></td>
             <td><<potassium3_val>><strong><<potassium3_val />></strong> (<<potassium3_dt />>)<</potassium3_val>></td>

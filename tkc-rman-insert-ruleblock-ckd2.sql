@@ -635,6 +635,47 @@ BEGIN
      gn_ln => eadv.icd_m32_14.dt.count(0); 
      gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
      
+     c_n00 => eadv.[icd_n00%].dt.min();
+     
+     c_n01 => eadv.[icd_n01%].dt.min();
+     
+     c_n03 => eadv.[icd_n03%].dt.min();
+     
+     c_n04 => eadv.[icd_n04%].dt.min();
+     
+     c_n05 => eadv.[icd_n05%].dt.min();
+     
+     c_n07 => eadv.[icd_n07%].dt.min();
+     
+     c_n08 => eadv.[icd_n08%].dt.min();
+     
+     c_n10_n16 => eadv.[icd_n10%,icd_n11%,icd_n12%,icd_n13%,icd_n14%,icd_n15%,icd_n16%].dt.min();
+     
+     c_n17 => eadv.[icd_n17%].dt.min();
+     
+     c_n20_n23 => eadv.[icd_n20%,icd_n21%,icd_n22%,icd_n23%].dt.min();
+     
+     c_n26_n27 => eadv.[icd_n26%,icd_n27%].dt.min();
+     
+     c_n30_n39 => eadv.[icd_n3%].dt.min();
+     
+     c_n40 => eadv.[icd_n40%].dt.min();
+     
+     c_q60 => eadv.[icd_q60%].dt.min();
+     
+     c_q61 => eadv.[icd_q61%].dt.min();
+     
+     c_q62 => eadv.[icd_q62%].dt.min();
+     
+     c_q63 => eadv.[icd_q63%].dt.min();
+     
+     c_q64 => eadv.[icd_q64%].dt.min();
+     
+     
+     
+     
+     
+     
      
      aet_dm : {ckd>0 and dm>0 =>1},{=>0};
      
@@ -1232,6 +1273,8 @@ BEGIN
        sodium1_x : { 1=1 => round(( 200/sodium_mu) * sodium1_val,0)};
        sodium2_x : { 1=1 => round(( 200/sodium_mu) * sodium2_val,0)};
        
+       sodium_min_x : { 1=1 => round(( 200/sodium_mu) * sodium_min_val,0)};
+       sodium_max_x : { 1=1 => round(( 200/sodium_mu) * sodium_max_val,0)};
        
        potassium1 => eadv.lab_bld_potassium.val.lastdv().where(dt>sysdate-730);
        potassium2 => eadv.lab_bld_potassium.val.lastdv(1).where(dt>sysdate-730);
@@ -1239,6 +1282,16 @@ BEGIN
        
        potassium_min => eadv.lab_bld_potassium.val.minldv();
        potassium_max => eadv.lab_bld_potassium.val.maxldv();
+       
+       potassium_ref_u : {1=1 =>5.5};
+       potassium_ref_l : {1=1 =>3.5};
+       potassium_mu : {1=1 => (potassium_ref_u + potassium_ref_l)/2};
+       
+       potassium1_x : { 1=1 => round(( 200/potassium_mu) * potassium1_val,0)};
+       potassium2_x : { 1=1 => round(( 200/potassium_mu) * potassium2_val,0)};
+       
+       potassium_min_x : { 1=1 => round(( 200/potassium_mu) * potassium_min_val,0)};
+       potassium_max_x : { 1=1 => round(( 200/potassium_mu) * potassium_max_val,0)};
        
        bicarb1 => eadv.lab_bld_bicarbonate.val.lastdv().where(dt>sysdate-730);
        bicarb2 => eadv.lab_bld_bicarbonate.val.lastdv(1).where(dt>sysdate-730);
@@ -1276,7 +1329,7 @@ BEGIN
        ferritin_min => eadv.lab_bld_phosphate.val.minldv();
        ferritin_max => eadv.lab_bld_phosphate.val.maxldv();
 
-       ckd_labs : {egfr1_val is not null => 1 },{=>0};
+       ckd_labs : {nvl(egfr1_val,0)>0 and nvl(egfr2_val,0)>0 => 1 },{=>0};
        
        
      
