@@ -187,6 +187,8 @@ Change Log
 05/12/2019  populate eadv is running of rman_admin_sqlblocks
 06/12/2019  svg_graph functions
 09/12/2019  graph_obj_type added
+14/12/2019  get_composite_sql string buffer overflow fixed
+14/12/2019  nvarchar2 replaced with varchar2
 
 */
     TYPE eadvx_tbl_type IS
@@ -215,7 +217,7 @@ Change Log
     tstack_empty tstack_type := tstack_type();
     TYPE cite_stack_type IS
         TABLE OF VARCHAR2(100);
-    cmpstat NVARCHAR2(4000);
+    cmpstat varchar2(4000);
     rman_index PLS_INTEGER := 0;
     assn_op CONSTANT VARCHAR2(2) := '=>';
     like_op CONSTANT CHAR := '%';
@@ -278,12 +280,15 @@ Change Log
         canvas_y PLS_INTEGER
     );
     
+
     PROCEDURE parse_rpipe (
-        sqlout OUT VARCHAR2
+--        sqlout OUT VARCHAR2
+        sqlout OUT CLOB
     );
 
     PROCEDURE get_composite_sql (
-        cmpstat OUT NVARCHAR2
+--        cmpstat OUT varchar2
+        cmpstat OUT CLOB
     );
 
     FUNCTION sql_predicate (
@@ -318,7 +323,7 @@ Change Log
 
     FUNCTION get_cte_name (
         indx BINARY_INTEGER
-    ) RETURN NVARCHAR2;
+    ) RETURN varchar2;
 
     FUNCTION trim_comments (
         txtin CLOB
@@ -368,13 +373,13 @@ Change Log
 
     PROCEDURE insert_rman (
         indx             INT,
-        where_clause     NVARCHAR2,
-        from_clause      NVARCHAR2,
-        select_clause    NVARCHAR2,
-        groupby_clause   NVARCHAR2,
-        varid            NVARCHAR2,
+        where_clause     varchar2,
+        from_clause      varchar2,
+        select_clause    varchar2,
+        groupby_clause   varchar2,
+        varid            varchar2,
         is_sub           INT,
-        sqlstat          OUT NVARCHAR2,
+        sqlstat          OUT varchar2,
         agg_func         VARCHAR2,
         func_param       VARCHAR2,
         ruleid           VARCHAR2
@@ -698,7 +703,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     FUNCTION get_cte_name (
         indx BINARY_INTEGER
-    ) RETURN NVARCHAR2 AS
+    ) RETURN varchar2 AS
     BEGIN
         RETURN 'CTE'
                || lpad(indx, 3, 0);
@@ -857,10 +862,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END get_hash;
 
     PROCEDURE get_composite_sql (
-        cmpstat OUT NVARCHAR2
+--        cmpstat OUT varchar2
+        cmpstat OUT CLOB
     ) IS
         rmanobj   rman_tbl_type;
-        ctename   NVARCHAR2(20);
+        ctename   varchar2(20);
     BEGIN
         SELECT
             id,
@@ -981,6 +987,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     -- Add the left outer joins
         FOR i IN rmanobj.first..rmanobj.last LOOP
             ctename := get_cte_name(i);
+            
+            
             IF rmanobj(i).is_sub = 0 OR rmanobj(i).is_sub = 2 THEN
                 IF is_tempvar(rmanobj(i).varid) = false AND is_selected_var(rmanobj(i).varid, rmanobj(i).is_sub) = true THEN
                     cmpstat := cmpstat
@@ -1008,13 +1016,13 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     PROCEDURE insert_rman (
         indx             INT,
-        where_clause     NVARCHAR2,
-        from_clause      NVARCHAR2,
-        select_clause    NVARCHAR2,
-        groupby_clause   NVARCHAR2,
-        varid            NVARCHAR2,
+        where_clause     varchar2,
+        from_clause      varchar2,
+        select_clause    varchar2,
+        groupby_clause   varchar2,
+        varid            varchar2,
         is_sub           INT,
-        sqlstat          OUT NVARCHAR2,
+        sqlstat          OUT varchar2,
         agg_func         VARCHAR2,
         func_param       VARCHAR2,
         ruleid           VARCHAR2
@@ -1906,12 +1914,12 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         left_tbl_name := tbl;
         build_assn_var2(txtin, '=>', left_tbl_name, from_clause, avn);
         assnvar := sanitise_varname(avn);
-        dbms_output.put_line('func_build -> '
-                             || assnvar
-                             || ' funcparam_str:'
-                             || funcparam_str
-                             || ' funcparam:'
-                             || funcparam);
+--        dbms_output.put_line('func_build -> '
+--                             || assnvar
+--                             || ' funcparam_str:'
+--                             || funcparam_str
+--                             || ' funcparam:'
+--                             || funcparam);
 
         IF substr(tbl, 1, 5) = 'ROUT_' AND func = 'BIND' THEN
             where_txt := '';
@@ -1970,8 +1978,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 WHEN func = 'LAST' OR func = 'FIRST' OR func = 'EXISTS' THEN
                     DECLARE
                         rankindx        NUMBER;
-                        sortdirection   NVARCHAR2(4) := 'DESC';
-                        ctename         NVARCHAR2(20);
+                        sortdirection   varchar2(4) := 'DESC';
+                        ctename         varchar2(20);
                     BEGIN
                         IF funcparam = 0 THEN
                             rankindx := 1;
@@ -2044,7 +2052,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 ) THEN
                     DECLARE
                         rankindx   NUMBER;
-                        ctename    NVARCHAR2(20);
+                        ctename    varchar2(20);
                     BEGIN
                         CASE func
                             WHEN 'FIRSTDV' THEN
@@ -2290,7 +2298,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 ) THEN
                     DECLARE
                         rankindx   NUMBER;
-                        ctename    NVARCHAR2(20);
+                        ctename    varchar2(20);
                     BEGIN
                         CASE func
                             WHEN 'MAX_POS_DELTA_DV' THEN
@@ -2353,6 +2361,104 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         select_txt := entity_id_col
                                       || ','
                                       || 'VAL_D'
+                                      || ' AS '
+                                      || assnvar
+                                      || '_VAL ,'
+                                      || dt_col
+                                      || ' AS '
+                                      || assnvar
+                                      || '_DT ';
+
+                        groupby_txt := '';
+                        is_sub_val := 2;
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                    assnvar, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
+
+                        rows_added := 1;
+                        push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
+                        push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_val');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_dt');
+                    END;
+                    WHEN func IN (
+                    'MAX_DELTA_DV'
+                    ) THEN
+                    DECLARE
+                        rankindx   NUMBER;
+                        ctename    varchar2(20);
+                        delta_col  VARCHAR2(100); 
+                    BEGIN
+                        dbms_output.put_line(
+                            '--------> ' || prop
+                        );
+                        
+                        CASE prop
+                            WHEN 'dt' THEN
+                                delta_col:=dt_col;
+                            WHEN 'val' THEN
+                                delta_col:=val_col;
+                        END CASE;
+
+                        IF funcparam = 0 THEN
+                            rankindx := 1;
+                        ELSE
+                            rankindx := funcparam + 1;
+                        END IF;
+
+                        ctename := get_cte_name(indx);
+                        where_txt := ' RN=' || rankindx;
+                        from_txt := '(SELECT '
+                                    || entity_id_col
+                                    || ','
+                                    || att_col
+                                    || ','
+                                    || dt_col
+                                    || ','
+                                    || delta_col
+                                    || '-NVL(LG,'
+                                    || delta_col
+                                    || ') AS VAL,'
+                                    || ' DENSE_RANK() OVER(PARTITION BY '
+                                    || entity_id_col
+                                    || ' ORDER BY '
+                                    || delta_col
+                                    || '-NVL('
+                                    || 'LG,'
+                                    || delta_col
+                                    || ') DESC '
+                                    || ') AS RN '
+                                    || ' FROM ('
+                                    || 'SELECT '
+                                    || entity_id_col
+                                    || ', '
+                                    || att_col
+                                    || ', '
+                                    || dt_col
+                                    || ', '
+                                    || val_col
+                                    || ', LAG('
+                                    || delta_col
+                                    || ') OVER (PARTITION BY '
+                                    ||  entity_id_col
+                                    || ','
+                                    || att_col
+                                    || ' ORDER BY ' 
+                                    || dt_col
+                                    || ') AS LG FROM '
+                                    || tbl
+                                    || ') WHERE '
+                                    || att_col 
+                                    || ' = '''
+                                    || att0
+                                    || ''' ) ';
+                                    
+                                    
+                        select_txt := entity_id_col
+                                      || ','
+                                      || 'VAL'
                                       || ' AS '
                                       || assnvar
                                       || '_VAL ,'
@@ -2618,7 +2724,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     END build_compiler_exp;
 
     PROCEDURE parse_rpipe (
-        sqlout OUT VARCHAR2
+--        sqlout OUT VARCHAR2
+        sqlout OUT CLOB
     ) IS
 
         rpipe_col        rpipe_tbl_type;
@@ -3993,6 +4100,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         IF tbl_exists_val > 0 THEN
             EXECUTE IMMEDIATE 'DROP TABLE ' || tbl_name;
         END IF;
+        
+--        dbms_output.put_line('------------> len sql stat:' || length(create_tbl_sql_str));
+        
         EXECUTE IMMEDIATE create_tbl_sql_str;
         COMMIT;
         tstack.extend;
@@ -4258,11 +4368,14 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
             EXECUTE IMMEDIATE 'DROP INDEX "EADVX_ATT_IDX"';
             EXECUTE IMMEDIATE 'DROP INDEX "EADVX_EID_IDX"';
+            
+            EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
+            
             FOR i IN rbs.first..rbs.last LOOP BEGIN
                 bid := rbs(i).blockid;
                 execute_ruleblock(bid, 1, 1, 0, 0,
                                   execute_return_code);
-                dbms_output.put_line('rb: ' || bid);
+--                dbms_output.put_line('rb: ' || bid);
             EXCEPTION
                 WHEN OTHERS THEN
                     commit_log('execute_active_ruleblocks', bid, 'Error:');
@@ -5071,7 +5184,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     PROCEDURE populate_eadv_tables IS
         table_exist   INT;
-        schemaname    NVARCHAR2(100);
+        schemaname    varchar2(100);
     BEGIN
         SELECT
             user
