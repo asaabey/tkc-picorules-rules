@@ -7,9 +7,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.7
+Version		    1.0.1.8
 Creation date	07/04/2019
-update on date  10/12/2019
+update on date  15/12/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -189,6 +189,7 @@ Change Log
 09/12/2019  graph_obj_type added
 14/12/2019  get_composite_sql string buffer overflow fixed
 14/12/2019  nvarchar2 replaced with varchar2
+15/12/2019  implemented match_recognize with match((pattern)~define)
 
 */
     TYPE eadvx_tbl_type IS
@@ -1804,8 +1805,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     ) AS
         varr tbl_type;
     BEGIN
-        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '[', ']');
-
+--        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '[', ']');
+        varr := rman_pckg.splitstr(trim(substr(txtin, instr(txtin, assn_op) + length(assn_op))), '.', '(', ')');
         IF varr.count = 5 THEN
             tbl := upper(varr(1));
             att := varr(2);
@@ -1914,12 +1915,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         left_tbl_name := tbl;
         build_assn_var2(txtin, '=>', left_tbl_name, from_clause, avn);
         assnvar := sanitise_varname(avn);
---        dbms_output.put_line('func_build -> '
---                             || assnvar
---                             || ' funcparam_str:'
---                             || funcparam_str
---                             || ' funcparam:'
---                             || funcparam);
+
 
         IF substr(tbl, 1, 5) = 'ROUT_' AND func = 'BIND' THEN
             where_txt := '';
@@ -2391,9 +2387,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ctename    varchar2(20);
                         delta_col  VARCHAR2(100); 
                     BEGIN
-                        dbms_output.put_line(
-                            '--------> ' || prop
-                        );
+
                         
                         CASE prop
                             WHEN 'dt' THEN
@@ -2468,6 +2462,69 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                       || '_DT ';
 
                         groupby_txt := '';
+                        is_sub_val := 2;
+                        insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
+                                    assnvar, is_sub_val, sqlstat, func, funcparam,
+                                    ruleid);
+
+                        rows_added := 1;
+                        push_vstack(assnvar || '_val', indx, 2, NULL, NULL);
+                        push_vstack(assnvar || '_dt', indx, 2, NULL, NULL);
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_val');
+                        insert_ruleblocks_dep(blockid, tbl, att_col, att0, func,
+                                              assnvar || '_dt');
+                    END;
+                    WHEN func IN (
+                    'MATCH'
+                    ) THEN
+                    DECLARE
+                        rankindx   NUMBER;
+                        ctename    varchar2(20);                        
+                        pat_str    VARCHAR2(40);
+                        def_str    VARCHAR2(1000);
+                    BEGIN
+                        IF length(funcparam_str) > 0 THEN
+                        pat_str := 'PATTERN ' || substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
+
+                        def_str := 'DEFINE ' || substr(funcparam_str, instr(funcparam_str, '~') + 1);
+                        END IF;
+                        
+
+                        ctename := get_cte_name(indx);
+                        where_txt := '';
+                        from_txt :=  '(SELECT '
+                                     || entity_id_col
+                                     || ',ps_dt FROM '
+                                     || tbl
+                                     || ' MATCH_RECOGNIZE (PARTITION BY '
+                                     || entity_id_col
+                                     || ','
+                                     || att_col
+                                     || ' ORDER BY '
+                                     || dt_col
+                                     || '  MEASURES FIRST('
+                                     || dt_col
+                                     || ') AS ps_dt '
+                                     || pat_str
+                                     || ' '
+                                     || def_str
+                                     || ') WHERE ' 
+                                     || att_col
+                                     || '='''
+                                     || att0
+                                     || ''') ';
+                                    
+                        select_txt := entity_id_col
+                                    || ' ,MIN(ps_dt) AS '
+                                    || assnvar
+                                    || '_DT,COUNT(ps_dt) AS '
+                                    || assnvar
+                                    || '_VAL '; 
+                                    
+
+
+                        groupby_txt := entity_id_col;
                         is_sub_val := 2;
                         insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
                                     assnvar, is_sub_val, sqlstat, func, funcparam,

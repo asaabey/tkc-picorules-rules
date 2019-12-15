@@ -39,11 +39,15 @@ BEGIN
             }
         );
         
-        i49_min => eadv.icd_z49_1.dt.min();
         
-        i49_gap => eadv.icd_z49_1.dt.max_delta_dv();
         
-        creat_gap => eadv.lab_bld_creatinine.val.max_delta_dv();
+        
+        
+        creat_pat => eadv.lab_bld_creatinine.val.match((p1+p2+p3+)~ 
+            p1 AS ( val * 80/100 < prev(val) ),
+            p2 AS ( val * 80/100 > prev(val) ),
+            p3 AS ( val * 80/100 < prev(val) )
+            );
         
         
         test1 : {1=1 =>1};
