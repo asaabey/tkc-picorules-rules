@@ -598,7 +598,6 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         ignore_left    IN   CHAR DEFAULT '[',
         ignore_right   IN   CHAR DEFAULT ']'
     ) RETURN tbl_type AS
-
         splitted           tbl_type := tbl_type();
         i                  PLS_INTEGER := 0;
         list_              VARCHAR2(32767) := trim(list);
@@ -4423,8 +4422,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
-            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_ATT_IDX"';
-            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_EID_IDX"';
+--            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_ATT_IDX"';
+--            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_EID_IDX"';
             
             EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
             
@@ -4443,8 +4442,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             END;
             END LOOP;
 
-            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_ATT_IDX" ON "EADVX" ("ATT")';
-            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_EID_IDX" ON "EADVX" ("EID")';
+--            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_ATT_IDX" ON "EADVX" ("ATT")';
+--            EXECUTE IMMEDIATE 'CREATE BITMAP INDEX "EADVX_EID_IDX" ON "EADVX" ("EID")';
 --            drop_rout_tables;
         ELSE
             commit_log('execute_active_ruleblocks', '', 'Exiting with NULL Ruleblocks');
