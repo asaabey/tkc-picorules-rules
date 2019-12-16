@@ -92,7 +92,20 @@ BEGIN
         
         dm_icpc => eadv.[icpc_t89%,icpc_t90%].dt.count(0);
         
+        
+        
         dm_code_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
+        
+        dm_type_1 => eadv.[icpc_t89%,icd_e10%].dt.count(0);
+        
+        
+        #doc(,
+            {
+                txt :"Code criteria for Gestational DM"
+            }
+        );
+        
+        gdm_code_fd => eadv.[icd_O24%,icpc_w85001,icpc_w85002].dt.min();
         
         #doc(,
             {
@@ -101,10 +114,19 @@ BEGIN
             }
         );
        
+        gluc_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>=65/10);
         
+        gluc_fasting => eadv.lab_bld_glucose_fasting.val.count(0).where(val>=7);
         
-        dm_lab => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>65/10);
-        dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min().where(val>65/10);
+        gluc_random => eadv.lab_bld_glucose_random.val.count(0).where(val>=111/10);
+        
+        gluc_ogtt_0h => eadv.lab_bld_glucose_ogtt_0h.val.count(0).where(val>=7);
+        
+        gluc_ogtt_2h => eadv.lab_bld_glucose_ogtt_2h.val.count(0).where(val>=111/10);
+        
+        dm_lab : {coalesce(gluc_hba1c,gluc_fasting,gluc_random,gluc_ogtt_0h,gluc_ogtt_2h) is not null =>1},{=>0};
+        
+        dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min().where(val>=65/10);
         
         #doc(,
             {
@@ -153,7 +175,7 @@ BEGIN
         
         dm_fd_t :{ 1=1 => to_char(dm_fd,`YYYY`)};
 
-        dm_type_1 => eadv.[icpc_t89%].dt.count(0);
+        
         
         #doc(,
             {
@@ -162,10 +184,41 @@ BEGIN
             }
         );
         
+        #doc(,
+            {
+                txt:"Non-proliferative diabetic retinopathy ICD codes"
+                
+            }
+        );
         
-        dm_micvas_retino => eadv.[icd_e11_3%,icpc_f83002].dt.count(0);
+        ndr_e10_icd => eadv.[icd_e10_32%,icd_e10_33%,icd_e10_35%].dt.count();
         
+        ndr_e11_icd => eadv.[icd_e11_32%,icd_e11_33%,icd_e11_35%].dt.count();
         
+        ndr_e13_icd => eadv.[icd_e13_32%,icd_e13_33%,icd_e13_35%].dt.count();
+        
+        ndr_icd : {coalesce(ndr_e10_icd,ndr_e11_icd,ndr_e13_icd)>0 =>1};
+        
+        #doc(,
+            {
+                txt:"Proliferative diabetic retinopathy ICD codes"
+                
+            }
+        );
+        
+        pdr_icd => eadv.[icd_e11_35%,icd_e11_35%,icd_e13_35%].dt.count();
+        
+        dr_icpc => eadv.icpc_f83002.dt.count();
+        
+        dm_micvas_retino : { coalesce(ndr_icd,pdr_icd,dr_icpc) is not null=>1},{=>0};
+        
+        #doc(,
+            {
+                txt:"Diabetic neuropathy ICD codes"
+                
+            }
+        );
+
         dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.count(0);
         
         dm_micvas :{ greatest(dm_micvas_neuro,dm_micvas_retino)>0 => 1},{=>0};
@@ -193,14 +246,12 @@ BEGIN
         dm_dx_uncoded : {dm_dx_code_flag=0 => 1},{=>0};
         
         dm_type : {dm=1 and dm_type_1>0 => 1},{dm=1 and dm_type_1=0 => 2},{=>0};
-        
-        
-        
+
         dm_dx_code : {dm=1 => (dm*1000 + dm_type*100 + dm_vintage_cat*10 + dm_micvas)},{=>0};
         
         #doc(,
             {
-                section: "Glycaemic control"
+                section: "Glycaemic Level"
             }
         );
         

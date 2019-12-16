@@ -2475,26 +2475,30 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                               assnvar || '_dt');
                     END;
                     WHEN func IN (
-                    'MATCH'
+                    'MATCH_FIRST',
+                    'MATCH_LAST'
                     ) THEN
                     DECLARE
                         rankindx   NUMBER;
                         ctename    varchar2(20);                        
                         pat_str    VARCHAR2(40);
                         def_str    VARCHAR2(1000);
+                        match_dir  VARCHAR2(10):=''; 
                     BEGIN
+                        IF func='MATCH_LAST' THEN  match_dir:='DESC';END IF;
+                        
                         IF length(funcparam_str) > 0 THEN
-                        pat_str := 'PATTERN ' || substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
-
-                        def_str := 'DEFINE ' || substr(funcparam_str, instr(funcparam_str, '~') + 1);
+                            pat_str := 'PATTERN ' || substr(funcparam_str, 1, instr(funcparam_str, '~') - 1);
+    
+                            def_str := 'DEFINE ' || substr(funcparam_str, instr(funcparam_str, '~') + 1);
                         END IF;
                         
 
                         ctename := get_cte_name(indx);
-                        where_txt := '';
+                        where_txt := ' mn=1';
                         from_txt :=  '(SELECT '
                                      || entity_id_col
-                                     || ',ps_dt FROM '
+                                     || ',ps_dt,ps_val,mn FROM '
                                      || tbl
                                      || ' MATCH_RECOGNIZE (PARTITION BY '
                                      || entity_id_col
@@ -2502,9 +2506,17 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                      || att_col
                                      || ' ORDER BY '
                                      || dt_col
-                                     || '  MEASURES FIRST('
+                                     || ' '
+                                     || match_dir
+                                     || '  MEASURES '                                     
+                                     ||'LAST('
                                      || dt_col
-                                     || ') AS ps_dt '
+                                     || ') AS ps_dt, '
+                                     || 'LAST('
+                                     || val_col
+                                     || ') AS ps_val, '
+                                     || 'MATCH_NUMBER() AS mn '
+                                     || 'ONE ROW PER MATCH '
                                      || pat_str
                                      || ' '
                                      || def_str
@@ -2512,18 +2524,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                      || att_col
                                      || '='''
                                      || att0
-                                     || ''') ';
+                                     || ''' ORDER BY mn DESC)';
                                     
                         select_txt := entity_id_col
-                                    || ' ,MIN(ps_dt) AS '
+                                    || ' ,ps_dt AS '
                                     || assnvar
-                                    || '_DT,COUNT(ps_dt) AS '
+                                    || '_DT,ps_val AS '
                                     || assnvar
                                     || '_VAL '; 
                                     
 
 
-                        groupby_txt := entity_id_col;
+                        groupby_txt := '';
                         is_sub_val := 2;
                         insert_rman(indx, where_txt, from_txt, select_txt, groupby_txt,
                                     assnvar, is_sub_val, sqlstat, func, funcparam,

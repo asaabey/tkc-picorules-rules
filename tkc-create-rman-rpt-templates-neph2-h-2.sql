@@ -463,7 +463,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
     <li><b>End-stage renal failure (ESRD)</b>
     <ul>
-    <li><<rrt=1>>Currently on haemodialysis, since <<hd_dt />><</rrt=1>></li>
+    <li><<rrt=1>>Currently on haemodialysis, since <<hd_dt_min />><</rrt=1>></li>
     <li><<rrt=2>>Currently on peritoneal dialysis, since <<pd_dt />><</rrt=2>></li>
     <li><<rrt=3>>Active renal transplant, <<tx_dt />><</rrt=3>><br /> <<rrt=4>>Currently on home-haemodialysis, <<homedx_dt />><</rrt=4>></li>
     </ul>
