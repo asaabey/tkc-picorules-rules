@@ -194,6 +194,7 @@ Change Log
             filter declared in compiler directive by filter attribute
             inject at get_composite_sql and build_func_exp
 
+15/12/2019  implemented match_recognize with match_last((pattern)~define)
 
 */
     TYPE eadvx_tbl_type IS
@@ -325,6 +326,9 @@ Change Log
         ignore_left    IN   CHAR DEFAULT '[',
         ignore_right   IN   CHAR DEFAULT ']'
     ) RETURN tbl_type2;
+
+    FUNCTION json_safe_splitstr(t in varchar2)
+    RETURN tbl_type;
 
     FUNCTION sanitise_clob (
         clbin CLOB
@@ -693,6 +697,19 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         END LOOP;
     END splitclob;
+
+    FUNCTION json_safe_splitstr(t in varchar2)
+    RETURN tbl_type AS
+    in_tbl tbl_type;
+    out_tbl tbl_type:=tbl_type();
+    BEGIN
+        in_tbl:=rman_pckg.splitstr(t,'","');
+        for i in 1..in_tbl.COUNT loop
+            out_tbl.extend(1);
+            out_tbl(i):= '"' || trim(both '"' from in_tbl(i)) || '"';
+        end loop;
+        return out_tbl;
+    END;
 
     FUNCTION tbl_type_to_string (
         t IN tbl_type
@@ -1444,7 +1461,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 --jstr into collection
         t := regexp_substr(jstr, '\{(.*?)\}', 1, 1, 'i',
               1);
-        key_tbl := rman_pckg.splitstr(t, ',');
+--        key_tbl := rman_pckg.splitstr(t, ',');
+        key_tbl := json_safe_splitstr(t);
         FOR i IN 1..key_tbl.count LOOP
             tkey := lower(regexp_substr(substr(key_tbl(i), 1, instr(key_tbl(i), ':')), '\"(.*?)\"', 1, 1, 'i',
               1));
@@ -1731,26 +1749,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                             || 'quot;', '"');
                                             
          
---        composition_head :='
---            <style>
---                .syn_alert_box {
---                    border-style: solid;border-color: brown;border-radius: 10px;padding: 10px
---                }
---                .syn_dmg_box {
---                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
---                }
---                .syn_table {
---                  border-collapse: collapse;
---                  border-spacing: 0;
---                  width: 100%;
---                  border: 1px solid #ddd;
---                }
---                
---                .syn_tr:nth-child(even) {
---                    background-color: #f2f2f2;
---                }
---            </style>
---            ' ;
+
         composition_head := '';
         composition := '<syn_body>'
                        || composition_head
