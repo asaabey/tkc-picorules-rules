@@ -7,9 +7,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.8
+Version		    1.0.1.9
 Creation date	07/04/2019
-update on date  15/12/2019
+update on date  26/12/2019
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -190,6 +190,10 @@ Change Log
 14/12/2019  get_composite_sql string buffer overflow fixed
 14/12/2019  nvarchar2 replaced with varchar2
 15/12/2019  implemented match_recognize with match((pattern)~define)
+26/12/2019  implemented batch and block level filters for ruleblocks
+            filter declared in compiler directive by filter attribute
+            inject at get_composite_sql and build_func_exp
+
 
 */
     TYPE eadvx_tbl_type IS
@@ -218,6 +222,10 @@ Change Log
     tstack_empty tstack_type := tstack_type();
     TYPE cite_stack_type IS
         TABLE OF VARCHAR2(100);
+        
+    global_block_level_filter VARCHAR2(400);
+    global_batch_level_filter VARCHAR2(400);
+    
     cmpstat varchar2(4000);
     rman_index PLS_INTEGER := 0;
     assn_op CONSTANT VARCHAR2(2) := '=>';
@@ -283,12 +291,16 @@ Change Log
     
 
     PROCEDURE parse_rpipe (
---        sqlout OUT VARCHAR2
+
         sqlout OUT CLOB
     );
+    
+    FUNCTION get_rb_filter(
+        tbl_prefix IN INT DEFAULT 1
+    ) RETURN VARCHAR2;
 
     PROCEDURE get_composite_sql (
---        cmpstat OUT varchar2
+
         cmpstat OUT CLOB
     );
 
@@ -475,6 +487,12 @@ Change Log
     );
 
     PROCEDURE execute_active_ruleblocks;
+    
+    PROCEDURE execute_ruleblocks(
+        batch_level_filter IN varchar2,
+        drop_rout_tables_flag   IN INT DEFAULT 0,
+        compute_stats   IN INT DEFAULT 0
+    ); 
 
     PROCEDURE drop_rout_tables;
 
@@ -860,9 +878,40 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         RETURN ret;
     END get_hash;
+    
+    FUNCTION get_rb_filter(
+        tbl_prefix IN INT DEFAULT 1
+    ) RETURN VARCHAR2 AS
+        ret VARCHAR2(400);
+        prefix  varchar2(40):='EADV.';
+    BEGIN
+        IF tbl_prefix=0 THEN
+            prefix:='';
+        END IF;
+        
+        IF global_block_level_filter IS NOT NULL THEN
+            ret := ret
+                   || ' AND '
+                   || prefix
+                   || 'EID IN ('
+                   || global_block_level_filter
+                   || ') ';
+        END IF;
+
+        IF global_batch_level_filter IS NOT NULL THEN
+            ret := ret
+                   || ' AND '
+                   || prefix
+                   || 'EID IN ('
+                   || global_batch_level_filter
+                   || ') ';
+        END IF;
+
+        RETURN ret;
+    END get_rb_filter;
 
     PROCEDURE get_composite_sql (
---        cmpstat OUT varchar2
+
         cmpstat OUT CLOB
     ) IS
         rmanobj   rman_tbl_type;
@@ -890,7 +939,10 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                    || get_cte_name(0)
                    || ' AS (SELECT '
                    || entity_id_col
-                   || ' FROM EADV GROUP BY '
+                   || ' FROM EADV '
+                   || ' WHERE 1=1 '
+                   || get_rb_filter()
+                   || ' GROUP BY '
                    || entity_id_col
                    || '),';
 
@@ -1456,7 +1508,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
 
 
---            IF length(x_vals) > 0 AND length(y_vals) > 0 AND yscale_in > 0 THEN
+
             IF length(x_vals) > 0 AND length(y_vals) > 0 AND y_max>y_min THEN
             
 --                xygraph_ascii := ascii_graph_dv(dts => x_vals, vals => y_vals, yscale => yscale_in, xline_str_arr => xline_str_arr_in
@@ -1467,7 +1519,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
                         ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
                 
---                        ret_tmplt := svg_graph_xy(x_vals,y_vals,y_min,y_max,ret_tmplt);
+
                         ret_tmplt := svg_graph_xy(graph_obj,ret_tmplt);
                 
                 
@@ -1488,29 +1540,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             tkey_lu_str := regexp_substr(ret_tmplt, html_tkey);
             IF length(tkey_lu_str) > 0 THEN
                 
---                dbms_output.put_line('***->'|| tkey_lu_str);
+
                 tkey_lu_key := tkey;
                 tkey_lu_res := trim(LEADING '$' FROM regexp_substr(tkey_lu_str, '\$([a-z0-9_]+)?'));
                 tkey_lu_val := lookup_key(tkey_lu_res, tval);
                 
---                dbms_output.put_line('***->'|| tkey_lu_str || ' res:' || tkey_lu_res || ' key:' || tkey_lu_key || ' val:' || tkey_lu_val);
+
                 
                 --replace of tkey_lu_str didnt work. hence using html_tkey
                 ret_tmplt := regexp_replace(ret_tmplt, html_tkey, tkey_lu_val);
             END IF;
 
---            IF length(x_vals_iso) > 0 THEN
---                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph />>', xygraph_ascii);
---
-----                ret_tmplt := regexp_replace(ret_tmplt, '<<xygraph_bitmap />>', xygraph_bitmap);
---                ret_tmplt := regexp_replace(ret_tmplt, '<<x_vals_iso />>', trim(x_vals_iso));
---                ret_tmplt := regexp_replace(ret_tmplt, '<<y_vals />>', trim(y_vals));
---                x_vals_iso := '';
-----                x_vals := '';
-----                y_vals := '';
---            END IF;                                       
-            
-            -- toggle on
+
 
             IF nvl(length(tval), 0) > 0 AND nvl(length(tval), 0) < 13 AND nvl(tval, '0') <> '0' THEN
                 -- without tag param
@@ -1946,7 +1987,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     'MEDIAN',
                     'STATS_MODE'
                 ) THEN
-                    where_txt := att || predicate;
+                    where_txt := att || predicate || ' ' || get_rb_filter();
                     from_txt := from_clause;
                     select_txt := tbl
                                   || '.'
@@ -1986,7 +2027,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                             sortdirection := '';
                         END IF;
                         ctename := get_cte_name(indx);
-                        where_txt := att || predicate;
+                        where_txt := att || predicate || ' ' || get_rb_filter();
                         from_txt := from_clause;
                         select_txt := tbl
                                       || '.'
@@ -2104,6 +2145,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     || ' WHERE '
                                     || att
                                     || predicate
+                                    || ' ' 
+                                    || get_rb_filter()
                                     || ')';
 
                         select_txt := entity_id_col
@@ -2162,7 +2205,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     'REGR_SYY',
                     'REGR_SXY'
                 ) THEN
-                    where_txt := att || predicate;
+                    where_txt := att || predicate || ' ' || get_rb_filter();
                     from_txt := from_clause;
                     select_txt := tbl
                                   || '.'
@@ -2192,7 +2235,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 WHEN func IN (
                     'SERIALIZE'
                 ) THEN
-                    where_txt := att || predicate;
+                    where_txt := att || predicate || ' ' || get_rb_filter();
                     from_txt := from_clause;
                     select_txt := tbl
                                   || '.'
@@ -2219,7 +2262,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 WHEN func IN (
                     'SERIALIZE2'
                 ) THEN
-                    where_txt := att || predicate;
+                    where_txt := att || predicate || ' ' || get_rb_filter();
                     from_txt := from_clause;
                     select_txt := tbl
                                   || '.'
@@ -2252,7 +2295,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                         dt_trans := substr(funcparam_str, instr(funcparam_str, '~') + 1);
                     END IF;
 
-                    where_txt := att || predicate;
+                    where_txt := att || predicate || ' ' || get_rb_filter();
                     from_txt := from_clause;
                     select_txt := tbl
                                   || '.'
@@ -2351,6 +2394,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     || ' WHERE '
                                     || att
                                     || predicate
+                                    || ' '
+                                    || get_rb_filter()
                                     || ') WHERE VAL_D IS NOT NULL)';
 
                         select_txt := entity_id_col
@@ -2446,7 +2491,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     || att_col 
                                     || ' = '''
                                     || att0
-                                    || ''' ) ';
+                                    || ''''
+                                    || get_rb_filter()
+                                    || ' ) ';
                                     
                                     
                         select_txt := entity_id_col
@@ -2524,7 +2571,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                      || att_col
                                      || '='''
                                      || att0
-                                     || ''' ORDER BY mn DESC)';
+                                     || '''' 
+                                     || get_rb_filter(0)
+                                     || ' ORDER BY mn DESC)';
                                     
                         select_txt := entity_id_col
                                     || ' ,ps_dt AS '
@@ -2533,7 +2582,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                     || assnvar
                                     || '_VAL '; 
                                     
-
+                        
 
                         groupby_txt := '';
                         is_sub_val := 2;
@@ -2761,6 +2810,18 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 INTO rb.out_att
                 FROM
                     dual;
+                
+                IF global_block_level_filter is null then
+                    
+                    
+                    SELECT
+                        JSON_VALUE(param_value, '$.filter' RETURNING VARCHAR2)
+                    INTO global_block_level_filter
+                    FROM
+                        dual;
+
+                END IF;
+                
 
                 UPDATE rman_ruleblocks
                 SET
@@ -4245,7 +4306,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             blockid = bid_in;
 
 --        check_sql_syntax(rb.blockid,rb.sqlblock,rb.target_table,rb.def_exit_prop,rb.def_predicate);
-
+        global_block_level_filter := null;
         commit_log('Compile ruleblock', bid_in, 'compiled to sql');
         return_code := 0;
     EXCEPTION
@@ -4434,8 +4495,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
---            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_ATT_IDX"';
---            EXECUTE IMMEDIATE 'DROP INDEX "EADVX_EID_IDX"';
+
             
             EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
             
@@ -4443,7 +4503,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                 bid := rbs(i).blockid;
                 execute_ruleblock(bid, 1, 1, 0, 0,
                                   execute_return_code);
---                dbms_output.put_line('rb: ' || bid);
+
             EXCEPTION
                 WHEN OTHERS THEN
                     commit_log('execute_active_ruleblocks', bid, 'Error:');
@@ -4469,6 +4529,80 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                  || bid
                                  || ' and errors logged to rman_ruleblocks_log !');
     END execute_active_ruleblocks;
+    
+    PROCEDURE execute_ruleblocks(
+        batch_level_filter IN varchar2,
+        drop_rout_tables_flag   IN INT DEFAULT 0,
+        compute_stats   IN INT DEFAULT 0
+    ) IS
+        rbs                   rman_ruleblocks_type;
+        bid                   VARCHAR2(100);
+        execute_return_code   PLS_INTEGER;
+    BEGIN
+        
+        
+        tstack := tstack_empty;
+        commit_log('execute_active_ruleblocks', '', 'Started');
+        
+        IF batch_level_filter IS NOT NULL THEN
+            global_batch_level_filter:=batch_level_filter;
+        END IF;
+        
+        dbms_output.put_line('---------------> ' || global_batch_level_filter);
+        
+        commit_log('execute_active_ruleblocks', '', 'batch level filter set');
+        compile_active_ruleblocks;
+        COMMIT;
+        SELECT
+            *
+        BULK COLLECT
+        INTO rbs
+        FROM
+            rman_ruleblocks
+        WHERE
+            is_active = 2
+        ORDER BY
+            exec_order;
+
+        IF rbs.count > 0 THEN
+            commit_log('execute_active_ruleblocks', '', rbs.count || ' Ruleblocks added to stack');
+
+            IF compute_stats=1 THEN                    
+                commit_log('execute_active_ruleblocks', '', 'computing stats for eadv');
+                EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
+            END IF;
+            
+            FOR i IN rbs.first..rbs.last LOOP BEGIN
+                bid := rbs(i).blockid;
+                execute_ruleblock(bid, 1, 1, 0, 0,
+                                  execute_return_code);
+
+            EXCEPTION
+                WHEN OTHERS THEN
+                    commit_log('execute_active_ruleblocks', bid, 'Error:');
+                    commit_log('execute_active_ruleblocks', bid, 'FAILED');
+                    dbms_output.put_line('FAILED::'
+                                         || bid
+                                         || ' and errors logged to rman_ruleblocks_log !');
+            END;
+            END LOOP;
+
+
+            IF drop_rout_tables_flag=1 THEN
+                drop_rout_tables;
+            END IF;
+        ELSE
+            commit_log('execute_active_ruleblocks', '', 'Exiting with NULL Ruleblocks');
+        END IF;
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            commit_log('execute_active_ruleblocks', bid, 'Error:');
+            commit_log('execute_active_ruleblocks', bid, 'FAILED');
+            dbms_output.put_line('FAILED::'
+                                 || bid
+                                 || ' and errors logged to rman_ruleblocks_log !');
+    END execute_ruleblocks;
 
     PROCEDURE drop_rout_tables IS
         status           PLS_INTEGER;

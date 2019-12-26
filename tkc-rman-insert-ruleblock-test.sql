@@ -35,19 +35,23 @@ BEGIN
                 def_exit_prop:"test1",
                 def_predicate:">0",
                 exec_order:1,
-                out_att : "test1"
+                out_att : "test1",
+                filter : "6811"
+                
             }
         );
         
         
         
         
-        
-        creat_pat => eadv.lab_bld_creatinine.val.match((p1+p2+p3+)~ 
+      
+        creat_pat => eadv.lab_bld_creatinine.val.match_first((p1+p2+p3+)~ 
             p1 AS ( val * 80/100 < prev(val) ),
             p2 AS ( val * 80/100 > prev(val) ),
             p3 AS ( val * 80/100 < prev(val) )
             );
+      
+        
         
         
         test1 : {1=1 =>1};
