@@ -26,7 +26,7 @@ creating wide tables. Long tables /Datastore (EADV) are generated using exec_dsq
     |  ruleblock  |
     +------+------+
            |
-           |  execute_active_ruleblocks()
+           |  execute_active_ruleblocks(),execute_ruleblocks()
            |  
            |  execute_ruleblock()
            |
@@ -513,8 +513,9 @@ Change Log
 
     PROCEDURE gen_cube_from_ruleblock (
         rb_att_str     IN   VARCHAR2,
-        slices_str     IN   VARCHAR2,
-        ret_tbl_name   IN   VARCHAR2
+        slices_str     IN   VARCHAR2, 
+        ret_tbl_name   IN   VARCHAR2,
+        batch_level_filter   IN   VARCHAR2
     );
 
     PROCEDURE build_compiler_exp (
@@ -4543,6 +4544,9 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         tstack := tstack_empty;
         commit_log('execute_active_ruleblocks', '', 'Started');
         
+        --reset global batch level filter
+        global_batch_level_filter:='';
+        
         IF batch_level_filter IS NOT NULL THEN
             global_batch_level_filter:=batch_level_filter;
         END IF;
@@ -4842,7 +4846,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
     PROCEDURE gen_cube_from_ruleblock (
         rb_att_str     IN   VARCHAR2,
         slices_str     IN   VARCHAR2,
-        ret_tbl_name   IN   VARCHAR2
+        ret_tbl_name   IN   VARCHAR2,
+        batch_level_filter   IN   VARCHAR2
     ) AS
 
         slice_tbl        tbl_type;
@@ -5361,6 +5366,11 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
     BEGIN
         commit_log('executing gen_cube', NULL, 'initialising');
+        global_batch_level_filter:='';
+        
+        IF batch_level_filter IS NOT NULL THEN
+            global_batch_level_filter:=batch_level_filter;
+        END IF;
         mock_mode := false;
         -- get time slices into collection
         get_slices(slices_str);
