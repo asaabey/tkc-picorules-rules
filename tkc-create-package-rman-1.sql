@@ -4360,15 +4360,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         parse_rpipe(strsql);
         sqlstmt := strsql;
         
---        
---        
---        UPDATE rman_ruleblocks
---        SET
---            sqlblock = strsql
---        WHERE
---            blockid = bid_in;
 
---        check_sql_syntax(rb.blockid,rb.sqlblock,rb.target_table,rb.def_exit_prop,rb.def_predicate);
         commit_log('Compile ruleblock ext', bid_in, 'compiled to sql');
     EXCEPTION
         WHEN OTHERS THEN
@@ -5033,6 +5025,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             obj_exists     BINARY_INTEGER;
         BEGIN
             FOR j IN 1..ruleblock_tbl.count LOOP
+            
                 dbms_output.put_line('ruleblock_tbl(j)->' || ruleblock_tbl(j));
                 compile_ruleblock_ext(ruleblock_tbl(j), rb_att_str_tbl(j), sql_stmt);
                 dbms_output.put_line('sql_stmt->' || sql_stmt);
@@ -5061,7 +5054,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                     sql_stmt_mod := replace(sql_stmt_mod, 'sysdate', 'to_date('''
                                                                      || slice_tbl(i)
                                                                      || ''',''ddmmyyyy'')');
---                    dbms_output.put_line('GEN CUBE sysdate replace ->' || 'to_date(''' || slice_tbl(i) || ''',''ddmmyyyy'')');
+
 
                     sql_stmt_mod := modify_dep_tbls(sql_stmt_mod, ruleblock_tbl(j), slice_tbl(i));
                     dbms_output.put_line(i
@@ -5372,21 +5365,27 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             global_batch_level_filter:=batch_level_filter;
         END IF;
         mock_mode := false;
-        -- get time slices into collection
+        
         get_slices(slices_str);
         cube_in_rbstack;
         commit_log('executing gen_cube', NULL, 'creating eadv views as per time slices');
         create_temp_eadv_views;
+        
         commit_log('executing gen_cube', NULL, 'executing ruleblocks');
         execute_ndsql_temp_tbls;
+        
         commit_log('executing gen_cube', NULL, 'modifying staging tables');
         modify_temp_tbls;
+        
         commit_log('executing gen_cube', NULL, 'executing union for each ruleblock');
         union_temp_tbls;
+        
         commit_log('executing gen_cube', NULL, 'executing join on all ruleblocks');
         join_temp_tbls;
+        
         commit_log('executing gen_cube', NULL, 'cleaning up staging tables');
         cleanup_objects;
+        
     END gen_cube_from_ruleblock;
 
 
