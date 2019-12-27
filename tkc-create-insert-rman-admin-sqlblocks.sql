@@ -497,7 +497,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
                                             lr.linked_registrations_id   eid,
                                             ''dmg_location'' AS att,
                                             c.dt                         dt,
-                                            coalesce(lm.sublocality_id,s.dflt_sublocality_id) val
+                                            to_number(coalesce(lm.sublocality_id,s.dflt_sublocality_id)|| lpad(pr.source_id,2,''0'')) val
                                         FROM
                                             cte1 c
                                             INNER JOIN patient_registrations pr ON pr.id = c.pid
