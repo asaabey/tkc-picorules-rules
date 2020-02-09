@@ -44,7 +44,16 @@ BEGIN
         
   
         
-        dmg : { 1=1 => 1},{=>0};    
+        dmg : { 1=1 => 1},{=>0};  
+        
+        #define_attribute(
+            dob,
+            {
+                label:"Date of birth (latest )",
+                desc:"Date",
+                is_reportable:0
+            }
+        );
         
                 
     ';

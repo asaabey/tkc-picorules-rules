@@ -470,61 +470,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
 
 INSERT INTO rman_admin_sqlblocks VALUES(
     134,
-    'MERGE INTO eadv t1 USING (
-                                    WITH cte1 AS (
-                                        SELECT
-                                            pn.patient_registration_id   pid,
-                                            pn.date_recorded             dt,
-                                            pn.location                  loc
-                                        FROM
-                                            patient_results_numeric pn
-                                        UNION
-                                        SELECT
-                                            pn.patient_registration_id   pid,
-                                            pn.date_recorded             dt,
-                                            pn.location                  loc
-                                        FROM
-                                            patient_results_coded pn
-                                        UNION
-                                        SELECT
-                                            pn.patient_registration_id   pid,
-                                            pn.date_recorded             dt,
-                                            pn.location                  loc
-                                        FROM
-                                            patient_results_text pn
-                                    ),cte2 AS (
-                                        SELECT DISTINCT
-                                            lr.linked_registrations_id   eid,
-                                            ''dmg_location'' AS att,
-                                            c.dt                         dt,
-                                            to_number(coalesce(lm.sublocality_id,s.dflt_sublocality_id)|| lpad(pr.source_id,2,''0'')) val
-                                        FROM
-                                            cte1 c
-                                            INNER JOIN patient_registrations pr ON pr.id = c.pid
-                                            INNER JOIN linked_registrations lr ON c.pid = lr.patient_registration_id
-                                            INNER JOIN sources s ON pr.source_id = s.id
-                                            LEFT JOIN location_mappings lm ON lm.result_location = upper(c.loc)
-                                    )
-                                    SELECT
-                                        eid,
-                                        att,
-                                        dt,
-                                        val
-                                    FROM
-                                        cte2
-                                )
-        t2 ON ( t1.eid = t2.eid
-                AND t1.att = t2.att
-                AND t1.dt = t2.dt )
-        WHEN NOT MATCHED THEN INSERT (
-            eid,
-            att,
-            dt,
-            val ) VALUES (
-            t2.eid,
-            t2.att,
-            t2.dt,
-            t2.val )',
+    'MERGE INTO eadv t1 USING( WITH cte1 AS ( SELECT pn.patient_registration_id pid, pn.date_recorded dt, pn.location loc FROM patient_results_numeric pn UNION SELECT pn.patient_registration_id pid, pn.date_recorded dt, pn.location loc FROM patient_results_coded pn UNION SELECT pn.patient_registration_id pid, pn.date_recorded dt, pn.location loc FROM patient_results_text pn),cte2 AS ( SELECT DISTINCT lr.linked_registrations_id eid, ''dmg_location'' AS att, c.dt dt, to_number(vlm.key) val FROM cte1 c INNER JOIN patient_registrations pr ON pr.id = c.pid INNER JOIN linked_registrations lr ON c.pid = lr.patient_registration_id INNER JOIN sources s ON pr.source_id = s.id LEFT JOIN location_mappings lm ON lm.result_location = upper(c.loc) LEFT JOIN vw_locations vlm ON vlm.sublocality_id = lm.sublocality_id ) SELECT DISTINCT eid,att,dt,val FROM cte2 WHERE val>0 ) t2 ON ( t1.eid = t2.eid AND t1.att = t2.att AND t1.dt = t2.dt ) WHEN NOT MATCHED THEN INSERT (eid, att, dt, val ) VALUES (t2.eid,t2.att,t2.dt,t2.val )',
     'Merge patient demographics location history',
     'build eadv',
     1,
