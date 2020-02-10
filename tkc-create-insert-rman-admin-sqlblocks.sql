@@ -163,6 +163,88 @@ INSERT INTO rman_admin_sqlblocks VALUES(
 );
 
 INSERT INTO rman_admin_sqlblocks VALUES(
+    137,
+    'DROP TABLE PATIENT_RESULTS_DERIVED',
+    'drop table patient_results_derived',
+    'build eadv',
+    1,
+    ''    
+);
+
+INSERT INTO rman_admin_sqlblocks VALUES(
+    138,
+    'CREATE TABLE patient_results_derived
+    AS
+         WITH egfr2009_base AS (
+            SELECT
+                date_recorded,
+                ''Creatinine: '' || raw_value AS raw_value,
+                pp.id,
+                pp.sex,
+                CASE
+                    WHEN pp.sex = 1 /*male*/ THEN 0.9
+                    ELSE 0.7 /*female*/
+                END AS k,
+                CASE
+                    WHEN pp.sex = 1 /*male*/ THEN 0.41
+                    ELSE 0.329  /*female*/
+                END AS a,
+                CASE
+                    WHEN pp.sex = 1 /*male*/ THEN 1
+                    ELSE 1.018
+                END AS sexmultiplier,
+                1 AS racialmultipier /* This is 1.159 for african/american (body mass multiple) it is not applicable to NT population */,
+                r.numeric_result * 0.011312217194570135 AS creatinine_gmdl,
+                trunc(months_between(date_recorded,date_of_birth) / 12) AS age,
+                r.sequence
+            FROM
+                patient_registrations pp
+                INNER JOIN patient_results_numeric r ON pp.id = r.patient_registration_id
+                INNER JOIN components c ON r.component_id = c.id
+            WHERE
+                c.key = ''Creatinine''
+                AND pp.sex IN (
+                    1,
+                    2
+                )
+                AND pp.date_of_birth IS NOT NULL
+                AND r.removed IS NULL
+        ),egfr2009 AS (
+            SELECT
+                id   patient_registration_id,
+                date_recorded,
+                raw_value,
+                creatinine_gmdl,
+                k,
+                a,
+                age,
+                sexmultiplier,
+                racialmultipier,
+                141 * ( power(least(creatinine_gmdl / k,1),a) * power(greatest(creatinine_gmdl / k,1),-1.209) ) * power(0.993,age
+                ) * sexmultiplier * racialmultipier AS egfr2009,
+                sequence
+            FROM
+                egfr2009_base
+        )
+        SELECT
+            CAST(''eGFR KDIGO'' AS NVARCHAR2(200) ) AS derivedresultname,
+            CAST(''KDIGO 2009 formula for egfr from Creatinine'' AS NVARCHAR2(2000) ) AS description,
+            patient_registration_id   AS patient_registration_id,
+            date_recorded             AS date_recorded,
+            CAST(egfr2009 AS INT) AS result,
+            CAST(raw_value AS NVARCHAR2(2000) ) AS raw_value,
+            CAST(''ml/min/1.73m^2'' AS NVARCHAR2(20) ) AS units,
+            sequence                  AS sequence
+        FROM
+            egfr2009',
+    'create table patient_results_derived',
+    'build eadv',
+    1,
+    ''    
+);
+
+
+INSERT INTO rman_admin_sqlblocks VALUES(
     139,
     'MERGE INTO eadv t1
         USING (
@@ -176,7 +258,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
         JOIN    patient_registrations pr on pr.id=prd.patient_registration_id
         JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
         JOIN    rman_comp_map rcm on rcm.key=prd.derivedresultname
-        WHERE   prd.derivedresultname in (''eGFR KDIGO'',''BMI'')
+        WHERE   prd.derivedresultname in (''eGFR KDIGO'')
         ) t2
         ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
         WHEN NOT MATCHED THEN
