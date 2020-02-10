@@ -258,7 +258,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
         JOIN    patient_registrations pr on pr.id=prd.patient_registration_id
         JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
         JOIN    rman_comp_map rcm on rcm.key=prd.derivedresultname
-        WHERE   prd.derivedresultname in (''eGFR KDIGO'')
+        WHERE   prd.derivedresultname in (''eGFR KDIGO'') and result<200
         ) t2
         ON (t1.eid=t2.eid and t1.att=t2.att and t1.dt=t2.dt)
         WHEN NOT MATCHED THEN
