@@ -149,7 +149,7 @@ BEGIN
             
             dspan : {1=1 => egfr_l_dt - egfr_f_dt };
             
-            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
+            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt).where(dt > sysdate-365);
             
             egfr_graph_canvas_x : {1=1 => 600};
             
