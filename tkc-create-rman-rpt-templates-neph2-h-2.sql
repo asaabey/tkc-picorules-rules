@@ -225,7 +225,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','alert_tg4620','tg4620',304620,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div class="syn_alert_box">
-    <h5>Alert : Unmanaged advanced CKD with rapid progression (Trigger 4620)</h5>
+    <h5>Alert : Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
     There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter
     <<avf>>Please note the AVF creation on <</avf>><<avf />>
     </div>
