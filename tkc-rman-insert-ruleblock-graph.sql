@@ -149,7 +149,10 @@ BEGIN
             
             dspan : {1=1 => egfr_l_dt - egfr_f_dt };
             
-            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt).where(dt > sysdate-365);
+
+
+            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt);
+
             
             egfr_graph_canvas_x : {1=1 => 600};
             
@@ -174,6 +177,8 @@ BEGIN
             line1_y1 : {1=1 => round((egfr_graph_y_max-egfr60_last_val) * y_scale,0) };
             
             line1_y2 : {1=1 => round((egfr_graph_y_max-egfr_l_val) * y_scale,0) };
+            
+            line_max_y : {1=1 => round(egfr_max_val * y_scale,0) };
                 
             slope1 : { egfr_l_dt - egfr60_last_dt>0 =>round(((egfr_l_val - egfr60_last_val)/(egfr_l_dt - egfr60_last_dt))*365.25,2) },{=>0};
             
@@ -522,6 +527,51 @@ BEGIN
             multi_graph : { hb0_val>0 =>1},{=>0};
             
             
+            
+    ';
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    
+    
+          -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='egfr_graph3';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to compute egfr graph 3 */
+        
+            
+             #define_ruleblock(egfr_graph3,
+                {
+                    description: "Algorithm to serialize egfr",
+                    version: "0.0.1.1",
+                    blockid: "egfr_graph3",
+                    target_table:"rout_egfr_graph3",
+                    environment:"DEV_2",
+                    rule_owner:"TKCADMIN",
+                    is_active:2,
+                    def_exit_prop:"egfr_graph3",
+                    def_predicate:">0",
+                    exec_order:2
+                    
+                }
+            );
+            
+            rrt => rout_rrt.rrt.val.bind();
+            
+            egfr_n => eadv.lab_bld_egfr_c.val.count(0);
+            
+            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt);
+            
+            
+            egfr_graph3 : {1=1 => 1};
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

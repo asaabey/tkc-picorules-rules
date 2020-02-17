@@ -558,6 +558,37 @@ INSERT INTO rman_admin_sqlblocks VALUES(
     1,
     ''    
 );
+INSERT INTO rman_admin_sqlblocks VALUES(
+    136,
+    'MERGE INTO eadv t1 USING (
+                             WITH cte1 AS (
+                                 SELECT DISTINCT
+                                     lr.linked_registrations_id   AS eid,
+                                     ''rx_desc'' AS att,
+                                     date_recorded                AS dt,
+                                     rrm.id                       AS val
+                                 FROM
+                                     patient_results_prescription prp
+                                     JOIN patient_registrations pr ON pr.id = prp.patient_registration_id
+                                     JOIN linked_registrations lr ON lr.patient_registration_id = pr.id
+                                     JOIN system_rxcui_map rrm ON upper(rrm.prescription) = upper(prp.prescription)
+                                 WHERE
+                                     prp.date_recorded > TO_DATE(''01/01/2000'',''DD/MM/YYYY'')
+                                     AND ( prp.prescription_end IS NULL
+                                           OR prp.prescription_end > SYSDATE )
+                             )
+                             SELECT * FROM cte1
+                         )
+t2 ON ( t1.eid = t2.eid
+        AND t1.att = t2.att
+        AND t1.dt = t2.dt )
+WHEN NOT MATCHED THEN INSERT (eid,att,dt,val ) VALUES (t2.eid,t2.att,t2.dt,t2.val )
+    ',
+    'Merge Rx Desc',
+    'build eadv',
+    1,
+    ''    
+);
 
 INSERT INTO rman_admin_sqlblocks VALUES(
     150,
