@@ -47,6 +47,9 @@ BEGIN
             }
         );
         
+        dod => eadv.dmg_dod.dt.min();
+        
+        dead : {dod is not null => 1},{=> 0};
         
         iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-365);
         iq_egfr => eadv.lab_bld_egfr.val.count(0).where(dt>sysdate-365);
@@ -284,7 +287,7 @@ BEGIN
         
          #define_ruleblock(tg4100,
             {
-                description: "Algorithm to detect nephritic syndrome",
+                description: "Algorithm to generate AKI trigger",
                 version: "0.0.1.1",
                 blockid: "tg4100",
                 target_table:"rout_tg4100",
@@ -512,7 +515,7 @@ BEGIN
                 txt:"Get CKD G stage and slope"
             }
         );
-                cga_g => rout_ckd.cga_g.val.bind();
+        cga_g => rout_ckd.cga_g.val.bind();
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -619,7 +622,7 @@ BEGIN
         #define_attribute(
                 tg4620,
                 {
-                    label:"Alert:Unmanaged advanced CKD with rapid progression",
+                    label:"Alert:No AVF with advanced CKD 4+ with rapid progression",
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:1,
                     is_trigger:1,
@@ -645,7 +648,7 @@ BEGIN
         
          #define_ruleblock(tg4720,
             {
-                description: "Algorithm to detect nephritic syndrome",
+                description: "Algorithm to detect new RRT",
                 version: "0.0.1.1",
                 blockid: "tg4720",
                 target_table:"rout_tg4720",
@@ -663,12 +666,14 @@ BEGIN
         hd_n => eadv.icd_z49_1.dt.count(0);
         hd_dt_max => eadv.icd_z49_1.dt.max();
         
+        
+        
         pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
-        hd_start : {hd_dt_min>sysdate-90 and hd_n>=10 => 1},{=>0};
+        hd_start : {hd_dt_min > sysdate-90 and hd_n>=10 => 1},{=>0};
           
-        pd_start : {pd_dt_min > sysdate-9 => 1},{=>0};
+        pd_start : {pd_dt_min > sysdate-90 => 1},{=>0};
         
         
           

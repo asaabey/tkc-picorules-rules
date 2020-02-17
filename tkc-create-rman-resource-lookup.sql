@@ -33,7 +33,7 @@ CREATE TABLE rman_resource_lookup (
     INSERT INTO rman_resource_lookup VALUES (
         'rx_desc',
         'table',
-        'INITCAP(''system_rxcui_map'')',
+        'system_rxcui_map',
         'id',
         'prescription'
     );
