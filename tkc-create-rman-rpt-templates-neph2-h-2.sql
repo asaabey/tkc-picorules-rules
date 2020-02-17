@@ -596,9 +596,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
         <li><b>Cardiovascular risk (CVR)</b></li>
         <ul>
-        <<risk_high_ovr=0>><li>CVR status was calculated using FRE [4.1]</li><</risk_high_ovr=0>>
-        <<risk_5>><li>Composite 5 year CVD risk is <<risk_5 />>%</li><</risk_5>>
-        <<cvra=2>><li>The composite 5 year CVD risk is high</li><</cvra=3>>
+        <<risk_high_ovr=0>>
+           <li>CVR status was calculated using FRE [4.1]</li>
+            <<risk_5>><li>Composite 5 year CVD risk is <<risk_5 />>%</li><</risk_5>>
+        <</risk_high_ovr=0>>
+        <<cvra=3>><li>The composite 5 year CVD risk is high</li><</cvra=3>>
         <<cvra=2>><li>The composite 5 year CVD risk is moderate</li><</cvra=2>>
         <<cvra=1>><li>The composite 5 year CVD risk is low</li><</cvra=1>> 
         <<risk_high_ovr>><li>The patient meets criteria for high CVR without calculation
