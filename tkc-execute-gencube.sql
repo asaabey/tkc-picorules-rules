@@ -49,23 +49,14 @@ rman_pckg.compile_active_ruleblocks;
 
 rman_pckg.gen_cube_from_ruleblock(
     rb_att_str => '
-        rrt.rrt,
-        dmg.dob,
-        dmg.dod,
-        ckd.ckd,
-        ckd.egfr_outdated,
-        cd_dm.dm,
-        cd_dm.dm_dx_uncoded,
-        cd_htn.htn,
-        cd_htn.htn_dx_uncoded,
-        cd_obesity.obesity,
-        cd_obesity.obs_dx_uncoded,
-        cvra.cvra,
-        cvra.cvra_dx_uncoded
+        ckd_dense.rrt,
+        ckd_dense.dob,
+        ckd_dense..dod,
+        ckd_dense.ckd
     ',
     slices_str=>'01072019,01072018,01072017',
     ret_tbl_name=>'rep126',
-    batch_level_filter => 'SELECT EID FROM ROUT_DMG_LOC WHERE LOC_MODE_FULL=76');
+    batch_level_filter => '');
 
 
 

@@ -91,7 +91,7 @@ BEGIN
         );
         
         
-        loc_mode_24 => eadv.dmg_location.val.stats_mode().where(dt > sysdate- 730);
+        loc_mode_24 => eadv.dmg_location.val.stats_mode().where(dt > sysdate - 730);
         
         loc_mode_full => eadv.dmg_location.val.stats_mode();
         
