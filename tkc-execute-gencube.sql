@@ -49,10 +49,18 @@ rman_pckg.compile_active_ruleblocks;
 
 rman_pckg.gen_cube_from_ruleblock(
     rb_att_str => '
-        ckd_dense.rrt,
         ckd_dense.dob,
-        ckd_dense..dod,
-        ckd_dense.ckd
+        ckd_dense.dod,
+        ckd_dense.gender,
+        ckd_dense.loc_mode_phc,
+        ckd_dense.rrt,
+        ckd_dense.rrt_start,
+        ckd_dense.hd_start,
+        ckd_dense.pd_start,
+        ckd_dense.ckd,
+        ckd_dense.cert_level,
+        ckd_dense.dx_ckd_diff,
+        ckd_dense.avf_has
     ',
     slices_str=>'01072019,01072018,01072017',
     ret_tbl_name=>'rep126',

@@ -46,6 +46,10 @@ BEGIN
         
         gender => eadv.dmg_gender.val.last();
         
+        loc_mode_phc => eadv.dmg_location.val.stats_mode().where(substr(val,-1)=1);
+        
+        
+        
         
         iq_uacr => eadv.lab_ua_acr.val.count(0);
         iq_egfr => eadv.lab_bld_egfr_c.val.count(0);
@@ -90,6 +94,8 @@ BEGIN
         hd_start : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
           
         pd_start : {pd_dt_min > sysdate-365 => 1},{=>0};
+        
+        rrt_start : { hd_start=1 or pd_start=1 => 1},{=>0};
         
         egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
         

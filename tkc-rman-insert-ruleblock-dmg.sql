@@ -101,12 +101,11 @@ BEGIN
         
         loc_mode_n => eadv.dmg_location.val.count().where(val=loc_mode_full);
         
-        loc_cont3 => eadv.dmg_location.val.match_last((a{3,})~
+         loc_cont3 => eadv.dmg_location.val.match_last((a{3,})~
             a as val=next(val)
         );
         
-        
-        loc_last_2y => eadv.dmg_location.val.serialize2().where(dt>sysdate-730);
+        loc_last_2y => eadv.dmg_location.val.serialize2().where(dt>sysdate-365);
         
         diff_last_mode : {loc_mode_full<>loc_last_val =>1},{=>0};
         
