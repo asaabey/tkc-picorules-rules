@@ -4,8 +4,8 @@
 @"tkc-create-eadvx.sql";
 
 @"tkc-create-rman.sql";
-@"tkc-create-rman-rpt-templates-neph1.sql";
-@"tkc-create-rman-rpt-templates-neph2.sql";
+--@"tkc-create-rman-rpt-templates-neph1.sql";
+--@"tkc-create-rman-rpt-templates-neph2.sql";
 @"tkc-create-rman-rpt-templates-neph2-h-2.sql";
 @"tkc-create-rman-comp-map.sql";
 
@@ -25,8 +25,10 @@
 
 @"tkc-create-package-rman-1.sql";
 
-ANALYZE table eadv compute statistics;
+--ANALYZE table eadv compute statistics;
 
 exec rman_pckg.compile_active_ruleblocks;
+
+exec rman_pckg.populate_eadv_tables;
 
 

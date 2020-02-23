@@ -60,37 +60,16 @@ BEGIN
         ); 
 */
 
---    rman_pckg.execute_ruleblock('htn_rcm',1,0,0,1);  
-
---    rman_pckg.execute_ruleblock('rrt',1,1,0,1); 
-
---    rman_pckg.execute_ruleblock('careplan',1,0,0,1);  
 
 rman_pckg.execute_ruleblock(
-        bid_in => 'dmg_loc',
+        bid_in => 'rrt',
         create_wide_tbl => 1,
-        push_to_long_tbl =>1,
+        push_to_long_tbl =>0,
         push_to_long_tbl2=>0,
         recompile=>1,
         return_code=>ret_val
 ); 
     
-/*
-    Execute all active ruleblock 
-    order determined by execution order
-    
-    usage :
-        rman_pckg.execute_active_ruleblocks(recompile={0,1});
-        eg :
---        rman_pckg.execute_active_ruleblocks;
-*/
-
---        rman_pckg.execute_ruleblocks(
---            batch_level_filter => '', 
---            drop_rout_tables_flag => 0,
---            compute_stats => 0    
---        ); 
-
 
     DBMS_OUTPUT.PUT_LINE('Exec');
     DBMS_OUTPUT.PUT_LINE('Return code->' || ret_val);

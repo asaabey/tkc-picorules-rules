@@ -87,7 +87,7 @@ BEGIN
         enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
         
                 
-        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 => 1},{=>0};
+        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 and dod is null => 1},{=>0};
         
         #doc(,
             {

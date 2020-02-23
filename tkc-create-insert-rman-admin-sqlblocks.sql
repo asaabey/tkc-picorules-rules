@@ -466,7 +466,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
         USING (
         SELECT DISTINCT
          lr.linked_registrations_id   AS eid,
-         ''csu_action_'' || prt.cse_block_id || ''_'' || prt.cse_att_id  AS att,
+         substr(''csu_action_'' || prt.cse_block_id,1,29)  AS att,
          prt.action_date              AS dt,
          prt.action_id                AS val
      FROM
