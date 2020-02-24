@@ -29,6 +29,3 @@
 
 exec rman_pckg.compile_active_ruleblocks;
 
-exec rman_pckg.populate_eadv_tables;
-
-

@@ -47,9 +47,9 @@ BEGIN
             }
         );
         
-        dod => eadv.dmg_dod.dt.min();
+        dod => rout_dmg.dod.val.bind();
         
-        dead : {dod is not null => 1},{=> 0};
+
         
         iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-365);
         iq_egfr => eadv.lab_bld_egfr.val.count(0).where(dt>sysdate-365);
@@ -182,6 +182,7 @@ BEGIN
             }
         );
         
+        dod => rout_dmg.dod.val.bind();
         
         iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-365);
         iq_egfr => eadv.lab_bld_egfr.val.count(0).where(dt>sysdate-365);
@@ -223,7 +224,7 @@ BEGIN
         enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
         
                 
-        ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 => 1},{=>0};
+        ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 and dod is null => 1},{=>0};
         
         #doc(,
             {
@@ -251,11 +252,13 @@ BEGIN
             }
         );
         
+        
+        
         t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
                     {ua_rbc>100 and ua_leu<40 => 1},    
                     {=>0};
         
-        tg4420 : { t4420_code >=2 => 1},{=>0};            
+        tg4420 : { t4420_code >=2 and ex_flag=0 => 1},{=>0};            
         
         #define_attribute(
             tg4420,
@@ -307,7 +310,10 @@ BEGIN
             }
         );
         
+          dod => rout_dmg.dod.val.bind();
+          
           rrt => rout_rrt.rrt.val.bind(); 
+          
           
         
           cr_n => eadv.lab_bld_creatinine.dt.count(); 
@@ -406,7 +412,9 @@ BEGIN
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
           
-          tg4100 : {akin_stage>=2 and aki_outcome>=2 => 1},{=>0};
+          ex_flag : {dod is not null => 1},{=>0};
+          
+          tg4100 : {akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
           
           #define_attribute(
                 tg4100,
@@ -460,10 +468,13 @@ BEGIN
             }
         );
         
+        dod => rout_dmg.dod.val.bind();
         
         aki_icd => eadv.[icd_n17%].dt.count(0).where(dt>sysdate-180);
+        
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg4110 : {aki_icd>0 => 1},{=>0};
+        tg4110 : {aki_icd>0 and ex_flag=0 => 1},{=>0};
           
         
                         
@@ -515,6 +526,9 @@ BEGIN
                 txt:"Get CKD G stage and slope"
             }
         );
+        
+        dod => rout_dmg.dod.val.bind();
+        
         cga_g => rout_ckd.cga_g.val.bind();
         
         ckd => rout_ckd.ckd.val.bind();
@@ -547,8 +561,10 @@ BEGIN
                 txt:"only if slope x is more than 180 and egfr last value less than 80 and max is known"
             }
         );
+        
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null=> 1},{=>0};
+        tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg4610,
@@ -600,6 +616,8 @@ BEGIN
             }
         );
         
+        dod => rout_dmg.dod.val.bind();
+        
         ckd => rout_ckd.ckd.val.bind();
         
         ckd_stage =>rout_ckd.ckd_stage.val.bind();
@@ -616,8 +634,9 @@ BEGIN
             }
         );
         
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null=> 1},{=>0};
+        tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg4620,
@@ -662,6 +681,8 @@ BEGIN
             }
         );
         
+        dod => rout_dmg.dod.val.bind();
+        
         hd_dt_min => eadv.icd_z49_1.dt.min();
         hd_n => eadv.icd_z49_1.dt.count(0);
         hd_dt_max => eadv.icd_z49_1.dt.max();
@@ -675,9 +696,9 @@ BEGIN
           
         pd_start : {pd_dt_min > sysdate-90 => 1},{=>0};
         
-        
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg4720 : { hd_start=1 or pd_start=1 => 1},{=>0};
+        tg4720 : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg4720,
@@ -725,6 +746,8 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
+        dod => rout_dmg.dod.val.bind();
+        
         #doc(,
             {
                 txt:"Exclude if previous cse action"
@@ -754,8 +777,9 @@ BEGIN
             }
         );
         
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 => 1},{=>0};
+        tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg4660,
@@ -799,6 +823,8 @@ BEGIN
             }
         );
         
+        dod => rout_dmg.dod.val.bind();
+        
         dm => rout_cd_dm.dm.val.bind();
         
         dm_rxn => rout_cd_dm.dm_rxn.val.bind();
@@ -838,9 +864,9 @@ BEGIN
         
         dm_untreat : {dm=1 and nvl(dm_rxn,0)=0 and nvl(hba1c_n0_val,0)>8 => 1},{=>0};
         
-        
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 => 1},{=>0};
+        tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg2610,
@@ -887,15 +913,17 @@ BEGIN
             }
         );
         
+        dod => rout_dmg.dod.val.bind();
+        
         esa_dt => eadv.rxnc_b03xa.dt.max().where(val=1);
         
         hb_i => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-180);
         
         hb_i1 => eadv.lab_bld_hb.val.lastdv(1);
         
-        
+        ex_flag : {dod is not null => 1},{=>0};
           
-        tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt=> 1},{=>0};
+        tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg4810,

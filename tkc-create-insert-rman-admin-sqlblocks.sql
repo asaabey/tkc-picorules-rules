@@ -24,32 +24,32 @@ INSERT INTO rman_admin_sqlblocks VALUES(
     ''    
 );
 
-INSERT INTO rman_admin_sqlblocks VALUES(
-    111,
-    'DROP INDEX EADV_ATT_IDX',
-    'drop index on att',
-    'build eadv',
-    1,
-    ''    
-);
+--INSERT INTO rman_admin_sqlblocks VALUES(
+--    111,
+--    'DROP INDEX EADV_ATT_IDX',
+--    'drop index on att',
+--    'build eadv',
+--    1,
+--    ''    
+--);
+--
+--INSERT INTO rman_admin_sqlblocks VALUES(
+--    112,
+--    'DROP INDEX EADV_ATT_IDX',
+--    'drop index on eid',
+--    'build eadv',
+--    1,
+--    ''    
+--);
 
-INSERT INTO rman_admin_sqlblocks VALUES(
-    112,
-    'DROP INDEX EADV_ATT_IDX',
-    'drop index on eid',
-    'build eadv',
-    1,
-    ''    
-);
-
-INSERT INTO rman_admin_sqlblocks VALUES(
-    115,
-    'TRUNCATE TABLE EADV',
-    'truncate eadv',
-    'build eadv',
-    1,
-    ''    
-);
+--INSERT INTO rman_admin_sqlblocks VALUES(
+--    115,
+--    'TRUNCATE TABLE EADV',
+--    'truncate eadv',
+--    'build eadv',
+--    1,
+--    ''    
+--);
 
 INSERT INTO rman_admin_sqlblocks VALUES(
     161,
@@ -164,7 +164,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
 
 INSERT INTO rman_admin_sqlblocks VALUES(
     137,
-    'DROP TABLE PATIENT_RESULTS_DERIVED',
+    'DROP TABLE PATIENT_RESULTS_DERIVED1',
     'drop table patient_results_derived',
     'build eadv',
     1,
@@ -173,7 +173,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
 
 INSERT INTO rman_admin_sqlblocks VALUES(
     138,
-    'CREATE TABLE patient_results_derived
+    'CREATE TABLE patient_results_derived1
     AS
          WITH egfr2009_base AS (
             SELECT
@@ -254,7 +254,7 @@ INSERT INTO rman_admin_sqlblocks VALUES(
             date_recorded as dt,
             round(result,0) as val
         FROM
-            patient_results_derived prd
+            patient_results_derived1 prd
         JOIN    patient_registrations pr on pr.id=prd.patient_registration_id
         JOIN    linked_registrations lr on lr.patient_registration_id=pr.id
         JOIN    rman_comp_map rcm on rcm.key=prd.derivedresultname

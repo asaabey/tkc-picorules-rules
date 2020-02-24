@@ -941,9 +941,7 @@ BEGIN
                 {
                     label:"At risk for CKD",
                     is_reportable:1,
-                    is_trigger:1,
-                    type:2,
-                    priority:1
+                    type:2
                 }
         );
         
@@ -952,9 +950,7 @@ BEGIN
                 {
                     label:"TKC active cohort",
                     is_reportable:1,
-                    is_trigger:1,
-                    type:2,
-                    priority:1
+                    type:2
                 }
         );
         

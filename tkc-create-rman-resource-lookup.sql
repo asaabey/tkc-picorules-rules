@@ -23,9 +23,9 @@ CREATE TABLE rman_resource_lookup (
 
     INSERT INTO rman_resource_lookup VALUES (
         'loc_sublocality',
-        'table',
-        'location_sublocalities',
-        'id',
+        'view',
+        'vw_locations',
+        'key',
         'name'
     );
 /
