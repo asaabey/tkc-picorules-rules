@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE rman_pckg AUTHID current_user AS
 /*
 
 Package		    rman_pckg
-Version		    1.0.1.11
+Version		    1.0.1.12
 Creation date	07/04/2019
-update on date  23/02/2020
+update on date  24/02/2020
 Author		    asaabey@gmail.com
 
 Purpose		
@@ -195,8 +195,9 @@ Change Log
 15/12/2019  implemented match_recognize with match_last((pattern)~define)
 14/02/2020  serializedv2 handles larger sequences by selecting monthly highs and lows only
             eadv_populate2 implemented
-23/02/2019  implemented match_recognize with match_last((pattern)~define) and where predicate
+23/02/2020  implemented match_recognize with match_last((pattern)~define) and where predicate
             drop_rout_tables_direct can be called directly
+24/02/2020  create missing indexes in eadv for execute_all
 */
     TYPE eadvx_tbl_type IS
         TABLE OF eadvx%rowtype;
@@ -4514,6 +4515,20 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
             return_code := 1;
             RAISE;
     END execute_ruleblock;
+    PROCEDURE create_eadv_idx_if_missing AS
+
+        already_exists EXCEPTION;
+        columns_indexed EXCEPTION;
+        PRAGMA exception_init ( already_exists, -955 );
+        PRAGMA exception_init ( columns_indexed, -1408 );
+    BEGIN
+        EXECUTE IMMEDIATE 'create bitmap index eadv_eid_idx on eadv (eid)';
+        EXECUTE IMMEDIATE 'create bitmap index eadv_att_idx on eadv (att)';
+        commit_log('create_eadv_idx_if_missing','','creating missing indexes');
+    EXCEPTION
+        WHEN already_exists OR columns_indexed THEN
+            commit_log('create_eadv_idx_if_missing','','indexes exist');
+    END create_eadv_idx_if_missing;
 
     PROCEDURE execute_active_ruleblocks IS
         rbs                   rman_ruleblocks_type;
@@ -4538,6 +4553,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks','',rbs.count || ' Ruleblocks added to stack');
             EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
+            create_eadv_idx_if_missing;
             FOR i IN rbs.first..rbs.last LOOP
                 BEGIN
                     bid := rbs(i).blockid;
@@ -4568,6 +4584,8 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
                                    || bid
                                    || ' and errors logged to rman_ruleblocks_log !');
     END execute_active_ruleblocks;
+    
+    
 
     PROCEDURE execute_ruleblocks (
         batch_level_filter      IN VARCHAR2,
@@ -4603,6 +4621,7 @@ CREATE OR REPLACE PACKAGE BODY rman_pckg AS
 
         IF rbs.count > 0 THEN
             commit_log('execute_active_ruleblocks','',rbs.count || ' Ruleblocks added to stack');
+            create_eadv_idx_if_missing;
             IF compute_stats = 1 THEN
                 commit_log('execute_active_ruleblocks','','computing stats for eadv');
                 EXECUTE IMMEDIATE 'ANALYZE TABLE EADV COMPUTE STATISTICS';
