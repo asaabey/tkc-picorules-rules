@@ -124,9 +124,7 @@ BEGIN
         
         loc_mode_n => eadv.dmg_location.val.count().where(val=loc_mode_full);
         
-        loc_cont3 => eadv.dmg_location.val.match_last((a{3,})~
-            a as val=next(val)
-        ).where(substr(val,-1)=1);
+      
         
         loc_last_2y => eadv.dmg_location.val.serialize2().where(dt>sysdate-365 and substr(val,-1)=1);
         

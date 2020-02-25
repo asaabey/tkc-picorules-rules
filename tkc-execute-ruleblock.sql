@@ -62,7 +62,7 @@ BEGIN
 
 
 rman_pckg.execute_ruleblock(
-        bid_in => 'tg4620',
+        bid_in => 'dmg_loc',
         create_wide_tbl => 1,
         push_to_long_tbl =>1,
         push_to_long_tbl2=>0,
