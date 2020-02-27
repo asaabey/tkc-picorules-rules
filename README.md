@@ -76,7 +76,7 @@ hb_last => eadv.lab_bld_haemoglobin.val.last();
 is_anaemic : { hb_last < 120 => 1},{=>0};
 ```
 
-when compiled to a fully executional SQL statement result in the following statment.
+when compiled to a fully executional SQL statement result in the following statement.
 
 ```sql
 WITH cte000 AS (
