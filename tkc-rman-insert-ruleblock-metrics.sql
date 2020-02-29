@@ -28,7 +28,7 @@ BEGIN
              #define_ruleblock(egfr_metrics,
                 {
                     description: "Algorithm to derive egfr metrics",
-                    version: "0.0.1.1",
+                    version: "0.0.1.2",
                     blockid: "egfr_metrics",
                     target_table:"rout_egfr_metrics",
                     environment:"DEV_2",
@@ -42,7 +42,11 @@ BEGIN
             );
             
                        
-            
+            #doc(,
+                {
+                    txt : "Gather last count first last one before last max and min egfr"
+                }
+            );
             
             egfr_n => eadv.lab_bld_egfr_c.val.count(0);
             
@@ -56,11 +60,60 @@ BEGIN
             
             egfr_min => eadv.lab_bld_egfr_c.val.minldv();
             
+            egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_rn_dt-30);
+            
+            egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_rn_dt-30);
+            
+            egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_rn_dt-90 and val<60);
+            
+            #doc(,
+                {
+                    txt : "calculate ratios"
+                }
+            );
+            
+            
             qt_r1_max : { egfr_r1_val>0 => round(egfr_max_val/egfr_r1_val,1)};
 
             qt_rn_min : { egfr_min_val>0 => round(egfr_rn_val/egfr_min_val,1)};
             
             qt_rn_rn1 : { egfr_rn1_val>0 => round(egfr_rn_val/egfr_rn1_val,1)};
+            
+            
+            #doc(,
+                {
+                    txt : "check for current vs historic"
+                }
+            );
+            
+            cur_gap : { egfr_rn_dt!? => round((sysdate - egfr_rn_dt)/365,0) },{=> -1};
+            
+            cur_flag : { cur_gap between 0 and 2  => 1},{ =>0};
+            
+            
+            #doc(,
+                {
+                    txt : "check for assumption violation where there is >20% variation in the last 3 months"
+                }
+            );
+            
+
+        
+            egfr_3m_qt : {egfr_3m_n2>=2 => round(egfr_rn_val/egfr_3m_mu,2)};
+        
+            asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
+            
+            #doc(,
+                {
+                    txt : "check for peristence "
+                }
+            );
+            
+            
+            
+        
+            pers : {egfr_3m_n > 0 => 1},{=>0};
+            
             
             r1_stg : { egfr_r1_val>=90 => 1},{ egfr_r1_val>=60 => 2},{ egfr_r1_val>=45 => 3},{ egfr_r1_val>=30 => 4},{ egfr_r1_val>=15 => 5},{ egfr_r1_val<15 => 6},{=>0};
             
@@ -126,6 +179,9 @@ BEGIN
             
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
     COMMIT;
