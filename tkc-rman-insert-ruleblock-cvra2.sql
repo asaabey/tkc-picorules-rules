@@ -175,7 +175,7 @@ BEGIN
         #define_ruleblock(kfre,
             {
                 description: "Ruleblock to calculate KFRE",
-                version: "0.0.1.1",
+                version: "0.0.1.2",
                 blockid: "kfre",
                 target_table:"rout_kfre",
                 environment:"PROD",
@@ -237,7 +237,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Apply equation"
+                txt:"Apply equation",
+                cite: "kfre_ref1, kfre_ref2"
             }
             
         );

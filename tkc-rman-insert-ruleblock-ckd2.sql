@@ -179,7 +179,7 @@ BEGIN
           #define_ruleblock(ckd,
             {
                 description: "Rule block to stage CKD",
-                version: "0.0.2.2",
+                version: "0.0.2.3",
                 blockid: "ckd",
                 target_table:"rout_ckd",
                 environment:"PROD",
@@ -326,6 +326,7 @@ BEGIN
         #doc(,
             {
                 txt : "Apply KDIGO 2012 staging"
+                cite:"ckd_1, ckd_2"
             }
         );
         
@@ -591,7 +592,8 @@ BEGIN
      #define_ruleblock(ckd_cause,
             {
                 description: "Rule block to determine causality for CKD",
-                version: "0.0.2.1",
+                cite "ckd_cause_ref1, ckd_cause_ref2"
+                version: "0.0.2.2",
                 blockid: "ckd_cause",
                 target_table:"rout_ckd_cause",
                 environment:"PROD",
@@ -1007,7 +1009,8 @@ BEGIN
         #define_ruleblock(ckd_complications,
             {
                 description: "Rule block to determine CKD complications",
-                version: "0.0.2.1",
+                cite: "ckd_complications_ref1, ckd_complications_ref2"
+                version: "0.0.2.2",
                 blockid: "ckd_complications",
                 target_table:"rout_ckd_complications",
                 environment:"PROD",

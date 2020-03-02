@@ -243,3 +243,147 @@ Support: Knowledge Engineering and Implementation. AMIA Annu Symp Proc. 2017 Feb
 PMC5333329'
 );
 /
+INSERT INTO rman_ruleblocks_citation VALUES (
+'ckd_ref1',
+'Kidney Disease: Improving Global Outcomes (KDIGO). KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease: Summary of Recommendation Statements. Kidney International Supplements. 2013;3(1):5-14.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'ckd_ref2',
+'Kidney Health Australia. Chronic Kidney Disease (CKD) Management in General Practice 3rd Edition. Melbourne: Kidney Health Australia; 2015. Available from: https://kidney.org.au/cms_uploads/docs/ckdm-in-gp-handbook.pdf'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'ckd_cause_ref1',
+'Kidney Disease: Improving Global Outcomes (KDIGO). KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease: Summary of Recommendation Statements. Kidney International Supplements. 2013;3(1):5-14.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'ckd_cause_ref2',
+'Mahmood U, Healy HG, Kark A, Cameron A, Wang Z, Abeysekera R, et al. Spectrum (characteristics) of patients with chronic kidney disease (CKD) with increasing age in a major metropolitan renal service. BMC Nephrol. 2017;18(1):372.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'kfre_ref1',
+'Tangri N, Stevens LA, Griffith J, Tighiouart H, Djurdjev O, Naimark D, et al. A predictive model for progression of chronic kidney disease to kidney failure. Jama. 2011;305(15):1553-9.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'kfre_ref2',
+'Tangri N, Grams ME, Levey AS, Coresh J, Appel LJ, Astor BC, et al. Multinational Assessment of Accuracy of Equations for Predicting Risk of Kidney Failure: A Meta-analysis. Jama. 2016;315(2):164-74.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'at_risk_ckd_ref1',
+'Johnson DW, Atai E, Chan M, Phoon RK, Scott C, Toussaint ND, et al. KHA-CARI guideline: Early chronic kidney disease: detection, prevention and management. Nephrology (Carlton, Vic). 2013;18(5):340-50.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'at_risk_ckd_ref2',
+'Kazancioglu R. Risk factors for chronic kidney disease: an update. Kidney Int Suppl (2011). 2013;3(4):368-71.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'at_risk_ckd_ref3',
+'Kidney Health Australia. Chronic Kidney Disease (CKD) Management in General Practice 3rd Edition. Melbourne: Kidney Health Australia; 2015. Available from: https://kidney.org.au/cms_uploads/docs/ckdm-in-gp-handbook.pdf.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'ckd_complications_ref1',
+'RCPA. Pathology Tests NSW: Royal College of Pathologists of Australasia; 2019 [cited 2020 Feb]. Available from: https://www.rcpa.edu.au/Manuals/RCPA-Manual/Pathology-Tests/.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'ckd_complications_ref2',
+'Kidney Health Australia. Chronic Kidney Disease (CKD) Management in General Practice 3rd Edition. Melbourne: Kidney Health Australia; 2015. Available from: https://kidney.org.au/cms_uploads/docs/ckdm-in-gp-handbook.pdf.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'obesity_ref1',
+' World Health Organization. Obesity: preventing and managing the global epidemic. Report of a WHO consultation. World Health Organization technical report series. 2000;894:i-xii, 1-253.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4610_ref1',
+'Coresh J, Turin TC, Matsushita K, Sang Y, Ballew SH, Appel LJ, et al. Decline in estimated glomerular filtration rate and subsequent risk of end-stage renal disease and mortality. Jama. 2014;311(24):2518-31.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4620_ref1',
+'Coresh J, Turin TC, Matsushita K, Sang Y, Ballew SH, Appel LJ, et al. Decline in estimated glomerular filtration rate and subsequent risk of end-stage renal disease and mortality. Jama. 2014;311(24):2518-31.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4620_ref2',
+'Janmaat CJ, van Diepen M, van Hagen CC, Rotmans JI, Dekker FW, Dekkers OM. Decline of kidney function during the pre-dialysis period in chronic kidney disease patients: a systematic review and meta-analysis. Clin Epidemiol. 2018;10:613-22.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4410_ref1',
+'RCPA. Pathology Tests NSW: Royal College of Pathologists of Australasia; 2019 [cited 2020 Feb]. Available from: https://www.rcpa.edu.au/Manuals/RCPA-Manual/Pathology-Tests/.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4410_ref2',
+'Kaminska J, Dymicka-Piekarska V, Tomaszewska J, Matowicka-Karna J, Koper-Lenkiewicz OM. Diagnostic utility of protein to creatinine ratio (P/C ratio) in spot urine sample within routine clinical practice. Critical reviews in clinical laboratory sciences. 2020:1-20.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4420_ref1',
+'Isbel NM. Glomerulonephritis--management in general practice. Australian family physician. 2005;34(11):907-13.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4420_ref2',
+'Madaio MP, Harrington JT. The diagnosis of glomerular diseases: acute glomerulonephritis and the nephrotic syndrome. Archives of internal medicine. 2001;161(1):25-34.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4420_ref3',
+'RCPA. Pathology Tests NSW: Royal College of Pathologists of Australasia; 2019 [cited 2020 Feb]. Available from: https://www.rcpa.edu.au/Manuals/RCPA-Manual/Pathology-Tests/.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4100_ref1',
+'Mehta RL, Kellum JA, Shah SV, Molitoris BA, Ronco C, Warnock DG, et al. Acute Kidney Injury Network: report of an initiative to improve outcomes in acute kidney injury. Critical Care. 2007;11(2):R31.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4100_ref2',
+'Low S, Vathsala A, Murali TM, Pang L, MacLaren G, Ng W-Y, et al. Electronic health records accurately predict renal replacement therapy in acute kidney injury. BMC Nephrology. 2019;20(1):32.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg2610_ref1',
+'Gregg LP, Hedayati SS. Management of Traditional Cardiovascular Risk Factors in CKD: What Are the Data? Am J Kidney Dis. 2018;72(5):728-44.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg2610_ref2',
+'Fraser SDS, Roderick PJ, May CR, McIntyre N, McIntyre C, Fluck RJ, et al. The burden of comorbidity in people with chronic kidney disease stage 3: a cohort study. BMC Nephrology. 2015;16(1):193.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4660_ref1',
+'Therapeutic Guidelines. Diabetes Melbourne: Therapeutic Guidelines Limited; 2019 [cited 2019 November]. Available from: https://tgldcdp.tg.org.au/topicTeaser?guidelinePage=Diabetes&etgAccess=true.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4660_ref2',
+'Australian Medicines Handbook. Endocrine Drugs Adelaide: Australian Medicines Handbook; 2019 [cited 2019 November]. Available from: https://amhonline.amh.net.au/chapters/endocrine-drugs?menu=vertical.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4660_ref3',
+'DeSantis A. Sodium-glucose co-transporter 2 inhibitors for the treatment of hyperglycemia in type 2 diabetes mellitus Waltham, MA: UpToDate Inc; 2019 [cited 2019 November]. Available from: https://www.uptodate.com/contents/sodium-glucose-co-transporter-2-inhibitors-for-the-treatment-of-hyperglycemia-in-type-2-diabetes-mellitus.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4810_ref1',
+'Australian Medicines Handbook. Drugs for Anaemias - Erythropoietin Agonists Adelaide: Australian Medicines Handbook; 2019 [cited 2019 November]. Available from: https://amhonline.amh.net.au/chapters/blood-electrolytes/drugs-anaemias/erythropoietin-agonists?menu=vertical.'
+);
+/
+INSERT INTO rman_ruleblocks_citation VALUES (
+'tg4810_ref2',
+'Jing Z, Wei-jie Y, Nan Z, Yi Z, Ling W. Hemoglobin targets for chronic kidney disease patients with anemia: a systematic review and meta-analysis. PLoS One. 2012;7(8):e43655.');
+/

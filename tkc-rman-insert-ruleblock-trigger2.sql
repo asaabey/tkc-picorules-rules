@@ -26,7 +26,8 @@ BEGIN
          #define_ruleblock(tg4410,
             {
                 description: "Algorithm to detect nephrotic syndrome",
-                version: "0.0.1.1",
+                cite: "tg4410_ref1, tg4410_ref2"
+                version: "0.0.1.2",
                 blockid: "tg4410",
                 target_table:"rout_tg4410",
                 environment:"DEV_2",
@@ -162,7 +163,7 @@ BEGIN
          #define_ruleblock(tg4420,
             {
                 description: "Algorithm to detect nephritic syndrome",
-                version: "0.0.1.1",
+                version: "0.0.1.2",
                 blockid: "tg4420",
                 target_table:"rout_tg4420",
                 environment:"DEV_2",
@@ -229,6 +230,7 @@ BEGIN
         #doc(,
             {
                 txt:"Inclusions"
+                cite: "tg4420_ref1, tg4420_ref2, tg4420_ref3"
             }
         );
         
@@ -286,12 +288,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate AKI trigger   */
+        /*  Algorithm to generate AKI trigger from community  */
         
          #define_ruleblock(tg4100,
             {
-                description: "Algorithm to generate AKI trigger",
-                version: "0.0.1.1",
+                description: "Algorithm to generate AKI trigger from community",
+                version: "0.0.1.2",
                 blockid: "tg4100",
                 target_table:"rout_tg4100",
                 environment:"PROD",
@@ -379,6 +381,7 @@ BEGIN
         #doc(,
             {
                 txt:AKI Stage as per AKIN excluding stage 1"
+                cite: "tg4100_ref1, tg4100_ref2"
             }
         );
           
@@ -443,12 +446,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate AKI from coding   */
+        /*  Algorithm to generate AKI from hospital coded diagnosis   */
         
          #define_ruleblock(tg4110,
             {
-                description: "Algorithm to detect nephritic syndrome",
-                version: "0.0.1.1",
+                description: "Algorithm to generate AKI from hospital coded diagnosis",
+                version: "0.0.1.2",
                 blockid: "tg4110",
                 target_table:"rout_tg4110",
                 environment:"DEV_2",
@@ -503,12 +506,13 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate CKD23 10 pa   */
+        /*  Algorithm to generate CKD2 or 3, rapid progression (20% decline per annum)   */
         
          #define_ruleblock(tg4610,
             {
-                description: "Algorithm to generate CKD23 10 pa ",
-                version: "0.0.1.1",
+                description: "Algorithm to generate CKD2 or 3, rapid progression (20% decline per annum) ",
+                cite: "tg4610_ref1"
+                version: "0.0.1.2",
                 blockid: "tg4610",
                 target_table:"rout_tg4610",
                 environment:"DEV_2",
@@ -591,13 +595,14 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate CKD45 10 pa without AVF   */
+        /*  Algorithm to generate CKD4 or 5, rapid progression (5% decline per annum), no AVF   */
         
         
          #define_ruleblock(tg4620,
             {
-                description: "Algorithm to generate CKD45 10 pa without AVF",
-                version: "0.0.1.1",
+                description: "Algorithm to generate CKD4 or 5, rapid progression (5% decline per annum), no AVF",
+                cite: "tg4620_ref1, tg4620+ref2"
+                version: "0.0.1.2",
                 blockid: "tg4620",
                 target_table:"rout_tg4620",
                 environment:"DEV_2",
@@ -730,7 +735,7 @@ BEGIN
          #define_ruleblock(tg4660,
             {
                 description: "Algorithm medication safety concern in CKD ",
-                version: "0.0.1.1",
+                version: "0.0.1.2",
                 blockid: "tg4660",
                 target_table:"rout_tg4660",
                 environment:"DEV_2",
@@ -761,6 +766,7 @@ BEGIN
         #doc(,
             {
                 txt:"presence of biguanide sglt2 nsaids "
+                cite: "tg4660_ref1, tg4660_ref2, tg4660_ref3"
             }
         );
         
@@ -805,12 +811,13 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to detect untreated dm   */
+        /*  Algorithm to detect detect untreated chronic disease   */
         
          #define_ruleblock(tg2610,
             {
-                description: "Algorithm to detect nephritic syndrome",
-                version: "0.0.1.1",
+                description: "Algorithm to detect untreated chronic disease",
+                cite: "tg2610_ref1, tg2610_ref2"
+                version: "0.0.1.2",
                 blockid: "tg2610",
                 target_table:"rout_tg2610",
                 environment:"DEV_2",
@@ -900,7 +907,8 @@ BEGIN
          #define_ruleblock(tg4810,
             {
                 description: "Algorithm to detect high haemoglobin while on ESA",
-                version: "0.0.1.1",
+                cite: "tg4810_ref1, tg4810_ref2"
+                version: "0.0.1.2",
                 blockid: "tg4810",
                 target_table:"rout_tg4810",
                 environment:"DEV_2",
