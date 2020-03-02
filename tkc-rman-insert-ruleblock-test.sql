@@ -109,7 +109,7 @@ BEGIN
         
         #define_attribute([[rb_id]],
             { 
-                label: "This is a test variable"
+                label: "This is a test variable cs"
             }
         );
     ';
