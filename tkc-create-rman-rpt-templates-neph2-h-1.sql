@@ -754,13 +754,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
      
      <line x1="<<line1_x1 />>" x2="<<line1_x2 />>" y1="<<line1_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
      
-     <line x1="0" x2="<<line1_x2 />>" y1="<<line2_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
-     
-     <line x1="0" x2="<<line1_x2 />>" y1="<<line1_y2 />>" y2="<<line1_y2 />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
-     
-     <line x1="0" x2="<<line1_x2 />>" y1="<<line_max_y />>" y2="<<line_max_y />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
+     <line x1="0" x2="<<line1_x2 />>" y1="<<line1_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
       
-     <text x="<<txt_lower_x />>" y="<<txt_lower_y />>" class="small"><<egfr_l_val />></text>  
+        
       
     </svg>
 
@@ -894,7 +890,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <tr class="syn_tr">
             <td>
                 <div>Sodium (mmol/l)</div>
-                
+                <svg class="svg_lab_panel">
+                  <rect class="svg_lab_panel_rect" />
+                  <circle cx="<<sodium2_x />>" cy="45" r="10" stroke="none" stroke-width="2" fill="red" fill-opacity="0.3" />
+                  <circle cx="<<sodium1_x />>" cy="45" r="10" stroke="black" stroke-width="2" fill="red" />
+                  <line x1="<<sodium2_x />>" y1="45" x2="<<sodium1_x />>" y2="45" style="stroke:black;stroke-width:2;stroke-dasharray:1,2" />
+                  
+                  <text x="150" y="15" text-anchor="middle" font-size="smaller"><<sodium_ref_l />></text>
+                  <text x="250" y="15" text-anchor="middle" font-size="smaller"><<sodium_ref_u />></text>
+    
+                </svg>
             </td>
             <td><<sodium1_val>><strong><<sodium1_val />></strong> (<<sodium1_dt />>)<</sodium1_val>></td>
             <td><<sodium2_val>><strong><<sodium2_val />></strong> (<<sodium2_dt />>)<</sodium2_val>></td>
@@ -906,7 +911,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <tr class="syn_tr">
             <td>
             <div>Potassium (mmol/l)</div>
-                
+                <svg class="svg_lab_panel">
+                  <rect class="svg_lab_panel_rect" />
+                  <circle class="svg_lab_panel_circle1" cx="<<potassium1_x />>" />
+                  <circle class="svg_lab_panel_circle2" cx="<<potassium2_x />>" />
+                  <line class="svg_lab_panel_line" x1="<<potassium2_x />>" x2="<<potassium1_x />>"  />
+                  
+                  <text x="150" y="15" class="svg_lab_panel_text"><<potassium_ref_l />></text>
+                  <text x="250" y="15" class="svg_lab_panel_text"><<potassium_ref_u />></text>
+    
+                </svg>
             
             </td>
             <td><<potassium1_val>><strong><<potassium1_val />></strong> (<<potassium1_dt />>)<</potassium1_val>></td>

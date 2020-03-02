@@ -64,11 +64,11 @@ BEGIN
             
             egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_rn_dt-30);
             
-            egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_rn_dt-90 and val<60);
+            egfr_3m_60_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_rn_dt-90 and val<60);
             
             #doc(,
                 {
-                    txt : "calculate ratios"
+                    txt : "calculate ratios max/first last/min last/last-1"
                 }
             );
             
@@ -109,10 +109,9 @@ BEGIN
                 }
             );
             
+
+            pers : {egfr_3m_60_n > 0 => 1},{=>0};
             
-            
-        
-            pers : {egfr_3m_n > 0 => 1},{=>0};
             
             
             r1_stg : { egfr_r1_val>=90 => 1},{ egfr_r1_val>=60 => 2},{ egfr_r1_val>=45 => 3},{ egfr_r1_val>=30 => 4},{ egfr_r1_val>=15 => 5},{ egfr_r1_val<15 => 6},{=>0};
@@ -122,6 +121,7 @@ BEGIN
             rmax_stg : { egfr_max_val>=90 => 1},{ egfr_max_val>=60 => 2},{ egfr_max_val>=45 => 3},{ egfr_max_val>=30 => 4},{ egfr_max_val>=15 => 5},{ egfr_max_val<15 => 6},{=>0};
             
             rmin_stg : { egfr_min_val>=90 => 1},{ egfr_min_val>=60 => 2},{ egfr_min_val>=45 => 3},{ egfr_min_val>=30 => 4},{ egfr_min_val>=15 => 5},{ egfr_min_val<15 => 6},{=>0};
+        
             
             gap_fl : { egfr_n>1 => egfr_rn_val-egfr_r1_val};
             
