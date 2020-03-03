@@ -748,6 +748,12 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             markerWidth="5" markerHeight="5">
           <circle cx="5" cy="5" r="10" fill="blue" />
         </marker>
+        <marker id="startarrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+              <polygon points="10 0, 10 7, 0 3.5" fill="black" />
+        </marker>
+        <marker id="endarrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto" markerUnits="strokeWidth">
+              <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+        </marker>
       </defs>
       <polyline points="<<xy_coords />>" 
       style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
@@ -760,7 +766,15 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
      
      <line x1="0" x2="<<line1_x2 />>" y1="<<line_max_y />>" y2="<<line_max_y />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
       
-     <text x="<<txt_lower_x />>" y="<<txt_lower_y />>" class="small"><<egfr_l_val />></text>  
+     <text x="0" y="<<txt_upper_y />>" class="small"><<egfr_max_val />> ml/min</text>  
+     
+     <text x="0" y="<<txt_lower_y />>" class="small"><<egfr_l_val />> ml/min</text>  
+     
+     <text x="0" y="<<egfr_graph_canvas_y />>" ><<egfr_f_dt />></text>  
+     
+     <text x="530" y="<<egfr_graph_canvas_y />>" ><<egfr_l_dt />></text>  
+     
+     <line x1="80" x2="520" y1="400" y2="400" stroke="#000" stroke-width="4" marker-end="url(#endarrow)" marker-start="url(#startarrow)" /> 
       
     </svg>
 
