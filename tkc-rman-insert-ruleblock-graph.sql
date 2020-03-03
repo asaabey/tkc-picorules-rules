@@ -178,11 +178,19 @@ BEGIN
             
             line1_y2 : {1=1 => round((egfr_graph_y_max-egfr_l_val) * y_scale,0) };
             
-            line_max_y : {1=1 => round(egfr_max_val * y_scale,0) };
+            line2_y1 : {1=1 => round((egfr_graph_y_max-egfr_f_val) * y_scale,0) };
+            
+            line_max_y : {1=1 => round((egfr_graph_y_max - egfr_max_val)*y_scale,0) };
                 
             slope1 : { egfr_l_dt - egfr60_last_dt>0 =>round(((egfr_l_val - egfr60_last_val)/(egfr_l_dt - egfr60_last_dt))*365.25,2) },{=>0};
             
             show_slope1 : { slope1 <-5 => 1 },{=>0};
+            
+            
+            txt_upper_y : { 1=1 => line_max_y -5};
+            
+            txt_lower_y : { 1=1 => line1_y2 - 5};
+            
             
             txt_slope1_x : {1=1 => round((line1_x1 + ((egfr_l_dt-egfr60_last_dt)/2))*x_scale,0)};
             
