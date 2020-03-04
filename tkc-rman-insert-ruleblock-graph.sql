@@ -308,7 +308,7 @@ BEGIN
                     is_active:2,
                     def_exit_prop:"acr_graph",
                     def_predicate:">0",
-                    exec_order:1
+                    exec_order:2
                     
                 }
             );

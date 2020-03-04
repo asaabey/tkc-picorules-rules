@@ -772,9 +772,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
      
      <text x="0" y="<<egfr_graph_canvas_y />>" ><<egfr_f_dt />></text>  
      
-     <text x="530" y="<<egfr_graph_canvas_y />>" ><<egfr_l_dt />></text>  
+     <text x="510" y="<<egfr_graph_canvas_y />>" ><<egfr_l_dt />></text>  
      
-     <line x1="80" x2="520" y1="400" y2="400" stroke="#000" stroke-width="4" marker-end="url(#endarrow)" marker-start="url(#startarrow)" /> 
+     <line x1="150" x2="450" y1="390" y2="390" stroke="#000" stroke-width="2" marker-end="url(#endarrow)" marker-start="url(#startarrow)" /> 
       
     </svg>
 
