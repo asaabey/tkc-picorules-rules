@@ -365,7 +365,7 @@ INSERT INTO rman_ruleblocks_citation VALUES (
 /
 INSERT INTO rman_ruleblocks_citation VALUES (
 'tg4660_ref1',
-'Therapeutic Guidelines. Diabetes Melbourne: Therapeutic Guidelines Limited; 2019 [cited 2019 November]. Available from: https://tgldcdp.tg.org.au/topicTeaser?guidelinePage=Diabetes&etgAccess=true.'
+'Therapeutic Guidelines. Diabetes Melbourne: Therapeutic Guidelines Limited; 2019 [cited 2019 November]. Available from: https%3A%2F%2Ftgldcdp.tg.org.au%2FtopicTeaser%3FguidelinePage%3DDiabetes%26etgAccess%3Dtrue.'
 );
 /
 INSERT INTO rman_ruleblocks_citation VALUES (

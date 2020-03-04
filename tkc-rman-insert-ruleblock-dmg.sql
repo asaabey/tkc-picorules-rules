@@ -49,8 +49,8 @@ BEGIN
         #define_attribute(
             dob,
             {
-                label:"Date of birth (latest registered)",
-                desc:"Date",
+                label:"Date of birth",
+                type:12,
                 is_reportable:1
             }
         );
@@ -58,20 +58,22 @@ BEGIN
         #define_attribute(
             dod,
             {
-                label:"Date of death (latest registered)",
-                desc:"Date",
+                label:"Date of death",
+                type:12,
                 is_reportable:1
             }
         );
         
         #define_attribute(
-            dod,
+            gender,
             {
-                label:"Gender (Male=1)",
-                desc:"Integer",
+                label:"Gender",
+                type:12,
                 is_reportable:1
             }
         );
+        
+        
         
                 
     ';

@@ -811,7 +811,6 @@ BEGIN
         #define_ruleblock(cd_obesity,
             {
                 description: "Ruleblock to assess obesity",
-                cite: "obesity_ref1"
                 version: "0.0.2.2",
                 blockid: "cd_cardiac",
                 target_table:"rout_cd_obesity",
@@ -874,7 +873,6 @@ BEGIN
         #define_ruleblock(at_risk_ckd,
             {
                 description: "Ruleblock to assess at_risk_ckd",
-                cite: "at_risk_ckd_ref1, at_risk_ckd_ref2, at_risk_ckd_ref3"
                 version: "0.0.2.2",
                 blockid: "at_risk_ckd",
                 target_table:"rout_at_risk_ckd",
@@ -888,6 +886,13 @@ BEGIN
                 
             }
         );
+        
+        #doc(,
+                {
+                    txt: "Risk factor assessment for CKD",
+                    cite: "at_risk_ckd_ref1, at_risk_ckd_ref2, at_risk_ckd_ref3"
+                }
+            ); 
         
         
         
