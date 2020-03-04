@@ -225,7 +225,7 @@ BEGIN
             
         );
         
-        kfre4v_ap : { least(dob,egfr_dt,uacr_dt) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
+        kfre4v_ap : { least(dob,egfr_dt,uacr_dt) is not null and male is not null and ckd>=4 and ckd<5 => 1},{=>0};
         
         egfr_1 : { 1=1 => egfr_val};
         

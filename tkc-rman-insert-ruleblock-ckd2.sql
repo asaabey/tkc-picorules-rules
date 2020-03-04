@@ -1114,7 +1114,7 @@ BEGIN
         phos_high : {phos_null=0 and phos_lv>=2 =>1},{=>0};
         
         pth_null : {pth_lv is null =>1},{=>0};
-        pth_high : {pth_null=0 and pth_lv>=72 =>1},{=>0};
+        pth_high : {pth_null=0 and pth_lv>=63 =>1},{=>0};
         
         #doc(,
             {

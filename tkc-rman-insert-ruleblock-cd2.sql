@@ -257,14 +257,14 @@ BEGIN
         
         #doc(,
             {
-                txt:"Diabetic glycaemic control which includes short and long term control",
+                txt:"Diabetic glycaemic levels which includes short and long term levels",
                 cite:"dm_pcd_2019,dm_ada_2018"
             }
         );
         
         #doc(,
             {
-                txt:"Australian guidelines set target glycaemic control as 7 but range from 6-8 in specific populations. However intensive glycaemic control 6pct has limited additional outcome benefits",
+                txt:"Australian guidelines set target glycaemic target as 7 but range from 6-8 in specific populations. However intensive glycaemic target 6pct has limited additional outcome benefits",
                 cite:"dm_bmj_2011,dm_nejm_2008,dm_ada_2016"
             }
         );
@@ -292,7 +292,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Categories control into 4 classes",
+                txt:"Categories levels into 4 classes",
                 cite:"dm_aihwa_atsi_kpi_2018"
             }
         );
@@ -338,7 +338,7 @@ BEGIN
         #define_ruleblock(cd_htn,
             {
                 description: "Algorithm to assess hypertension",
-                version: "0.1.2.1",
+                version: "0.1.2.2",
                 blockid: "cd_htn",
                 target_table:"rout_cd_htn",
                 environment:"PROD",
@@ -382,7 +382,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: observation criteria within 2 years",
+                txt:"Hypertension diagnosis: observation criteria >3 readings over SBP140 within 2 years",
                 cite:"htn_nhf_2016,htn_aha_2018,htn_mja_2016"
             }
         );
@@ -503,7 +503,7 @@ BEGIN
         
         htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>2 =>1},{=>0};
         
-        htn_dx_uncoded : {htn_obs>=2 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
+        htn_dx_uncoded : {htn_obs>=3 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
         
         #define_attribute(
             htn,
