@@ -101,9 +101,83 @@ BEGIN
             }
         );
         
-        hb_last => eadv.lab_bld_hb.val.last();
+        ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
         
-        is_anaemic : { hb_last < 120 => 1},{=>0};
+        
+        u88_att => eadv.[
+                            icpc_u88j91,
+                            icpc_u88j92,
+                            icpc_u88j93,
+                            icpc_u88j94,
+                            icpc_u88j95,
+                            icpc_u88j96
+                        ].att.last();
+        
+        u88_dt => eadv.[icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j96].dt.last();
+        
+        u99_att => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].att.last();
+        
+        u99_dt => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.last();
+        
+        u99f : { u99_att!? => to_number(substr(u99_att,-2))};
+        
+        u99v : { u99f=35 => 1},{ u99f=36 => 2},{ u99f=37 => 3},{ u99f=43 => 3},{ u99f=44 => 4},{ u99f=38 => 5},{ u99f=39 => 6},{=> 0};
+        
+        u88v : { u88_att!? => to_number(substr(u88_att,-1))},{=>0};
+        
+        ckd_icpc_ext : { u99_dt > u88_dt => u99v },{ u88_dt > u99_dt => u88v},{ => greatest(u88v,u99v)};
+        
+        err_flag : { ckd_icpc_val<> ckd_icpc_ext =>1},{=>0};
+        
+        [[rb_id]] : {. =>1};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "This is a test variable uics"
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
+    
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='test3';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Test  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a test algorithm",
+                version: "0.0.0.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:1,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+        ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
+        
         
         [[rb_id]] : {1=1 =>1};
         

@@ -97,7 +97,7 @@ BEGIN
         
         rrt_start : { hd_start=1 or pd_start=1 => 1},{=>0};
         
-        egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
+        egfr_l => eadv.lab_bld_egfr_c.val.lastdv().where(dt > sysdate - 365);
         
         egfr_l1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
         
@@ -110,15 +110,7 @@ BEGIN
         
         egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
         
-        #doc(,
-            {
-                txt : "Check for 1 year egfr assumption violation"
-            }
-        );
-        
-        egfr_1y_delta : {egfr_l1_val is not null => egfr_l_val-egfr_l1_val};
-        
-        asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
+
         
         #doc(,
             {
@@ -135,37 +127,43 @@ BEGIN
                
         
    
-        acr_l => eadv.lab_ua_acr.val.lastdv();
-            
+        acr_l => eadv.lab_ua_acr.val.lastdv().where(dt > sysdate - 365);
+        
+        acr_l1 => eadv.lab_ua_acr.val.lastdv().where(dt < acr_l_dt-30 and dt > sysdate - 365);    
         
         egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_l_dt-90 and val<60);
         acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
         
         pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
         
+        g_l_val:  {egfr_l_val>=90 AND rrt=0 => 1},
+                {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => 2},
+                {egfr_l_val<60 AND egfr_l_val>=45  AND rrt=0 => 3},
+                {egfr_l_val<45 AND egfr_l_val>=30  AND rrt=0 => 4},
+                {egfr_l_val<30 AND egfr_l_val>=15  AND rrt=0 => 5},
+                {egfr_l_val<15 AND rrt=0 => 6},
+                {=>0};
         
+        g_l1_val:  {egfr_l1_val>=90 AND rrt=0 => 1},
+                {egfr_l1_val<90 AND egfr_l1_val>=60  AND rrt=0 => 2},
+                {egfr_l1_val<60 AND egfr_l1_val>=45  AND rrt=0 => 3},
+                {egfr_l1_val<45 AND egfr_l1_val>=30  AND rrt=0 => 4},
+                {egfr_l1_val<30 AND egfr_l1_val>=15  AND rrt=0 => 5},
+                {egfr_l1_val<15 AND rrt=0 => 6},
+                {=>0};
         
-        
-        cga_g:  {egfr_l_val>=90 AND rrt=0 => `G1`},
-                {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => `G2`},
-                {egfr_l_val<60 AND egfr_l_val>=45  AND rrt=0 => `G3A`},
-                {egfr_l_val<45 AND egfr_l_val>=30  AND rrt=0 => `G3B`},
-                {egfr_l_val<30 AND egfr_l_val>=15  AND rrt=0 => `G4`},
-                {egfr_l_val<15 AND rrt=0 => `G5`},
-                {=>`NA`};
-
-        
-
-            
-        cga_a: {acr_l_val<3 => `A1`},
-                {acr_l_val<30 AND acr_l_val>=3 => `A2`},
-                {acr_l_val<300 AND acr_l_val>=30 => `A3`},
-                {acr_l_val>300 => `A4`},{=>`NA`};
+        g_l_l1_gap : { greatest(g_l_val,g_l1_val)>0 => g_l_val-g_l1_val};
                 
-        cga_a_val: {acr_l_val<3 => 1},
+                
+        a_l_val: {acr_l_val<3 => 1},
                 {acr_l_val<30 AND acr_l_val>=3 => 2},
                 {acr_l_val<300 AND acr_l_val>=30 => 3},
                 {acr_l_val>300 => 4},{=>0};
+        
+        a_l1_val: {acr_l1_val<3 => 1},
+                {acr_l1_val<30 AND acr_l1_val>=3 => 2},
+                {acr_l1_val<300 AND acr_l1_val>=30 => 3},
+                {acr_l1_val>300 => 4},{=>0};
         
         ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
                 {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => `2`},
@@ -226,6 +224,116 @@ BEGIN
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
+    -- END OF RULEBLOCK --
+
+         
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='at_risk_dense';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Test  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is the at_risk_dense algorithm",
+                version: "0.0.0.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:1,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+        ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
+        
+        dm_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.min();
+        
+        dm_icpc_fd => eadv.[icpc_t89%,icpc_t90%].dt.min();
+        
+        dm_fd : { dm_icd_fd!? and dm_icpc_fd!? => least(dm_icd_fd,dm_icpc_fd) },{dm_icd_fd!? => dm_icd_fd},{dm_icpc_fd!? => dm_icpc_fd};
+        
+        dm_prev : { dm_fd!? => 1 },{=>0};
+        
+        dm_incd : { dm_fd > sysdate - 365 => 1},{=>0};
+        
+        htn_icd_fd => eadv.[icd_i10_%,icd_i15_%].dt.min();
+        
+        htn_icpc_fd => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
+
+        htn_fd : { htn_icd_fd!? and htn_icpc_fd!? => least(htn_icd_fd,htn_icpc_fd) },{htn_icd_fd!? => htn_icd_fd},{htn_icpc_fd!? => htn_icpc_fd};
+        
+        htn_prev : { htn_fd!? => 1 },{=>0};
+        
+        htn_incd : { htn_fd > sysdate - 365 => 1},{=>0};
+        
+        ihd_fd => eadv.[icd_z95_1%,icpc_k54007,icd_i21%,icd_i22%,icd_i23%,icd_i24%,icd_i25%,icpc_k74%,icpc_k75%,icpc_k76%].dt.min(2900);
+        
+        cva_fd => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min(2900);
+            
+        pvd_fd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min(2900);
+        
+        cvd_fd : { least(ihd_fd,cva_fd,pvd_fd)< to_date(`29000101`,`YYYYMMDD`) => least(ihd_fd,cva_fd,pvd_fd)};
+        
+        
+        cvd_prev : { cvd_fd!? => 1 },{=>0};
+        
+        cvd_incd : { cvd_fd > sysdate - 365 => 1},{=>0};
+        
+        
+        
+        dyslip_fd => eadv.[icpc_t93%].dt.min();
+        
+        dyslip_prev : { dyslip_fd!? => 1 },{=>0};
+        
+        dyslip_incd : { dyslip_fd > sysdate - 365 => 1},{=>0};
+            
+        egfr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
+        
+        uacr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
+        
+        bp_1y_n => eadv.obs_bp_systolic.dt.count(0).where(dt > sysdate -365);
+        
+        screen_egfr : { egfr_1y_n>0 =>1 },{ => 0}; 
+        
+        screen_uacr : { uacr_1y_n>0 =>1 },{ => 0};
+        
+        screen_bp : { bp_1y_n>0 =>1 },{ => 0};
+        
+        screen_full : { . => screen_egfr + screen_uacr + screen_bp};
+        
+        mbs_715 => eadv.mbs_715.dt.count().where(dt > sysdate -365);
+        
+        mbs_721 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
+        
+        mbs_flag : { . => coalesce(mbs_715,mbs_721)};
+        [[rb_id]] : {1=1 =>1};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "This is a test variable uics"
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
     -- END OF RULEBLOCK --
   
     

@@ -25,16 +25,16 @@ BEGIN
         /* Algorithm to compute egfr metrics  */
         
             
-             #define_ruleblock(egfr_metrics,
+             #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to derive egfr metrics",
                     version: "0.0.1.2",
-                    blockid: "egfr_metrics",
-                    target_table:"rout_egfr_metrics",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
                     is_active:2,
-                    def_exit_prop:"egfr_metrics",
+                    def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
                     exec_order:1
                     
@@ -175,9 +175,77 @@ BEGIN
             n_avg : { mspan>0 => round(egfr_n/mspan,1)};
             
             
-            egfr_metrics : {1=1 =>1},{=>0};
+            [[rb_id]] : {1=1 =>1},{=>0};
             
     ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    
+        -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='acr_metrics';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to compute acr metrics  */
+        
+            
+             #define_ruleblock([[rb_id]],
+                {
+                    description: "Algorithm to derive uACR metrics",
+                    version: "0.0.1.2",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
+                    environment:"DEV_2",
+                    rule_owner:"TKCADMIN",
+                    is_active:2,
+                    def_exit_prop:"[[rb_id]]",
+                    def_predicate:">0",
+                    exec_order:1
+                    
+                }
+            );
+            
+            acr_l => eadv.lab_ua_acr._.lastdv();
+            
+            acr_f => eadv.lab_ua_acr._.firstdv();
+        
+            acr_max => eadv.lab_ua_acr.val.firstdv();
+            
+            acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
+
+            acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
+
+
+            cga_a: {acr_l_val<3 => `A1`},
+                {acr_l_val<30 AND acr_l_val>=3 => `A2`},
+                {acr_l_val<300 AND acr_l_val>=30 => `A3`},
+                {acr_l_val>300 => `A4`},{=>`NA`};
+                
+            cga_a_val: {acr_l_val<3 => 1},
+                {acr_l_val<30 AND acr_l_val>=3 => 2},
+                {acr_l_val<300 AND acr_l_val>=30 => 3},
+                {acr_l_val>300 => 4},{=>0};
+                       
+            
+            [[rb_id]] : {1=1 =>1},{=>0};
+            
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     
     
