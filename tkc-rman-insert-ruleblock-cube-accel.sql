@@ -32,7 +32,7 @@ BEGIN
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
-                is_active:2,
+                is_active:0,
                 def_exit_prop:"ckd_dense",
                 def_predicate:">0",
                 exec_order:1
@@ -85,54 +85,90 @@ BEGIN
         pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
-        hd_start : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
+        hd_incd : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
           
-        pd_start : {pd_dt_min > sysdate-365 => 1},{=>0};
+        pd_incd : {pd_dt_min > sysdate-365 => 1},{=>0};
         
-        rrt_start : { hd_start=1 or pd_start=1 => 1},{=>0};
+        rrt_incd : { hd_incd=1 or pd_incd=1 => 1},{=>0};
         
+        #doc(,
+            {
+                txt : "CKD staging based KDIGO 2012"
+            }
+        );
         
+        #doc(,
+            {
+                txt : "Exclusions"
+            }
+        );
+        
+        ex_flag : { rrt>0 =>1},{=>0};
+        
+        #doc(,
+            {
+                txt : "Read last,first, -30 day and -365 day egfr values"
+            }
+        );
         
         egfr_l => eadv.lab_bld_egfr_c.val.lastdv().where(dt > sysdate - 365);
         
         egfr_l1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt < egfr_l_dt-90 and dt>egfr_l_dt-365);
         
+        egfr_l2 => eadv.lab_bld_egfr_c.val.lastdv().where(dt < egfr_l_dt-365 and dt >egfr_l_dt-1095);
+        
         egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
         
         
-        egfr_single:{ iq_egfr=1 =>1},{=>0};
-        egfr_multiple:{ iq_egfr>1 =>1},{=>0};
-        egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
-        
-        egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
-        
-
-        
         #doc(,
             {
-                txt : "Check for 3 month egfr assumption violation"
+                txt : "Check for 30 day egfr assumption violation"
             }
         );
         
-        egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
-        egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
+        egfr_30_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
+        egfr_30_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
         
-        egfr_3m_qt : {egfr_3m_n2>=2 => round(egfr_l_val/egfr_3m_mu,2)};
+        egfr_30_qt : {egfr_30_n2>=2 => round(egfr_l_val/egfr_30_mu,2)};
         
-        asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
+        asm_viol_30 : {nvl(egfr_30_qt,1)>1.2 or nvl(egfr_30_qt,1)<0.8  => 1},{=> 0};
                
+        #doc(,
+            {
+                txt : "Check for 90 day egfr persistence"
+            }
+        );
         
+        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_l_dt-90 and dt > egfr_l_date-730 and val<90);
+        
+        g_pers : { egfr_3m_n>=2 => 1},{=>0};
+        
+        #doc(,
+            {
+                txt : "Check for 1y egfr progression"
+            }
+        );
    
+        l_l2_delta : {g_l_val!? and g_l2_val!? => g_l_val-g_l2_val};
+        
+        g_stage_prog : {l_l2_delta < -15 =>1},{=>0};
+        
+        #doc(,
+            {
+                txt : "Check for 30 day uacr persistence"
+            }
+        );
+        
         acr_l => eadv.lab_ua_acr.val.lastdv().where(dt > sysdate - 365);
         
-        acr_l1 => eadv.lab_ua_acr.val.lastdv().where(dt < acr_l_dt-30 and dt > sysdate - 365);    
+        acr_l1 => eadv.lab_ua_acr.val.lastdv().where(dt < acr_l_dt-30 and dt > sysdate - 730);    
         
-        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_l_dt-90 and val<60);
+        
         acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
         
-        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
+        a_pers : {acr_3m_n>=2 => 1},{=>0};
         
-        g_l_val:  {egfr_l_val>=90 AND rrt=0 => 1},
+        g_l_val:  {egfr_l_val>=90  => 1},
                 {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => 2},
                 {egfr_l_val<60 AND egfr_l_val>=45  AND rrt=0 => 3},
                 {egfr_l_val<45 AND egfr_l_val>=30  AND rrt=0 => 4},
@@ -161,34 +197,18 @@ BEGIN
                 {acr_l1_val<300 AND acr_l1_val>=30 => 3},
                 {acr_l1_val>300 => 4},{=>0};
         
-        ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
-                {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => `2`},
-                {cga_g=`G3A` => `3A`},
-                {cga_g=`G3B` => `3B`},
-                {cga_g=`G4` => `4`},
-                {cga_g=`G5` => `5`},
+        ckd_stage :{g_l_val=1 and a_l_val>1 => 1},
+                {g_l_val=2 and a_l_val>1 => 2},
+                {g_l_val>2 => g_l_val},
                 {=> null};
         
         
         
         
-        ckd :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) and rrt=0 => 1},
-                {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) and rrt=0 => 2},
-                {cga_g=`G3A` and rrt=0 => 3},
-                {cga_g=`G3B` and rrt=0 => 4},
-                {cga_g=`G4` and rrt=0 => 5},
-                {cga_g=`G5` and rrt=0 => 6},
-                {=> 0};
         
         
         cert_level : {ckd>0 and pers=1 and asm_viol_3m=0 =>3},{ckd>0 and pers=1 and asm_viol_3m=1 =>2},{ckd>0 and pers=0 and asm_viol_3m=0 =>1};
         
-        
-        cp_l => eadv.careplan_h9_v1.val.lastdv();
-        
-        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
-        
-        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
         
         
         dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
@@ -203,7 +223,7 @@ BEGIN
         
         avf => eadv.caresys_3450901.dt.max();
         
-        cp_mis :{cp_ckd>0 and (ckd - cp_ckd)>=2 => 1},{=>0};
+        
         
         avf_has : { avf is not null =>1},{=>0};
         
@@ -235,7 +255,7 @@ BEGIN
                 target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:1,
+                is_active:0,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:1
