@@ -836,6 +836,13 @@ BEGIN
         
         obs_icpc => eadv.[icpc_t82%].dt.count(0);
         
+        #doc(,
+                {
+                    txt: "Obesity diagnosis where BMI >30",
+                    cite: "cd_obesity_ref1"
+                }
+            );
+        
         obesity : { bmi>30 => 1 },{=>0};
         
         obs_dx_uncoded : {bmi>30 and greatest(obs_icd,obs_icpc)=0 =>1},{=>0};

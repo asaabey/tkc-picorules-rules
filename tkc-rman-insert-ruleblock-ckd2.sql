@@ -325,8 +325,8 @@ BEGIN
         
         #doc(,
             {
-                txt : "Apply KDIGO 2012 staging"
-                cite:"ckd_1, ckd_2"
+                txt : "Apply KDIGO 2012 staging",
+                cite: "ckd_1, ckd_2"
             }
         );
         
@@ -592,7 +592,6 @@ BEGIN
      #define_ruleblock(ckd_cause,
             {
                 description: "Rule block to determine causality for CKD",
-                cite "ckd_cause_ref1, ckd_cause_ref2"
                 version: "0.0.2.2",
                 blockid: "ckd_cause",
                 target_table:"rout_ckd_cause",
@@ -609,7 +608,8 @@ BEGIN
      
       #doc(,
         {
-            txt :"Gather coding supporting DM2 HTN LN and other GN"
+            txt :"Gather coding supporting DM2 HTN LN and other GN",
+            cite : "ckd_cause_ref1, ckd_cause_ref2",
         }
         
     );
@@ -1009,7 +1009,6 @@ BEGIN
         #define_ruleblock(ckd_complications,
             {
                 description: "Rule block to determine CKD complications",
-                cite: "ckd_complications_ref1, ckd_complications_ref2"
                 version: "0.0.2.2",
                 blockid: "ckd_complications",
                 target_table:"rout_ckd_complications",
@@ -1023,7 +1022,13 @@ BEGIN
                 
             }
         );
-        
+                
+        #doc(,
+            {
+                txt:"Complications including Hb low, metabolic bone, and electrolyte disturbances",
+                cite : "ckd_complications_ref1, ckd_complications_ref2"
+            }
+        );        
         
         ckd => rout_ckd.ckd.val.bind(); 
         

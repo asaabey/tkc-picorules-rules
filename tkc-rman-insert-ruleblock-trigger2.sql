@@ -26,7 +26,6 @@ BEGIN
          #define_ruleblock(tg4410,
             {
                 description: "Algorithm to detect nephrotic syndrome",
-                cite: "tg4410_ref1, tg4410_ref2"
                 version: "0.0.1.2",
                 blockid: "tg4410",
                 target_table:"rout_tg4410",
@@ -92,7 +91,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Inclusions"
+                txt:"Inclusions for nephrotic syndrome",
+                cite: "tg4410_ref1, tg4410_ref2"
             }
         );
         
@@ -229,7 +229,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Inclusions"
+                txt:"Inclusions for nephritic syndrome"
                 cite: "tg4420_ref1, tg4420_ref2, tg4420_ref3"
             }
         );
@@ -380,7 +380,7 @@ BEGIN
         
         #doc(,
             {
-                txt:AKI Stage as per AKIN excluding stage 1"
+                txt:AKI Stage as per AKIN excluding stage 1",
                 cite: "tg4100_ref1, tg4100_ref2"
             }
         );
@@ -511,7 +511,6 @@ BEGIN
          #define_ruleblock(tg4610,
             {
                 description: "Algorithm to generate CKD2 or 3, rapid progression (20% decline per annum) ",
-                cite: "tg4610_ref1"
                 version: "0.0.1.2",
                 blockid: "tg4610",
                 target_table:"rout_tg4610",
@@ -556,7 +555,8 @@ BEGIN
         
         #doc(,
             {
-                txt:"Triggered for stage 1 or 2 with eb of minus 20pc provided no renal encounter"
+                txt:"Triggered for stage 1 or 2 with eb of minus 20pc provided no renal encounter",
+                cite: "tg4610_ref1"
             }
         );
         
@@ -601,8 +601,7 @@ BEGIN
          #define_ruleblock(tg4620,
             {
                 description: "Algorithm to generate CKD4 or 5, rapid progression (5% decline per annum), no AVF",
-                cite: "tg4620_ref1, tg4620+ref2"
-                version: "0.0.1.2",
+                                version: "0.0.1.2",
                 blockid: "tg4620",
                 target_table:"rout_tg4620",
                 environment:"DEV_2",
@@ -636,6 +635,7 @@ BEGIN
         #doc(,
             {
                 txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc"
+                cite: "tg4620_ref1, tg4620_ref2"
             }
         );
         
@@ -765,7 +765,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"presence of biguanide sglt2 nsaids "
+                txt:"presence of biguanide sglt2 nsaids ",
                 cite: "tg4660_ref1, tg4660_ref2, tg4660_ref3"
             }
         );
@@ -816,7 +816,6 @@ BEGIN
          #define_ruleblock(tg2610,
             {
                 description: "Algorithm to detect untreated chronic disease",
-                cite: "tg2610_ref1, tg2610_ref2"
                 version: "0.0.1.2",
                 blockid: "tg2610",
                 target_table:"rout_tg2610",
@@ -872,7 +871,14 @@ BEGIN
         dm_untreat : {dm=1 and nvl(dm_rxn,0)=0 and nvl(hba1c_n0_val,0)>8 => 1},{=>0};
         
         ex_flag : {dod is not null => 1},{=>0};
-          
+
+        #doc(,
+            {
+                txt:"Chronic diseases include ckd, dm, possibly not on treatment",
+                cite: "tg2610_ref1, tg2610_ref2"
+            }
+        );
+
         tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
@@ -907,7 +913,6 @@ BEGIN
          #define_ruleblock(tg4810,
             {
                 description: "Algorithm to detect high haemoglobin while on ESA",
-                cite: "tg4810_ref1, tg4810_ref2"
                 version: "0.0.1.2",
                 blockid: "tg4810",
                 target_table:"rout_tg4810",
@@ -930,7 +935,14 @@ BEGIN
         hb_i1 => eadv.lab_bld_hb.val.lastdv(1);
         
         ex_flag : {dod is not null => 1},{=>0};
-          
+
+        #doc(,
+            {
+                txt:"activate if ckd3+ and above present",
+                cite: "tg4810_ref1, tg4810_ref2"
+            }
+        );
+
         tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
