@@ -48,18 +48,12 @@ BEGIN
         
         loc_mode_phc => eadv.dmg_location.val.stats_mode().where(substr(val,-1)=1);
         
+        loc_mode => eadv.dmg_location.val.stats_mode().where(dt > sysdate - 730);
+        
+        source => eadv.dmg_source.val.last();
         
         
         
-        iq_uacr => eadv.lab_ua_acr.val.count(0);
-        iq_egfr => eadv.lab_bld_egfr_c.val.count(0);
-        iq_coding => eadv.[icd_%,icpc_%].dt.count(0);
-        
-        iq_tier: {iq_coding>1 and least(iq_egfr,iq_uacr)>=2 => 4},
-                {least(iq_egfr,iq_uacr)>=2 => 3},
-                {least(iq_egfr,iq_uacr)>=1 => 2},
-                {iq_egfr>0 or iq_uacr>0 => 1},
-                {=>0};
                 
         hd_z49_n => eadv.icd_z49_1.dt.count(0);
         
@@ -97,9 +91,11 @@ BEGIN
         
         rrt_start : { hd_start=1 or pd_start=1 => 1},{=>0};
         
+        
+        
         egfr_l => eadv.lab_bld_egfr_c.val.lastdv().where(dt > sysdate - 365);
         
-        egfr_l1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
+        egfr_l1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt < egfr_l_dt-90 and dt>egfr_l_dt-365);
         
         egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
         
@@ -199,14 +195,7 @@ BEGIN
         
         dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};
         
-        
-        dx_ckd_stage :{dx_ckd=1 => `1`},
-                {dx_ckd=2 => `2`},
-                {dx_ckd=3 => `3A`},
-                {dx_ckd=4 => `3B`},
-                {dx_ckd=5 => `4`},
-                {dx_ckd=6 => `5`},
-                {dx_ckd=0 => `0`};
+ 
                 
         
         dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
@@ -296,26 +285,34 @@ BEGIN
         dyslip_prev : { dyslip_fd!? => 1 },{=>0};
         
         dyslip_incd : { dyslip_fd > sysdate - 365 => 1},{=>0};
+        
+        obs_icd => eadv.[icd_e66%,icpc_t82%].dt.min();
+        
+        
             
         egfr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
         
         uacr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
         
-        bp_1y_n => eadv.obs_bp_systolic.dt.count(0).where(dt > sysdate -365);
+        
         
         screen_egfr : { egfr_1y_n>0 =>1 },{ => 0}; 
         
         screen_uacr : { uacr_1y_n>0 =>1 },{ => 0};
         
-        screen_bp : { bp_1y_n>0 =>1 },{ => 0};
         
-        screen_full : { . => screen_egfr + screen_uacr + screen_bp};
+        
+        screen_full : { . => screen_egfr + screen_uacr };
         
         mbs_715 => eadv.mbs_715.dt.count().where(dt > sysdate -365);
         
+        mbs_715_2y => eadv.mbs_715.dt.count().where(dt > sysdate -730)
+        
         mbs_721 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
         
-        mbs_flag : { . => coalesce(mbs_715,mbs_721)};
+        mbs_723 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
+        
+        mbs_flag : { . => coalesce(mbs_715,mbs_721,mbs_723)};
         [[rb_id]] : {1=1 =>1};
         
         #define_attribute([[rb_id]],
