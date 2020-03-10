@@ -1,7 +1,7 @@
 --TKC Composition
 --Version 	0.0.2.0
 --Creation date	24/11/2019
---Authour		ASAABEY
+--Author		ASAABEY
 --
 --Purpose
 --
@@ -212,11 +212,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','alert_tg4810','tg4810',304810,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div class="syn_alert_box">
-    <h5>Alert : High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
-    Current haemoglobin is <<hb_i_val />> g/L which has increased from a previous hb of <<hb_i1_val />> g/L.<br /> 
-    The ESA was last prescribed on \t <<esa_dt />>
-    This finding is associated with a higher all-cause mortality in CKD and RRT patients.\n
-    It is possible that the medication is not administered,or an undocumented dose reduction has occured.<br />
+    <h5>Alert: High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
+    Current haemoglobin is <<hb_i_val />> g/L which has increased from a previous hb of <<hb_i1_val />> g/L. <br />
+    The ESA was last prescribed on \t <<esa_dt />>. 
+    This finding is associated with a higher all-cause mortality in CKD and RRT patients.\n 
+    It is possible that the medication is not administered,or an undocumented dose reduction has occured.
     </div>
     
     '
@@ -225,9 +225,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','alert_tg4620','tg4620',304620,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div class="syn_alert_box">
-    <h5>Alert : Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
-    There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter
-    <<avf>>Please note the AVF creation on <</avf>><<avf />>
+    <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
+    There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter. <br />
+    <<avf>>Please note the AVF creation on <</avf>>.<<avf />>
     </div>
     '
     );
@@ -235,10 +235,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','alert_tg4610','tg4610',304610,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div class="syn_alert_box">
-    <h5>Alert : Unmanaged possible early CKD with rapid progression (Trigger 4610)</h5>
-    The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb /> ml/min/yr without a recent specialist encounter
-    <<egfrlv>>The last eGFR was <<egfrlv />> ml/min on <</egfrlv>><<egfrld />><<egfr_max_v>> with a decline from <<egfr_max_v />><<egfr_max_v />> ml/min on <</egfr_max_ld />><</egfr_max_ld>> 
-    <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria.<</ckd_null>>
+    <h5>Alert: Unmanaged possible early CKD with rapid progression (Trigger 4610)</h5>
+    The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb /> ml/min/yr without a recent specialist encounter. <br />
+    <<egfrlv>>The last eGFR was <<egfrlv />> ml/min on <</egfrlv>><<egfrld />><<egfr_max_v>> with a decline from <<egfr_max_v />><<egfr_max_v />> ml/min on <</egfr_max_ld />>. <</egfr_max_ld>>
+    <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria. <</ckd_null>>
     </div>
     '
     );
@@ -246,13 +246,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','alert_tg4100','tg4100',304100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div class="syn_alert_box">
-    <h5>Alert : Acute kidney injury in community (Trigger 4100)</h5>
-    Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>
-    This is consistent with an acute kidney injury (AKIN stage 2 or above).
-    <<aki_outcome=3>>There is no resolution <</aki_outcome=3>>
-    <<aki_outcome=2>>There appears to be partial resolution<</aki_outcome=2>>
-    <<aki_outcome=1>>There appears to be complete resolution<</aki_outcome=1>>
-    last recored creatinine is <<cr_lv />>umol/l on <<cr_ld />>.
+    <h5>Alert: Acute kidney injury in community (Trigger 4100)</h5>
+    Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>. <br /> 
+    This is consistent with an acute kidney injury (AKIN stage 2 or above). 
+    <<aki_outcome=3>>There is no resolution. <</aki_outcome=3>> 
+    <<aki_outcome=2>>There appears to be partial resolution. <</aki_outcome=2>>
+    <<aki_outcome=1>>There appears to be complete resolution. <</aki_outcome=1>> 
+    last recorded creatinine is <<cr_lv />>umol/l on <<cr_ld />>.
     </div>
     '
     );
@@ -262,12 +262,12 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <div class="syn_alert_box">
     <h5>
-    Alert : Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
+    Alert: Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
     </h5>
-    The last uACR was <<uacr1 />> mg/mmol and the one before was <<uacr2 />> mg/mmol.
-    <<iq_tier=3>>Serum Albumin and Cholesterol have been checked <<low_alb>> and there is hypoalbuminaemia<</low_alb>><<higl_chol>> and hypercholesterolaemia<</higl_chol>><</iq_tier=3>>
-    This is consistent with a primary nephrotic syndrome
-    <<iq_tier=4>>It is noted that autoimmune and other relevant serological tests have been performed<</iq_tier=4>>
+    The last uACR was <<uacr1 />> mg/mmol and the one before was <<uacr2 />> mg/mmol. <br />  
+    <<iq_tier=3>>Serum Albumin and Cholesterol have been checked <<low_alb>> and there is hypoalbuminaemia<</low_alb>><<higl_chol>> and hypercholesterolaemia<</higl_chol>>. <</iq_tier=3>>
+    This is consistent with a primary nephrotic syndrome. 
+    <<iq_tier=4>>It is noted that autoimmune and other relevant serological tests have been performed.<</iq_tier=4>>
     </div>
     '
     );
@@ -277,9 +277,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <div class="syn_alert_box">
     <h5>
-    Alert : New commencement on Renal replacement therapy (Trigger 4720)
+    Alert: New commencement on Renal replacement therapy (Trigger 4720)
     </h5>
-    <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min />><<hd_start>>
+    <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min />>. <<hd_start>>
     </div>
     '
     );
@@ -288,12 +288,12 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <div class="syn_alert_box">
     <h5>
-    Alert : Medication safety concern (Trigger 4660)
+    Alert: Medication safety concern (Trigger 4660)
     </h5>
-    This patient is on <<dm_rxn_bg>>a biguanide,<</dm_rxn_bg>><<dm_rxn_sglt2>> SGLT2 inhibitor,<</dm_rxn_sglt2>><<rx_nsaids>> NSAIDS,<</rx_nsaids>> which is inconsistent with the current renal function.
-    <<dm_rxn_bg>>Biguanides may be rarely associated with lactic acidosis at this level of renal function<</dm_rxn_bg>>
-    <<dm_rxn_sglt2>>SGLT2 inhibitors are relatively contra-indicated at this level of renal function<</dm_rxn_sglt2>>
-    <<rx_nsaids>>NSAIDS may cause additional renal injury<</rx_nsaids>>
+    This patient is on <<dm_rxn_bg>>a biguanide,<</dm_rxn_bg>><<dm_rxn_sglt2>> SGLT2 inhibitor,<</dm_rxn_sglt2>><<rx_nsaids>> NSAIDS,<</rx_nsaids>> which may be inconsistent with current renal function. <br />
+    <<dm_rxn_bg>>Biguanides may be rarely associated with lactic acidosis at this level of renal function. <</dm_rxn_bg>>
+    <<dm_rxn_sglt2>>SGLT2 inhibitors are relatively contra-indicated at this level of renal function. <</dm_rxn_sglt2>>
+    <<rx_nsaids>>NSAIDS may cause additional renal injury.<</rx_nsaids>>
     </div>
     '
     );
@@ -302,11 +302,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <div class="syn_alert_box">
     <h5>
-    Alert : Potentially untreated chronic disease (Trigger 2610)
+    Alert: Potentially untreated chronic disease (Trigger 2610)
     </h5>
-    <<dm_untreat>>Likely to require pharmacotherapy for glycaemic control. No active medications are detected.<</dm_untreat>>
-    <<ckd_untreat>>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease<</ckd_untreat>>
-    <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />) and serum potassium is <<k_val />> mmol/l (<<k_dt />>)<</ckd_untreat>>
+    <<dm_untreat>>Likely to require pharmacotherapy for glycaemic control. No active medications are detected. <</dm_untreat>>
+    <<ckd_untreat>>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease. <</ckd_untreat>>
+    <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />) and serum potassium is <<k_val />> mmol/l (<<k_dt />>).<</ckd_untreat>>
     </div>
     '
     );
@@ -321,7 +321,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<dm_micvas>><li>Non-renal microvascular complications present</li><</dm_micvas>>
             <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val />> % (<<hba1c_n0_dt />>)</li><</hba1c_n_tot>>
             <<dm_rxn=0>>
-                <li>Non-medicated</li>
+                <li>No medications recorded</li>
             <</dm_rxn=0>>
             <<dm_rxn>>
                 <li>Current medication classes
@@ -335,10 +335,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 </li>
             <</dm_rxn>>
             <<cp_dm=0>>
-                <li>Diabetes careplan was not detected [2.4]</li>
+                <li>PCIS diabetes careplan was not detected [2.4]</li>
             <</cp_dm=0>>
             <<cp_dm>>
-                <li>Diabetes careplan was updated on <<cp_dm_ld />></li>
+                <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
             <</cp_dm>>
         </ul>
         </li>
@@ -371,7 +371,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<bp_control>>
             <li>
                 BP control <<bp_control=3>>appears to be adequate<</bp_control=3>>
-                <<bp_control=2>>can be optimized<</bp_control=2>>
+                <<bp_control=2>>can be optimised<</bp_control=2>>
                 <<bp_control=1>>appears to sub-optimal<</bp_control=1>>
                 <<bp_control=0>>could not be determined<</bp_control=0>>[3.3]
             </li>
@@ -396,8 +396,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_htn_rec_1','htn_rcm',703100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <<htn_icpc=0>><div>Recommendation [3.1] Update diagnosis to hypertension</div><</htn_icpc=0>>
-    <<bpc=2>><div>Recommendation [3.4] Optimize BP control</div><</bpc=2>>
-    <<bpc=3>><div>Recommendation [3.4] Optimize BP control</div><</bpc=3>>
+    <<bpc=2>><div>Recommendation [3.4] Optimise BP control</div><</bpc=2>>
+    <<bpc=3>><div>Recommendation [3.4] Optimise BP control</div><</bpc=3>>
     <<htn_rcm=11>><div>Recommendation [3.4.1] Consider adding ACEi or ARB (RAAS blockade) which is recommended as first line therapy</div><</htn_rcm=11>>
     <<htn_rcm=12>><div>Recommendation [3.4.1] Consider adding DHP-CCB instead of RAAS blockade as there is a risk worsening hyperkalaemia</div><</htn_rcm=12>>
     <<htn_rcm=22>><div>Recommendation [3.4.1] Consider adding CCB which is recommended as second line therapy</div><</htn_rcm=22>>
@@ -431,7 +431,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <<cad_mi_icd>><li>First myocardial infarction <<cad_mi_icd />></li><</cad_mi_icd>>
             </ul>
             </li><</cad>>
-            <<vhd>><li>Valvular heart disease :
+            <<vhd>><li>Valvular heart disease:
             <ul>
                 <<vhd_mv_icd>><li>Mitral valve disease <<vhd_mv_icd />></li><</vhd_mv_icd>>
                 <<vhd_av_icd>><li>Aortic valve disease <<vhd_av_icd />></li><</vhd_av_icd>>
@@ -477,16 +477,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <li><b>CKD stage <<ckd_stage />></b>
     <ul>
     <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
-    <<dx_ckd=0>><li>No coded diagnosis on the EHR [1.2]</li><</dx_ckd=0>>
+    <<dx_ckd=0>><li>No coded diagnosis on the EHR (ICD/ICPC coding) [1.2]</li><</dx_ckd=0>>
     <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>
     <<egfr_l_val>><li>Last eGFR is <strong><<egfr_l_val />></strong> ml/min/1.73m2 (<<egfr_l_dt />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfr_l_val>>
     <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
     <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
     <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
-    <<enc_ld>><li>Last encounter with renal services was on <<enc_ld />>and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
+    <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />>and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
     <<avf>><li>An arterio-venous fistula has been created on <<avf />></li><</avf>>
-    <<cp_ckd=0>><li>No current careplan for CKD</li><</cp_ckd=0>>
-    <<cp_ckd>><li>CKD current careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
+    <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
+    <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
     <ul>
     <<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>>
     </ul>
@@ -567,7 +567,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_ckd_recm_2','ckd_complications',701200,'dev','tkc',TO_DATE(SYSDATE),
     '
     <<hco3_low>><div>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</div><</hco3_low>>
-    <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phsophate binder therapy</div><</phos_high>>
+    <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phosphate binder therapy</div><</phos_high>>
     '
     );
 
@@ -576,12 +576,12 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_ckd_footnote_1','ckd',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <<egfr_single>><div>Note [1.1] This is based on a single egfr value on <<egfr_l_dt />></div><</egfr_single>>
-    <<egfr_multiple>><div>Note [1.1] This is based on <<iq_egfr />> egfr values between <<egfr_f_dt />> and <<egfr_l_dt />></div><</egfr_multiple>>
-    <<egfr_outdated>><div>Note [1.2.1] Last egfr on <<egfr_l_dt />></div><</egfr_outdated>>
+    <<egfr_multiple>><div>Note [1.1] This is based on <<iq_egfr />> eGFR values between <<egfr_f_dt />> and <<egfr_l_dt />></div><</egfr_multiple>>
+    <<egfr_outdated>><div>Note [1.2.1] Last eGFR on <<egfr_l_dt />></div><</egfr_outdated>>
     <<acr_outdated>><div>Note [1.2.2] Last uACR on <<acr_l_dt />></div><</acr_outdated>>
     <<asm_viol_3m>><div>Note [1.2.3] Assumption violation present. +/- 20% fluctuation in last 30 days </div><</asm_viol_3m>>
-    <<egfr_decline>><div>Note [1.3] Maximum eGFR of <<egfr_max_val />> ml/min/1.73m2 on <<egfr_max_dt />>  with the most recent value being <<egfr_l_val />></div><</egfr_decline>>
-    <<iq_tier=4>><div>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR value (Tier 4).</div><</iq_tier=4>>
+    <<egfr_decline>><div>Note [1.3] Maximum eGFR of <<egfr_max_val />> ml/min/1.73m2 on <<egfr_max_dt />> with the most recent value being <<egfr_l_val />></div><</egfr_decline>>
+    <<iq_tier=4>><div>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR values (Tier 4).</div><</iq_tier=4>>
     <<iq_tier=3>><div>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). </div><</iq_tier=3>>
     <<iq_tier=2>><div>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3).</div> <</iq_tier=2>>
     <<iq_tier=1>><div>Note [1.0] This was based on at least one eGFR or uACR value (Tier 4). </div><</iq_tier=1>>
@@ -604,16 +604,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <<cvra=1>><li>The composite 5 year CVD risk is low</li><</cvra=1>> 
         <<risk_high_ovr>><li>The patient meets criteria for high CVR without calculation
         <ul>
-            <<cvd_prev>><li>previous documented CVD event</li><</cvd_prev>>
+            <<cvd_prev>><li>Previously documented CVD event</li><</cvd_prev>>
             <<dm60>><li>Diabetes and age more than 60</li><</dm60>>
             <<dmckd1>><li>Diabetes and albuminuria</li><</dmckd1>>
             <<ckd3>><li>CKD 3b or above</li><</ckd3>>
-            <<tc7>><li>total cholesterol more than 7.5</li><</tc7>>
-            <<sbp180>><li>systolic bp more than 180mmHg</li><</sbp180>>
-            <<age74>><li>age more than 74 and ATSI</li><</age74>>
+            <<tc7>><li>Total cholesterol more than 7.5</li><</tc7>>
+            <<sbp180>><li>Systolic bp more than 180mmHg</li><</sbp180>>
+            <<age74>><li>Age more than 74 and ATSI</li><</age74>>
         </ul></li><</risk_high_ovr>>
-        <<cp_hicvr=0>><li>There is no cv careplan</li><</cp_hicvr=0>>
-        <<cp_hicvr=1>><li>A high CVR careplan is already in place</li><</cp_hicvr=1>>
+        <<cp_hicvr=0>><li>There is no PCIS CVR careplan</li><</cp_hicvr=0>>
+        <<cp_hicvr=1>><li>A PCIS high CVR careplan is already in place</li><</cp_hicvr=1>>
         </ul>
     </ul>
     '
@@ -621,16 +621,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cvra_rec_1','cvra',704100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<cvra=3>><<cp_hicvr=0>><div>Recommendation [4.1]  Update care plan to include High CVR </div><</cp_hicvr=0>><</cvra=3>>
-    <<cvra=3>><<smoke0=30>><div>Recommendation [4.2]  Given high cvr status the smoking cessation is strongly advised </div><</smoke0=30>><</cvra=3>>
-    <<cvra=2>><<smoke0=30>><div>Recommendation [4.2]  Given moderate cvr status the smoking cessation is advised </div><</smoke0=30>><</cvra=2>>
+    <<cvra=3>><<cp_hicvr=0>><div>Recommendation [4.1] Update PCIS care plan to include high CVR </div><</cp_hicvr=0>><</cvra=3>>
+    <<cvra=3>><<smoke0=30>><div>Recommendation [4.2] Given high CVR status the smoking cessation is strongly advised </div><</smoke0=30>><</cvra=3>>
+    <<cvra=2>><<smoke0=30>><div>Recommendation [4.2] Given moderate CVR status the smoking cessation is advised </div><</smoke0=30>><</cvra=2>>
 
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cvra_footnote_1','cvra',804100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<risk_high_ovr=0>><div>Note [4.1] The Framigham risk equation was used as per heart foundation guidelines. The CARPA 7th STM uses the same methodology</div><</risk_high_ovr=0>>
+    <<risk_high_ovr=0>><div>Note [4.1] The Framingham risk equation was used as per heart foundation guidelines. The CARPA 7th STM uses the same methodology</div><</risk_high_ovr=0>>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -638,13 +638,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <ul>
         <li>Renal services engagement</li>
-        <<enc_multi=0>><li><<enc_ld>>Nephrologist review <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
-        <<enc_multi>><li>Nephrologist reviews :\t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li> <</enc_multi>>
-        <<edu_init>><li>CKD Education (initial) :\t<<edu_init />></li><</edu_init>>
-        <<edu_rv>><li>CKD Education review (last) :\t<<edu_rv />></li><</edu_rv>>
-        <<dietn>><li>Renal Dietician review (last) :\t<<dietn />></li><</dietn>>
-        <<sw>><li>Renal social work review (last) :\t<<sw />></li><</sw>>
-        <<avf_ld>><li>CKD Access (AVF) formation date :\t\t<<avf_ld />></li><</avf_ld>>
+        <<enc_multi=0>><li><<enc_ld>>Nephrologist reviews <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
+        <<enc_multi>><li>Nephrologist reviews: \t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li> <</enc_multi>>
+        <<edu_init>><li>CKD Education (initial): \t<<edu_init />></li><</edu_init>>
+        <<edu_rv>><li>CKD Education review (last): \t<<edu_rv />></li><</edu_rv>>
+        <<dietn>><li>Renal Dietician review (last): \t<<dietn />></li><</dietn>>
+        <<sw>><li>Renal social work review (last): \t<<sw />></li><</sw>>
+        <<avf_ld>><li>CKD Access (AVF) formation date: \t\t<<avf_ld />></li><</avf_ld>>
     </ul>
     '
     );
@@ -652,23 +652,23 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_ckd_dx_1','ckd_diagnostics',601110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li>diagnostic workup
+    <li>Diagnostic workup
     <ul>
     <li>Basic urinalysis
     <<ua_null=1>> not performed <</ua_null=1>>
     <<ua_rbc_ld>> last performed on <<ua_rbc_ld />> and shows<</ua_rbc_ld>>
     <<ua_null=0>>
-        <<ua_pos=0>> no significance<</ua_pos=0>>
+        <<ua_pos=0>> no significant findings<</ua_pos=0>>
         <<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>>
         <<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>>
     <</ua_null=0>></li>
-    <li>ANA Serology : <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
-    <li>ANCA Serology : <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld />><</anca_null=0>></li>
-    <li>Complements : <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld />><</c3c4_null=0>></li>
-    <li>Serum PEP : <<spep_null=1>>not performed <</spep_null=1>><<spep_null=0>><<paraprot_ld>>last performed on <</paraprot_ld>><<paraprot_ld />><</spep_null=0>></li>
-    <li>SFLC assay : <<sflc_null=1>>not performed <</sflc_null=1>><<sflc_null=0>><<sflc_kappa_ld>>last performed on <</sflc_kappa_ld>><<sflc_kappa_ld />><</sflc_null=0>></li>
-    <li>Renal imaging : <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
-    <li>Kidney biopsy : <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
+    <li>ANA Serology: <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
+    <li>ANCA Serology: <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld />><</anca_null=0>></li>
+    <li>Complements: <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld />><</c3c4_null=0>></li>
+    <li>Serum PEP: <<spep_null=1>>not performed <</spep_null=1>><<spep_null=0>><<paraprot_ld>>last performed on <</paraprot_ld>><<paraprot_ld />><</spep_null=0>></li>
+    <li>SFLC assay: <<sflc_null=1>>not performed <</sflc_null=1>><<sflc_null=0>><<sflc_kappa_ld>>last performed on <</sflc_kappa_ld>><<sflc_kappa_ld />><</sflc_null=0>></li>
+    <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
+    <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
     </ul>
     </li>
     </ul>
@@ -690,7 +690,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <<hb_state=1>><<mcv_state=31>><li>consistent with macrocytic anaemia</li><</mcv_state=31>><</hb_state=1>>
     <<hb_state=1>><<mcv_state=0>><li>consistent with anaemia<</mcv_state=0>></li><</hb_state=1>>
     <<esa_state=0>><li>No ESA use</li><</esa_state=0>>
-    <<esa_state=1>><li>current ESA use</li><</esa_state=1>>
+    <<esa_state=1>><li>Current ESA use</li><</esa_state=1>>
     <<esa_state=2>><li>Past ESA use but not current</li><</esa_state=2>>
     <<iron_low>><li>Iron stores low/<li><</iron_low>>
     </ul>
