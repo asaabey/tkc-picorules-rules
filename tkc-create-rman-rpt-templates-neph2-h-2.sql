@@ -544,7 +544,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <</aet_multiple=1>>
                 <<aet_multiple=0>>
                     <li>
-                        The likely cause is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>>
+                        Potential cause for CKD is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>>
                         <<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong></li>
                 <</aet_multiple=0>>
             </ul>
