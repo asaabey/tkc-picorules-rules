@@ -382,7 +382,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: observation criteria >3 readings over SBP140 within 2 years",
+                txt:"Hypertension diagnosis: observation criteria at least 3 readings over SBP140 within 2 years",
                 cite:"htn_nhf_2016,htn_aha_2018,htn_mja_2016"
             }
         );
@@ -402,7 +402,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: rxn criteria based on WHO ATC code C09"
+                txt:"Hypertension diagnosis: treatment criteria based on RxNorm medication codes"
             }
         );
         
