@@ -311,15 +311,33 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 
+
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_dm_syn_1','cd_dm',602100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','cd_dm_syn_1','cd_dm_dx',602110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
         <li><b><<dm_dx_code_flag>>Diagnosed<</dm_dx_code_flag>><<dm_dx_uncoded>>Undiagnosed<</dm_dx_uncoded>> Diabetes type <<dm_type />></b>
         <ul>
             <<dm_fd_t>><li>since <<dm_fd_t />></li><</dm_fd_t>>
-            <<dm_micvas>><li>Non-renal microvascular complications present</li><</dm_micvas>>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_dm_syn_2','cd_dm_comp',602115,'dev','tkc',TO_DATE(SYSDATE),
+    '
+            <li>Non-renal microvascular complications present</li>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_dm_syn_3','cd_dm_glyc_cntrl',602120,'dev','tkc',TO_DATE(SYSDATE),
+    '
             <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val />> % (<<hba1c_n0_dt />>)</li><</hba1c_n_tot>>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_dm_syn_4','cd_dm_dx',602130,'dev','tkc',TO_DATE(SYSDATE),
+    '
             <<dm_rxn=0>>
                 <li>No medications recorded</li>
             <</dm_rxn=0>>
@@ -334,18 +352,30 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 </ul>
                 </li>
             <</dm_rxn>>
-            <<cp_dm=0>>
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_dm_syn_5','cd_dm_mx',602135,'dev','tkc',TO_DATE(SYSDATE),
+    '
+             <<cp_dm=0>>
                 <li>PCIS diabetes careplan was not detected [2.4]</li>
             <</cp_dm=0>>
             <<cp_dm>>
                 <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
             <</cp_dm>>
-        </ul>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_dm_syn_6','cd_dm_dx',602190,'dev','tkc',TO_DATE(SYSDATE),
+    '
+             </ul>
         </li>
     </ul>
     '
     );
-    
+
+
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_dm_rec_1','cd_dm',702100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -968,4 +998,4 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
     
-@"..\tkc-picorules\tkc-create-package-rman-1.sql";
+@"..\tkc-master\tkc-picorules\tkc-create-package-rman-1.sql";

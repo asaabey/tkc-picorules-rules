@@ -61,7 +61,9 @@ BEGIN
             }
         );
         
-        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
+        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(2900);
+        
+        pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min(1900);
         
         #doc(,
             {
@@ -104,6 +106,12 @@ BEGIN
         rrt_tx : {rrt=3 => 1},{=>0};
         
         rrt_hhd : {rrt=4 => 1},{=>0};
+        
+        hd_incd : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
+          
+        pd_incd : {pd_dt_min > sysdate-365 => 1},{=>0};
+        
+        rrt_incd : { hd_incd=1 or pd_incd=1 => 1},{=>0};
         
         #doc(,
             {
@@ -257,16 +265,16 @@ BEGIN
         
         #doc(,
             {
-                txt : "Check for 3 month egfr assumption violation"
+                txt : "Check for 1 month egfr assumption violation"
             }
         );
         
-        egfr_3m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
-        egfr_3m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
+        egfr_1m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
+        egfr_1m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
         
-        egfr_3m_qt : {egfr_3m_n2>=2 => round(egfr_l_val/egfr_3m_mu,2)};
+        egfr_1m_qt : {egfr_1m_n2>=2 => round(egfr_l_val/egfr_1m_mu,2)};
         
-        asm_viol_3m : {nvl(egfr_3m_qt,1)>1.2 or nvl(egfr_3m_qt,1)<0.8  => 1},{=> 0};
+        asm_viol_1m : {nvl(egfr_1m_qt,1)>1.2 or nvl(egfr_1m_qt,1)<0.8  => 1},{=> 0};
                
         #doc(,
             {

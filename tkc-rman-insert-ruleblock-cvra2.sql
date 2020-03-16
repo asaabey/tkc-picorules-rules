@@ -220,12 +220,12 @@ BEGIN
         
         #doc(,
             {
-                txt:"Determine if 4 variable equation is applicable"
+                txt:"Determine if 4 variable equation is applicable - apply for CKD G3a, 3b, 4"
             }
             
         );
         
-        kfre4v_ap : { least(dob,egfr_dt,uacr_dt) is not null and male is not null and ckd>=4 and ckd<5 => 1},{=>0};
+        kfre4v_ap : { least(dob,egfr_dt,uacr_dt) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
         
         egfr_1 : { 1=1 => egfr_val};
         
@@ -237,7 +237,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Apply equation",
+                txt:"Apply KFRE 4 variable equation. Note: KFRE is not validated in Indigenous populations.",
                 cite: "kfre_ref1, kfre_ref2"
             }
             

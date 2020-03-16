@@ -44,6 +44,8 @@ BEGIN
         
         dod => eadv.dmg_dod.dt.max();
         
+        alive : { dod < sysdate-365 => 0},{ => 1};
+        
         gender => eadv.dmg_gender.val.last();
         
         loc_mode_phc => eadv.dmg_location.val.stats_mode().where(substr(val,-1)=1);
@@ -73,12 +75,12 @@ BEGIN
         
         ren_enc => eadv.enc_op_renal.dt.max(1900);
         
+        rrt_ex_flag : { alive=0 =>1},{=>0};
         
-        
-        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365 => 1},
-            {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
-            {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
-            {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
+        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365  and rrt_ex_flag=0 => 1},
+            {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) and rrt_ex_flag=0 => 2},
+            {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) and rrt_ex_flag=0 => 3},
+            {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) and rrt_ex_flag=0 => 4},
             {=>0};
 
              
@@ -103,7 +105,7 @@ BEGIN
             }
         );
         
-        ex_flag : { rrt>0 =>1},{=>0};
+        ckd_ex_flag : { rrt>0 or alive=0 =>1},{=>0};
         
         #doc(,
             {
@@ -115,7 +117,7 @@ BEGIN
         
         egfr_l1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt < egfr_l_dt-90 and dt>egfr_l_dt-365);
         
-        egfr_l2 => eadv.lab_bld_egfr_c.val.lastdv().where(dt < egfr_l_dt-365 and dt >egfr_l_dt-1095);
+        egfr_l2 => eadv.lab_bld_egfr_c.val.lastdv().where(dt < egfr_l_dt-365);
         
         egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
         
@@ -132,6 +134,8 @@ BEGIN
         egfr_30_qt : {egfr_30_n2>=2 => round(egfr_l_val/egfr_30_mu,2)};
         
         asm_viol_30 : {nvl(egfr_30_qt,1)>1.2 or nvl(egfr_30_qt,1)<0.8  => 1},{=> 0};
+        
+        asm_viol_ex : {asm_viol_30=1 =>0},{=>1};       
                
         #doc(,
             {
@@ -139,17 +143,19 @@ BEGIN
             }
         );
         
-        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_l_dt-90 and dt > egfr_l_date-730 and val<90);
         
-        g_pers : { egfr_3m_n>=2 => 1},{=>0};
+        g_pers : { egfr_l1_val<90 and egfr_l_val<60 => 1},{ egfr_l2_val<90 and egfr_l_val<60 =>1},{=>0};
+        
         
         #doc(,
             {
                 txt : "Check for 1y egfr progression"
             }
         );
+        
+        ckd_prog : { egfr_l2_val!? =>1},{=>0};
    
-        l_l2_delta : {g_l_val!? and g_l2_val!? => g_l_val-g_l2_val};
+        l_l2_delta : { egfr_l2_val!? => egfr_l_val-egfr_l2_val};
         
         g_stage_prog : {l_l2_delta < -15 =>1},{=>0};
         
@@ -163,10 +169,9 @@ BEGIN
         
         acr_l1 => eadv.lab_ua_acr.val.lastdv().where(dt < acr_l_dt-30 and dt > sysdate - 730);    
         
+        a_pers : {acr_l_val>3 and acr_l1_val>3 => 1},{=>0};
         
-        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
-        
-        a_pers : {acr_3m_n>=2 => 1},{=>0};
+        ckd_pers : {greatest(g_pers,a_pers)>0 => 1},{=>0};
         
         g_l_val:  {egfr_l_val>=90  => 1},
                 {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => 2},
@@ -175,16 +180,6 @@ BEGIN
                 {egfr_l_val<30 AND egfr_l_val>=15  AND rrt=0 => 5},
                 {egfr_l_val<15 AND rrt=0 => 6},
                 {=>0};
-        
-        g_l1_val:  {egfr_l1_val>=90 AND rrt=0 => 1},
-                {egfr_l1_val<90 AND egfr_l1_val>=60  AND rrt=0 => 2},
-                {egfr_l1_val<60 AND egfr_l1_val>=45  AND rrt=0 => 3},
-                {egfr_l1_val<45 AND egfr_l1_val>=30  AND rrt=0 => 4},
-                {egfr_l1_val<30 AND egfr_l1_val>=15  AND rrt=0 => 5},
-                {egfr_l1_val<15 AND rrt=0 => 6},
-                {=>0};
-        
-        g_l_l1_gap : { greatest(g_l_val,g_l1_val)>0 => g_l_val-g_l1_val};
                 
                 
         a_l_val: {acr_l_val<3 => 1},
@@ -192,42 +187,26 @@ BEGIN
                 {acr_l_val<300 AND acr_l_val>=30 => 3},
                 {acr_l_val>300 => 4},{=>0};
         
-        a_l1_val: {acr_l1_val<3 => 1},
-                {acr_l1_val<30 AND acr_l1_val>=3 => 2},
-                {acr_l1_val<300 AND acr_l1_val>=30 => 3},
-                {acr_l1_val>300 => 4},{=>0};
         
-        ckd_stage :{g_l_val=1 and a_l_val>1 => 1},
-                {g_l_val=2 and a_l_val>1 => 2},
-                {g_l_val>2 => g_l_val},
-                {=> null};
+       
+        avf => eadv.caresys_3450901.dt.max();        
         
-        
-        
-        
-        
-        
-        cert_level : {ckd>0 and pers=1 and asm_viol_3m=0 =>3},{ckd>0 and pers=1 and asm_viol_3m=1 =>2},{ckd>0 and pers=0 and asm_viol_3m=0 =>1};
-        
-        
+        ckd :{g_l_val=1 and a_l_val>1 and ckd_ex_flag=0=> 1},
+                {g_l_val=2 and a_l_val>1 and ckd_ex_flag=0 => 2},
+                {g_l_val>2 and ckd_ex_flag=0 => g_l_val},
+                {=> 0};
         
         dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
         
-        dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};
-        
- 
-                
+        dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};            
         
         dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
         
-        
-        avf => eadv.caresys_3450901.dt.max();
-        
+       
         
         
-        avf_has : { avf is not null =>1},{=>0};
         
-  
+        assert_level : {. => 100000 + ckd_pers*10000 + asm_viol_ex*1000 + ckd_prog*100};
 
     ';
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -258,10 +237,16 @@ BEGIN
                 is_active:0,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
-                exec_order:1
+                exec_order:2
                 
             }
         );
+        
+        ckd => rout_ckd_dense.ckd.val.bind();
+        
+        rrt => rout_ckd_dense.rrt.val.bind();
+        
+        alive => rout_ckd_dense.alive.val.bind();
         
         ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
         
@@ -285,13 +270,13 @@ BEGIN
         
         htn_incd : { htn_fd > sysdate - 365 => 1},{=>0};
         
-        ihd_fd => eadv.[icd_z95_1%,icpc_k54007,icd_i21%,icd_i22%,icd_i23%,icd_i24%,icd_i25%,icpc_k74%,icpc_k75%,icpc_k76%].dt.min(2900);
+        ihd_fd => eadv.[icd_z95_1%,icpc_k54007,icd_i21%,icd_i22%,icd_i23%,icd_i24%,icd_i25%,icpc_k74%,icpc_k75%,icpc_k76%].dt.min(2999);
         
-        cva_fd => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min(2900);
+        cva_fd => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min(2999);
             
-        pvd_fd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min(2900);
+        pvd_fd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min(2999);
         
-        cvd_fd : { least(ihd_fd,cva_fd,pvd_fd)< to_date(`29000101`,`YYYYMMDD`) => least(ihd_fd,cva_fd,pvd_fd)};
+        cvd_fd : { least(ihd_fd,cva_fd,pvd_fd)< to_date(`29991231`,`YYYYMMDD`) => least(ihd_fd,cva_fd,pvd_fd)};
         
         
         cvd_prev : { cvd_fd!? => 1 },{=>0};
@@ -306,8 +291,13 @@ BEGIN
         
         dyslip_incd : { dyslip_fd > sysdate - 365 => 1},{=>0};
         
-        obs_icd => eadv.[icd_e66%,icpc_t82%].dt.min();
+        obese_fd => eadv.[icd_e66%,icpc_t82%].dt.min();
         
+        obese_prev : { obese_fd!? => 1 },{=>0};
+        
+        obese_incd : { obese_fd > sysdate - 365 => 1},{=>0};
+        
+        at_risk : {coalesce(obese_fd, dyslip_fd,cvd_fd,htn_fd,dm_fd)!? and ckd=0 and rrt=0 and alive=1 =>1},{=>0};
         
             
         egfr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
@@ -326,7 +316,7 @@ BEGIN
         
         mbs_715 => eadv.mbs_715.dt.count().where(dt > sysdate -365);
         
-        mbs_715_2y => eadv.mbs_715.dt.count().where(dt > sysdate -730)
+        mbs_715_2y => eadv.mbs_715.dt.count().where(dt > sysdate -730);
         
         mbs_721 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
         

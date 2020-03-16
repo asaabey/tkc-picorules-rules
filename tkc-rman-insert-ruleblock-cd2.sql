@@ -86,17 +86,24 @@ BEGIN
             }
         );
         
+        dm1_icd_fd => eadv.icd_e10%.dt.min(2999);
+        
+        dm1_icpc_fd => eadv.icpc_t89%.dt.min(2999);
+        
+        dm2_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e11%,icd_e14%].dt.min(2999);
+        
+        dm2_icpc_fd => eadv.icpc_t90%.dt.min(2999);
+        
+        dm_icd_fd : {least(dm1_icd_fd,dm2_icd_fd) < to_date(`29991231`,`YYYYMMDD`) => least(dm1_icd_fd,dm2_icd_fd) };
+        
+        dm_icpc_fd : {least(dm1_icpc_fd,dm2_icpc_fd) < to_date(`29991231`,`YYYYMMDD`) => least(dm1_icpc_fd,dm2_icpc_fd) };
         
         
-        dm_icd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.count(0);
+        dm_code_fd : { dm_icd_fd!? and dm_icpc_fd!? => least(dm_icd_fd,dm_icpc_fd) },
+                        {dm_icd_fd!? => dm_icd_fd},
+                        {dm_icpc_fd!? => dm_icpc_fd};
         
-        dm_icpc => eadv.[icpc_t89%,icpc_t90%].dt.count(0);
-        
-        
-        
-        dm_code_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%,icpc_t89%,icpc_t90%].dt.min();
-        
-        dm_type_1 => eadv.[icpc_t89%,icd_e10%].dt.count(0);
+        dm_type_1 : {least(dm1_icpc_fd,dm1_icd_fd) < to_date(`29991231`,`YYYYMMDD`) => 1},{=>0}; 
         
         
         #doc(,
@@ -137,6 +144,16 @@ BEGIN
         
         
         dm_rxn_n => eadv.[rxnc_a10%].dt.count(0).where(val=1);
+        
+        #doc(,
+            {
+                txt:"Medications that if present signify diagnosis"
+            }
+        );
+        dm_rxn1_fd => eadv.[rxnc_a10bb,rxnc_a10ae,rxnc_a10ac,rxnc_a10ad,rxnc_a10ab,rxnc_a10bh,rxnc_a10bj,rxnc_a10bk].dt.min();
+    
+        dm_rxn2_fd => eadv.[rxnc_a10ba].dt.min();
+    
         dm_rxn_su => eadv.[rxnc_a10bb].dt.count(0).where(val=1);
         dm_rxn_ins_long => eadv.[rxnc_a10ae].dt.count(0).where(val=1);
         dm_rxn_ins_int => eadv.[rxnc_a10ac].dt.count(0).where(val=1);
@@ -148,7 +165,7 @@ BEGIN
         dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
            
                
-        dm_rxn : { dm_rxn_n >0 => 1},{=>0};
+        dm_rxn : { coalesce(dm_rxn1_fd,dm_rxn2_fd)!? => 1},{=>0};
         
         #doc(,
             {
@@ -169,9 +186,17 @@ BEGIN
             }
         );
         
-        dm_fd :{coalesce(dm_code_fd,dm_lab_fd) is not null => 
-                    (least(nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
-                    nvl(dm_lab_fd,to_date(`29991231`,`YYYYMMDD`))))};
+        dm_fd :{coalesce(dm_code_fd,dm_lab_fd,dm_rxn1_fd)!? => 
+                    (
+                        least(
+                            nvl(dm_code_fd,to_date(`29991231`,`YYYYMMDD`)),
+                            nvl(dm_lab_fd,to_date(`29991231`,`YYYYMMDD`)),
+                            nvl(dm_rxn1_fd,to_date(`29991231`,`YYYYMMDD`))
+                        )
+                    )
+                };
+        
+                    
         
         dm_fd_t :{ 1=1 => to_char(dm_fd,`YYYY`)};
 
@@ -238,10 +263,13 @@ BEGIN
         dm_longstanding : {dm_vintage_cat>=2 => 1},{=>0};   
         
         
-        dm : {greatest(dm_icd,dm_icpc,dm_lab,dm_rxn)>0 =>1},{=>0};
+        dm : { dm_fd!? =>1},{=>0};
         
+        dm_icpc_coded : { dm_icpc_fd!? =>1},{=>0};
         
-        dm_dx_code_flag : {dm >=1 and greatest(dm_icd,dm_icpc)>=1 => 1},{dm >=1 and greatest(dm_lab,dm_rxn)>0 =>0};
+        dm_icd_coded : { dm_icd_fd!? =>1},{=>0};
+        
+        dm_dx_code_flag : {greatest(dm_icd_coded,dm_icpc_coded)>0 => 1},{=>0};
         
         dm_dx_uncoded : {dm_dx_code_flag=0 => 1},{=>0};
         
@@ -382,7 +410,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: observation criteria >3 readings over SBP140 within 2 years",
+                txt:"Hypertension diagnosis: observation criteria at least 3 readings over SBP140 within 2 years",
                 cite:"htn_nhf_2016,htn_aha_2018,htn_mja_2016"
             }
         );
@@ -402,7 +430,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Hypertension diagnosis: rxn criteria based on WHO ATC code C09"
+                txt:"Hypertension diagnosis: treatment criteria based on RxNorm medication codes"
             }
         );
         
