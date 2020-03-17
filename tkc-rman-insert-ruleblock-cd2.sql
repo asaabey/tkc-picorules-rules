@@ -942,6 +942,8 @@ BEGIN
         cad => rout_cd_cardiac.cardiac.val.bind();
         
         obesity => rout_cd_obesity.obesity.val.bind();
+        
+        dod => rout_dmg.dod.val.bind();
     
         #doc(,
             {
@@ -955,7 +957,7 @@ BEGIN
         
         obs_ld => eadv.[obs%].dt.max().where(dt > sysdate-730);
         
-        is_active_2y : {coalesce(lab_ld,obs_ld) is null =>0},{=>1};
+        is_active_2y : {coalesce(lab_ld,obs_ld)!? and dod? => 1},{=>0};
               
         obst => eadv.[icd_e66%,icpc_t82%].dt.count(0);
             
@@ -976,7 +978,9 @@ BEGIN
             
         at_risk_ckd : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
         
-        tkc_active_cohort : { greatest(ckd,rrt,at_risk_ckd)>0 and is_active_2y=1 =>1},{=>0};
+        active : {1=1 => is_active_2y};
+        
+        tkc_cohort : { greatest(ckd,rrt,at_risk_ckd)>0 =>1},{=>0};
         
         #define_attribute(
             at_risk_ckd,
@@ -988,14 +992,21 @@ BEGIN
         );
         
         #define_attribute(
-            tkc_active_cohort,
+            tkc_cohort,
                 {
-                    label:"TKC active cohort",
+                    label:"TKC cohort",
                     is_reportable:1,
                     type:2
                 }
         );
-        
+        #define_attribute(
+            active,
+                {
+                    label:"Is Active within last 2y",
+                    is_reportable:1,
+                    type:2
+                }
+        );
         
         
     ';
