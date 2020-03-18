@@ -67,17 +67,21 @@ BEGIN
             }
         );
         
-        dm1_icd_fd => eadv.icd_e10%.dt.min(2999);
+        dm1_icd_fd => eadv.icd_e10%.dt.min();
         
-        dm1_icpc_fd => eadv.icpc_t89%.dt.min(2999);
+        dm1_icpc_fd => eadv.icpc_t89%.dt.min();
         
-        dm2_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e11%,icd_e14%].dt.min(2999);
+        dm1_fd : {.=> least_date(dm1_icd_fd,dm1_icpc_fd) };
         
-        dm2_icpc_fd => eadv.icpc_t90%.dt.min(2999);
+        dm2_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e11%,icd_e14%].dt.min();
         
-        dm_icd_fd : {least(dm1_icd_fd,dm2_icd_fd) < to_date(`29991231`,`YYYYMMDD`) => least(dm1_icd_fd,dm2_icd_fd) };
+        dm2_icpc_fd => eadv.icpc_t90%.dt.min();
         
-        dm_icpc_fd : {least(dm1_icpc_fd,dm2_icpc_fd) < to_date(`29991231`,`YYYYMMDD`) => least(dm1_icpc_fd,dm2_icpc_fd) };
+        dm2_fd : {.=> least_date(dm2_icd_fd,dm2_icpc_fd) };
+        
+        dm_icd_fd : {.=> least_date(dm1_icd_fd,dm2_icd_fd) };
+        
+        dm_icpc_fd : {.=> least_date(dm1_icpc_fd,dm2_icpc_fd) };
         
         
         #doc(,
@@ -87,15 +91,12 @@ BEGIN
         );
         
         gdm_code_fd => eadv.[icd_O24%,icpc_w85001,icpc_w85002].dt.min();
+      
+        dm_code_fd : { . => least_date(dm_icd_fd,dm_icpc_fd) };
+        
+        dm_type_1 : { coalesce(dm1_icpc_fd,dm1_icd_fd)!? => 1},{=>0}; 
         
         
-        
-        
-        dm_code_fd : { dm_icd_fd!? and dm_icpc_fd!? => least(dm_icd_fd,dm_icpc_fd) },
-                        {dm_icd_fd!? => dm_icd_fd},
-                        {dm_icpc_fd!? => dm_icpc_fd};
-        
-        dm_type_1 : {least(dm1_icpc_fd,dm1_icd_fd) < to_date(`29991231`,`YYYYMMDD`) => 1},{=>0}; 
         
         
         #doc(,
@@ -105,8 +106,13 @@ BEGIN
             }
         );
        
-        gluc_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(val>=65/10);
+        gluc_hba1c_high1 => eadv.lab_bld_hba1c_ngsp._.lastdv().where(val>=65/10);
         
+        gluc_hba1c_high2 => eadv.lab_bld_hba1c_ngsp._.lastdv(1).where(val>=65/10);
+        
+        gluc_hba1c => eadv.lab_bld_hba1c_ngsp._.lastdv();
+        
+        /* not implemented yet
         gluc_fasting => eadv.lab_bld_glucose_fasting.val.count(0).where(val>=7);
         
         gluc_random => eadv.lab_bld_glucose_random.val.count(0).where(val>=111/10);
@@ -114,10 +120,15 @@ BEGIN
         gluc_ogtt_0h => eadv.lab_bld_glucose_ogtt_0h.val.count(0).where(val>=7);
         
         gluc_ogtt_2h => eadv.lab_bld_glucose_ogtt_2h.val.count(0).where(val>=111/10);
+        */
         
-        dm_lab : {coalesce(gluc_hba1c,gluc_fasting,gluc_random,gluc_ogtt_0h,gluc_ogtt_2h)!? =>1},{=>0};
+        dm_lab : { gluc_hba1c_high1_val!? and gluc_hba1c_high2_val!?  =>1},{=>0};
         
-        dm_lab_fd => eadv.lab_bld_hba1c_ngsp.dt.min(2999).where(val>=65/10);
+        /* not implemented yet
+        dm_lab : {coalesce(gluc_hba1c_high1_dt,gluc_fasting,gluc_random,gluc_ogtt_0h,gluc_ogtt_2h)!? =>1},{=>0};
+        */
+        
+        gluc_hba1c_high_f => eadv.lab_bld_hba1c_ngsp._.firstdv().where(val>=65/10);
         
         #doc(,
             {
@@ -134,24 +145,29 @@ BEGIN
                 txt:"Medications that if present signify diagnosis"
             }
         );
-        dm_rxn1_fd => eadv.[rxnc_a10bb,rxnc_a10ae,rxnc_a10ac,rxnc_a10ad,rxnc_a10ab,rxnc_a10bh,rxnc_a10bj,rxnc_a10bk].dt.min(2999);
+        dm_rxn1_fd => eadv.[rxnc_a10bb,rxnc_a10ae,rxnc_a10ac,rxnc_a10ad,rxnc_a10ab,rxnc_a10bh,rxnc_a10bj,rxnc_a10bk].dt.min();
     
         dm_rxn2_fd => eadv.[rxnc_a10ba].dt.min();
     
-        dm_rxn_su => eadv.[rxnc_a10bb].dt.count(0).where(val=1);
-        dm_rxn_ins_long => eadv.[rxnc_a10ae].dt.count(0).where(val=1);
-        dm_rxn_ins_int => eadv.[rxnc_a10ac].dt.count(0).where(val=1);
-        dm_rxn_ins_mix => eadv.[rxnc_a10ad].dt.count(0).where(val=1);
-        dm_rxn_ins_short => eadv.[rxnc_a10ab].dt.count(0).where(val=1);
-        dm_rxn_bg => eadv.[rxnc_a10ba].dt.count(0).where(val=1);
-        dm_rxn_dpp4 => eadv.[rxnc_a10bh].dt.count(0).where(val=1);
-        dm_rxn_glp1 => eadv.[rxnc_a10bj].dt.count(0).where(val=1);
-        dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.count(0).where(val=1);
+        dm_rxn_su => eadv.[rxnc_a10bb].dt.min().where(val=1);
+        dm_rxn_ins_long => eadv.[rxnc_a10ae].dt.min().where(val=1);
+        dm_rxn_ins_int => eadv.[rxnc_a10ac].dt.min().where(val=1);
+        dm_rxn_ins_mix => eadv.[rxnc_a10ad].dt.min().where(val=1);
+        dm_rxn_ins_short => eadv.[rxnc_a10ab].dt.min().where(val=1);
+        dm_rxn_bg => eadv.[rxnc_a10ba].dt.min().where(val=1);
+        dm_rxn_dpp4 => eadv.[rxnc_a10bh].dt.min().where(val=1);
+        dm_rxn_glp1 => eadv.[rxnc_a10bj].dt.min().where(val=1);
+        dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.min().where(val=1);
+           
+        dm_rxn_ins : {coalesce(dm_rxn_ins_long,dm_rxn_ins_int,dm_rxn_ins_mix,dm_rxn_ins_short)!? =>1},{=>0};
            
         dm_rxn : { coalesce(dm_rxn1_fd,dm_rxn2_fd)!? => 1},{=>0};
         
-        dm_fd :{ . => dm_code_fd };
+        dm_dx_rxn : { dm_rxn1_fd!? => 1},{=>0};
         
+        dm_fd :{ . => least_date(dm_code_fd,dm_rxn1_fd,gluc_hba1c_high_f_dt)  };
+        
+        dm_fd_year :{ . => extract(year from dm_fd) };
         
         dm_vintage_yr_ : { dm_fd!? => round((sysdate-dm_fd)/365,0)},{=>0};
         
@@ -166,17 +182,30 @@ BEGIN
         
         dm : { dm_fd!? =>1},{=>0};
         
+        dm_type : {dm=1 and dm_type_1=1=>1},{dm=1 and dm_type_1=0=>2},{=>0};
         
         
         dm_dx_code_flag : {greatest(dm_icd_coded,dm_icpc_coded)>0 => 1},{=>0};
         
         dm_dx_uncoded : {dm_dx_code_flag=0 => 1},{=>0};
         
-        dm_type : {dm=1 and dm_type_1>0 => 1},{dm=1 and dm_type_1=0 => 2},{=>0};
+        
 
         dm_dx_code : {dm=1 => (dm*1000 + dm_type*100 + dm_vintage_cat*10)},{=>0};
         
+        dm1_mm_1 : { dm_type=1 and dm_rxn_ins=0 => 1},{=>0};
         
+        dm1_mm_2 : { dm_type=1 and dm1_icd_fd? => 1},{ dm_type=1 and dm1_icpc_fd? => 2},{=>0};
+        
+        dm1_mm_3 : { dm_type=1 and dm2_fd>dm1_fd => 1},{=>0};
+        
+        dm1_mm : { .=> least(dm1_mm_1,dm1_mm_2,dm1_mm_3)};
+        
+        dm1_mm_code : {.=> 10000 + dm1_mm_1*1000 + dm1_mm_2*100 + dm1_mm_3*10};
+        
+        dm2_mm_1 : { dm=1 and dm_type_1=0 and dm_rxn=0 and gluc_hba1c_val<6 =>1 },{=>0};
+        
+        dm2_mm_2 : { dm=1 and dm_type_1=0 and gluc_hba1c_high_f_dt!? and dm_lab=0 =>1 },{=>0};
         
         cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_lab*100 + dm_rxn*10};
         
@@ -262,13 +291,14 @@ BEGIN
             }
         );
         
-        ndr_e10_icd => eadv.[icd_e10_32%,icd_e10_33%,icd_e10_35%].dt.count();
+                
+        ndr_icd_e32 => eadv.[icd_e10_32%,icd_e11_32%,icd_e13_32%].dt.min();
         
-        ndr_e11_icd => eadv.[icd_e11_32%,icd_e11_33%,icd_e11_35%].dt.count();
+        ndr_icd_e33 => eadv.[icd_e10_33%,icd_e11_33%,icd_e13_33%].dt.min();
         
-        ndr_e13_icd => eadv.[icd_e13_32%,icd_e13_33%,icd_e13_35%].dt.count();
+        ndr_icd_e34 => eadv.[icd_e10_34%,icd_e11_34%,icd_e13_34%].dt.min();
         
-        ndr_icd : {coalesce(ndr_e10_icd,ndr_e11_icd,ndr_e13_icd)>0 =>1};
+        ndr_icd : {coalesce(ndr_icd_e32,ndr_icd_e33,ndr_icd_e34)!? =>1},{=>0};
         
         #doc(,
             {
@@ -277,11 +307,18 @@ BEGIN
             }
         );
         
-        pdr_icd => eadv.[icd_e11_35%,icd_e11_35%,icd_e13_35%].dt.count();
+        pdr_icd_e35 => eadv.[icd_e11_35%,icd_e11_35%,icd_e13_35%].dt.min();
         
-        dr_icpc => eadv.icpc_f83002.dt.count();
+        #doc(,
+            {
+                txt:"Diabetic retinopathy ICPC codes"
+                
+            }
+        );
         
-        dm_micvas_retino : { coalesce(ndr_icd,pdr_icd,dr_icpc) is not null=>1},{=>0};
+        dr_icpc_f83 => eadv.icpc_f83002.dt.min();
+        
+        dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1},{=>0};
         
         #doc(,
             {
@@ -290,9 +327,9 @@ BEGIN
             }
         );
 
-        dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.count(0);
+        dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.min();
         
-        dm_micvas :{ greatest(dm_micvas_neuro,dm_micvas_retino)>0 => 1},{=>0};
+        dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? => 1},{=>0};
         
         [[rb_id]] : { greatest(dm_micvas)>0 and dm=1 =>1},{=>0};
         

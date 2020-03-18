@@ -256,7 +256,7 @@ BEGIN
         
         
         
-        dm_fd : { . => rman_min_dt(dt_args(dm_icd_fd,dm_icpc_fd))};
+        dm_fd : {.=>least_date(dm_icd_fd, dm_icpc_fd)};
         
         dm_prev : { dm_fd!? => 1 },{=>0};
         

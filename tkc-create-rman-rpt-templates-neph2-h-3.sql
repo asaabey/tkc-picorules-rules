@@ -194,17 +194,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     
     <div class="syn_dmg_box">
-        <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
-        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
-        <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
-        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_mode_full$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>
-        <<episode_single=0>><<diff_mode2y_mode=1>>The most visited site in the last 2y is <<loc_mode_24$loc_sublocality />> and the most visited overall is <<loc_mode_full$loc_sublocality />> <</diff_mode2y_mode=1>> <</episode_single=0>>
-        
-        <<loc_last_2y>><<loc_single=0>>Other sites visited within the last 2 years include <<loc_last_2y$loc_sublocality />><</loc_last_2y>>
         
     </div>
     <hr />
-    
+    <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
+        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
+        
+        <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
+        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_mode_full$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>
     '
     );
 
@@ -316,16 +313,38 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_dm_syn_1','cd_dm_dx',602110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-        <li><b><<dm_dx_code_flag>>Diagnosed<</dm_dx_code_flag>><<dm_dx_uncoded>>Undiagnosed<</dm_dx_uncoded>> Diabetes type <<dm_type />></b>
+        
+        <li><b><<dm_type=1>>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
+        <li><b><<dm_type=2>>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><</dm_type=2>>
         <ul>
-            <<dm_fd_t>><li>since <<dm_fd_t />></li><</dm_fd_t>>
+            <<dm_fd_year>><li>since <<dm_fd_year />></li><</dm_fd_year>>
+            <<dm_dx_uncoded>><li>not coded on primary care EHR</li><</dm_dx_uncoded>>
+            <<cd_dm_dx_code=110000>><li>based only on hospital records on <<dm_icd_fd />></li><</cd_dm_dx_code=110000>>
+            <<cd_dm_dx_code=101110>><li>based on primary EHR,lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=101110>>
+            <<cd_dm_dx_code=111110>><li>based on hospital and primary EHR,lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=111110>>
+            <<cd_dm_dx_code=100000>><li>based on a single HbA1c of <<gluc_hba1c_high_f_val />> on <<gluc_hba1c_high_f_dt />></li><</cd_dm_dx_code=100000>>
+        
     '
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_dm_syn_2','cd_dm_comp',602115,'dev','tkc',TO_DATE(SYSDATE),
     '
-            <li>Non-renal microvascular complications present</li>
+            <li>Non-renal microvascular complications present
+                <ul>
+                    <<dm_micvas_retino>>
+                        <li>Diabetic retinopathy 
+                            <ul>
+                                <<ndr_icd_e32>><li>Mild non-proliferative retinopathy <<ndr_icd_e32 />></li><</ndr_icd_e32>>
+                                <<ndr_icd_e33>><li>Moderate non-proliferative retinopathy <<ndr_icd_e33 />></li><</ndr_icd_e33>>
+                                <<ndr_icd_e34>><li>Severe non-proliferative retinopathy <<ndr_icd_e34 />></li><</ndr_icd_e34>>
+                                <<pdr_icd_e35>><li>Severe non-proliferative retinopathy <<pdr_icd_e35 />></li><</pdr_icd_e35>>
+                            </ul>
+                        </li>
+                    <</dm_micvas_retino>>
+                    <<dm_micvas_neuro>><li>Diabetic neuropathy (<<dm_micvas_neuro />>)</li><</dm_micvas_neuro>>
+                </ul>
+            </li
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -347,7 +366,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                     <<dm_rxn_su>><li>sulphonylurea</li><</dm_rxn_su>>
                     <<dm_rxn_ins_long>><li>long-acting insulin</li><</dm_rxn_ins_long>>
                     <<dm_rxn_glp1>><li>GLP1 analogue</li><</dm_rxn_glp1>>
-                    <<dm_rxn_dpp4>><li>DPP4 inhibitor</li><</dm_rxn_dpp4>>
+                    <<dm_rxn_dpp4>><li>DPP4 inhibitor (<<dm_rxn_dpp4 />>)</li><</dm_rxn_dpp4>>
                     <<dm_rxn_sglt2>><li>SGLT2 inhibitor</li><</dm_rxn_sglt2>>
                 </ul>
                 </li>
