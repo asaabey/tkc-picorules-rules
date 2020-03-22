@@ -334,7 +334,7 @@ BEGIN
         #doc(,
             {
                 txt : "Apply KDIGO 2012 staging",
-                cite: "ckd_1, ckd_2"
+                cite: "ckd_ref1, ckd_ref2"
             }
         );
         
@@ -622,7 +622,7 @@ BEGIN
         
     );
      
-     dm => rout_cd_dm.dm.val.bind(); 
+     dm => rout_cd_dm_dx.dm.val.bind(); 
      htn => rout_cd_htn.htn.val.bind();
      ckd => rout_ckd.ckd.val.bind();
      
