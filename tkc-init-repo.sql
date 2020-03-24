@@ -13,12 +13,14 @@
 @"tkc-rman-insert-ruleblock-graph.sql";
 @"tkc-rman-insert-ruleblock-metrics";
 @"tkc-rman-insert-ruleblock-test";
+@"tkc-rman-insert-ruleblock-cube-accel.sql";
 
 
 --Init citations
 @"tkc-create-rman-ruleblocks-citations.sql";
 
 --Re-init Rman package
+@"..\tkc-picorules\tkc-create-package-rman-1.sql";
 
 
 
