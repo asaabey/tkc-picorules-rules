@@ -1199,7 +1199,7 @@ BEGIN
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
-                is_active:2,
+                is_active:0,
                 def_exit_prop:"egfr_fit",
                 def_predicate:">0",
                 exec_order:1

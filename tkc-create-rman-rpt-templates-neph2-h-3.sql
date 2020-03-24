@@ -198,10 +198,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </div>
     <hr />
     <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
-        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_mode_full$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
+        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
         
-        <<episode_single=0>><<loc_single=0>>visited <b><<loc_mode_full$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
-        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_mode_full$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>
+        <<episode_single=0>><<loc_single=0>>visited <b><<loc_def$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
+        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>
     '
     );
 
@@ -314,8 +314,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <ul>
         
-        <li><b><<dm_type=1>>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
-        <li><b><<dm_type=2>>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><</dm_type=2>>
+        <li><<dm_type=1>><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
+        <li><<dm_type=2>><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><</dm_type=2>>
         <ul>
             <<dm_fd_year>><li>since <<dm_fd_year />></li><</dm_fd_year>>
             <<dm_dx_uncoded>><li>not coded on primary care EHR</li><</dm_dx_uncoded>>
@@ -411,12 +411,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <ul>
             <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
             <<mu_1>><li>Average systolic BP during last year was <<mu_1 />> mmHg</li><</mu_1>>
-            <<bp_trend>>
+            
             <li>
+                <<bp_trend=0>>No comment on the trend<</bp_trend=0>>
                 <<bp_trend=1>>Hypertension control appears to have improved compared to last year<</bp_trend=1>>
                 <<bp_trend=2>>Hypertension control appears to have worsened compared to last year<</bp_trend=2>>        
+                
             </li>
-            <</bp_trend>>
+            
             <<bp_control>>
             <li>
                 BP control <<bp_control=3>>appears to be adequate<</bp_control=3>>
