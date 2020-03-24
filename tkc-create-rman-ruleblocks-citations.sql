@@ -299,7 +299,7 @@ INSERT INTO rman_ruleblocks_citation VALUES (
 );
 /
 INSERT INTO rman_ruleblocks_citation VALUES (
-'obesity_ref1',
+'cd_obesity_ref1',
 ' World Health Organization. Obesity: preventing and managing the global epidemic. Report of a WHO consultation. World Health Organization technical report series. 2000;894:i-xii, 1-253.'
 );
 /

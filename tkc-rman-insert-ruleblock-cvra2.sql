@@ -27,13 +27,13 @@ BEGIN
             {
                 description: "Ruleblock to apply Framingham equations",
                 version: "0.1.1.1",
-                blockid: "cvra",
-                target_table:"rout_cvra",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
                 is_active:2,
-                def_exit_prop:"cvra",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -56,9 +56,9 @@ BEGIN
         );
         
         
-        ckd0 => rout_ckd.ckd.val.bind();
-        dm => rout_cd_dm.dm.val.bind();
-        cp_hicvr => rout_careplan.cp_hicvr.val.bind();
+        ckd => rout_ckd.ckd.val.bind();
+        dm => rout_cd_dm_dx.dm.val.bind();
+        cp_hicvr => rout_cd_careplan.cp_hicvr.val.bind();
         
         
         #doc(,
@@ -111,9 +111,9 @@ BEGIN
         );
         
         
-        dmckd1 : {dm=1 and ckd0>=1 => 1},{=>0};
+        dmckd1 : {dm=1 and ckd>=1 => 1},{=>0};
         dm60 : {dm=1 and age>=60 => 1},{=>0};
-        ckd3 : {ckd0>=3 => 1},{=>0};
+        ckd3 : {ckd>=3 => 1},{=>0};
         tc7 : {tc>=7 => 1},{=>0};
         sbp180 : {sbp >=180 => 1},{=>0};
         age74 : {age>74 => 1},{=>0};
@@ -147,7 +147,7 @@ BEGIN
         risk_5 : { risk_high_ovr=0 => nvl(risk_5_chd,0) + nvl(risk_5_mi,0)};
         
         
-        cvra :  {risk_high_ovr=1 => 3},
+        [[rb_id]] :  {risk_high_ovr=1 => 3},
                     { risk_5 >=15 => 3},
                     { risk_5 >=10 and risk_5 <15 => 2},
                     { risk_5 <10 => 1},{=>0};
@@ -158,6 +158,7 @@ BEGIN
         
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);  
     -- END OF RULEBLOCK --
@@ -176,13 +177,13 @@ BEGIN
             {
                 description: "Ruleblock to calculate KFRE",
                 version: "0.0.1.2",
-                blockid: "kfre",
-                target_table:"rout_kfre",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
                 is_active:2,
-                def_exit_prop:"kfre",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -250,10 +251,11 @@ BEGIN
         
         kfre4v_5yr : { kfre4v_ap =1 => round(1-power(0.9365,kfre4v_exp) ,2)};
         
-        kfre : { 1=1 => kfre4v_ap};
+        [[rb_id]] : { 1=1 => kfre4v_ap};
         
                   
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock); 
     -- END OF RULEBLOCK --
@@ -274,13 +276,13 @@ BEGIN
             {
                 description: "Ruleblock to assess PCD Traffic light report",
                 version: "0.0.1.1",
-                blockid: "pcd",
-                target_table:"rout_pcd",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
                 is_active:0,
-                def_exit_prop:"pcd",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -297,7 +299,7 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
-        dm => rout_cd_dm.dm.val.bind();
+        dm => rout_cd_dm_dx.dm.val.bind();
         
         cvra_calc => rout_cvra.cvra.val.bind();
         
@@ -350,8 +352,9 @@ BEGIN
         
         age : { dob< sysdate => (sysdate-dob)/365.25};
         
-        pcd : { pcd_dt is not null =>1},{=>0};       
+        [[rb_id]] : { pcd_dt is not null =>1},{=>0};       
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);  
     COMMIT;

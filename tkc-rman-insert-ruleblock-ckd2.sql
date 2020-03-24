@@ -27,15 +27,16 @@ BEGIN
             {
                 description: "Rule block to determine RRT status",
                 version: "0.0.2.1",
-                blockid: "rrt",
-                target_table:"rout_rrt",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
                 is_active:2,
-                def_exit_prop:"rrt",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
-                exec_order:1
+                exec_order:1,
+                filter: "SELECT eid FROM rout_core_info_entropy WHERE icd=1 or icpc=1"
                 
             }
         );
@@ -46,12 +47,12 @@ BEGIN
                 cite : "rrt_hd_icd,rrt_pd_icd"
             }
         );
-        hd_z49_n => eadv.icd_z49_1.dt.count(0);
+        hd_z49_n => eadv.icd_z49_1.dt.count();
         
-        hd_z49_1y_n => eadv.icd_z49_1.dt.count(0).where(dt>sysdate-365);
+        hd_z49_1y_n => eadv.icd_z49_1.dt.count().where(dt>sysdate-365);
         
-        hd_dt0 => eadv.[caresys_13100_00,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(1900); 
-        hd_dt => eadv.icd_z49_1.dt.max(1900); 
+        hd_dt0 => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(); 
+        hd_dt => eadv.icd_z49_1.dt.max(); 
         
         hd_dt_min => eadv.icd_z49_1.dt.min();
         
@@ -61,26 +62,33 @@ BEGIN
             }
         );
         
-        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(2900);
+        pd_dt => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
         
-        pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min(1900);
+        pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         #doc(,
             {
-                txt : "Transplant episode ICD and problem ICPC2p coding"
+                txt : "Transplant problem ICPC2p coding"
             }
         );
-        tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
+        tx_dt => eadv.icpc_u28001.dt.max();
+        
+        #doc(,
+            {
+                txt : "Transplant problem ICD coding"
+            }
+        );
+        tx_dt_icd => eadv.icd_z94_0.dt.max();
         
         #doc(,
             {
                 txt : "Home-haemodialysis ICPC2p coding"
             }
         );
-        homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
+        homedx_dt => eadv.[icpc_u59j99].dt.max();
         
         
-        ren_enc => eadv.enc_op_renal.dt.max(1900);
+        ren_enc => eadv.enc_op_renal.dt.max();
         
         #doc(,
             {
@@ -88,10 +96,10 @@ BEGIN
             }
         );
         
-        rrt:{hd_dt > greatest(pd_dt,tx_dt,homedx_dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365 => 1},
-            {pd_dt > greatest(hd_dt,tx_dt,homedx_dt) => 2},
-            {tx_dt > greatest(hd_dt,pd_dt,homedx_dt) => 3},
-            {homedx_dt > greatest(hd_dt,pd_dt,tx_dt) => 4},
+        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365 => 1},
+            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) => 2},
+            {tx_dt > nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
+            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) => 4},
             {=>0};
         #doc(,
             {
@@ -122,7 +130,7 @@ BEGIN
         tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
         
         #define_attribute(
-            rrt,
+            [[rb_id]],
             {
                 label:"Renal replacement therapy category.",
                 desc:"Integer [1-4] where 1=HD, 2=PD, 3=TX, 4=HHD",
@@ -167,6 +175,8 @@ BEGIN
             }
         );
     ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -334,7 +344,7 @@ BEGIN
         #doc(,
             {
                 txt : "Apply KDIGO 2012 staging",
-                cite: "ckd_1, ckd_2"
+                cite: "ckd_ref1, ckd_ref2"
             }
         );
         
@@ -622,7 +632,7 @@ BEGIN
         
     );
      
-     dm => rout_cd_dm.dm.val.bind(); 
+     dm => rout_cd_dm_dx.dm.val.bind(); 
      htn => rout_cd_htn.htn.val.bind();
      ckd => rout_ckd.ckd.val.bind();
      

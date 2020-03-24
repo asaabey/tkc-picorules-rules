@@ -254,7 +254,9 @@ BEGIN
         
         dm_icpc_fd => eadv.[icpc_t89%,icpc_t90%].dt.min();
         
-        dm_fd : { dm_icd_fd!? and dm_icpc_fd!? => least(dm_icd_fd,dm_icpc_fd) },{dm_icd_fd!? => dm_icd_fd},{dm_icpc_fd!? => dm_icpc_fd};
+        
+        
+        dm_fd : {.=>least_date(dm_icd_fd, dm_icpc_fd)};
         
         dm_prev : { dm_fd!? => 1 },{=>0};
         

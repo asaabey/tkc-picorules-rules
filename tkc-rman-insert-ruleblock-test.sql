@@ -168,7 +168,7 @@ BEGIN
                 target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:1,
+                is_active:0,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:1
@@ -176,7 +176,66 @@ BEGIN
             }
         );
         
-        ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
+        dm_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.min();
+        
+        dm_icpc_fd => eadv.[icpc_t89%,icpc_t90%].dt.min();
+        
+        
+        
+        dm_fd : { . => rman_min_dt(dt_args(dm_icd_fd,dm_icpc_fd))};
+        
+        
+        [[rb_id]] : {1=1 =>1};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "This is a test variable uics"
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='test4';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Test  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a test algorithm",
+                version: "0.0.0.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:0,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+        dm_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.min(2999);
+        
+        dm_icpc_fd => eadv.[icpc_t89%,icpc_t90%].dt.min(2999);      
+        
+        dm_fd : { least(dm_icd_fd,dm_icpc_fd)<to_date(`31122999`,`DDMMYYYY`) => least(dm_icd_fd,dm_icpc_fd)};
         
         
         [[rb_id]] : {1=1 =>1};

@@ -27,12 +27,12 @@ BEGIN
             {
                 description: "Algorithm to detect nephrotic syndrome",
                 version: "0.0.1.2",
-                blockid: "tg4410",
-                target_table:"rout_tg4410",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:"2",
-                def_exit_prop:"tg4410",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:"5"
                 
@@ -71,7 +71,7 @@ BEGIN
         
         
         rrt => rout_rrt.rrt.val.bind();
-        dm => rout_cd_dm.dm.val.bind();
+        dm => rout_cd_dm_dx.dm.val.bind();
        
         #doc(,
             {
@@ -130,10 +130,10 @@ BEGIN
         
         
                 
-        tg4410 : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 },{=>0};
+        [[rb_id]] : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 },{=>0};
         
         #define_attribute(
-            tg4410,
+            [[rb_id]],
             {
                 label:"Alert:Nephrotic range proteinuria in the absence of diabetes",
                 desc:"Integer [0-1] if meets criteria ",
@@ -145,6 +145,7 @@ BEGIN
         );
         
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
 
@@ -164,12 +165,12 @@ BEGIN
             {
                 description: "Algorithm to detect nephritic syndrome",
                 version: "0.0.1.2",
-                blockid: "tg4420",
-                target_table:"rout_tg4420",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4420",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5,
                 priority:2
@@ -260,10 +261,10 @@ BEGIN
                     {ua_rbc>100 and ua_leu<40 => 1},    
                     {=>0};
         
-        tg4420 : { t4420_code >=2 and ex_flag=0 => 1},{=>0};            
+        [[rb_id]] : { t4420_code >=2 and ex_flag=0 => 1},{=>0};            
         
         #define_attribute(
-            tg4420,
+            [[rb_id]],
             {
                 label:"Alert:Possible nephritic syndrome",
                 desc:"Integer [0-1] if meets criteria ",
@@ -276,6 +277,7 @@ BEGIN
         
         
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
@@ -294,12 +296,12 @@ BEGIN
             {
                 description: "Algorithm to generate AKI trigger from community",
                 version: "0.0.1.2",
-                blockid: "tg4100",
-                target_table:"rout_tg4100",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4100",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -417,10 +419,10 @@ BEGIN
           
           ex_flag : {dod is not null => 1},{=>0};
           
-          tg4100 : {akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
+          [[rb_id]] : {akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
           
           #define_attribute(
-                tg4100,
+                [[rb_id]],
                 {
                     label:"Alert:Acute kidney injury in community",
                     desc:"Integer [0-1] if meets criteria ",
@@ -434,6 +436,7 @@ BEGIN
           
         
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
@@ -452,12 +455,12 @@ BEGIN
             {
                 description: "Algorithm to generate AKI from hospital coded diagnosis",
                 version: "0.0.1.2",
-                blockid: "tg4110",
-                target_table:"rout_tg4110",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4110",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5,
                 priority:2
@@ -477,12 +480,12 @@ BEGIN
         
         ex_flag : {dod is not null => 1},{=>0};
           
-        tg4110 : {aki_icd>0 and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : {aki_icd>0 and ex_flag=0 => 1},{=>0};
           
         
                         
          #define_attribute(
-                tg4110,
+                [[rb_id]],
                 {
                     label:"Alert:Acute kidney injury in hospital by coding",
                     desc:"Integer [0-1] if meets criteria ",
@@ -494,6 +497,7 @@ BEGIN
             ); 
         
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
@@ -510,14 +514,14 @@ BEGIN
         
          #define_ruleblock(tg4610,
             {
-                description: "Algorithm to generate CKD2 or 3, rapid progression (20% decline per annum) ",
+                description: "Algorithm to generate CKD2 or 3 rapid progression 20% decline per annum ",
                 version: "0.0.1.2",
-                blockid: "tg4610",
-                target_table:"rout_tg4610",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4610",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -568,10 +572,10 @@ BEGIN
         
         ex_flag : {dod is not null => 1},{=>0};
           
-        tg4610 : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
-                tg4610,
+                [[rb_id]],
                 {
                     label:"Alert:Unmanaged possible early CKD with rapid progression",
                     desc:"Integer [0-1] if meets criteria ",
@@ -583,6 +587,7 @@ BEGIN
             ); 
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
@@ -595,19 +600,19 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate CKD4 or 5, rapid progression (5% decline per annum), no AVF   */
+        /*  Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF   */
         
         
          #define_ruleblock(tg4620,
             {
-                description: "Algorithm to generate CKD4 or 5, rapid progression (5% decline per annum), no AVF",
-                                version: "0.0.1.2",
-                blockid: "tg4620",
-                target_table:"rout_tg4620",
+                description: "Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF",
+                version: "0.0.1.2",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4620",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -641,10 +646,10 @@ BEGIN
         
         ex_flag : {dod is not null => 1},{=>0};
           
-        tg4620 : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
-                tg4620,
+                [[rb_id]],
                 {
                     label:"Alert:No AVF with advanced CKD 4+ with rapid progression",
                     desc:"Integer [0-1] if meets criteria ",
@@ -656,6 +661,7 @@ BEGIN
             ); 
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
@@ -674,12 +680,12 @@ BEGIN
             {
                 description: "Algorithm to detect new RRT",
                 version: "0.0.1.1",
-                blockid: "tg4720",
-                target_table:"rout_tg4720",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4720",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -703,10 +709,10 @@ BEGIN
         
         ex_flag : {dod is not null => 1},{=>0};
           
-        tg4720 : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
-                tg4720,
+                [[rb_id]],
                 {
                     label:"Alert:New commencement on Renal replacement therapy",
                     desc:"Integer [0-1] if meets criteria ",
@@ -718,6 +724,7 @@ BEGIN
             ); 
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);      
     -- END OF RULEBLOCK --
@@ -736,12 +743,12 @@ BEGIN
             {
                 description: "Algorithm medication safety concern in CKD ",
                 version: "0.0.1.2",
-                blockid: "tg4660",
-                target_table:"rout_tg4660",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4660",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5,
                 priority:2
@@ -771,9 +778,9 @@ BEGIN
         );
         
         
-        dm_rxn_bg => rout_cd_dm.dm_rxn_bg.val.bind();
+        dm_rxn_bg => rout_cd_dm_dx.dm_rxn_bg.val.bind();
         
-        dm_rxn_sglt2 => rout_cd_dm.dm_rxn_sglt2.val.bind();
+        dm_rxn_sglt2 => rout_cd_dm_dx.dm_rxn_sglt2.val.bind();
         
         rx_nsaids => eadv.[rxnc_m01a%].dt.count(0).where(val=1);
         
@@ -785,10 +792,10 @@ BEGIN
         
         ex_flag : {dod is not null => 1},{=>0};
           
-        tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
-                tg4660,
+                [[rb_id]],
                 {
                     label:"Alert:Medication safety concern",
                     desc:"Integer [0-1] if meets criteria ",
@@ -799,6 +806,7 @@ BEGIN
             ); 
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);     
     -- END OF RULEBLOCK --
@@ -817,12 +825,12 @@ BEGIN
             {
                 description: "Algorithm to detect untreated chronic disease",
                 version: "0.0.1.2",
-                blockid: "tg2610",
-                target_table:"rout_tg2610",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg2610",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -831,11 +839,11 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
-        dm => rout_cd_dm.dm.val.bind();
+        dm => rout_cd_dm_dx.dm.val.bind();
         
-        dm_rxn => rout_cd_dm.dm_rxn.val.bind();
+        dm_rxn => rout_cd_dm_dx.dm_rxn.val.bind();
         
-        hba1c_n0_val => rout_cd_dm.hba1c_n0_val.val.bind();
+        hba1c_n0_val => rout_cd_dm_glyc_cntrl.hba1c_n0_val.val.bind();
         
         cga_a => rout_ckd.cga_a_val.val.bind();
         
@@ -879,10 +887,10 @@ BEGIN
             }
         );
 
-        tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
-                tg2610,
+                [[rb_id]],
                 {
                     label:"Alert:Potentially untreated chronic disease",
                     desc:"Integer [0-1] if meets criteria ",
@@ -894,6 +902,7 @@ BEGIN
             ); 
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);    
     COMMIT;
@@ -914,12 +923,12 @@ BEGIN
             {
                 description: "Algorithm to detect high haemoglobin while on ESA",
                 version: "0.0.1.2",
-                blockid: "tg4810",
-                target_table:"rout_tg4810",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"tg4810",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5
                 
@@ -943,10 +952,10 @@ BEGIN
             }
         );
 
-        tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
-                tg4810,
+                [[rb_id]],
                 {
                     label:"Alert: High Hb associated with ESA therapy",
                     desc:"Integer [0-1] if meets criteria ",
@@ -958,6 +967,7 @@ BEGIN
             ); 
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);    
     COMMIT;
