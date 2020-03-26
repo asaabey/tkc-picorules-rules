@@ -1019,4 +1019,4 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
     
-@"..\tkc-master\tkc-picorules\tkc-create-package-rman-1.sql";
+ALTER PACKAGE rman_pckg COMPILE;

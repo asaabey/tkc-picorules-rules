@@ -28,7 +28,7 @@
 @"tkc-create-rman-ruleblocks-citations.sql";
 
 --Re-init Rman package
-@"..\tkc-picorules\tkc-create-package-rman-1.sql";
+alter package rman_pckg compile;
 
 
 
