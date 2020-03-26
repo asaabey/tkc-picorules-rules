@@ -20,16 +20,16 @@ BEGIN
     
         /* Algorithm to assess demographics */
         
-        #define_ruleblock(dmg,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to assess demographics",
                 version: "0.0.1.1",
-                blockid: "dmg",
-                target_table:"rout_dmg",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"dmg",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:1
                 
@@ -44,7 +44,7 @@ BEGIN
         
   
         
-        dmg : { 1=1 => 1},{=>0};  
+        [[rb_id]] : { 1=1 => 1},{=>0};  
         
         #define_attribute(
             dob,
@@ -77,6 +77,8 @@ BEGIN
         
                 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
 
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
@@ -94,16 +96,16 @@ BEGIN
     
         /* Algorithm to assess demographics */
         
-        #define_ruleblock(dmg_loc,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to assess demographics",
                 version: "0.0.1.1",
-                blockid: "dmg_loc",
-                target_table:"rout_dmg_loc",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
                 is_active:2,
-                def_exit_prop:"dmg_loc",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:1
                 
@@ -150,7 +152,7 @@ BEGIN
         
         loc_single : { mode_pct=1 =>1},{=>0}; 
         
-        dmg_loc : { 1=1 =>loc_def };    
+        [[rb_id]] : { 1=1 =>loc_def };    
         
         #define_attribute(
             dmg_loc,
@@ -171,6 +173,87 @@ BEGIN
         );
                 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
+         -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='dmg_source';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess demographic source */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess demographics",
+                version: "0.0.1.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+                
+        
+        tc_caresys_n => eadv.dmg_source_02.dt.count();
+        
+        tc_caresys_ld => eadv.dmg_source_02.dt.max();
+        
+        tc_labtrak_n => eadv.dmg_source_07.dt.count();
+        
+        tc_labtrak_ld => eadv.dmg_source_07.dt.max();
+        
+        phc_pcis_n => eadv.dmg_source_01.dt.count();
+        
+        phc_pcis_ld => eadv.dmg_source_01.dt.max();
+        
+        phc_eacs_n => eadv.dmg_source_03.dt.count();
+        
+        phc_eacs_ld => eadv.dmg_source_03.dt.max();
+        
+        phc_laynhapuy_n => eadv.dmg_source_04.dt.count();
+        
+        phc_laynhapuy_ld => eadv.dmg_source_04.dt.max();
+        
+        phc_miwatj_n => eadv.dmg_source_05.dt.count();
+        
+        phc_anyinginyi_n => eadv.dmg_source_06.dt.count();
+        
+        phc_anyinginyi_ld => eadv.dmg_source_06.dt.max();
+        
+        
+        
+        
+        [[rb_id]] : { 1=1 =>1 };    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Demographic source",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+       
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
 
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
