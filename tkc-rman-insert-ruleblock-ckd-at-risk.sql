@@ -53,13 +53,13 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         
-        dm => rout_cd_dm.dm.val.bind();
+        dm => rout_cd_dm_dx.dm.val.bind();
         
         htn => rout_cd_htn.htn.val.bind();
         
         cad => rout_cd_cardiac.cardiac.val.bind();
         
-        obesity => rout_cd_obesity.obesity.val.bind();
+        obesity => rout_cd_obesity.cd_obesity.val.bind();
         
         dod => rout_dmg.dod.val.bind();
     
