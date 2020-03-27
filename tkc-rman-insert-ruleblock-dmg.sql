@@ -217,33 +217,40 @@ BEGIN
         
         tc_labtrak_ld => eadv.dmg_source_07.dt.max();
         
-        phc_pcis_n => eadv.dmg_source_01.dt.count();
+        pcis_n => eadv.dmg_source_01.dt.count(0).where(dt>sysdate-1000);
         
-        phc_pcis_ld => eadv.dmg_source_01.dt.max();
+        pcis_ld => eadv.dmg_source_01.dt.max().where(dt>sysdate-1000);
         
-        phc_eacs_n => eadv.dmg_source_03.dt.count();
+        eacs_n => eadv.dmg_source_03.dt.count(0).where(dt>sysdate-1000);
         
-        phc_eacs_ld => eadv.dmg_source_03.dt.max();
+        eacs_ld => eadv.dmg_source_03.dt.max().where(dt>sysdate-1000);
         
-        phc_laynhapuy_n => eadv.dmg_source_04.dt.count();
+        laynhapuy_n => eadv.dmg_source_04.dt.count(0).where(dt>sysdate-1000);
         
-        phc_laynhapuy_ld => eadv.dmg_source_04.dt.max();
+        laynhapuy_ld => eadv.dmg_source_04.dt.max().where(dt>sysdate-1000);
         
-        phc_miwatj_n => eadv.dmg_source_05.dt.count();
+        miwatj_n => eadv.dmg_source_05.dt.count(0).where(dt>sysdate-1000);
         
-        phc_anyinginyi_n => eadv.dmg_source_06.dt.count();
+        miwatj_ld => eadv.dmg_source_05.dt.max().where(dt>sysdate-1000);
         
-        phc_anyinginyi_ld => eadv.dmg_source_06.dt.max();
+        anyinginyi_n => eadv.dmg_source_06.dt.count(0).where(dt>sysdate-1000);
         
+        anyinginyi_ld => eadv.dmg_source_06.dt.max().where(dt>sysdate-1000);
         
+        phc_1 :   { greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,pcis_n)=0 =>0},
+                        { pcis_n > greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n) => 1},
+                        { eacs_n > greatest(laynhapuy_n,miwatj_n,anyinginyi_n) => 3},
+                        { laynhapuy_n > greatest(miwatj_n,anyinginyi_n) => 4},
+                        { miwatj_n > anyinginyi_n => 5},
+                        { anyinginyi_n>0 =>6};
+
         
-        
-        [[rb_id]] : { 1=1 =>1 };    
+        [[rb_id]] : { . => phc_1 };    
         
         #define_attribute(
             [[rb_id]],
             {
-                label:"Demographic source",
+                label:"Demographic phc source",
                 type:2,
                 is_reportable:1
             }

@@ -30,6 +30,9 @@
 --Re-init Rman package
 alter package rman_pckg compile;
 
+--Compile rules
+execute rman_pckg.compile_active_ruleblocks;
+
 
 
 

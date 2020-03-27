@@ -187,21 +187,40 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','dmg_source_summary','dmg_source',200008,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    
+    <div class="syn_dmg_box">
+    <<dmg_source>>
+        <h6>
+            Primary health care network
+            <<dmg_source=1>>
+               <b>NTG PCIS</b><i>encounters(N=<<pcis_n />>, last=<<pcis_ld />>)</i> 
+               <br />
+               <<eacs_n>><</eacs_n>>
+            <</dmg_source=1>>        
+        </h6>
+    <</dmg_source>>
+    </div>
+    <hr />
 
+    '
+    );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','dmg_loc_summary','dmg_loc',200010,'dev','tkc',TO_DATE(SYSDATE),
     '
     
     <div class="syn_dmg_box">
-        
-    </div>
-    <hr />
     <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
         <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
         
         <<episode_single=0>><<loc_single=0>>visited <b><<loc_def$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
-        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>
+        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
+    </div>
+    <hr />
+    
     '
     );
 
