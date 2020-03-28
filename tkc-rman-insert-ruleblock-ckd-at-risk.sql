@@ -13,7 +13,7 @@ BEGIN
   
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='at_risk_ckd';
+    rb.blockid:='at_risk';
 
     
     
@@ -98,10 +98,10 @@ BEGIN
         
         active : {1=1 => is_active_2y};
         
-        tkc_cohort : { greatest(ckd,rrt,at_risk_ckd)>0 =>1},{=>0};
+        tkc_cohort : { greatest(ckd,rrt,at_risk)>0 =>1},{=>0};
         
         #define_attribute(
-            at_risk_ckd,
+            [[rb_id]],
                 {
                     label:"At risk for CKD",
                     is_reportable:1,

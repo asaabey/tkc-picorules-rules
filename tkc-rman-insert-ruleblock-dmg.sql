@@ -43,9 +43,13 @@ BEGIN
         gender => eadv.dmg_gender.val.last();
         
         /* Constants */
+        st_rman_ver : {.=> 1000};
         
-        status_rman_init : {. => 1010};
+        st_rman_init : {. => 1010};
         
+        st_rman_rb : {. => 2010};
+        
+        st_rman_rb_err : {. => 2014};
         [[rb_id]] : { 1=1 => 1},{=>0};  
         
         #define_attribute(

@@ -498,8 +498,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','debug_info','dmg',921010,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
-    <div class="syn_notes_box">
-        RMAN repository initiased on <<rman_status_key_val$status_rman_init />>
+    <div class="syn_notes_box"><small>
+    Debug info:
+        <<st_rman_ver$rman_status_key_val />>;
+        <<st_rman_init$rman_status_key_ts />>;
+        <<st_rman_rb$rman_status_key_ts />>;
+        <<st_rman_rb_err$rman_status_key_val />>;
+        
+        </small>
     </div>
     '
     );
@@ -591,7 +597,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <hr/>
     <h3>Medications</h3>
-        <<rx_name_obj$rx_desc />>
+        <<rx_name_obj$rx_name_obj />>
     
     
     '

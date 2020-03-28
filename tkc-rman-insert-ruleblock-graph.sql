@@ -207,83 +207,7 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
     COMMIT;
-    -- END OF RULEBLOCK --
---         -- BEGINNING OF RULEBLOCK --
---
---    rb.blockid:='egfr_graph2';
---
---    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
---    
---    rb.picoruleblock:='
---    
---        /* Algorithm to compute egfr graph 2 */
---        
---            
---             #define_ruleblock(egfr_graph2,
---                {
---                    description: "Algorithm to serialize egfr",
---                    version: "0.0.1.1",
---                    blockid: "egfr_graph2",
---                    target_table:"rout_egfr_graph2",
---                    environment:"DEV_2",
---                    rule_owner:"TKCADMIN",
---                    is_active:2,
---                    def_exit_prop:"egfr_graph2",
---                    def_predicate:">0",
---                    exec_order:2
---                    
---                }
---            );
---            
---            rrt => rout_rrt.rrt.val.bind();
---            
---            egfr_n => rout_egfr_metrics.egfr_n.val.bind();
---            
---            egfr_f_dt => rout_egfr_metrics.egfr_r1_dt.val.bind();
---            
---            egfr_f_val => rout_egfr_metrics.egfr_r1_val.val.bind();
---            
---            egfr_l_dt => rout_egfr_metrics.egfr_rn_dt.val.bind();
---            
---            egfr_l_val => rout_egfr_metrics.egfr_rn_val.val.bind();
---            
---            egfr_max_dt => rout_egfr_metrics.egfr_max_dt.val.bind();
---            
---            egfr_max_val => rout_egfr_metrics.egfr_max_val.val.bind();
---            
---            egfr_min_dt => rout_egfr_metrics.egfr_min_dt.val.bind();
---            
---            egfr_min_val => rout_egfr_metrics.egfr_min_val.val.bind();
---            
---            egfr60_last_dt => rout_egfr_metrics.egfr60_last_dt.val.bind();
---            
---            egfr60_last_val => rout_egfr_metrics.egfr60_last_val.val.bind();
---            
---            
---            
---            
---            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
---            
---            dspan : {1=1 => egfr_l_dt - egfr_f_dt };
---            
---        
---            
---   
---   
---           
---
---            mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
---            
---            
---            
---            egfr_graph2 : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
---            
---    ';
---    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
---    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
---    
---    COMMIT;
---    -- END OF RULEBLOCK --
+   
    
    
      -- BEGINNING OF RULEBLOCK --
@@ -305,7 +229,7 @@ BEGIN
                     target_table:"rout_acr_graph",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:2,
+                    is_active:0,
                     def_exit_prop:"acr_graph",
                     def_predicate:">0",
                     exec_order:2
@@ -355,7 +279,7 @@ BEGIN
                     target_table:"rout_hb_graph",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:2,
+                    is_active:0,
                     def_exit_prop:"hb_graph",
                     def_predicate:">0",
                     exec_order:1
@@ -502,7 +426,7 @@ BEGIN
                     target_table:"rout_multi_graph",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:2,
+                    is_active:0,
                     def_exit_prop:"multi_graph",
                     def_predicate:">0",
                     exec_order:2
@@ -564,7 +488,7 @@ BEGIN
                     target_table:"rout_egfr_graph3",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:2,
+                    is_active:0,
                     def_exit_prop:"egfr_graph3",
                     def_predicate:">0",
                     exec_order:2
