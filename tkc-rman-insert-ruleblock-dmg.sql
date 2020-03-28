@@ -152,6 +152,8 @@ BEGIN
         
         loc_single : { mode_pct=1 =>1},{=>0}; 
         
+        status_rman_init : {. => 101};
+        
         [[rb_id]] : { 1=1 =>loc_def };    
         
         #define_attribute(

@@ -131,7 +131,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','frame_synthesis_begin','dmg_loc',600010,'dev','tkc',TO_DATE(SYSDATE),
     '
-    
+    <hr />
     <div class="syn_synopsis_box">
         <h3>Relevant Diagnoses</h3>
         <hr />
@@ -193,14 +193,19 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     
     <div class="syn_dmg_box">
     <<dmg_source>>
-        <h6>
-            Primary health care network
-            <<dmg_source=1>>
-               <b>NTG PCIS</b><i>encounters(N=<<pcis_n />>, last=<<pcis_ld />>)</i> 
-               <br />
-               <<eacs_n>><</eacs_n>>
-            <</dmg_source=1>>        
-        </h6>
+        
+            Primary health care network:
+            <<dmg_source=1>><b>NTG PCIS</b><hr /><</dmg_source=1>> 
+            <<dmg_source=3>><b>NTG EACS</b><hr /><</dmg_source=3>>    
+            <<dmg_source=4>><b>LAYNHAPUY</b><hr /><</dmg_source=4>>    
+            <<dmg_source=5>><b>MIWATJ</b><hr /><</dmg_source=5>>    
+            <<dmg_source=6>><b>ANYINGINYI</b><hr /><</dmg_source=6>> 
+            <<pcis_n>><i>PCIS encounters(N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
+            <<eacs_n>><i>EACS encounters(N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
+            <<miwatj_n>><i>MIWATJ encounters(N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
+            <<laynhapuy_n>><i>LAYNHAPUY encounters(N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
+            <<anyinginyi_n>><i>ANYINGINYI encounters(N=<<anyinginyi_n />>, last=<<anyinginyi_ld />>)</i><</anyinginyi_n>>
+        
     <</dmg_source>>
     </div>
     <hr />
@@ -486,6 +491,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <div>Note [3.1] This is based on <<iq_sbp />> blood pressure readings within the last 2 years</div>
     <</iq_tier>>
 
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','debug_info','dmg_loc',921010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_notes_box">
+        RMAN repository initiased on <<rman_status$status_rman_init />>
+    </div>
     '
     );
 
