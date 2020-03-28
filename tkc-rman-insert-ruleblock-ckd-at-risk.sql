@@ -23,17 +23,17 @@ BEGIN
     
         /* Ruleblock to assess at risk population for CKD */
         
-        #define_ruleblock(at_risk_ckd,
+        #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess at_risk_ckd",
+                description: "Ruleblock to assess [[rb_id]]",
                 version: "0.0.2.2",
-                blockid: "at_risk_ckd",
-                target_table:"rout_at_risk_ckd",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
                 is_active:2,
-                def_exit_prop:"at_risk_ckd",
+                def_exit_prop:"[[rb_id]]",
                 def_predicate:"",
                 exec_order:5
                 
@@ -94,7 +94,7 @@ BEGIN
         );
         
             
-        at_risk_ckd : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
+        [[rb_id]] : { greatest(dm,htn,cad,obesity,obst,lit,struc,aki,cti)>0 and ckd=0 =>1},{=>0};
         
         active : {1=1 => is_active_2y};
         
@@ -128,6 +128,9 @@ BEGIN
         
         
     ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     

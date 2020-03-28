@@ -28,7 +28,7 @@
 DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_main_header','dmg_loc',200001,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_main_header','dmg',200001,'dev','tkc',TO_DATE(SYSDATE),
     '
     <style>
                 .syn_alert_box {
@@ -129,7 +129,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_synthesis_begin','dmg_loc',600010,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_synthesis_begin','dmg',600010,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_synopsis_box">
@@ -139,25 +139,25 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_synthesis_left_begin','dmg_loc',600011,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_synthesis_left_begin','dmg',600011,'dev','tkc',TO_DATE(SYSDATE),
     '
     <div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_synthesis_left_end','dmg_loc',609001,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_synthesis_left_end','dmg',609001,'dev','tkc',TO_DATE(SYSDATE),
     '
     </div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_synthesis_end','dmg_loc',609010,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_synthesis_end','dmg',609010,'dev','tkc',TO_DATE(SYSDATE),
     '
     </div></div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_recm_begin','dmg_loc',700001,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_recm_begin','dmg',700001,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_recm_box">
@@ -165,13 +165,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_recm_end','dmg_loc',799999,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_recm_end','dmg',799999,'dev','tkc',TO_DATE(SYSDATE),
     '
     </div>
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_notes_begin','dmg_loc',800001,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_notes_begin','dmg',800001,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_notes_box">
@@ -180,7 +180,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','frame_notes_end','dmg_loc',899999,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','frame_notes_end','dmg',899999,'dev','tkc',TO_DATE(SYSDATE),
     '
     </small>
     </div>
@@ -495,11 +495,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','debug_info','dmg_loc',921010,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','debug_info','dmg',921010,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_notes_box">
-        RMAN repository initiased on <<rman_status$status_rman_init />>
+        RMAN repository initiased on <<rman_status_key_val$status_rman_init />>
     </div>
     '
     );
@@ -790,33 +790,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
---INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
---    VALUES('neph002_html','graph_egfr','egfr_graph',651100,'dev','tkc',TO_DATE(SYSDATE),
---    '
---    <hr />
---    <div class="syn_synopsis_box">
---    <h5>Temporal variation of eGFR</h5>
---    eGFR ml/min against time 
---    <div>
---    
---    <chart id="chartId" 
---        name="chartName" 
---        style="height:400px;width=600px" 
---        class="img-thumbnail"
---        x-vals="<<x_vals_iso />>"
---        y-vals="<<y_vals />>"
---        x-label="Date Recorded" 
---        y-label="umols/Litre" 
---        x-grid-lines="3" 
---        y-grid-lines="2" 
---        slope-line="30 30" 
---        line-colour="blue" 
---        slope-colour="gray" />
---    </div>
---    </div>
---    
---    '
---    );
+
     
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','graph_egfr2','egfr_graph2',651101,'dev','tkc',TO_DATE(SYSDATE),

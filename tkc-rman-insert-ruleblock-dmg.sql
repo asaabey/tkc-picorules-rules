@@ -42,7 +42,9 @@ BEGIN
         
         gender => eadv.dmg_gender.val.last();
         
-  
+        /* Constants */
+        
+        status_rman_init : {. => 1010};
         
         [[rb_id]] : { 1=1 => 1},{=>0};  
         
@@ -152,9 +154,9 @@ BEGIN
         
         loc_single : { mode_pct=1 =>1},{=>0}; 
         
-        status_rman_init : {. => 101};
         
-        [[rb_id]] : { 1=1 =>loc_def };    
+        
+        [[rb_id]] : { nvl(loc_def,0)>0 =>loc_def };    
         
         #define_attribute(
             dmg_loc,
