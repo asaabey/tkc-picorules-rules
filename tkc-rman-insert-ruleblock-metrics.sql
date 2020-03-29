@@ -36,10 +36,14 @@ BEGIN
                     is_active:2,
                     def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
-                    exec_order:1
+                    exec_order:2,
+                    filter : "select eid from rout_rrt where rrt=0"
+                    
                     
                 }
             );
+            
+            
             
                        
             #doc(,
@@ -175,7 +179,7 @@ BEGIN
             n_avg : { mspan>0 => round(egfr_n/mspan,1)};
             
             
-            [[rb_id]] : {1=1 =>1},{=>0};
+            [[rb_id]] : {egfr_n>2 =>1},{=>0};
             
     ';
     

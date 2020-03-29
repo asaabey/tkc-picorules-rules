@@ -294,7 +294,7 @@ BEGIN
         
          #define_ruleblock(tg4100,
             {
-                description: "Algorithm to generate AKI trigger from community",
+                description: "Algorithm to generate AKI trigger from labs",
                 version: "0.0.1.2",
                 blockid: "[[rb_id]]",
                 target_table:"rout_[[rb_id]]",
@@ -317,6 +317,8 @@ BEGIN
           dod => rout_dmg.dod.val.bind();
           
           rrt => rout_rrt.rrt.val.bind(); 
+          
+          ckd => rout_ckd.ckd.val.bind();
           
           
         
@@ -387,9 +389,13 @@ BEGIN
             }
         );
           
+         /*Sensitivity adjustment : only for ckd <4 */
+         
          
           
-          akin_stage : {rrt=0 and cr_base_max_1y_qt>2 => 3 },{rrt=0 and cr_base_max_1y_qt>1.5 => 2 },{=>0};
+          akin_stage : {ex_flag=0 and cr_base_max_1y_qt>2 => 3 },
+                        {ex_flag=0 and cr_base_max_1y_qt>1.5 => 2 },
+                        {=>0};
         
         #doc(,
             {
@@ -417,7 +423,9 @@ BEGIN
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
           
-          ex_flag : {dod is not null => 1},{=>0};
+          ex_flag : {dod!? or rrt=1 or ckd>4 => 1},{=>0};
+          
+          
           
           [[rb_id]] : {akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
           

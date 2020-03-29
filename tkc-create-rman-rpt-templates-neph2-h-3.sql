@@ -552,11 +552,12 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <ul>
     <li><b>End-stage renal failure (ESRD)</b>
-    <ul>
-    <li><<rrt=1>>Currently on haemodialysis, since <<hd_dt_min />><</rrt=1>></li>
-    <li><<rrt=2>>Currently on peritoneal dialysis, since <<pd_dt />><</rrt=2>></li>
-    <li><<rrt=3>>Active renal transplant, <<tx_dt />><</rrt=3>><br /> <<rrt=4>>Currently on home-haemodialysis, <<homedx_dt />><</rrt=4>></li>
-    </ul>
+        <ul>
+            <<rrt=1>><li>Currently on haemodialysis, since <<hd_dt_min />></li><</rrt=1>>
+            <<rrt=2>><li>Currently on peritoneal dialysis, since <<pd_dt />></li><</rrt=2>>
+            <<rrt=3>><li>Active renal transplant, <<tx_dt />></li><</rrt=3>>
+            <<rrt=4>><li>Currently on home-haemodialysis, <<homedx_dt />></li><</rrt=4>>
+        </ul>
     </li>
     </ul>
     '
@@ -596,9 +597,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','rx_syn_1','rx_desc',651010,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr/>
+    <div class="syn_synopsis_box">
     <h3>Medications</h3>
         <<rx_name_obj$rx_name_obj />>
-    
+    </div>
     
     '
     );
@@ -657,7 +659,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_recm_2','ckd_complications',701200,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <<hco3_low>><div>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</div><</hco3_low>>
+    <<rcm_bicarb>><div>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</div><</rcm_bicarb>>
     <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phosphate binder therapy</div><</phos_high>>
     '
     );
@@ -909,11 +911,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','egfr_metrics','egfr_metrics',651110,'dev','tkc',TO_DATE(SYSDATE),
     '
+    <div class="syn_synopsis_box">
     <<r1_stg=1>>Normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=1>>
     <<r1_stg=2>>Near normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=2>>
     <<p3pg_signal=1>>Apparent progression from <<egfr60_last_val />> ml/min to <<egfr_rn_val />> ml/min during (<<egfr60_last_dt />>-<<egfr_rn_dt />>) <</p3pg_signal=1>>
     <<est_esrd_lapsed=0>><<est_esrd_dt>>Estimated ESRD around <<est_esrd_dt />>.<</est_esrd_dt>><</est_esrd_lapsed=0>>
     <<est_esrd_lapsed=1>><<est_esrd_dt>>Imminent ESRD, with estimation boundry in the past<</est_esrd_lapsed=1>>
+    </div>
     '
     );
 

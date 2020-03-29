@@ -251,6 +251,10 @@ BEGIN
                         { laynhapuy_n > greatest(miwatj_n,anyinginyi_n) => 4},
                         { miwatj_n > anyinginyi_n => 5},
                         { anyinginyi_n>0 =>6};
+        
+        phc_pcis : { phc_1=1 => 1 },{=>0};
+        
+        phc_miwatj : { phc_1=5 => 1 },{=>0};
 
         
         [[rb_id]] : { . => phc_1 };    
@@ -264,6 +268,24 @@ BEGIN
             }
         );
         
+        
+        #define_attribute(
+            phc_pcis,
+            {
+                label:"Demographic phc source Pcis",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+        #define_attribute(
+            phc_miwatj,
+            {
+                label:"Demographic phc source Miwatj",
+                type:2,
+                is_reportable:1
+            }
+        );
        
                 
     ';

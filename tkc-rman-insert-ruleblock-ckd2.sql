@@ -1073,6 +1073,8 @@ BEGIN
         esa_lv => eadv.rxnc_b03xa.val.last();
         esa_ld => eadv.rxnc_b03xa.dt.max();
         
+        b05_ld => eadv.[rxnc_b05cb,rxnc_b05xa].dt.max().where(val=1);
+        
         #doc(,
             {
                 txt:"Electrolytes"
@@ -1121,7 +1123,7 @@ BEGIN
         
         thal_sig : {mcv_state=11 =>1 },{=>0};
         
-        esa_null : { esa_lv is null=>1},{=>0};
+        esa_null : { esa_lv? =>1},{=>0};
         
         esa_state : { esa_null=0 and esa_lv=1 => 1},{ esa_null=0 and esa_lv=0 => 2},{=>0};
         
@@ -1133,10 +1135,10 @@ BEGIN
         
         
         
-        phos_null : {phos_lv is null =>1},{=>0};
+        phos_null : {phos_lv? =>1},{=>0};
         phos_high : {phos_null=0 and phos_lv>=2 =>1},{=>0};
         
-        pth_null : {pth_lv is null =>1},{=>0};
+        pth_null : {pth_lv? =>1},{=>0};
         pth_high : {pth_null=0 and pth_lv>=63 =>1},{=>0};
         
         #doc(,
@@ -1146,7 +1148,7 @@ BEGIN
         );
         
         
-        k_null : {k_lv is null =>1},{=>0};
+        k_null : {k_lv? =>1},{=>0};
         k_high : {k_null=0 and k_lv>=6 =>1},{=>0};      
         
         #doc(,
@@ -1156,8 +1158,10 @@ BEGIN
         );
         
         
-        hco3_null : {hco3_lv is null =>1},{=>0};
+        hco3_null : {hco3_lv? =>1},{=>0};
         hco3_low : {hco3_null=0 and hco3_lv<22 =>1},{=>0};
+        
+        rcm_bicarb : {hco3_low=1 and b05_ld? => 1},{=>0};
         
         ckd_compx : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high)>0=> 1},{=>0};
         
