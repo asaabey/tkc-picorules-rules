@@ -25,8 +25,27 @@
 --90    reserved
 
 
-DELETE FROM rman_rpt_templates WHERE compositionid='neph002_html';
+DELETE FROM rman_rpt_templates WHERE compositionid='blank_validation';
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('blank_validation','frame_main_header','dmg',200001,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <style>
+               
+                .syn_dmg_box {
+                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
+                }
+                
+                
+                
+    </style>
+    <div class="syn_dmg_box">
+        <h3>Synopsis masked for validation</h3>
+        
+    <div>
+    
+    '
+    );
+    
       
 ALTER PACKAGE rman_pckg COMPILE;
