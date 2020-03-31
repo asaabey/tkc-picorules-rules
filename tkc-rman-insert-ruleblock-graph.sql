@@ -289,7 +289,7 @@ BEGIN
             
             esa => eadv.rxnc_b03xa.val.lastdv();
             
-            hb_graph => eadv.lab_bld_hb.val.serializedv(round(val,0)~dt).where(dt>sysdate-730);    
+            hb_graph => eadv.lab_bld_hb.val.serializedv2(round(val,0)~dt).where(dt>sysdate-1825);    
             
             hb_distinct => eadv.lab_bld_hb.val.serialize2();
                        
@@ -361,7 +361,7 @@ BEGIN
             
             tir => rout_cd_htn.n_qt_1.val.bind();
             
-            sbp_graph => eadv.obs_bp_systolic.val.serializedv(round(val,0)~dt).where(dt>sysdate-730);    
+            sbp_graph => eadv.obs_bp_systolic.val.serializedv2(round(val,0)~dt).where(dt>sysdate-1825);    
             
             
             bp_graph_y_max : {1=1 => sbp_max};
