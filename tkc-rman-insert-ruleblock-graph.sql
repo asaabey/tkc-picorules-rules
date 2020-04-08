@@ -12,97 +12,7 @@ BEGIN
      
     
     
-    
-    
---     -- BEGINNING OF RULEBLOCK --
---
---    rb.blockid:='egfr_graph';
---
---    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
---    
---    rb.picoruleblock:='
---    
---        /* Algorithm to compute egfr graph  */
---        
---            
---             #define_ruleblock(egfr_graph,
---                {
---                    description: "Algorithm to serialize egfr",
---                    version: "0.0.1.1",
---                    blockid: "egfr_graph",
---                    target_table:"rout_egfr_graph",
---                    environment:"DEV_2",
---                    rule_owner:"TKCADMIN",
---                    is_active:2,
---                    def_exit_prop:"egfr_graph",
---                    def_predicate:">0",
---                    exec_order:1
---                    
---                }
---            );
---            
---            rrt => rout_rrt.rrt.val.bind();
---            
---            
---            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv(round(val,0)~dt);
---            
---            egfr_n => eadv.lab_bld_egfr_c.val.count(0);
---            
---                        
---            egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
---            
---            egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
---            
---            dspan : {1=1 => egfr_l_dt - egfr_f_dt };
---            
---            s1_mu => eadv.lab_bld_egfr_c.val.avg().where(dt < (egfr_l_dt -(dspan/2)));
---            
---            s2_mu => eadv.lab_bld_egfr_c.val.avg().where(dt > (egfr_f_dt +(dspan/2)));
---            
---            mu_delta_30 : { s1_mu - s2_mu >30 =>1},{=>0};
---            
---            egfr_graph_xline_60 => eadv.lab_bld_egfr_c.dt.max().where(val>60);
---            
---            egfr60_last => eadv.lab_bld_egfr_c.val.lastdv().where(val>60);
---   
---            graph_canvas_x : {1=1 => 600};
---            
---            graph_canvas_y : {1=1 => 400};
---            
---            graph_y_max : {1=1 => 150};
---            
---            graph_y_min : {1=1 => 0};
---            
---            x_scale : {dspan>0 => round(graph_canvas_x/dspan,1)};
---            
---            
---            y_scale : {1=1 => round(graph_canvas_y/graph_y_max,1)};
---            
---            
---            line1_x1 : {1=1 => round(( egfr60_last_dt - egfr_f_dt )* x_scale,0) };
---            
---            line1_x2 : {1=1 => round(( egfr_l_dt - egfr_f_dt )* x_scale,0) };
---            
---            line1_y1 : {1=1 => round((graph_y_max-egfr60_last_val) * y_scale,0) };
---            
---            line1_y2 : {1=1 => round((graph_y_max-egfr_l_val) * y_scale,0) };
---                
---            
---
---            mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
---            
---            egfr_graph_yscale : {1=1 => 10};
---            
---            egfr_graph : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
---            
---    ';
---    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
---    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
---    
---    COMMIT;
---    -- END OF RULEBLOCK --
-    
-      -- BEGINNING OF RULEBLOCK --
+
 
     rb.blockid:='egfr_graph2';
 
@@ -113,16 +23,16 @@ BEGIN
         /* Algorithm to compute egfr graph 2 */
         
             
-             #define_ruleblock(egfr_graph2,
+             #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to serialize egfr",
                     version: "0.0.1.1",
-                    blockid: "egfr_graph2",
-                    target_table:"rout_egfr_graph2",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
                     is_active:2,
-                    def_exit_prop:"egfr_graph2",
+                    def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
                     exec_order:2
                     
@@ -200,9 +110,11 @@ BEGIN
             
             
             
-            egfr_graph2 : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
+            [[rb_id]] : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
             
     ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -254,6 +166,7 @@ BEGIN
             acr_graph : {rrt=0 and acr_graph_val is not null and acr_n>2 and mspan>=3 =>1},{=>0};
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -306,6 +219,7 @@ BEGIN
             hb_graph : {nvl(esa_val,0)>0 and hb_graph_val is not null and hb_n>2 and mspan>=3 =>1},{=>0};
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -325,16 +239,16 @@ BEGIN
         /* Algorithm to compute bp graph  */
         
             
-             #define_ruleblock(bp_graph,
+             #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to show BP TIR",
                     version: "0.0.1.1",
-                    blockid: "bp_graph",
-                    target_table:"rout_bp_graph",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
                     is_active:2,
-                    def_exit_prop:"bp_graph",
+                    def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
                     exec_order:2
                     
@@ -396,11 +310,12 @@ BEGIN
             
             
             
-            bp_graph : { (htn >0 and sigma_1 >1) or rrt>0 =>1},{=>0};
+            [[rb_id]] : { (htn >0 and sigma_1 >1) or rrt>0 =>1},{=>0};
             
             
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -409,58 +324,88 @@ BEGIN
     
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='multi_graph';
+    rb.blockid:='hba1c_graph';
 
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute multi_graph  */
+        /* Algorithm to compute hba1c graph  */
         
             
-             #define_ruleblock(multi_graph,
+             #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to show multi_graph",
+                    description: "Algorithm to show hba1c TIR",
                     version: "0.0.1.1",
-                    blockid: "multi_graph",
-                    target_table:"rout_multi_graph",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:0,
-                    def_exit_prop:"multi_graph",
+                    is_active:2,
+                    def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
                     exec_order:2
                     
                 }
             );
             
+            hba1c_max => eadv.lab_bld_hba1c_ngsp._.maxldv();
+            
+            hba1c_min => eadv.lab_bld_hba1c_ngsp._.minldv();
+            
+            hba1c_f => eadv.lab_bld_hba1c_ngsp._.firstdv();
+            
+            hba1c_l => eadv.lab_bld_hba1c_ngsp._.lastdv();
+            
+            
+            dspan : { hba1c_l_dt> hba1c_f_dt => hba1c_l_dt - hba1c_f_dt};
+            
+            dspan_y : { dspan>0 => ceil(dspan/365)};
+            
+            hba1c_n => eadv.lab_bld_hba1c_ngsp.dt.count();
+            
+            hba1c_graph_canvas_x : {1=1 => 350};
+            
+            hba1c_graph_canvas_y : {1=1 => 100};
+            
+            dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+            
+            
+            
+            hba1c_target_max : { . => 10};
+            hba1c_target_min : { . => 6};
+            
+            
+                       
+            hba1c_graph => eadv.lab_bld_hba1c_ngsp.val.serializedv2(round(val,0)~dt);    
+            
+            
+            hba1c_graph_y_max : {. => hba1c_max_val};
+            
+            hba1c_graph_y_min : {hba1c_min_val < hba1c_target_min => hba1c_min_val},{=> hba1c_target_min};
+            
+            hba1c_graph_x_scale : {. => round(hba1c_graph_canvas_x/dspan,5)};
+            
+            hba1c_graph_y_scale : { hba1c_graph_y_max > hba1c_graph_y_min => round(hba1c_graph_canvas_y/(hba1c_graph_y_max-hba1c_graph_y_min),5)},{=>round(hba1c_graph_canvas_y/10,5)};
+            
+            
+            
+                        
+            line_upper_y : {.=> 0};
+            
+            line_lower_y : {. => (hba1c_graph_y_max-hba1c_graph_y_min) * hba1c_graph_y_scale};
+            
+            line_target_upper_y : {hba1c_graph_y_min< hba1c_target_max and hba1c_graph_y_max> hba1c_target_max => (hba1c_graph_y_max-10) * hba1c_graph_y_scale};
+            
+            
 
             
-            hb0 => eadv.lab_bld_hb.val.lastdv();
-            
-            hb1 => eadv.lab_bld_hb.val.lastdv(1);
-            
-            hb_ref_u : {1=1 =>150};
-            
-            hb_ref_l : {1=1 =>100};
-            
-            hb_mu : {1=1 => (hb_ref_u + hb_ref_l)/2};
-            
-            hb0_y : { 1=1 => (300/hb_mu) * hb0_val};
-            
-            hb1_y : { 1=1 => (300/hb_mu) * hb1_val};
-            
-            multi_graph_canvas_x : {1=1 => 350};
-            
-            multi_graph_canvas_y : {1=1 => 100};
-            
-            
-            
-            multi_graph : { hb0_val>0 =>1},{=>0};
+            [[rb_id]] : { dm=1 and hba1c_n>3 and dspan>365 =>1},{=>0};
             
             
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -468,49 +413,161 @@ BEGIN
     -- END OF RULEBLOCK --
     
     
-    
-          -- BEGINNING OF RULEBLOCK --
+    -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='egfr_graph3';
+    rb.blockid:='acr_graph';
 
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute egfr graph 3 */
+        /* Algorithm to compute acr graph  */
         
             
-             #define_ruleblock(egfr_graph3,
+             #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to serialize egfr",
+                    description: "Algorithm to show acr ",
                     version: "0.0.1.1",
-                    blockid: "egfr_graph3",
-                    target_table:"rout_egfr_graph3",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:0,
-                    def_exit_prop:"egfr_graph3",
+                    is_active:2,
+                    def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
                     exec_order:2
                     
                 }
             );
+            
+            acr_max => eadv.lab_ua_acr._.maxldv();
+            
+            acr_min => eadv.lab_ua_acr._.minldv();
+            
+            acr_f => eadv.lab_ua_acr._.firstdv();
+            
+            acr_l => eadv.lab_ua_acr._.lastdv();
+            
+            dspan : { acr_l_dt> acr_f_dt => acr_l_dt - acr_f_dt};
+            
+            dspan_y : { dspan>0 => ceil(dspan/365)};
+                        
+            acr_n => eadv.lab_ua_acr.dt.count();
+            
+            acr_n_30 => eadv.lab_ua_acr.val.count();
+            
+            acr_graph_canvas_x : {1=1 => 350};
+            
+            acr_graph_canvas_y : {1=1 => 100};
+
+            acr_graph => eadv.lab_ua_acr.val.serializedv2(round(val,0)~dt);    
+            
+            
+            acr_graph_y_max : {. => acr_max_val};
+            
+            acr_graph_y_min : { . => acr_min_val};
+            
+            acr_graph_x_scale : {. => round(acr_graph_canvas_x/dspan,5)};
+            
+            acr_graph_y_scale : { acr_graph_y_max > acr_graph_y_min => round(acr_graph_canvas_y/(acr_graph_y_max-acr_graph_y_min),5)},{=>round(acr_graph_canvas_y/10,5)};
+            
+                        
+            line_upper_y : {.=> 0};
+            
+            line_lower_y : {. => (acr_graph_y_max-acr_graph_y_min) * acr_graph_y_scale};
+            
+            
+            [[rb_id]] : { acr_n_30>3 =>1},{=>0};
+            
+            
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='hb_graph';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to compute hb graph  */
+        
+            
+             #define_ruleblock([[rb_id]],
+                {
+                    description: "Algorithm to show hb",
+                    version: "0.0.1.1",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
+                    environment:"DEV_2",
+                    rule_owner:"TKCADMIN",
+                    is_active:2,
+                    def_exit_prop:"[[rb_id]]",
+                    def_predicate:">0",
+                    exec_order:2
+                    
+                }
+            );
+            
+            hb_max => eadv.lab_bld_hb._.maxldv().where(dt>sysdate-730);
+            
+            hb_min => eadv.lab_bld_hb._.minldv().where(dt>sysdate-730);
+            
+                        
+            hb_n => eadv.lab_bld_hb.dt.count().where(dt>sysdate-730);
             
             rrt => rout_rrt.rrt.val.bind();
             
-            egfr_n => eadv.lab_bld_egfr_c.val.count(0);
+            hb_graph_canvas_x : {1=1 => 350};
             
-            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt);
+            hb_graph_canvas_y : {1=1 => 100};
             
             
-            egfr_graph3 : {1=1 => 1};
+            hb_target_max : { . => 130};
+            hb_target_min : { . => 100};
+            
+            
+                       
+            hb_graph => eadv.lab_bld_hb.val.serializedv2(round(val,0)~dt).where(dt>sysdate-730);    
+            
+            
+            hb_graph_y_max : {. => hb_max_val};
+            
+            hb_graph_y_min : { hb_min_val < hb_target_min => hb_min_val},{=> hb_target_min};
+            
+            hb_graph_x_scale : {. => round(hb_graph_canvas_x/730,5)};
+            
+            hb_graph_y_scale : { hb_graph_y_max > hb_graph_y_min => round(hb_graph_canvas_y/(hb_graph_y_max-hb_graph_y_min),5)},{=>round(hb_graph_canvas_y/10,5)};
+            
+                        
+            line_upper_y : {.=> 0};
+            
+            line_lower_y : {. => (hb_graph_y_max-hb_graph_y_min) * hb_graph_y_scale};
+            
+            line_target_upper_y : {hb_graph_y_min< hb_target_max and hb_graph_y_max> hb_target_max => (hb_graph_y_max-10) * hb_graph_y_scale};
+            
+            
+            [[rb_id]] : { rrt=1 and hb_n>3 =>1},{=>0};
+            
+            
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    
+
 END;
 
 

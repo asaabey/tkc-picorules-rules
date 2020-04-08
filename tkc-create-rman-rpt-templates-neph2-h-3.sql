@@ -851,11 +851,122 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','acr_graph_acr','acr_graph',651310,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>uACR profile for the last <<dspan_y />> years</h5>
+    
+    <div class="syn_container">
+   
+  
+    <svg height=<<acr_graph_canvas_y />> width=<<acr_graph_canvas_x />>>
+            <defs>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="5" markerHeight="5">
+                  <circle cx="5" cy="5" r="10" fill="blue" />
+                </marker>
+            </defs>
+        <polyline points="<<xy_coords />>" 
+          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+          <line x1="0" x2="<<acr_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+          
+          <line x1="0" x2="<<acr_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+    
+          
+          
+          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<acr_graph_y_max />></text>
+          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<acr_graph_y_min />></text>
+          
+           
+    </svg>
+    <svg height=10 width=<<acr_graph_canvas_x />>>
+        <text x="0" y="10" ><<acr_f_dt />></text>  
+        <text x="280" y="10" ><<acr_l_dt />></text> 
+    </svg>
+    </div>
+    </div>
+    
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','hb_graph','hb_graph',651010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>Hb profile for the last 2 years</h5>
+    
+    <div class="syn_container">
+   
+  
+    <svg height=<<hb_graph_canvas_y />> width=<<hb_graph_canvas_x />>>
+            <defs>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="5" markerHeight="5">
+                  <circle cx="5" cy="5" r="10" fill="blue" />
+                </marker>
+            </defs>
+        <polyline points="<<xy_coords />>" 
+          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+          <line x1="0" x2="<<hb_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+          
+          <line x1="0" x2="<<hb_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+    
+          <rect x="0" y="<<line_target_upper_y />>"  width="<<hb_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+          
+          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hb_graph_y_max />></text>
+          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hb_graph_y_min />></text>
+    </svg>
+    </div>
+    </div>
+    
+    '
+    );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','hba1c_graph','hba1c_graph',652110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>Hba1c profile for the last <<dspan_y />> years</h5>
+    
+    <div class="syn_container">
+   
+  
+    <svg height=<<hba1c_graph_canvas_y />> width=<<hba1c_graph_canvas_x />>>
+            <defs>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="5" markerHeight="5">
+                  <circle cx="5" cy="5" r="10" fill="blue" />
+                </marker>
+            </defs>
+        <polyline points="<<xy_coords />>" 
+          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+          <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+          
+          <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+    
+          <rect x="0" y="<<line_target_upper_y />>"  width="<<hba1c_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+          
+          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_max />></text>
+          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_min />></text>
+    </svg>
+    <svg height=10 width=<<hba1c_graph_canvas_x />>>
+        <text x="0" y="10" ><<hba1c_f_dt />></text>  
+        <text x="280" y="10" ><<hba1c_l_dt />></text> 
+    </svg>
+    </div>
+    </div>
+    
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','graph_bp','bp_graph',653110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_synopsis_box">
-    <h5>Blood pressure profile for the last 2 years</h5>
+    <h5>Blood pressure profile for the last 5 years</h5>
     
     <div class="syn_container">
    
