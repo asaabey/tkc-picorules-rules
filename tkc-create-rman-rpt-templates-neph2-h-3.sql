@@ -940,6 +940,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                     markerWidth="5" markerHeight="5">
                   <circle cx="5" cy="5" r="10" fill="blue" />
                 </marker>
+                <linearGradient id="grad12" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:0.3" />
+                </linearGradient>
             </defs>
         <polyline points="<<xy_coords />>" 
           style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
@@ -947,7 +951,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
           
           <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
     
-          <rect x="0" y="<<line_target_upper_y />>"  width="<<hba1c_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+          <rect x="0" y="<<line_target_upper_y />>"  width="<<hba1c_graph_canvas_x />>" height="40" fill="url(#grad12)" />
           
           <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_max />></text>
           <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_min />></text>
