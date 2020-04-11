@@ -214,7 +214,7 @@ BEGIN
                     target_table:"rout_[[rb_id]]",
                     environment:"DEV_2",
                     rule_owner:"TKCADMIN",
-                    is_active:2,
+                    is_active:0,
                     def_exit_prop:"[[rb_id]]",
                     def_predicate:">0",
                     exec_order:1
