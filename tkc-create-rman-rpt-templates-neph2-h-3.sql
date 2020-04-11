@@ -880,6 +880,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
           
            
     </svg>
+    <br />
     <svg height=10 width=<<acr_graph_canvas_x />>>
         <text x="0" y="10" ><<acr_f_dt />></text>  
         <text x="280" y="10" ><<acr_l_dt />></text> 
@@ -956,6 +957,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
           <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_max />></text>
           <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_min />></text>
     </svg>
+    <br />
     <svg height=10 width=<<hba1c_graph_canvas_x />>>
         <text x="0" y="10" ><<hba1c_f_dt />></text>  
         <text x="280" y="10" ><<hba1c_l_dt />></text> 

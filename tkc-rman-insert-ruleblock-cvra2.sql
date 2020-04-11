@@ -34,7 +34,7 @@ BEGIN
                 rule_author:"asaabey@gmail.com",
                 is_active:2,
                 def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
+                def_predicate:">1",
                 exec_order:5
                 
             }
