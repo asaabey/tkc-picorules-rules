@@ -20,12 +20,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute egfr graph 2 */
+        /* Algorithm to plot egfr graph 2 */
         
             
              #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to serialize egfr",
+                    description: "Algorithm to plot egfr graph 2",
                     version: "0.0.1.1",
                     blockid: "[[rb_id]]",
                     target_table:"rout_[[rb_id]]",
@@ -121,112 +121,7 @@ BEGIN
     COMMIT;
    
    
-   
-     -- BEGINNING OF RULEBLOCK --
-
-    rb.blockid:='acr_graph';
-
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Algorithm to compute acr graph  */
-        
-            
-             #define_ruleblock(acr_graph,
-                {
-                    description: "Algorithm to serialize acr",
-                    version: "0.0.1.1",
-                    blockid: "acr_graph",
-                    target_table:"rout_acr_graph",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:0,
-                    def_exit_prop:"acr_graph",
-                    def_predicate:">0",
-                    exec_order:2
-                    
-                }
-            );
-            
-            rrt => rout_rrt.rrt.val.bind();
-            
-            acr_graph => eadv.lab_ua_acr.val.serializedv(abs(round(log(10,val+1),1))~dt);
-            
-            acr_n => eadv.lab_ua_acr.val.count(0);
-            
-            acr_fd => eadv.lab_ua_acr.dt.min();
-            
-            acr_ld => eadv.lab_ua_acr.dt.max();
-            
-            mspan : { acr_n > 0 => round((acr_ld-acr_fd)/12,0)};
-            
-            acr_graph_yscale : {1=1 => 0.25};
-            
-            acr_graph : {rrt=0 and acr_graph_val is not null and acr_n>2 and mspan>=3 =>1},{=>0};
-            
-    ';
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    COMMIT;
-    -- END OF RULEBLOCK --
-   
-    -- BEGINNING OF RULEBLOCK --
-
-    rb.blockid:='hb_graph';
-
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Algorithm to compute hb graph  */
-        
-            
-             #define_ruleblock(hb_graph,
-                {
-                    description: "Algorithm to serialize hb",
-                    version: "0.0.1.1",
-                    blockid: "hb_graph",
-                    target_table:"rout_hb_graph",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:0,
-                    def_exit_prop:"hb_graph",
-                    def_predicate:">0",
-                    exec_order:1
-                    
-                }
-            );
-            
-            esa => eadv.rxnc_b03xa.val.lastdv();
-            
-            hb_graph => eadv.lab_bld_hb.val.serializedv2(round(val,0)~dt).where(dt>sysdate-1825);    
-            
-            hb_distinct => eadv.lab_bld_hb.val.serialize2();
-                       
-            hb_n => eadv.lab_bld_hb.val.count(0).where(dt>sysdate-365);
-            
-            hb_fd => eadv.lab_bld_hb.dt.min().where(dt>sysdate-365);
-            
-            hb_ld => eadv.lab_bld_hb.dt.max().where(dt>sysdate-365);
-            
-            mspan : { hb_n > 0 => round((hb_ld-hb_fd)/12,0)};
-            
-            hb_graph_yscale : {1=1 => 10};
-            
-            hb_graph : {nvl(esa_val,0)>0 and hb_graph_val is not null and hb_n>2 and mspan>=3 =>1},{=>0};
-            
-    ';
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    COMMIT;
-    -- END OF RULEBLOCK --
-    
-    
+ 
        
     -- BEGINNING OF RULEBLOCK --
 
@@ -236,12 +131,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute bp graph  */
+        /* Algorithm to plot bp graph  */
         
             
              #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to show BP TIR",
+                    description: "Algorithm to plot bp graph",
                     version: "0.0.1.1",
                     blockid: "[[rb_id]]",
                     target_table:"rout_[[rb_id]]",
@@ -330,12 +225,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute hba1c graph  */
+        /* Algorithm to plot hba1c graph  */
         
             
              #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to show hba1c TIR",
+                    description: "Algorithm to plot hba1c graph",
                     version: "0.0.1.1",
                     blockid: "[[rb_id]]",
                     target_table:"rout_[[rb_id]]",
@@ -421,12 +316,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute acr graph  */
+        /* Algorithm to plot acr graph  */
         
             
              #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to show acr ",
+                    description: "Algorithm to plot acr graph ",
                     version: "0.0.1.1",
                     blockid: "[[rb_id]]",
                     target_table:"rout_[[rb_id]]",
@@ -497,12 +392,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Algorithm to compute hb graph  */
+        /* Algorithm to plot hb graph  */
         
             
              #define_ruleblock([[rb_id]],
                 {
-                    description: "Algorithm to show hb",
+                    description: "Algorithm to plot hb graph",
                     version: "0.0.1.1",
                     blockid: "[[rb_id]]",
                     target_table:"rout_[[rb_id]]",
@@ -566,6 +461,84 @@ BEGIN
     COMMIT;
     -- END OF RULEBLOCK --
     
+    
+   -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='phos_graph';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to plot phosphate graph  */
+        
+            
+             #define_ruleblock([[rb_id]],
+                {
+                    description: "Algorithm to plot phosphate graph",
+                    version: "0.0.1.1",
+                    blockid: "[[rb_id]]",
+                    target_table:"rout_[[rb_id]]",
+                    environment:"DEV_2",
+                    rule_owner:"TKCADMIN",
+                    is_active:2,
+                    def_exit_prop:"[[rb_id]]",
+                    def_predicate:">0",
+                    exec_order:2
+                    
+                }
+            );
+            
+            phos_max => eadv.lab_bld_phosphate._.maxldv().where(dt>sysdate-730);
+            
+            phos_min => eadv.lab_bld_phosphate._.minldv().where(dt>sysdate-730);
+            
+                        
+            phos_n => eadv.lab_bld_phosphate.dt.count().where(dt>sysdate-730);
+            
+            rrt => rout_rrt.rrt.val.bind();
+            
+            phos_graph_canvas_x : {1=1 => 350};
+            
+            phos_graph_canvas_y : {1=1 => 100};
+            
+            
+            phos_target_max : { . => 1.7};
+            phos_target_min : { . => 1.1};
+            
+            
+                       
+            phos_graph => eadv.lab_bld_phosphate.val.serializedv2(round(val,1)~dt).where(dt>sysdate-730);    
+            
+            
+            phos_graph_y_max : {. => greatest(phos_max_val,phos_target_max)};
+            
+            phos_graph_y_min : {. => least(phos_min_val,phos_target_min)};
+            
+            phos_graph_x_scale : {. => round(phos_graph_canvas_x/730,5)};
+            
+            phos_graph_y_scale : { . => round(phos_graph_canvas_y/(phos_graph_y_max-phos_graph_y_min),5)};
+            
+                        
+            line_upper_y : {.=> 0};
+            
+            line_lower_y : {. => 100};
+            
+            
+            line_target_upper_y : { phos_max_val > phos_target_max => (phos_max_val - phos_target_max) * phos_graph_y_scale },{ => 0 };
+            
+            line_target_lower_y : { phos_min_val < phos_target_min => (phos_target_min - phos_min_val) * phos_graph_y_scale },{ => phos_graph_canvas_y };
+            [[rb_id]] : { rrt in (1,2,4) and phos_n>3 =>1},{=>0};
+            
+            
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
     
 
 END;

@@ -338,7 +338,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <ul>
         
-        <li><<dm_type=1>><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
+        <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
         <li><<dm_type=2>><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><</dm_type=2>>
         <ul>
             <<dm_fd_year>><li>since <<dm_fd_year />></li><</dm_fd_year>>
@@ -893,7 +893,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','hb_graph','hb_graph',651010,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','hb_graph','hb_graph',653120,'dev','tkc',TO_DATE(SYSDATE),
     '
     <hr />
     <div class="syn_synopsis_box">
@@ -925,7 +925,39 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     
     '
     );
+    INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','phos_graph','phos_graph',653130,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>Phosphate profile for the last 2 years</h5>
     
+    <div class="syn_container">
+   
+  
+    <svg height=<<phos_graph_canvas_y />> width=<<phos_graph_canvas_x />>>
+            <defs>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="5" markerHeight="5">
+                  <circle cx="5" cy="5" r="10" fill="blue" />
+                </marker>
+            </defs>
+        <polyline points="<<xy_coords />>" 
+          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+          <line x1="0" x2="<<phos_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+          
+          <line x1="0" x2="<<phos_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+    
+          <rect x="0" y="<<line_target_upper_y />>"  width="<<phos_graph_canvas_x />>" height="<<line_target_lower_y />>" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+          
+          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<phos_graph_y_max />></text>
+          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<phos_graph_y_min />></text>
+    </svg>
+    </div>
+    </div>
+    
+    '
+    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','hba1c_graph','hba1c_graph',652110,'dev','tkc',TO_DATE(SYSDATE),
     '
