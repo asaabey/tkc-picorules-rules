@@ -467,23 +467,23 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_htn_rec_1','htn_rcm',703100,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    <<htn_icpc=0>><div>Recommendation [3.1] Update diagnosis to hypertension</div><</htn_icpc=0>>
-    <<bpc=2>><div>Recommendation [3.4] Optimise BP control</div><</bpc=2>>
-    <<bpc=3>><div>Recommendation [3.4] Optimise BP control</div><</bpc=3>>
-    <<htn_rcm=11>><div>Recommendation [3.4.1] Consider adding ACEi or ARB (RAAS blockade) which is recommended as first line therapy</div><</htn_rcm=11>>
-    <<htn_rcm=12>><div>Recommendation [3.4.1] Consider adding DHP-CCB instead of RAAS blockade as there is a risk worsening hyperkalaemia</div><</htn_rcm=12>>
-    <<htn_rcm=22>><div>Recommendation [3.4.1] Consider adding CCB which is recommended as second line therapy</div><</htn_rcm=22>>
-    <<htn_rcm=33>><div>Recommendation [3.4.1] Consider adding low dose thiazide which is recommended as third line therapy</div><</htn_rcm=33>>
-    <<htn_rcm=34>><div>Recommendation [3.4.1] Consider adding Aldosterone antagonist instead of low dose thiazide as there is a risk of worsening hypokalaemia</div><</htn_rcm=34>>
-    <<htn_rcm=35>><div>Recommendation [3.4.1] Consider adding beta blocker or central blocker instead of Aldosterone Antagonist as there is a risk of worsening hyperkalaemia</div><</htn_rcm=35>>
-    <<htn_rcm=44>><div>Recommendation [3.4.1] Consider adding Aldosterone antagonist which is recommended as fourth line therapy</div><</htn_rcm=44>>
-    <<htn_rcm=55>><div>Recommendation [3.4.1] Consider adding Beta blocker or Central blocker as 5th line therapy</div><</htn_rcm=55>>
-    <<htn_rcm=99>><div>Recommendation [3.4.1] Best combination cannot be determined</div><</htn_rcm=99>>
-    '
-    );
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','cd_htn_rec_1','htn_rcm',703100,'dev','tkc',TO_DATE(SYSDATE),
+--    '
+--    <<htn_icpc=0>><div>Recommendation [3.1] Update diagnosis to hypertension</div><</htn_icpc=0>>
+--    <<bpc=2>><div>Recommendation [3.4] Optimise BP control</div><</bpc=2>>
+--    <<bpc=3>><div>Recommendation [3.4] Optimise BP control</div><</bpc=3>>
+--    <<htn_rcm=11>><div>Recommendation [3.4.1] Consider adding ACEi or ARB (RAAS blockade) which is recommended as first line therapy</div><</htn_rcm=11>>
+--    <<htn_rcm=12>><div>Recommendation [3.4.1] Consider adding DHP-CCB instead of RAAS blockade as there is a risk worsening hyperkalaemia</div><</htn_rcm=12>>
+--    <<htn_rcm=22>><div>Recommendation [3.4.1] Consider adding CCB which is recommended as second line therapy</div><</htn_rcm=22>>
+--    <<htn_rcm=33>><div>Recommendation [3.4.1] Consider adding low dose thiazide which is recommended as third line therapy</div><</htn_rcm=33>>
+--    <<htn_rcm=34>><div>Recommendation [3.4.1] Consider adding Aldosterone antagonist instead of low dose thiazide as there is a risk of worsening hypokalaemia</div><</htn_rcm=34>>
+--    <<htn_rcm=35>><div>Recommendation [3.4.1] Consider adding beta blocker or central blocker instead of Aldosterone Antagonist as there is a risk of worsening hyperkalaemia</div><</htn_rcm=35>>
+--    <<htn_rcm=44>><div>Recommendation [3.4.1] Consider adding Aldosterone antagonist which is recommended as fourth line therapy</div><</htn_rcm=44>>
+--    <<htn_rcm=55>><div>Recommendation [3.4.1] Consider adding Beta blocker or Central blocker as 5th line therapy</div><</htn_rcm=55>>
+--    <<htn_rcm=99>><div>Recommendation [3.4.1] Best combination cannot be determined</div><</htn_rcm=99>>
+--    '
+--    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_htn_footnote_1','cd_htn',801100,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -656,13 +656,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     
     '
     );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_ckd_recm_2','ckd_complications',701200,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    <<rcm_bicarb>><div>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</div><</rcm_bicarb>>
-    <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phosphate binder therapy</div><</phos_high>>
-    '
-    );
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','cd_ckd_recm_2','ckd_complications',701200,'dev','tkc',TO_DATE(SYSDATE),
+--    '
+--    <<rcm_bicarb>><div>Recommendation [1.5.1] Consider adding oral bicarbonate therapy for metabolic acidosis</div><</rcm_bicarb>>
+--    <<phos_high>><div>Recommendation [1.5.2] Consider adding oral phosphate binder therapy</div><</phos_high>>
+--    '
+--    );
 
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
