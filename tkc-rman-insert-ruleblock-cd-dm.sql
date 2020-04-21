@@ -79,6 +79,8 @@ BEGIN
         
         dm2_fd : {.=> least_date(dm2_icd_fd,dm2_icpc_fd) };
         
+        dm_mixed : { dm1_fd!? and dm2_fd!? => 1},{=>0};
+        
         dm_icd_fd : {.=> least_date(dm1_icd_fd,dm2_icd_fd) };
         
         dm_icpc_fd : {.=> least_date(dm1_icpc_fd,dm2_icpc_fd) };
@@ -182,7 +184,7 @@ BEGIN
         
         dm : { dm_fd!? =>1},{=>0};
         
-        dm_type : {dm=1 and dm_type_1=1=>1},{dm=1 and dm_type_1=0=>2},{=>0};
+        dm_type : {dm=1 and dm_type_1=1 and dm_mixed=0 =>1},{dm=1 and dm_type_1=0=>2},{dm_mixed=1 =>2},{=>0};
         
         
         dm_dx_code_flag : {greatest(dm_icd_coded,dm_icpc_coded)>0 => 1},{=>0};

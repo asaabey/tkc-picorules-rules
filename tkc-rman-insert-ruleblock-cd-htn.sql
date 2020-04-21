@@ -65,7 +65,7 @@ BEGIN
         );
        
         
-        htn_icd => eadv.[icd_i10_%,icd_i15_%].dt.count(0);
+        htn_icd => eadv.[icd_i10%,icd_i15%].dt.count(0);
         htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count(0);
         
         #doc(,
@@ -120,7 +120,7 @@ BEGIN
         );
         
         
-        htn_fd_code => eadv.[icd_i10_%,icd_i15_%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
+        htn_fd_code => eadv.[icd_i10%,icd_i15%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
         htn_fd_obs => eadv.obs_bp_systolic.dt.min().where(val>140);
         
         htn_fd : {coalesce(htn_fd_code,htn_fd_obs) is not null => least(nvl(htn_fd_code,to_date(`01012999`,`DDMMYYYY`)),nvl(htn_fd_obs,to_date(`01012999`,`DDMMYYYY`)))};

@@ -338,9 +338,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <ul>
         
-        <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
-        <li><<dm_type=2>><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><</dm_type=2>>
+        <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>></li><</dm_type=1>>
+        <<dm_type=2>><li><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>></li><</dm_type=2>>
         <ul>
+            <<dm_mixed>><li>coded as type 1? on <<dm1_fd />></li><</dm_mixed>>
             <<dm_fd_year>><li>since <<dm_fd_year />></li><</dm_fd_year>>
             <<dm_dx_uncoded>><li>not coded on primary care EHR</li><</dm_dx_uncoded>>
             <<cd_dm_dx_code=110000>><li>based only on hospital records on <<dm_icd_fd />></li><</cd_dm_dx_code=110000>>
@@ -544,6 +545,18 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             </li><</rxn>>
         </ul>
         </li>
+    </ul>  
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_cva_syn','cd_cva',604110,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <li><b>Cerebrovascular disease</b>
+        <ul>
+            <<cva_infarct_dt>>cerebral infarct <<cva_infarct_dt />><</cva_infarct_dt>>
+            <<cva_hmrage_dt>>subarachnoid or intracerebral haemorrhage <<cva_hmrage_dt />><</cva_hmrage_dt>>
+        </ul>
     </ul>  
     '
     );
