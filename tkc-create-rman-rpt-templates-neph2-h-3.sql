@@ -74,52 +74,15 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                     
                 }
                 
-                .svg_lab_panel {
-                    height:60;
-                    width:400;
-                }
                 
-                .svg_lab_panel_rect {
-                    width:100;
-                    height:30;
-                    fill:green;
-                    stroke:green;
-                    stroke-width:2;
-                    fill-opacity:0.1;
-                    stroke-opacity:0.9;
-                    x:150;
-                    y:30;
-                }
                 
-                .svg_lab_panel_circle1 {
-                    cy:45;
-                    r:10;
-                    stroke:none;
-                    stroke-width:2;
-                    fill:red;
-                    fill-opacity:0.3;
-                }
-                
-                .svg_lab_panel_circle2 {
-                    cy:45;
-                    r:10;
-                    stroke:none;
-                    stroke-width:2;
-                    fill:red;
-                }
-                
-                .svg_lab_panel_line {
-                    y1:45;
-                    y2:45;
-                    stroke:black;
-                    stroke-width:2;
-                    stroke-dasharray:1,2;
-                }
-                
-                .svg_lab_panel_text {
-                    text-anchor:middle;
-                    font-size:smaller;
-                    
+                @media print {
+                    .body { font-family: Arial, Helvetica, sans-serif; }
+                    .syn_alert_box { border-style: none !important;}
+                    .syn_dmg_box { border-style: none !important; }
+                    .syn_synopsis_box { border-style: none !important;}
+                    .syn_recm_box { border-style: none !important; }
+                    .syn_notes_box {border-style: none !important; }
                 }
                 
                 
@@ -200,11 +163,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<dmg_source=4>><b>LAYNHAPUY</b><hr /><</dmg_source=4>>    
             <<dmg_source=5>><b>MIWATJ</b><hr /><</dmg_source=5>>    
             <<dmg_source=6>><b>ANYINGINYI</b><hr /><</dmg_source=6>> 
+            <<dmg_source=8>><b>CONGRESS</b><hr /><</dmg_source=8>>
             <<pcis_n>><i>PCIS encounters(N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
             <<eacs_n>><i>EACS encounters(N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
             <<miwatj_n>><i>MIWATJ encounters(N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
             <<laynhapuy_n>><i>LAYNHAPUY encounters(N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
             <<anyinginyi_n>><i>ANYINGINYI encounters(N=<<anyinginyi_n />>, last=<<anyinginyi_ld />>)</i><</anyinginyi_n>>
+            <<congress_n>><i>CONGRESS encounters(N=<<congress_n />>, last=<<congress_n />>)</i><</congress_n>>
         
     <</dmg_source>>
     </div>

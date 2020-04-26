@@ -245,19 +245,26 @@ BEGIN
         
         anyinginyi_ld => eadv.dmg_source_06.dt.max().where(dt>sysdate-1000);
         
-        phc_1 :   { greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,pcis_n)=0 =>0},
-                        { pcis_n > greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n) => 1},
-                        { eacs_n > greatest(laynhapuy_n,miwatj_n,anyinginyi_n) => 3},
-                        { laynhapuy_n > greatest(miwatj_n,anyinginyi_n) => 4},
-                        { miwatj_n > anyinginyi_n => 5},
-                        { anyinginyi_n>0 =>6};
+        congress_n => eadv.dmg_source_08.dt.count(0).where(dt>sysdate-1000);
+        
+        congress_ld => eadv.dmg_source_08.dt.max().where(dt>sysdate-1000);
+        
+        phc_1 :   { greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,pcis_n,congress_n)=0 =>0},
+                        { pcis_n > greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,congress_n) => 1},
+                        { eacs_n > greatest(laynhapuy_n,miwatj_n,anyinginyi_n,congress_n) => 3},
+                        { laynhapuy_n > greatest(miwatj_n,anyinginyi_n,congress_n) => 4},
+                        { miwatj_n > greatest(anyinginyi_n,congress_n) => 5},
+                        { anyinginyi_n > congress_n =>6},
+                        { congress_n>0 =>8};
         
         phc_pcis : { phc_1=1 => 1 },{=>0};
         
         phc_miwatj : { phc_1=5 => 1 },{=>0};
+        
+        phc_congress : { phc_1=8 => 1 },{=>0};
 
         
-        [[rb_id]] : { . => phc_1 };    
+        [[rb_id]] : { phc_1!? => phc_1 };    
         
         #define_attribute(
             [[rb_id]],
@@ -282,6 +289,15 @@ BEGIN
             phc_miwatj,
             {
                 label:"Demographic phc source Miwatj",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+        #define_attribute(
+            phc_congress,
+            {
+                label:"Demographic phc source Congress",
                 type:2,
                 is_reportable:1
             }

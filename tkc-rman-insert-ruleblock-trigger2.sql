@@ -427,7 +427,7 @@ BEGIN
           
           
           
-          [[rb_id]] : {akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
+          [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
           
           #define_attribute(
                 [[rb_id]],
@@ -467,7 +467,7 @@ BEGIN
                 target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:2,
+                is_active:0,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:5,
