@@ -577,7 +577,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <hr/>
     <div class="syn_synopsis_box">
     <h3>Medications</h3>
+    <ol>
         <<rx_name_obj$rx_name_obj />>
+    </ol>
     </div>
     
     '
