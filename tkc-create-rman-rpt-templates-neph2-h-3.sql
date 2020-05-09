@@ -514,6 +514,17 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_dyslip','cd_dyslip',604105,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <b>Hypercholesterolaemia</b>
+        <ul>
+            <<ldl_dt>><li>Last LDL-C value <<ldl_val />>(<<ldl_dt />>)</li><</ldl_dt>>
+        </ul>
+
+</ul>
+    ');
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cva_syn','cd_cva',604110,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>

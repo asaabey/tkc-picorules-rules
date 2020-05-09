@@ -8,6 +8,7 @@
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
 @"tkc-rman-insert-ruleblock-cd-cvd.sql";
+@"tkc-rman-insert-ruleblock-cd-dyslip.sql";
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
