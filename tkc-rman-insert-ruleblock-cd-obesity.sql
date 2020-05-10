@@ -53,6 +53,19 @@ BEGIN
         
         #doc(,
                 {
+                    txt: "Obesity classification",
+                    cite: "cd_obesity_ref2"
+                }
+            );
+        
+        bmi_class : { bmi between 30 and 34.9 => 1},
+                    { bmi between 35 and 39.9 => 2},
+                    { bmi >= 40 =>3},
+                    {=>0};
+        
+        
+        #doc(,
+                {
                     txt: "Obesity diagnosis where BMI >30",
                     cite: "cd_obesity_ref1"
                 }

@@ -61,6 +61,7 @@ BEGIN
         cp_hicvr => rout_cd_careplan.cp_hicvr.val.bind();
         
         
+        
         #doc(,
             {
                 txt:"Gather variables including existing assessment demographics and diseases by coding"
@@ -69,7 +70,7 @@ BEGIN
         );
         
         
-        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
         
         asm_cvra => eadv.asm_cvra.val.lastdv();
         

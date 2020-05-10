@@ -387,3 +387,8 @@ INSERT INTO rman_ruleblocks_citation VALUES (
 'tg4810_ref2',
 'Jing Z, Wei-jie Y, Nan Z, Yi Z, Ling W. Hemoglobin targets for chronic kidney disease patients with anemia: a systematic review and meta-analysis. PLoS One. 2012;7(8):e43655.');
 /
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'cd_obesity_ref2',
+'Purnell JQ. Definitions, Classification, and Epidemiology of Obesity. [Updated 2018 Apr 12]. In: Feingold KR, Anawalt B, Boyce A, et al., editors. Endotext [Internet]. South Dartmouth (MA): MDText.com, Inc.; 2000-. Available from: https://www.ncbi.nlm.nih.gov/books/NBK279167/');
+/

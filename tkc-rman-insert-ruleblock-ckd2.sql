@@ -217,7 +217,9 @@ BEGIN
             }
         );
         
-        rrt => rout_rrt.rrt.val.bind();        
+        rrt => rout_rrt.rrt.val.bind();     
+        
+        hd_z49_1y_n => rout_rrt.hd_z49_1y_n.val.bind();
         
         #doc(,
             {
@@ -416,7 +418,7 @@ BEGIN
         ckd_stage_4 : { ckd=5 => 1},{=>0};
         
         ckd_stage_5 : { ckd=6 => 1},{=>0};
-        
+             
         #define_attribute(
             ckd_stage,
             {
@@ -1285,16 +1287,16 @@ BEGIN
        uacr2 => eadv.lab_ua_acr.val.lastdv(1).where(dt>sysdate-730);
        uacr3 => eadv.lab_ua_acr.val.lastdv(2).where(dt>sysdate-730);
        
-       uacr_min => eadv.lab_ua_acr.val.minldv();
-       uacr_max => eadv.lab_ua_acr.val.maxldv();
+       uacr_min => eadv.lab_ua_acr.val.minldv().where(dt>sysdate-730);
+       uacr_max => eadv.lab_ua_acr.val.maxldv().where(dt>sysdate-730);
        
       
        sodium1 => eadv.lab_bld_sodium.val.lastdv().where(dt>sysdate-730);
        sodium2 => eadv.lab_bld_sodium.val.lastdv(1).where(dt>sysdate-730);
        sodium3 => eadv.lab_bld_sodium.val.lastdv(2).where(dt>sysdate-730);
        
-       sodium_min => eadv.lab_bld_sodium.val.minldv();
-       sodium_max => eadv.lab_bld_sodium.val.maxldv();
+       sodium_min => eadv.lab_bld_sodium.val.minldv().where(dt>sysdate-730);
+       sodium_max => eadv.lab_bld_sodium.val.maxldv().where(dt>sysdate-730);
        
        sodium_ref_u : {1=1 =>140};
        sodium_ref_l : {1=1 =>130};
@@ -1310,8 +1312,8 @@ BEGIN
        potassium2 => eadv.lab_bld_potassium.val.lastdv(1).where(dt>sysdate-730);
        potassium3 => eadv.lab_bld_potassium.val.lastdv(2).where(dt>sysdate-730);
        
-       potassium_min => eadv.lab_bld_potassium.val.minldv();
-       potassium_max => eadv.lab_bld_potassium.val.maxldv();
+       potassium_min => eadv.lab_bld_potassium.val.minldv().where(dt>sysdate-730);
+       potassium_max => eadv.lab_bld_potassium.val.maxldv().where(dt>sysdate-730);
        
        potassium_ref_u : {1=1 =>5.5};
        potassium_ref_l : {1=1 =>3.5};
@@ -1327,37 +1329,37 @@ BEGIN
        bicarb2 => eadv.lab_bld_bicarbonate.val.lastdv(1).where(dt>sysdate-730);
        bicarb3 => eadv.lab_bld_bicarbonate.val.lastdv(2).where(dt>sysdate-730);
        
-       bicarb_min => eadv.lab_bld_bicarbonate.val.minldv();
-       bicarb_max => eadv.lab_bld_bicarbonate.val.maxldv();
+       bicarb_min => eadv.lab_bld_bicarbonate.val.minldv().where(dt>sysdate-730);
+       bicarb_max => eadv.lab_bld_bicarbonate.val.maxldv().where(dt>sysdate-730);
        
        calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
        calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
        calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
        
-       calcium_min => eadv.lab_bld_calcium.val.minldv();
-       calcium_max => eadv.lab_bld_calcium.val.maxldv();
+       calcium_min => eadv.lab_bld_calcium.val.minldv().where(dt>sysdate-730);
+       calcium_max => eadv.lab_bld_calcium.val.maxldv().where(dt>sysdate-730);
 
        phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
        phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
        phos3 => eadv.lab_bld_phosphate.val.lastdv(2).where(dt>sysdate-730);
        
-       phos_min => eadv.lab_bld_phosphate.val.minldv();
-       phos_max => eadv.lab_bld_phosphate.val.maxldv();
+       phos_min => eadv.lab_bld_phosphate.val.minldv().where(dt>sysdate-730);
+       phos_max => eadv.lab_bld_phosphate.val.maxldv().where(dt>sysdate-730);
        
        hb1 => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-730);
        hb2 => eadv.lab_bld_hb.val.lastdv(1).where(dt>sysdate-730);
        hb3 => eadv.lab_bld_hb.val.lastdv(2).where(dt>sysdate-730);
        
-       hb_min => eadv.lab_bld_hb.val.minldv();
-       hb_max => eadv.lab_bld_hb.val.maxldv();
+       hb_min => eadv.lab_bld_hb.val.minldv().where(dt>sysdate-730);
+       hb_max => eadv.lab_bld_hb.val.maxldv().where(dt>sysdate-730);
        
        
        ferritin1 => eadv.lab_bld_ferritin.val.lastdv().where(dt>sysdate-730);
        ferritin2 => eadv.lab_bld_ferritin.val.lastdv(1).where(dt>sysdate-730);
        ferritin3 => eadv.lab_bld_ferritin.val.lastdv(2).where(dt>sysdate-730);
        
-       ferritin_min => eadv.lab_bld_phosphate.val.minldv();
-       ferritin_max => eadv.lab_bld_phosphate.val.maxldv();
+       ferritin_min => eadv.lab_bld_phosphate.val.minldv().where(dt>sysdate-730);
+       ferritin_max => eadv.lab_bld_phosphate.val.maxldv().where(dt>sysdate-730);
 
        ckd_labs : {nvl(egfr1_val,0)>0 and nvl(egfr2_val,0)>0 => 1 },{=>0};
        

@@ -22,6 +22,8 @@
 --21	Chronic disease : DM2
 --31	Chronic disease : HTN
 --41	Chronic disease : CVD
+--51	Chronic disease : CNS
+--61	Chronic disease : HAEM
 --90    reserved
 
 
@@ -32,25 +34,25 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     <style>
                 .syn_alert_box {
-                    border-style: solid;border-color: brown;border-radius: 10px;padding: 10px
+                    border-style: none;border-color: brown;border-radius: 10px;padding: 10px
                 }
                 .syn_dmg_box {
-                    border-style: solid;border-color: green;border-radius: 10px;padding: 10px
+                    border-style: none;border-color: green;border-radius: 10px;padding: 10px
                 }
                 .syn_synopsis_box {
-                    border-style: solid;border-color: darkgray;border-radius: 10px;padding: 10px
+                    border-style: none;border-color: darkgray;border-radius: 10px;padding: 10px
                 }
                 .syn_recm_box {
-                    border-style: solid;border-color: darkorange;border-radius: 10px;padding: 10px
+                    border-style: none;border-color: darkorange;border-radius: 10px;padding: 10px
                 }
                 .syn_notes_box {
-                    border-style: solid;background-color: mintcream; border-color: #ccffe6 ;border-radius: 10px;padding: 10px
+                    border-style: none;background-color: mintcream; border-color: #ccffe6 ;border-radius: 10px;padding: 10px
                 }
                 .syn_table {
                   border-collapse: collapse;
                   border-spacing: 0;
                   width: 80%;
-                  border: 1px solid #ddd;
+                  border: 1px none #ddd;
                   padding: 10px;
                 }
                 
@@ -383,6 +385,18 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_obesity','cd_obesity',602900,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <<cd_obesity>><li><b>Obesity</b></li><</cd_obesity>>
+        <ul>
+            <li>obesity class <<bmi_class />>: BMI <<bmi />> kg/m2 (<<wt_dt />>)</li>
+        </ul>
+    </ul>
+    '
+    );
 
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
@@ -479,16 +493,26 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cardiac_syn','cd_cardiac',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
-    <ul>
-        <li><b>Cardiac disease</b>
+    
         <ul>
-            <<cad>><li>Coronary artery disease
+            <<cad>><li><b>Coronary artery disease</b>
             <ul>
                 <<cabg>><li>Cornoary artery bypass grafting <<cabg />></li><</cabg>>
                 <<cad_mi_icd>><li>First myocardial infarction <<cad_mi_icd />></li><</cad_mi_icd>>
+                <li><<rxn>>Current medication classes
+                    <ul>
+                        <<rxn_ap>><li>Anti-platelet agents</li><</rxn_ap>>
+                        <<rxn_statin>><li>Statins</li><</rxn_statin>>
+                        <<rxn_diu_loop>><li>Loop diuretics</li><</rxn_diu_loop>>
+                        <<rxn_diu_low_ceil>><li>Low-ceiling diuretics</li><</rxn_diu_low_ceil>>
+                        <<rxn_diu_k_sp>><li>Low-ceiling diuretics</li><</rxn_diu_k_sp>>
+                        <<rxn_chrono>><li>Anti-arrhythmic agent</li><</rxn_chrono>>
+                    </ul>
+                </li><</rxn>>
             </ul>
             </li><</cad>>
-            <<vhd>><li>Valvular heart disease:
+            <br />
+            <<vhd>><li><b>Valvular heart disease</b>
             <ul>
                 <<vhd_mv_icd>><li>Mitral valve disease <<vhd_mv_icd />></li><</vhd_mv_icd>>
                 <<vhd_av_icd>><li>Aortic valve disease <<vhd_av_icd />></li><</vhd_av_icd>>
@@ -496,33 +520,81 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <<vhd_ie_icd>><li>Infective endocarditis <<vhd_ie_icd />></li><</vhd_ie_icd>>
                 <<vhd_icpc>><li>Valvular disease NOS<<vhd_icpc />></li><</vhd_icpc>>
             </ul>
-            </li><</vhd>>
-            <li><<rxn>>Current medication classes
-            <ul>
-                <<rxn_ap>><li>Anti-platelet agents</li><</rxn_ap>>
-                <<rxn_statin>><li>Statins</li><</rxn_statin>>
-                <<rxn_anticoag>><li>Anti-coagulation (Warfarin or NOAC)</li><</rxn_anticoag>>
-                <<rxn_diu_loop>><li>Loop diuretics</li><</rxn_diu_loop>>
-                <<rxn_diu_low_ceil>><li>Low-ceiling diuretics</li><</rxn_diu_low_ceil>>
-                <<rxn_diu_k_sp>><li>Low-ceiling diuretics</li><</rxn_diu_k_sp>>
-                <<rxn_chrono>><li>Anti-arrhythmic agent</li><</rxn_chrono>>
-            </ul>
-            </li><</rxn>>
+        <</vhd>>
+            
         </ul>
-        </li>
-    </ul>  
+        
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_dyslip','cd_dyslip',604105,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-        <b>Hypercholesterolaemia</b>
+        <b><li>Hypercholesterolaemia</li></b>
         <ul>
             <<ldl_dt>><li>Last LDL-C value <<ldl_val />>(<<ldl_dt />>)</li><</ldl_dt>>
+            <<ascvd>><li>Secondary prevention as there is past atherosclerotic cvd </li><</ascvd>>
+            <<ldl_subopt=1>><li>Suboptimal control (LDL-C level 20% above threshold of <<ldl_unl />>)</li><</ldl_subopt=1>>
         </ul>
 
-</ul>
+    </ul>
+    ');
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_cns','cd_cns',605100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <<md>><b><li>Mood disorder</li></b>
+        <ul>
+            <li>Diagnosed (<<code_md_dt />>) and medicated</li>
+        </ul>
+        <</md>>
+        <<schiz>><b><li>Psychotic disorder</li></b>
+        <ul>
+            <li>Diagnosed (<<code_shiz_dt />>) and medicated</li>
+        </ul>
+        <</schiz>>
+        <<epil>><b><li>Seizure disorder</li></b>
+        <ul>
+            <li>Diagnosed (<<code_epil_dt />>) and medicated</li>
+        </ul>
+        <</epil>>
+        <<pd>><b><li>Parkinson disease</li></b>
+        <ul>
+            <li>Diagnosed (<<code_pd_dt />>) and medicated</li>
+        </ul>
+        <</pd>>
+    </ul>
+    ');
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_haem','cd_haem',606100,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <<low_cat=3>><b><li>Pancytopaenia</li></b><</low_cat=3>>
+        <<low_cat=2>><b><li>Bicytopaenia</li></b><</low_cat=2>>
+        <<low_cat>>
+            <ul>
+            <<hb_low=1>>
+                <b><li>Anaemia</li></b>
+                <ul>
+                    <li>Last Haemoglobin <<hb1_val />> g/L (<<hb1_dt />>)</li>
+                </ul>
+            <</hb_low=1>>
+            <<plt_low=1>>
+                <b><li>Thrombocytopaenia</li></b>
+                <ul>
+                    <li>Last Platelet count <<plt_val />> x10^6/ml (<<plt_dt />>)</li>
+                </ul>
+            <</plt_low=1>>
+            <<wcc_low=1>>
+                <b><li>Neutropaenia</li></b>
+                <ul>
+                    <li>Last Neutrophil count <<wcc_val />> x10^6/ml (<<wcc_dt />>)</li>
+                </ul>
+            <</wcc_low=1>>
+            </ul>
+        <</low_cat>>
+        
+    </ul>
     ');
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_cva_syn','cd_cva',604110,'dev','tkc',TO_DATE(SYSDATE),
@@ -696,8 +768,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<sbp180>><li>Systolic bp more than 180mmHg</li><</sbp180>>
             <<age74>><li>Age more than 74 and ATSI</li><</age74>>
         </ul></li><</risk_high_ovr>>
-        <<cp_hicvr=0>><li>There is no PCIS CVR careplan</li><</cp_hicvr=0>>
-        <<cp_hicvr=1>><li>A PCIS high CVR careplan is already in place</li><</cp_hicvr=1>>
+        <<dmg_source=1>>
+            <<cp_hicvr=0>><li>There is no PCIS CVR careplan</li><</cp_hicvr=0>>
+            <<cp_hicvr=1>><li>A PCIS high CVR careplan is already in place</li><</cp_hicvr=1>>
+        <</dmg_source=1>>
         </ul>
     </ul>
     '

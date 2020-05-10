@@ -11,6 +11,9 @@
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
 @"tkc-rman-insert-ruleblock-cd-dyslip.sql";
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";
+@"tkc-rman-insert-ruleblock-cd-haem.sql";
+@"tkc-rman-insert-ruleblock-cd-cns.sql";
+@"tkc-rman-insert-ruleblock-cd-pulm.sql";
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
@@ -21,7 +24,6 @@
 @"tkc-rman-insert-ruleblock-rx.sql";
 @"tkc-rman-insert-ruleblock-graph.sql";
 @"tkc-rman-insert-ruleblock-metrics";
-@"tkc-rman-insert-ruleblock-test";
 @"tkc-rman-insert-ruleblock-cube-accel.sql";
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 
