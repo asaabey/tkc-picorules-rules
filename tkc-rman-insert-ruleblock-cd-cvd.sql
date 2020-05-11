@@ -41,6 +41,8 @@ BEGIN
             }
         );
         
+            
+        
             #doc(,
                 {
                     section:"CAD"
@@ -113,6 +115,18 @@ BEGIN
             
             af_icpc => eadv.[icpc_k78%].dt.min();
             
+            af : {coalesce(af_icd,af_icpc)!? =>1},{=>0};
+            
+            #doc(,
+                {
+                    section:"CHF"
+                }
+            );
+            
+            chf_code => eadv.[icd_i50_%],icpc_k77%].dt.min();
+            
+            chf : {chf_code!? =>1},{=>0};
+            
             #doc(,
                 {
                     section:"other CVD"
@@ -126,10 +140,13 @@ BEGIN
             );   
             
             
-            cva => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
+            cva_dt => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
             
-            pvd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min();
+            pvd_dt => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min();
            
+            cva : { cva_dt!? =>1},{=>0};
+           
+            pvd : { pvd_dt!? =>1},{=>0};
            #doc(,
                 {
                     section:"Management"
@@ -201,6 +218,7 @@ BEGIN
             
             vhd : { coalesce(vhd_mv_icd,vhd_av_icd,vhd_ov_icd,vhd_ie_icd,vhd_icpc) is not null =>1},{=>0};
             
+            
             cardiac : {greatest(cad,vhd)=1 =>1},{=>0};
             
             #define_attribute(
@@ -229,7 +247,98 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_cv_af';
     
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  AF  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a assess chadvas score in AF",
+                version: "0.0.0.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:0,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:3
+                
+            }
+        );
+        
+        dob => eadv.dmg_dob.dt.max();
+        
+        gender => eadv.dmg_gender.val.last();
+        
+        af =>rout_cd_cardiac.af.val.bind();
+        
+        cad =>rout_cd_cardiac.cad.val.bind();
+        
+        chf =>rout_cd_cardiac.chf.val.bind();
+        
+        pvd =>rout_cd_cardiac.pvd.val.bind();
+        
+        cva =>rout_cd_cardiac.cva.val.bind();
+        
+        htn =>rout_cd_htn.htn.val.bind();
+        
+        dm =>rout_cd_dm_dx.dm.val.bind();
+        
+        age : {.=>round((sysdate-dob)/365.25,0)};
+        
+        #doc(,
+                {
+                    txt: "CHADVASC score"
+                }
+            ); 
+            
+        
+            
+        age_score : {age <65 => 0},{age>75 > 2},{=>1};
+            
+        gender_score : {.=>gender};
+            
+        chf_hx_score :{ chf>0 => 1},{=>0};
+        
+        htn_score : { htn>0 => 1},{=>0};
+        
+        cva_score : {cva>0 =>2},{=>0};
+        
+        cvd_score : {cad>0 or pvd>0 =>1},{=>0};
+        
+        dm_score : { dm>0 => 1},{=>0};
+        
+        cha2ds2vasc : { af=1 => age_score + gender_score + chf_hx_score + cva_score +cvd_score + dm_score},{=>0};
+        
+            
+        
+        
+        [[rb_id]] : {af=1 =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "This is a test variable uics"
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
    
    
 END;

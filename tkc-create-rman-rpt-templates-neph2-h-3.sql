@@ -428,9 +428,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 BP control <<bp_control=3>>appears to be adequate<</bp_control=3>>
                 <<bp_control=2>>can be optimised<</bp_control=2>>
                 <<bp_control=1>>appears to sub-optimal<</bp_control=1>>
-                <<bp_control=0>>could not be determined<</bp_control=0>>[3.3]
             </li>
             <</bp_control>>
+            <<bp_control=0>><li>could not be determined</li><</bp_control=0>>
     
             <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
             <ul>
