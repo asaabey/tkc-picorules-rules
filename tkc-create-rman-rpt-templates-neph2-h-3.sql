@@ -215,7 +215,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <div class="syn_alert_box">
     <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
     There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter. <br />
-    <<avf>>Please note the AVF creation on <</avf>>.<<avf />>
+    <<avf>>Please note the AVF creation on <<avf />>.<</avf>>
     </div>
     '
     );
@@ -423,13 +423,10 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 
             </li>
             
-            <<bp_control>>
-            <li>
-                BP control <<bp_control=3>>appears to be adequate<</bp_control=3>>
-                <<bp_control=2>>can be optimised<</bp_control=2>>
-                <<bp_control=1>>appears to sub-optimal<</bp_control=1>>
-            </li>
-            <</bp_control>>
+            
+            <<bp_control=3>><li>BP control appears to be adequate</li><</bp_control=3>>
+            <<bp_control=2>><li>BP control can be optimised</li><</bp_control=2>>
+            <<bp_control=1>><li>BP control appears to sub-optimal</li><</bp_control=1>>
             <<bp_control=0>><li>could not be determined</li><</bp_control=0>>
     
             <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
@@ -520,12 +517,28 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <<vhd_ie_icd>><li>Infective endocarditis <<vhd_ie_icd />></li><</vhd_ie_icd>>
                 <<vhd_icpc>><li>Valvular disease NOS<<vhd_icpc />></li><</vhd_icpc>>
             </ul>
-        <</vhd>>
+            <</vhd>>
+            <<chf>><li><b>Congestive heart failure</b>
+            
+            <</chf>>
             
         </ul>
         
     '
     );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_cv_af','cd_cv_af',604103,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+        <b><li>Atrial fibrillation</li></b>
+        <ul>
+            <li>Diagnosed <<af_dt />></li>
+            <li>CHA2DS2VASC score  : <<cha2ds2vasc />></li>
+            <<rxn_anticoag_dt>><li>Anticoagulation <<rxn_anticoag_dt />></li><</rxn_anticoag_dt>>
+        </ul>
+
+    </ul>
+    ');
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_dyslip','cd_dyslip',604105,'dev','tkc',TO_DATE(SYSDATE),
     '
@@ -571,6 +584,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
         <<low_cat=3>><b><li>Pancytopaenia</li></b><</low_cat=3>>
         <<low_cat=2>><b><li>Bicytopaenia</li></b><</low_cat=2>>
+        <<low_cat=1>><b><li>Monocytopaenia</li></b><</low_cat=1>>
         <<low_cat>>
             <ul>
             <<hb_low=1>>

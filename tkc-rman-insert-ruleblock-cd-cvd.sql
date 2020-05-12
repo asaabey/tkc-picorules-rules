@@ -115,6 +115,8 @@ BEGIN
             
             af_icpc => eadv.[icpc_k78%].dt.min();
             
+            af_dt : {.=>least_date(af_icd,af_icpc)};
+            
             af : {coalesce(af_icd,af_icpc)!? =>1},{=>0};
             
             #doc(,
@@ -265,7 +267,7 @@ BEGIN
                 target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:0,
+                is_active:1,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:3
@@ -278,6 +280,8 @@ BEGIN
         gender => eadv.dmg_gender.val.last();
         
         af =>rout_cd_cardiac.af.val.bind();
+        
+        af_dt =>rout_cd_cardiac.af_dt.val.bind();
         
         cad =>rout_cd_cardiac.cad.val.bind();
         
@@ -292,6 +296,9 @@ BEGIN
         dm =>rout_cd_dm_dx.dm.val.bind();
         
         age : {.=>round((sysdate-dob)/365.25,0)};
+        
+        rxn_anticoag_dt => rout_cd_cardiac.rxn_anticoag.val.bind();
+        
         
         #doc(,
                 {
@@ -324,7 +331,9 @@ BEGIN
         
         #define_attribute([[rb_id]],
             { 
-                label: "This is a test variable uics"
+                label: "presence of AF",
+                type : 1001
+                
             }
         );
     ';
