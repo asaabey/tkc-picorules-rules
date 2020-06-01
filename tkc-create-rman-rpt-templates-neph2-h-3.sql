@@ -75,17 +75,14 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                     width:200;
                     
                 }
+                                
                 
-                
-                
-                @media print {
-                    .body { font-family: Arial, Helvetica, sans-serif; }
-                    .syn_alert_box { border-style: none !important;}
-                    .syn_dmg_box { border-style: none !important; }
-                    .syn_synopsis_box { border-style: none !important;}
-                    .syn_recm_box { border-style: none !important; }
-                    .syn_notes_box {border-style: none !important; }
+                .body {
+                    font-family:Arial, Helvetica, sans-serif;
                 }
+                
+                
+                
                 
                 
     </style>
@@ -888,18 +885,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     eGFR ml/min against time 
     <div>
     <svg height=<<egfr_graph_canvas_y />> width=<<egfr_graph_canvas_x />>>
+    <style>
+        .small { font:Ariel 18px;font-weight:normal;}
+    </style>
     <defs>
     
         <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
             markerWidth="5" markerHeight="5">
           <circle cx="5" cy="5" r="10" fill="blue" />
         </marker>
-        <marker id="startarrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-              <polygon points="10 0, 10 7, 0 3.5" fill="black" />
-        </marker>
-        <marker id="endarrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto" markerUnits="strokeWidth">
-              <polygon points="0 0, 10 3.5, 0 7" fill="black" />
-        </marker>
+        
       </defs>
       <polyline points="<<xy_coords />>" 
       style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
@@ -916,11 +911,11 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
      
      <text x="0" y="<<txt_lower_y />>" class="small"><<egfr_l_val />> ml/min</text>  
      
-     <text x="0" y="<<egfr_graph_canvas_y />>" ><<egfr_f_dt />></text>  
+     <text x="0" y="<<egfr_graph_canvas_y />>" class="small"><<egfr_f_dt />></text>  
      
-     <text x="510" y="<<egfr_graph_canvas_y />>" ><<egfr_l_dt />></text>  
+     <text x="510" y="<<egfr_graph_canvas_y />>" class="small" ><<egfr_l_dt />></text>  
      
-     <line x1="150" x2="450" y1="390" y2="390" stroke="#000" stroke-width="2" marker-end="url(#endarrow)" marker-start="url(#startarrow)" /> 
+     
       
     </svg>
 
@@ -940,6 +935,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
    
   
     <svg height=<<acr_graph_canvas_y />> width=<<acr_graph_canvas_x />>>
+            <style>
+                    .small { font:Ariel 8px;font-weight:normal;}
+            </style>
             <defs>
                 <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
                     markerWidth="5" markerHeight="5">
@@ -954,16 +952,19 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     
           
           
-          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<acr_graph_y_max />></text>
-          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<acr_graph_y_min />></text>
+          <text x="330" y="12" class="small"><<acr_graph_y_max />></text>
+          <text x="330" y="94" class="small"><<acr_graph_y_min />></text>
           
            
     </svg>
     <br />
     
     <svg height=10 width=<<acr_graph_canvas_x />>>
-        <text x="0" y="10" style="fill: #000000; stroke: none; font-size: 10px;"><<acr_f_dt />></text>  
-        <text x="290" y="10"style="fill: #000000; stroke: none; font-size: 10px;" ><<acr_l_dt />></text> 
+    <style>
+                    .small { font:Ariel 8px;font-weight:normal;}
+    </style>
+        <text x="0" y="10" class="small"><<acr_f_dt />></text>  
+        <text x="290" y="10" class="small"><<acr_l_dt />></text> 
     </svg>
     </div>
     </div>

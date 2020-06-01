@@ -68,6 +68,17 @@ BEGIN
             
             mi_type2_icd => eadv.icd_i21_a1.dt.min();
             
+            nstemi => eadv.[icpc_k75016,icd_i21_5].dt.min();
+            
+            stemi => eadv.[icpc_k75015,icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3].dt.min();
+            
+        
+            stemi_anat0 => eadv.[icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3].att.first();
+            
+            stemi_anat : { stemi_anat0!? => substr(stemi_anat0,-1)};
+            
+            mi : { coalesce(stemi,nstemi)!? => 1},{=>0};
+            
             cad_chronic_icd => eadv.[icd_i24%,icd_i25%].dt.min();
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();        
