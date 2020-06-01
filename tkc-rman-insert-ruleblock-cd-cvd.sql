@@ -68,6 +68,17 @@ BEGIN
             
             mi_type2_icd => eadv.icd_i21_a1.dt.min();
             
+            nstemi => eadv.[icpc_k75016,icd_i21_5].dt.min();
+            
+            stemi => eadv.[icpc_k75015,icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3].dt.min();
+            
+        
+            stemi_anat0 => eadv.[icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3].att.first();
+            
+            stemi_anat : { stemi_anat0!? => substr(stemi_anat0,-1)};
+            
+            mi : { coalesce(stemi,nstemi)!? => 1},{=>0};
+            
             cad_chronic_icd => eadv.[icd_i24%,icd_i25%].dt.min();
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();        
@@ -114,6 +125,8 @@ BEGIN
             af_icd => eadv.[icd_i48_%].dt.min();
             
             af_icpc => eadv.[icpc_k78%].dt.min();
+            
+            af_dt : {.=>least_date(af_icd,af_icpc)};
             
             af : {coalesce(af_icd,af_icpc)!? =>1},{=>0};
             
@@ -265,7 +278,7 @@ BEGIN
                 target_table:"rout_[[rb_id]]",
                 environment:"DEV_2",
                 rule_owner:"TKCADMIN",
-                is_active:0,
+                is_active:1,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:3
@@ -278,6 +291,8 @@ BEGIN
         gender => eadv.dmg_gender.val.last();
         
         af =>rout_cd_cardiac.af.val.bind();
+        
+        af_dt =>rout_cd_cardiac.af_dt.val.bind();
         
         cad =>rout_cd_cardiac.cad.val.bind();
         
@@ -292,6 +307,9 @@ BEGIN
         dm =>rout_cd_dm_dx.dm.val.bind();
         
         age : {.=>round((sysdate-dob)/365.25,0)};
+        
+        rxn_anticoag_dt => rout_cd_cardiac.rxn_anticoag.val.bind();
+        
         
         #doc(,
                 {
@@ -324,7 +342,9 @@ BEGIN
         
         #define_attribute([[rb_id]],
             { 
-                label: "This is a test variable uics"
+                label: "presence of AF",
+                type : 1001
+                
             }
         );
     ';
