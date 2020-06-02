@@ -230,12 +230,13 @@ BEGIN
                 
             }
         );
+        rrt_n => eadv.icd_z49_1.dt.count();
         
-        dm_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.min(2999);
+        rrt_last_dt => eadv.icd_z49_1.dt.max();
         
-        dm_icpc_fd => eadv.[icpc_t89%,icpc_t90%].dt.min(2999);      
+        rrt_first_dt => eadv.icd_z49_1.dt.min();
         
-        dm_fd : { least(dm_icd_fd,dm_icpc_fd)<to_date(`31122999`,`DDMMYYYY`) => least(dm_icd_fd,dm_icpc_fd)};
+        rrt_reg => eadv.icd_z49_1.dt.temporal_regularity();
         
         
         [[rb_id]] : {1=1 =>1};

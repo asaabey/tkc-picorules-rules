@@ -485,14 +485,27 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     );
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_cardiac_syn','cd_cardiac',604100,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','cd_cardiac_cad_syn','cd_cardiac_cad',604100,'dev','tkc',TO_DATE(SYSDATE),
     '
     
         <ul>
             <<cad>><li><b>Coronary artery disease</b>
             <ul>
                 <<cabg>><li>Cornoary artery bypass grafting <<cabg />></li><</cabg>>
-                <<cad_mi_icd>><li>First myocardial infarction <<cad_mi_icd />></li><</cad_mi_icd>>
+                <<stemi_fd>><li>First STEMI <<stemi_fd />></li><</stemi_fd>>
+                
+                    <ul>
+                        <<stemi_anat=0>><li>LMS or LAD territory</li><</stemi_anat=0>>
+                        <<stemi_anat=1>><li>RCA territory</li><</stemi_anat=1>>
+                        <<stemi_anat=2>><li>Left circumflex territory</li><</stemi_anat=2>>
+                        <<stemi_anat=3>><li>territory not specified</li><</stemi_anat=3>>
+                    </ul>
+                
+                <<stemi_ld>><li>Most recent STEMI <<stemi_ld />></li><</stemi_ld>>
+                <<nstemi_fd>><li>First NSTEMI <<nstemi_fd />></li><</nstemi_fd>>
+                <<nstemi_ld>><li>Most recent NSTEMI <<nstemi_ld />></li><</nstemi_ld>>
+                
+                
                 <li><<rxn>>Current medication classes
                     <ul>
                         <<rxn_ap>><li>Anti-platelet agents</li><</rxn_ap>>
@@ -505,7 +518,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 </li><</rxn>>
             </ul>
             </li><</cad>>
-            <br />
+        </ul>
+        
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_cardiac_vhd_syn','cd_cardiac_vhd',604101,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    
+        <ul>
+            
             <<vhd>><li><b>Valvular heart disease</b>
             <ul>
                 <<vhd_mv_icd>><li>Mitral valve disease <<vhd_mv_icd />></li><</vhd_mv_icd>>
@@ -524,7 +546,16 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     '
     );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_cv_af','cd_cv_af',604103,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','cd_cardiac_chf_syn','cd_cardiac_chf',604102,'dev','tkc',TO_DATE(SYSDATE),
+    '
+        <ul>
+            <<chf>><li><b>Congestive heart failure</b>
+            <</chf>>
+        </ul>   
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_cardiac_af','cd_cardiac_af',604103,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
         <b><li>Atrial fibrillation</li></b>
