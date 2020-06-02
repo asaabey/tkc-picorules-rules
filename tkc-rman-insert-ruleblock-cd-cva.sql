@@ -44,18 +44,16 @@ BEGIN
         
         cva_hmrage_dt => eadv.[icd_i60%,icd_i61%,icd_i62%].dt.min();
         
+        cva_nos_dt =>  eadv.icd_i64.dt.min();
+        
         cva_icpc_dt => eadv.[icpc_k90%,icpc_k91%].dt.min();
         
-        cva_dt : {.=> least_date(cva_infarct_dt,cva_hmrage_dt,cva_icpc_dt)};
+        cva_dt : {.=> least_date(cva_infarct_dt,cva_nos_dt,cva_hmrage_dt,cva_icpc_dt)};
         
         
         [[rb_id]] :  {cva_dt!? => 1},{=>0};
         
-        
-            
-        
-        
-            
+
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
