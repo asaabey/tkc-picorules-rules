@@ -73,13 +73,23 @@ BEGIN
                 }
             );  
             
-            nstemi_fd => eadv.[icpc_k75016,icd_i21_4,icd_i22_2].dt.min();
+            nstemi_fd_icd => eadv.[icd_i21_4,icd_i22_2].dt.min();
             
-            stemi_fd => eadv.[icpc_k75015,icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3,icd_i22_0,icd_i22_1,icd_i22_8,icd_i22_9].dt.min();
+            nstemi_fd_icpc => eadv.icpc_k75016.dt.min();        
+            
+            nstemi_fd : {. => least_date(nstemi_fd_icd,nstemi_fd_icpc)};
+            
+            stemi_fd_icd => eadv.[icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3,icd_i22_0,icd_i22_1,icd_i22_8,icd_i22_9].dt.min();
+            
+            stemi_fd_icpc => eadv.icpc_k75015.dt.min();
+            
+            stemi_fd : {. => least_date(stemi_fd_icd,stemi_fd_icpc)};
         
             nstemi_ld => eadv.[icpc_k75016,icd_i21_4,icd_i22_2].dt.max().where(dt > nstemi_fd);
             
             stemi_ld => eadv.[icpc_k75015,icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3,icd_i22_0,icd_i22_1,icd_i22_8,icd_i22_9].dt.max().where(dt > stemi_fd);
+            
+            ami_icd_null : {coalesce(stemi_fd_icd,nstemi_fd_icd)? => 1};
             
             #doc(,
                 {
@@ -88,7 +98,7 @@ BEGIN
             );  
             stemi_anat_0 => eadv.[icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3].att.first();
             
-            stemi_anat : { stemi_anat_0!? => substr(stemi_anat_0,-1)};
+            stemi_anat : { stemi_anat_0!? => to_number(substr(stemi_anat_0,-1))+1};
             
             #doc(,
                 {
@@ -108,7 +118,7 @@ BEGIN
             
             cad_chronic_icd => eadv.[icd_i24%,icd_i25%].dt.min();
             
-            cad_ihd_icpc => eadv.[icpc_k74%].dt.min();        
+            cad_ihd_icpc => eadv.[icpc_k74%,icpc_k76%].dt.min();        
                 
             cad_ex_ami :{ coalesce(cad_chronic_icd,cad_ihd_icpc)!? =>1},{=>0};    
             
@@ -136,7 +146,70 @@ BEGIN
             cva : { cva_dt!? =>1},{=>0};
            
             pvd : { pvd_dt!? =>1},{=>0};
+            
+            #doc(,
+                {
+                    txt:"Medication"
+                }
+            ); 
+            
+            #doc(,
+                {
+                    txt: "antiplatelet agents"
+                }
+            ); 
+            
+            
+            rxn_ap => eadv.[rxnc_b01ac].dt.min().where(val=1);
+            
+            
+            #doc(,
+                {
+                    txt: "anti-coagulation including NOAC"
+                }
+            ); 
+            
+            
+            rxn_anticoag => eadv.[rxnc_b01aa,rxnc_b01af,rxnc_b01ae,rxnc_b01ab].dt.min().where(val=1);
+            
+            #doc(,
+                {
+                    txt: "beta blockers"
+                }
+            ); 
+            
+        
+            rxn_bb_ag => eadv.rxnc_c07ag.dt.min().where(val=1);
+            
+            rxn_bb_aa => eadv.rxnc_c07aa.dt.min().where(val=1);
+            
+            rxn_bb_ab => eadv.rxnc_c07ab.dt.min().where(val=1);
+            
+            rxn_bb : {. => least_date(rxn_bb_ag,rxn_bb_aa,rxn_bb_ab)};
+            
+            #doc(,
+                {
+                    txt: "RAAS blockers"
+                }
+            ); 
+            
+            rxn_ace_aa => eadv.rxnc_c09aa.dt.min().where(val=1);
+            
+            rxn_arb_aa => eadv.rxnc_c09ca.dt.min().where(val=1);
+            
+            rxn_raas : {. => least_date(rxn_ace_aa, rxn_arb_aa)};
+            
+            #doc(,
+                {
+                    txt: "lipid lowering"
+                }
+            ); 
+            
+            rxn_statin => eadv.[rxnc_c10aa,rxnc_c10bx,rxnc_c10ba].dt.min().where(val=1);
+            
+            rxn_c10_ax => eadv.rxnc_c10_ax.dt.min().where(val=1);
            
+            rxn : {coalesce(rxn_ap,rxn_anticoag,rxn_bb,rxn_raas,rxn_statin,rxn_c10_ax)!? =>1};
             
             [[rb_id]] : {cad=1 =>1},{=>0};
             
@@ -312,7 +385,7 @@ BEGIN
         
         age : {.=>round((sysdate-dob)/365.25,0)};
         
-        rxn_anticoag_dt => rout_cd_cardiac_cad.rxn_anticoag.val.bind();
+        rxn_anticoag_dt => rout_cd_cardiac_rx.rxn_anticoag.val.bind();
         
         
         #doc(,

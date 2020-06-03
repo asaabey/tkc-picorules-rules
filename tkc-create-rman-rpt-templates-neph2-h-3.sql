@@ -492,30 +492,30 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<cad>><li><b>Coronary artery disease</b>
             <ul>
                 <<cabg>><li>Cornoary artery bypass grafting <<cabg />></li><</cabg>>
+                <<ami_icd_null>><li>No recorded myocardial infarction in hospital</li><</ami_icd_null>>
                 <<stemi_fd>><li>First STEMI <<stemi_fd />></li><</stemi_fd>>
                 
                     <ul>
-                        <<stemi_anat=0>><li>LMS or LAD territory</li><</stemi_anat=0>>
-                        <<stemi_anat=1>><li>RCA territory</li><</stemi_anat=1>>
-                        <<stemi_anat=2>><li>Left circumflex territory</li><</stemi_anat=2>>
-                        <<stemi_anat=3>><li>territory not specified</li><</stemi_anat=3>>
+                        <<stemi_anat=1>><li>LMS or LAD territory</li><</stemi_anat=1>>
+                        <<stemi_anat=2>><li>RCA territory</li><</stemi_anat=2>>
+                        <<stemi_anat=3>><li>Left circumflex territory</li><</stemi_anat=3>>
+                        <<stemi_anat=4>><li>territory not specified</li><</stemi_anat=4>>
                     </ul>
                 
                 <<stemi_ld>><li>Most recent STEMI <<stemi_ld />></li><</stemi_ld>>
                 <<nstemi_fd>><li>First NSTEMI <<nstemi_fd />></li><</nstemi_fd>>
                 <<nstemi_ld>><li>Most recent NSTEMI <<nstemi_ld />></li><</nstemi_ld>>
-                
-                
-                <li><<rxn>>Current medication classes
+                <<rxn>>
+                    <li>relevant medication </li>
                     <ul>
-                        <<rxn_ap>><li>Anti-platelet agents</li><</rxn_ap>>
-                        <<rxn_statin>><li>Statins</li><</rxn_statin>>
-                        <<rxn_diu_loop>><li>Loop diuretics</li><</rxn_diu_loop>>
-                        <<rxn_diu_low_ceil>><li>Low-ceiling diuretics</li><</rxn_diu_low_ceil>>
-                        <<rxn_diu_k_sp>><li>Low-ceiling diuretics</li><</rxn_diu_k_sp>>
-                        <<rxn_chrono>><li>Anti-arrhythmic agent</li><</rxn_chrono>>
+                        <<rxn_ap>><li>Anti-platelet agent(s) <<rxn_ap />> </li><</rxn_ap>>
+                        <<rxn_bb>><li>Betablocker <<rxn_bb />> </li><</rxn_bb>>
+                        <<rxn_raas>><li>ACEi or ARB <<rxn_raas />> </li><</rxn_raas>>
+                        <<rxn_statin>><li>Statin <<rxn_statin />> </li><</rxn_statin>>
                     </ul>
-                </li><</rxn>>
+                <</rxn>>
+                
+                
             </ul>
             </li><</cad>>
         </ul>
@@ -644,8 +644,9 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <ul>
         <li><b>Cerebrovascular disease</b>
         <ul>
-            <<cva_infarct_dt>>cerebral infarct <<cva_infarct_dt />><</cva_infarct_dt>>
-            <<cva_hmrage_dt>>subarachnoid or intracerebral haemorrhage <<cva_hmrage_dt />><</cva_hmrage_dt>>
+            <<cva_infarct_dt>><li>cerebral infarct <<cva_infarct_dt />></li><</cva_infarct_dt>>
+            <<cva_hmrage_dt>><li>subarachnoid or intracerebral haemorrhage <<cva_hmrage_dt />></li><</cva_hmrage_dt>>
+            <<cva_nos_dt>><li>Stroke <<cva_nos_dt />></li><</cva_nos_dt>>
         </ul>
     </ul>  
     '
