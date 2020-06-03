@@ -505,15 +505,13 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 <<stemi_ld>><li>Most recent STEMI <<stemi_ld />></li><</stemi_ld>>
                 <<nstemi_fd>><li>First NSTEMI <<nstemi_fd />></li><</nstemi_fd>>
                 <<nstemi_ld>><li>Most recent NSTEMI <<nstemi_ld />></li><</nstemi_ld>>
-                <<rxn>>
-                    <li>relevant medication </li>
+                <<rxn>><li>relevant medication </li><</rxn>>
                     <ul>
                         <<rxn_ap>><li>Anti-platelet agent(s) <<rxn_ap />> </li><</rxn_ap>>
                         <<rxn_bb>><li>Betablocker <<rxn_bb />> </li><</rxn_bb>>
                         <<rxn_raas>><li>ACEi or ARB <<rxn_raas />> </li><</rxn_raas>>
                         <<rxn_statin>><li>Statin <<rxn_statin />> </li><</rxn_statin>>
                     </ul>
-                <</rxn>>
                 
                 
             </ul>
