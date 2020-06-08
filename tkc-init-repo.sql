@@ -3,7 +3,7 @@
 
 
 --Init rules
-@"tkc-rman-insert-ruleblock-cd2.sql";
+@"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-core";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";

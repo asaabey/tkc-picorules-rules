@@ -1,6 +1,6 @@
-REM INSERTING into TKC.RMAN_RPT_TEMPLATE_BLOCKS
+REM INSERTING into RMAN_RPT_TEMPLATE_BLOCKS
 SET DEFINE OFF;
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
     <style>
                 .syn_alert_box {
                     border-style: none;border-color: brown;border-radius: 10px;padding: 10px
@@ -57,7 +57,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </style>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
 
     <div class="syn_dmg_box">
     <<dmg_source>>
@@ -81,7 +81,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <hr />
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
 
     <div class="syn_dmg_box">
     <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
@@ -93,7 +93,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <hr />
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (4,'alert_tg2610','tg2610','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (4,'alert_tg2610','tg2610','
     <div class="syn_alert_box">
     <h5>
     Alert: Potentially untreated chronic disease (Trigger 2610)
@@ -103,7 +103,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />) and serum potassium is <<k_val />> mmol/l (<<k_dt />>).<</ckd_untreat>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (5,'alert_tg4100','tg4100','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (5,'alert_tg4100','tg4100','
     <div class="syn_alert_box">
     <h5>Alert: Acute kidney injury in community (Trigger 4100)</h5>
     Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>. <br /> 
@@ -114,7 +114,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     last recorded creatinine is <<cr_lv />>umol/l on <<cr_ld />>.
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (6,'alert_tg4410','tg4410','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (6,'alert_tg4410','tg4410','
     <div class="syn_alert_box">
     <h5>
     Alert: Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
@@ -125,7 +125,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<iq_tier=4>>It is noted that autoimmune and other relevant serological tests have been performed.<</iq_tier=4>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (7,'alert_tg4610','tg4610','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (7,'alert_tg4610','tg4610','
     <div class="syn_alert_box">
     <h5>Alert: Unmanaged possible early CKD with rapid progression (Trigger 4610)</h5>
     The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb /> ml/min/yr without a recent specialist encounter. <br />
@@ -133,14 +133,14 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria. <</ckd_null>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (8,'alert_tg4620','tg4620','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (8,'alert_tg4620','tg4620','
     <div class="syn_alert_box">
     <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
     There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter. <br />
     <<avf>>Please note the AVF creation on <<avf />>.<</avf>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (9,'alert_tg4660','tg4660','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (9,'alert_tg4660','tg4660','
     <div class="syn_alert_box">
     <h5>
     Alert: Medication safety concern (Trigger 4660)
@@ -151,7 +151,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<rx_nsaids>>NSAIDS may cause additional renal injury.<</rx_nsaids>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (10,'alert_tg4720','tg4720','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (10,'alert_tg4720','tg4720','
     <div class="syn_alert_box">
     <h5>
     Alert: New commencement on Renal replacement therapy (Trigger 4720)
@@ -159,7 +159,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min />>. <<hd_start>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (11,'alert_tg4810','tg4810','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (11,'alert_tg4810','tg4810','
     <div class="syn_alert_box">
     <h5>Alert: High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
     Current haemoglobin is <<hb_i_val />> g/L which has increased from a previous hb of <<hb_i1_val />> g/L. <br />
@@ -169,20 +169,20 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (12,'frame_synthesis_begin','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (12,'frame_synthesis_begin','dmg','
     <hr />
     <div class="syn_synopsis_box">
         <h3>Relevant Diagnoses</h3>
         <hr />
         <div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (13,'frame_synthesis_left_begin','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (13,'frame_synthesis_left_begin','dmg','
     <div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (14,'rrt_frame_begin','rrt','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (14,'rrt_frame_begin','rrt','
     <ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (15,'rrt_1_syn','rrt','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (15,'rrt_1_syn','rrt','
     <<rrt=1>>
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
@@ -199,7 +199,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </li>
     <</rrt=1>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (16,'rrt_2_syn','rrt','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (16,'rrt_2_syn','rrt','
     <<rrt=2>>
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
@@ -216,7 +216,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </li>
     <</rrt=2>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (17,'rrt_3_syn','rrt','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (17,'rrt_3_syn','rrt','
     <<rrt=3>>
     <li><b>Renal transplant due to (ESRD)</b>
         <ul>
@@ -233,7 +233,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </li>
     <</rrt=3>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (18,'rrt_4_syn','rrt','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (18,'rrt_4_syn','rrt','
     <<rrt=4>>
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
@@ -250,7 +250,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </li>
     <</rrt=4>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (19,'rrt_3_metric','rrt_tx','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (19,'rrt_3_metric','rrt_tx','
     <ul>
     <<cr_min_dt>><li>Best graft function creatinine <<cr_min_val />> on <<cr_min_dt />></li><</cr_min_dt>> 
     <<cr_last_dt>><li>Last recorded creatinine <<cr_last_val />> on <<cr_last_dt />></li><</cr_last_dt>>
@@ -266,10 +266,10 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <</rxn>>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (20,'rrt_frame_end','rrt','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (20,'rrt_frame_end','rrt','
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (21,'cd_ckd_syn_1','ckd','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (21,'cd_ckd_syn_1','ckd','
     <ul>
         <li><b>CKD stage <<ckd_stage />></b>
         <ul>
@@ -291,7 +291,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </ul>
         </li>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (27,'cd_dm_syn_1','cd_dm_dx','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (27,'cd_dm_syn_1','cd_dm_dx','
     <ul>
 
         <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>></li><</dm_type=1>>
@@ -306,7 +306,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
             <<cd_dm_dx_code=100000>><li>based on a single HbA1c of <<gluc_hba1c_high_f_val />> on <<gluc_hba1c_high_f_dt />></li><</cd_dm_dx_code=100000>>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (28,'cd_dm_syn_2','cd_dm_comp','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (28,'cd_dm_syn_2','cd_dm_comp','
             <li>Non-renal microvascular complications present
                 <ul>
                     <<dm_micvas_retino>>
@@ -323,10 +323,10 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
                 </ul>
             </li
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (29,'cd_dm_syn_3','cd_dm_glyc_cntrl','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (29,'cd_dm_syn_3','cd_dm_glyc_cntrl','
             <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val />> % (<<hba1c_n0_dt />>)</li><</hba1c_n_tot>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (30,'cd_dm_syn_4','cd_dm_dx','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (30,'cd_dm_syn_4','cd_dm_dx','
             <<dm_rxn=0>>
                 <li>No medications recorded</li>
             <</dm_rxn=0>>
@@ -342,7 +342,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
                 </li>
             <</dm_rxn>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (31,'cd_dm_syn_5','cd_dm_mx','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (31,'cd_dm_syn_5','cd_dm_mx','
              <<cp_dm=0>>
                 <li>PCIS diabetes careplan was not detected [2.4]</li>
             <</cp_dm=0>>
@@ -350,12 +350,12 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
                 <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
             <</cp_dm>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (32,'cd_dm_syn_6','cd_dm_dx','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (32,'cd_dm_syn_6','cd_dm_dx','
              </ul>
         </li>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (33,'cd_obesity','cd_obesity','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (33,'cd_obesity','cd_obesity','
     <ul>
         <<cd_obesity>><li><b>Obesity</b></li><</cd_obesity>>
         <ul>
@@ -363,7 +363,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </ul>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (34,'cd_htn_syn_1','cd_htn','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (34,'cd_htn_syn_1','cd_htn','
     <ul>
         <li><b>Hypertension</b>
         <ul>
@@ -397,7 +397,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </li>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (35,'cd_cardiac_cad_syn','cd_cardiac_cad','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (35,'cd_cardiac_cad_syn','cd_cardiac_cad','
 
         <ul>
             <<cad>><li><b>Coronary artery disease</b>
@@ -430,7 +430,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </ul>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (36,'cd_cvra_syn_1','cvra','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (36,'cd_cvra_syn_1','cvra','
     <ul>
         <li><b>Cardiovascular risk (CVR)</b></li>
         <ul>
@@ -458,7 +458,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </ul>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (37,'cd_cardiac_vhd_syn','cd_cardiac_vhd','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (37,'cd_cardiac_vhd_syn','cd_cardiac_vhd','
 
         <ul>
 
@@ -478,13 +478,13 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </ul>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (38,'cd_cardiac_chf_syn','cd_cardiac_chf','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (38,'cd_cardiac_chf_syn','cd_cardiac_chf','
         <ul>
             <<chf>><li><b>Congestive heart failure</b>
             <</chf>>
         </ul>   
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (39,'cd_cardiac_af','cd_cardiac_af','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (39,'cd_cardiac_af','cd_cardiac_af','
     <ul>
         <b><li>Atrial fibrillation</li></b>
         <ul>
@@ -496,7 +496,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
 
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (40,'cd_dyslip','cd_dyslip','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (40,'cd_dyslip','cd_dyslip','
     <ul>
         <b><li>Dyslipidaemia</li></b>
         <ul>
@@ -507,7 +507,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
 
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (41,'cd_cva_syn','cd_cva','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (41,'cd_cva_syn','cd_cva','
     <ul>
         <li><b>Cerebrovascular disease</b>
         <ul>
@@ -517,7 +517,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </ul>
     </ul>  
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (42,'cd_cns','cd_cns','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (42,'cd_cns','cd_cns','
     <ul>
         <<md>><b><li>Mood disorder</li></b>
         <ul>
@@ -541,7 +541,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         <</pd>>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (43,'cd_haem','cd_haem','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (43,'cd_haem','cd_haem','
     <ul>
         <<low_cat=3>><b><li>Pancytopaenia</li></b><</low_cat=3>>
         <<low_cat=2>><b><li>Bicytopaenia</li></b><</low_cat=2>>
@@ -571,13 +571,13 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
 
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (44,'frame_synthesis_left_end','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (44,'frame_synthesis_left_end','dmg','
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (45,'frame_synthesis_end','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (45,'frame_synthesis_end','dmg','
     </div></div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (46,'rx_syn_1','rx_desc','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (46,'rx_syn_1','rx_desc','
     <hr/> 
     <div class="syn_synopsis_box">
     <h3>Medications</h3>
@@ -587,7 +587,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (47,'graph_egfr2','egfr_graph2','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (47,'graph_egfr2','egfr_graph2','
     <hr />
     <div class="syn_synopsis_box">
     <h5>Temporal variation of eGFR</h5>
@@ -632,7 +632,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','<ul>
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','<ul>
         <li>aetiology
             <ul>
                 <<aet_multiple=1>><li>Multiple aetiology is suggested
@@ -670,7 +670,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </li>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (23,'cd_ckd_journey_1','ckd_journey','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (23,'cd_ckd_journey_1','ckd_journey','
     <ul>
         <li>Renal services engagement</li>
         <<enc_multi=0>><li><<enc_ld>>Nephrologist reviews <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
@@ -682,7 +682,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         <<avf_ld>><li>CKD Access (AVF) formation date: \t\t<<avf_ld />></li><</avf_ld>>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (24,'cd_ckd_dx_1','ckd_diagnostics','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (24,'cd_ckd_dx_1','ckd_diagnostics','
     <ul>
     <li>Diagnostic workup
     <ul>
@@ -705,7 +705,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </li>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (25,'cd_ckd_compx_1','ckd_complications','<ul>
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (25,'cd_ckd_compx_1','ckd_complications','<ul>
     <li>CKD Complications
     <ul>
     <li>Haemopoetic function
@@ -732,10 +732,10 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </li>
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (26,'cd_ckd_syn_2','ckd','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (26,'cd_ckd_syn_2','ckd','
     </ul>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (52,'hb_graph','hb_graph','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (52,'hb_graph','hb_graph','
     <hr />
     <div class="syn_synopsis_box">
     <h5>Hb profile for the last 2 years</h5>
@@ -765,7 +765,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (53,'phos_graph','phos_graph','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (53,'phos_graph','phos_graph','
     <hr />
     <div class="syn_synopsis_box">
     <h5>Phosphate profile for the last 2 years</h5>
@@ -795,7 +795,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (54,'ckd_labs_tbl1','ckd_labs','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (54,'ckd_labs_tbl1','ckd_labs','
     <hr />
     <div class="syn_synopsis_box">
     <h5>Lab data panel</h5>
@@ -826,7 +826,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
 
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (55,'ckd_labs_tbl2','ckd_labs','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (55,'ckd_labs_tbl2','ckd_labs','
         <tr class="syn_tr">
             <td>
                 <div>Sodium (mmol/l)</div>
@@ -850,7 +850,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         <td> </td>
         </tr>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (56,'ckd_labs_tbl3','ckd_labs','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (56,'ckd_labs_tbl3','ckd_labs','
         <tr class="syn_tr">
             <td>CO2 (mmol/l)</td>
             <td><<bicarb1_val>><strong><<bicarb1_val />></strong> <</bicarb1_val>></td>
@@ -899,44 +899,44 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </table>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (57,'frame_recm_begin','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (57,'frame_recm_begin','dmg','
     <hr />
     <div class="syn_recm_box">
     <h3>Recommendations</h3>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (58,'cd_ckd_recm_1','ckd','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (58,'cd_ckd_recm_1','ckd','
     <<dx_ckd_diff>><div>Recommendation [1.2] Update diagnosis to CKD stage<<ckd_stage />> </div><</dx_ckd_diff>>
     <<egfr_outdated>><div>Recommendation [1.3] Repeat renal function tests.</div><</egfr_outdated>>
     <<cp_mis>><div>Recommendation [1.7] Update care plan to include appropriate stage of CKD</div><</cp_mis>>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (59,'cd_dm_rec_1','cd_dm','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (59,'cd_dm_rec_1','cd_dm','
     <<n0_st=3>><div>Recommendation [2.3] Suggest optimizing glycaemic control</div><</n0_st=3>>
     <<n0_st=4>><div>Recommendation [2.3] Suggest optimizing glycaemic control</div><</n0_st=4>>
     <<cp_dm=0>><div>Recommendation [2.4] Suggest updating care plan to include diabetes</div><</cp_dm=0>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (60,'cd_cvra_rec_1','cvra','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (60,'cd_cvra_rec_1','cvra','
     <<cvra=3>><<cp_hicvr=0>><div>Recommendation [4.1] Update PCIS care plan to include high CVR </div><</cp_hicvr=0>><</cvra=3>>
     <<cvra=3>><<smoke0=30>><div>Recommendation [4.2] Given high CVR status the smoking cessation is strongly advised </div><</smoke0=30>><</cvra=3>>
     <<cvra=2>><<smoke0=30>><div>Recommendation [4.2] Given moderate CVR status the smoking cessation is advised </div><</smoke0=30>><</cvra=2>>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (61,'frame_recm_end','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (61,'frame_recm_end','dmg','
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (62,'frame_notes_begin','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (62,'frame_notes_begin','dmg','
     <hr />
     <div class="syn_notes_box">
     <h4>Footnotes</h4>
     <small>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (63,'cd_htn_footnote_1','cd_htn','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (63,'cd_htn_footnote_1','cd_htn','
     <<iq_tier>>
         <div>Note [3.1] This is based on <<iq_sbp />> blood pressure readings within the last 2 years</div>
     <</iq_tier>>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (64,'cd_ckd_footnote_1','ckd','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (64,'cd_ckd_footnote_1','ckd','
     <<egfr_single>><div>Note [1.1] This is based on a single egfr value on <<egfr_l_dt />></div><</egfr_single>>
     <<egfr_multiple>><div>Note [1.1] This is based on <<iq_egfr />> eGFR values between <<egfr_f_dt />> and <<egfr_l_dt />></div><</egfr_multiple>>
     <<egfr_outdated>><div>Note [1.2.1] Last eGFR on <<egfr_l_dt />></div><</egfr_outdated>>
@@ -948,14 +948,14 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<iq_tier=2>><div>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3).</div> <</iq_tier=2>>
     <<iq_tier=1>><div>Note [1.0] This was based on at least one eGFR or uACR value (Tier 4). </div><</iq_tier=1>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (65,'cd_cvra_footnote_1','cvra','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (65,'cd_cvra_footnote_1','cvra','
     <<risk_high_ovr=0>><div>Note [4.1] The Framingham risk equation was used as per heart foundation guidelines. The CARPA 7th STM uses the same methodology</div><</risk_high_ovr=0>>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (66,'frame_notes_end','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (66,'frame_notes_end','dmg','
     </small>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (67,'debug_info','dmg','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (67,'debug_info','dmg','
     <hr />
     <div class="syn_notes_box"><small>
     Debug info:
@@ -967,7 +967,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
         </small>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (48,'egfr_metrics','egfr_metrics','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (48,'egfr_metrics','egfr_metrics','
     <div class="syn_synopsis_box">
     <<r1_stg=1>>Normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=1>>
     <<r1_stg=2>>Near normal renal function of <<egfr_r1_val />> ml/min at entry<</r1_stg=2>>
@@ -976,7 +976,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     <<est_esrd_lapsed=1>><<est_esrd_dt>>Imminent ESRD, with estimation boundry in the past<</est_esrd_lapsed=1>>
     </div>
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (49,'acr_graph_acr','acr_graph','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (49,'acr_graph_acr','acr_graph','
     <hr />
     <div class="syn_synopsis_box">
     <h5>uACR profile for the last <<dspan_y />> years</h5>
@@ -1020,7 +1020,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (50,'hba1c_graph','hba1c_graph','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (50,'hba1c_graph','hba1c_graph','
     <hr />
     <div class="syn_synopsis_box">
     <h5>Hba1c profile for the last <<dspan_y />> years</h5>
@@ -1060,7 +1060,7 @@ Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEH
     </div>
 
     ');
-Insert into TKC.RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (51,'graph_bp','bp_graph','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (51,'graph_bp','bp_graph','
     <hr />
     <div class="syn_synopsis_box">
     <h5>Blood pressure profile for the last 5 years</h5>
