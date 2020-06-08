@@ -3,7 +3,7 @@
 
 
 --Init rules
---@"tkc-rman-insert-ruleblock-cd2.sql";
+@"tkc-rman-insert-ruleblock-cd2.sql";
 @"tkc-rman-insert-ruleblock-core";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
@@ -17,6 +17,7 @@
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
+@"tkc-rman-insert-ruleblock-rrt.sql";
 @"tkc-rman-insert-ruleblock-kfre.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
 @"tkc-rman-insert-ruleblock-trigger2.sql";
@@ -29,6 +30,10 @@
 
 -- Init templates
 @"tkc-create-rman-rpt-templates-neph2-h-3.sql";
+@"tkc-insert-compositions.sql"
+@"tkc-insert-template-block.sql"
+@"tkc-insert-composition-template-map.sql"
+
 
 
 --Init citations

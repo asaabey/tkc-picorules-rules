@@ -560,7 +560,8 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
         <ul>
             <li>Diagnosed <<af_dt />></li>
             <li>CHA2DS2VASC score  : <<cha2ds2vasc />></li>
-            <<rxn_anticoag_dt>><li>Anticoagulation <<rxn_anticoag_dt />></li><</rxn_anticoag_dt>>
+            <<rxn_anticoag>><li>Anticoagulation <<rxn_anticoag_dt />></li><</rxn_anticoag>>
+            <<rxn_anticoag=0>><li>Not on anticoagulation </li><</rxn_anticoag=0>>
         </ul>
 
     </ul>
@@ -569,7 +570,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     VALUES('neph002_html','cd_dyslip','cd_dyslip',604105,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-        <b><li>Hypercholesterolaemia</li></b>
+        <b><li>Dyslipidaemia</li></b>
         <ul>
             <<ldl_dt>><li>Last LDL-C value <<ldl_val />>(<<ldl_dt />>)</li><</ldl_dt>>
             <<ascvd>><li>Secondary prevention as there is past atherosclerotic cvd </li><</ascvd>>
@@ -649,65 +650,168 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>  
     '
     );
+    
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','rrt_syn','rrt',601000,'dev','tkc',TO_DATE(SYSDATE),
+    VALUES('neph002_html','rrt_frame_begin','rrt',601000,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li><b>End-stage renal failure (ESRD)</b>
-        <ul>
-            <<rrt=1>><li>Currently on haemodialysis, since <<hd_dt_min />></li><</rrt=1>>
-            <<rrt=2>><li>Currently on peritoneal dialysis, since <<pd_dt />></li><</rrt=2>>
-            <<rrt=3>><li>Active renal transplant, <<tx_dt />></li><</rrt=3>>
-            <<rrt=4>><li>Currently on home-haemodialysis, <<homedx_dt />></li><</rrt=4>>
-        </ul>
-    </li>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rrt_frame_end','rrt',601099,'dev','tkc',TO_DATE(SYSDATE),
+    '
     </ul>
     '
     );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rrt_1_syn','rrt',601001,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <<rrt=1>>
+    <li><b>End-stage renal failure (ESRD)</b>
+        <ul>
+            <li>Currently on satelite haemodialysis, since <<hd_dt_min />></li>
+            <<rrt_past=1>>
+                <li>Past renal replacement therapies</li>
+                    <ul>
+                        <<tx_dt>><li>Past failed renal transplant <<tx_dt />></li><</tx_dt>>
+                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt />></li><</pd_dt>>
+                        <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
+                    </ul>
+            <</rrt_past=1>>
+        </ul>
+    </li>
+    <</rrt=1>>
+    '
+    );
+
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rrt_2_syn','rrt',601002,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <<rrt=2>>
+    <li><b>End-stage renal failure (ESRD)</b>
+        <ul>
+            <li>Currently on peritoneal dialysis, since <<pd_dt_min />></li>
+            <<rrt_past=1>>
+                <li>Past renal replacement therapies</li>
+                    <ul>
+                        <<tx_dt>><li>Past failed renal transplant <<tx_dt />></li><</tx_dt>>
+                        <<hd_dt>><li>Past haemo dialysis <<hd_dt />></li><</hd_dt>>
+                        <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
+                    </ul>
+            <</rrt_past=1>>
+        </ul>
+    </li>
+    <</rrt=2>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rrt_3_syn','rrt',601003,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <<rrt=3>>
+    <li><b>Renal transplant due to (ESRD)</b>
+        <ul>
+            <li>Functioning allograft, since <<tx_dt />></li>
+            <<rrt_past=1>>
+                <li>Past renal replacement therapies</li>
+                    <ul>
+                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt />></li><</pd_dt>>
+                        <<hd_dt>><li>Past haemo dialysis <<hd_dt />></li><</hd_dt>>
+                        <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
+                    </ul>
+            <</rrt_past=1>>
+        </ul>
+    </li>
+    <</rrt=3>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rrt_4_syn','rrt',601004,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <<rrt=4>>
+    <li><b>End-stage renal failure (ESRD)</b>
+        <ul>
+            <li>Currently on home or community dialysis, since <<homedx_dt />></li>
+            <<rrt_past=1>>
+                <li>Past renal replacement therapies</li>
+                    <ul>
+                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt />></li><</pd_dt>>
+                        <<hd_dt>><li>Past haemo dialysis <<hd_dt />></li><</hd_dt>>
+                        <<tx_dt>><li>Past failed renal transplant <<tx_dt />></li><</tx_dt>>
+                    </ul>
+            <</rrt_past=1>>
+        </ul>
+    </li>
+    <</rrt=4>>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rrt_3_metric','rrt_tx',601031,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <ul>
+    <<cr_min_dt>><li>Best graft function creatinine <<cr_min_val />> on <<cr_min_dt />></li><</cr_min_dt>> 
+    <<cr_last_dt>><li>Last recorded creatinine <<cr_last_val />> on <<cr_last_dt />></li><</cr_last_dt>>
+    <<rxn>>
+    <li>Immunosuppressant regimen
+        <ul>
+            <<rx_h02ab>><li>Corticosteroid <<rx_h02ab />></li><</rx_h02ab>>
+            <<rx_l04ad>><li>Calcineurin inhibitor <<rx_l04ad />></li><</rx_l04ad>>
+            <<rx_l04aa>><li>Antimetabolite or MTOR class agent <<rx_l04aa />></li><</rx_l04aa>>
+            <<rx_l04ax>><li>L04AX class agent <<rx_l04ax />></li><</rx_l04ax>>
+        </ul>
+    </li>
+    <</rxn>>
+    </ul>
+    ');
+    
+--INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+--    VALUES('neph002_html','rrt_syn','rrt',601000,'dev','tkc',TO_DATE(SYSDATE),
+--    '
+--    <ul>
+--    <li><b>End-stage renal failure (ESRD)</b>
+--        <ul>
+--            <<rrt=1>><li>Currently on haemodialysis, since <<hd_dt_min />></li><</rrt=1>>
+--            <<rrt=2>><li>Currently on peritoneal dialysis, since <<pd_dt />></li><</rrt=2>>
+--            <<rrt=3>><li>Active renal transplant, <<tx_dt />></li><</rrt=3>>
+--            <<rrt=4>><li>Currently on home-haemodialysis, <<homedx_dt />></li><</rrt=4>>
+--            <<rrt_past=1>>
+--                <li>Past renal replacement therapies</li>
+--                    <ul>
+--                        <<tx_dt>><li>Past transplant <<tx_dt />></li><</tx_dt>>
+--                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt />></li><</pd_dt>>
+--                        <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
+--                    </ul>
+--            <</rrt_past=1>>
+--        </ul>
+--    </li>
+--    </ul>
+--    '
+--    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_syn_1','ckd',601100,'dev','tkc',TO_DATE(SYSDATE),
     '
     <ul>
-    <li><b>CKD stage <<ckd_stage />></b>
-    <ul>
-    <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
-    <<dx_ckd=0>><li>No coded diagnosis on the EHR (ICD/ICPC coding) [1.2]</li><</dx_ckd=0>>
-    <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>
-    <<egfr_l_val>><li>Last eGFR is <strong><<egfr_l_val />></strong> ml/min/1.73m2 (<<egfr_l_dt />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfr_l_val>>
-    <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
-    <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
-    <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
-    <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />>and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
-    <<avf>><li>An arterio-venous fistula has been created on <<avf />></li><</avf>>
-    <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
-    <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
-    <ul>
-    <<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>>
-    </ul>
-    </li>
-    </ul>
-    </li>
+        <li><b>CKD stage <<ckd_stage />></b>
+        <ul>
+            <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
+            <<dx_ckd=0>><li>No coded diagnosis on the EHR (ICD/ICPC coding) [1.2]</li><</dx_ckd=0>>
+            <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>
+            <<egfr_l_val>><li>Last eGFR is <strong><<egfr_l_val />></strong> ml/min/1.73m2 (<<egfr_l_dt />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfr_l_val>>
+            <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
+            <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
+            <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
+            <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />>and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
+            <<avf>><li>An arterio-venous fistula has been created on <<avf />></li><</avf>>
+            <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
+            <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
+            <ul>
+                <<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>>
+            </ul>
+            </li>
+        </ul>
+        </li>
     '
     );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','cd_ckd_syn_2','ckd',601199,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    </ul>
-    '
-    );
-INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
-    VALUES('neph002_html','rx_syn_1','rx_desc',651010,'dev','tkc',TO_DATE(SYSDATE),
-    '
-    <hr/>
-    <div class="syn_synopsis_box">
-    <h3>Medications</h3>
-    <ol>
-        <<rx_name_obj$rx_name_obj />>
-    </ol>
-    </div>
     
-    '
-    );
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
     VALUES('neph002_html','cd_ckd_cause_syn_1','ckd_cause',601101,'dev','tkc',TO_DATE(SYSDATE),
     '<ul>
@@ -749,6 +853,27 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     </ul>
     '
     );
+    
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','cd_ckd_syn_2','ckd',601199,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    </ul>
+    '
+    );
+INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)
+    VALUES('neph002_html','rx_syn_1','rx_desc',651010,'dev','tkc',TO_DATE(SYSDATE),
+    '
+    <hr/> 
+    <div class="syn_synopsis_box">
+    <h3>Medications</h3>
+    <ol>
+        <<rx_name_obj$rx_name_obj />>
+    </ol>
+    </div>
+    
+    '
+    );
+
     
 
 INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid,environment,template_owner,effective_dt,templatehtml)

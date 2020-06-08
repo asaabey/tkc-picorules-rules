@@ -335,6 +335,8 @@ BEGIN
                 }
             );
             
+            rrt => rout_rrt.rrt.val.bind();
+            
             acr_max => eadv.lab_ua_acr._.maxldv();
             
             acr_min => eadv.lab_ua_acr._.minldv();
@@ -372,7 +374,7 @@ BEGIN
             line_lower_y : {. => (acr_graph_y_max-acr_graph_y_min) * acr_graph_y_scale};
             
             
-            [[rb_id]] : { acr_n_30>3 =>1},{=>0};
+            [[rb_id]] : { acr_n_30>3 and rrt=0 =>1},{=>0};
             
             
             

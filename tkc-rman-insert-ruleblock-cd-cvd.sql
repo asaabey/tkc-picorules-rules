@@ -387,6 +387,7 @@ BEGIN
         
         rxn_anticoag_dt => rout_cd_cardiac_rx.rxn_anticoag.val.bind();
         
+        rxn_anticoag : { rxn_anticoag_dt!? => 1},{=>0};
         
         #doc(,
                 {

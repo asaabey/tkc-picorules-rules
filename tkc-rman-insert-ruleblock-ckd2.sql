@@ -11,176 +11,7 @@ DECLARE
 BEGIN
      
 
-    -- BEGINNING OF RULEBLOCK --
     
-        
-    rb.blockid:='rrt';
-
-    
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Rule block to determine RRT status*/
-        
-        #define_ruleblock(rrt,
-            {
-                description: "Rule block to determine RRT status",
-                version: "0.0.2.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1,
-                filter: "SELECT eid FROM rout_core_info_entropy WHERE icd=1 or icpc=1"
-                
-            }
-        );
-
-        #doc(,
-            {
-                txt : "Haemodialysis episode ICD proc codes and problem ICPC2p coding",
-                cite : "rrt_hd_icd,rrt_pd_icd"
-            }
-        );
-        hd_z49_n => eadv.icd_z49_1.dt.count();
-        
-        hd_z49_1y_n => eadv.icd_z49_1.dt.count().where(dt>sysdate-365);
-        
-        hd_dt0 => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(); 
-        hd_dt => eadv.icd_z49_1.dt.max(); 
-        
-        hd_dt_min => eadv.icd_z49_1.dt.min();
-        
-        #doc(,
-            {   
-                txt : "Peritoneal episode ICD and problem ICPC2p coding"
-            }
-        );
-        
-        pd_dt => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
-        
-        pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
-        
-        #doc(,
-            {
-                txt : "Transplant problem ICPC2p coding"
-            }
-        );
-        tx_dt => eadv.icpc_u28001.dt.max();
-        
-        #doc(,
-            {
-                txt : "Transplant problem ICD coding"
-            }
-        );
-        tx_dt_icd => eadv.icd_z94_0.dt.max();
-        
-        #doc(,
-            {
-                txt : "Home-haemodialysis ICPC2p coding"
-            }
-        );
-        homedx_dt => eadv.[icpc_u59j99].dt.max();
-        
-        
-        ren_enc => eadv.enc_op_renal.dt.max();
-        
-        #doc(,
-            {
-                txt: "Determine RRT category based on chronology. RRT cat 1 [HD] requires more than 10 sessions within last year"
-            }
-        );
-        
-        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365 => 1},
-            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) => 2},
-            {tx_dt > nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
-            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) => 4},
-            {=>0};
-        #doc(,
-            {
-                txt: "Generate binary variables for rrt categories"
-            }
-        );
-            
-        rrt_hd : {rrt=1 => 1},{=>0};
-        
-        rrt_pd : {rrt=2 => 1},{=>0};
-        
-        rrt_tx : {rrt=3 => 1},{=>0};
-        
-        rrt_hhd : {rrt=4 => 1},{=>0};
-        
-        hd_incd : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
-          
-        pd_incd : {pd_dt_min > sysdate-365 => 1},{=>0};
-        
-        rrt_incd : { hd_incd=1 or pd_incd=1 => 1},{=>0};
-        
-        #doc(,
-            {
-                txt:"Current transplant patient based on 2y encounter activity"
-            }
-        );
-        
-        tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
-        
-        #define_attribute(
-            [[rb_id]],
-            {
-                label:"Renal replacement therapy category.",
-                desc:"Integer [1-4] where 1=HD, 2=PD, 3=TX, 4=HHD",
-                is_reportable:0,
-                type:2
-            }
-        );
-        
-        #define_attribute(
-            rrt_hd,
-            {
-                label:"RRT Haemodialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-        
-         #define_attribute(
-            rrt_pd,
-            {
-                label:"RRT Peritoneal dialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-        
-        #define_attribute(
-            rrt_tx,
-            {
-                label:"RRT Renal transplant",
-                is_reportable:1,
-                type:2
-            }
-        );
-        
-        #define_attribute(
-            rrt_hhd,
-            {
-                label:"RRT Home haemodialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-    ';
-    
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    -- END OF RULEBLOCK --
     -- BEGINNING OF RULEBLOCK --
     
         
@@ -819,7 +650,7 @@ BEGIN
         );
         
         
-        
+        rrt => rout_rrt.rrt.val.bind();
                
         ckd => rout_ckd.ckd.val.bind();       
         
@@ -869,7 +700,7 @@ BEGIN
         
         enc_multi : { nvl(enc_n,0)>1 =>1},{=>0};
         
-        ckdj : { coalesce(edu_init, edu_rv,enc_fd) is not null => 1},{=>0};
+        ckdj : { coalesce(edu_init, edu_rv,enc_fd)!? and rrt=0 => 1},{=>0};
         
         #define_attribute(
             ckdj,
