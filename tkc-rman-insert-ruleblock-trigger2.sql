@@ -395,6 +395,7 @@ BEGIN
           
           akin_stage : {cr_base_max_1y_qt>2 => 3 },
                         {cr_base_max_1y_qt>1.5 => 2 },
+                        {cr_base_max_1y_qt between 1 and 1.5 => 1 },
                         {=>0};
         
         #doc(,
@@ -415,16 +416,13 @@ BEGIN
             }
         );  
           
-        
 
-          
           
           aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
           
           ex_flag : {dod!? or rrt=1 or ckd>4 => 1},{=>0};
-          
           
           
           [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
@@ -510,6 +508,8 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
     
+
+    
      -- BEGINNING OF RULEBLOCK --
 
     rb.blockid:='tg4610';
@@ -544,22 +544,24 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
-        cga_g => rout_ckd.cga_g.val.bind();
-        
         ckd => rout_ckd.ckd.val.bind();
-        
-        eb => rout_ckd.egfr_slope2.val.bind();
-        
-        egfr_max_v => rout_ckd.egfr_max_val.val.bind();
-        
-        egfr_max_ld => rout_ckd.egfr_max_dt.val.bind();
+               
         
         
+        egfr_l => eadv.lab_bld_egfr_c._.lastdv().where(dt > sysdate-365);
         
+        egfr_l1 => eadv.lab_bld_egfr_c._.lastdv().where(dt < egfr_l_dt and dt>egfr_l_dt - 180);
         
+        egfr_max => eadv.lab_bld_egfr_c._.maxldv().where(dt>sysdate-730 and dt < egfr_l1_dt);
         
-        egfrld => rout_ckd.egfr_l_dt.val.bind();
-        egfrlv => rout_ckd.egfr_l_val.val.bind();
+        eb : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};  
+        
+        egfr_l_l1_qt : {egfr_l1_val!? =>(egfr_l_val/egfr_l1_val)},{=>0};
+        
+        egfr_ss : { egfr_l_l1_qt>0.8 and egfr_l_l1_qt<1.2 =>1 },{=>0};
+        
+        eb_thresh : {ckd<3 => -20},{ckd>=3 and ckd<6 => -30};
+        
         
         ckd_null : { nvl(ckd,0)=0 =>1},{=0};
         
@@ -578,9 +580,15 @@ BEGIN
             }
         );
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? and enc!? => 1},{=>0};
           
-        [[rb_id]] : {cga_g in (`G2`,`G1`) and nvl(eb,0)<-20 and enc=0 and egfrld - egfr_max_ld >180 and egfrlv<80 and egfr_max_v is not null and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : {
+                        ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh 
+                        and egfr_l_dt - egfr_max_dt >180 
+                        and egfr_l_val<80 and egfr_max_val is not null 
+                        and egfr_ss=1
+                        and ex_flag=0 => 1
+                    },{=>0};
         
         #define_attribute(
                 [[rb_id]],
