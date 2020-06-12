@@ -30,6 +30,7 @@
 
 -- Init templates
 @"tkc-create-rman-rpt-templates-neph2-h-3.sql";
+-- above should be deprecated
 @"tkc-insert-compositions.sql"
 @"tkc-insert-template-block.sql"
 @"tkc-insert-composition-template-map.sql"
