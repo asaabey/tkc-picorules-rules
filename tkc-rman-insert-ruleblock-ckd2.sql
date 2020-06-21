@@ -1274,6 +1274,399 @@ BEGIN
         COMMIT;
     -- END OF RULEBLOCK --
     
+     -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_egfr_metrics';
+
+    
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to stage CKD */
+        
+          #define_ruleblock(ckd,
+            {
+                description: "Rule block to stage CKD",
+                version: "0.0.2.3",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:2
+                
+            }
+        );
+        
+        
+                
+        #doc(,
+            {
+                txt : "Calculate egfr metrics"
+            }
+        );
+        
+        #doc(,
+            {
+                txt : "Gather last first and penultimate within 3-12 month windows with cardinality"
+            }
+        );
+        
+        
+        egfr_l => eadv.lab_bld_egfr_c._.lastdv();
+        
+        egfr_l1 => eadv.lab_bld_egfr_c._.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
+        
+        egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
+        
+        /*
+        egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
+        
+        egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
+        */
+        #doc(,
+            {
+                txt : "Check for 1 year egfr assumption violation"
+            }
+        );
+        
+        egfr_1y_delta : {egfr_l1_val!? => egfr_l_val-egfr_l1_val};
+        
+        asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
+        
+        #doc(,
+            {
+                txt : "Check for 1 month egfr assumption violation"
+            }
+        );
+        
+        egfr_1m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
+        egfr_1m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
+        
+        egfr_1m_qt : {egfr_1m_n2>=2 => round(egfr_l_val/egfr_1m_mu,2)};
+        
+        asm_viol_1m : {nvl(egfr_1m_qt,1)>1.2 or nvl(egfr_1m_qt,1)<0.8  => 1},{=> 0};
+               
+        #doc(,
+            {
+                txt : "calculate egfr slope and related metrics"
+            }
+        );
+
+        
+        
+        
+        egfr_max => eadv.lab_bld_egfr_c._.maxldv();
+        
+        egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfr_l_dt);
+        
+        #doc(,
+            {
+                txt : "Slope between last and last maximum value, assuming last max represents baseline"
+            }
+        );
+        
+        
+        
+        egfr_slope2 : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};
+        
+        egfr_decline : {egfr_l_dt - egfr_max_dt >365 and egfr_ld_max_n >2 and egfr_max_val - egfr_l_val>=20 => 1},{=>0};
+        
+        egfr_rapid_decline : { egfr_decline=1 and egfr_slope2<-10 =>1},{=>0};
+        
+        
+        
+        #doc(,
+            {
+                txt : "check for eGFR and uACR persistence based on KDIGO persistence definition "
+            }
+        );
+        
+
+        #doc(,
+            {
+                txt : "Apply KDIGO 2012 staging",
+                cite: "ckd_ref1, ckd_ref2"
+            }
+        );
+        
+        
+        
+        [[rb_id]]:  {egfr_l_val>=90 => 1},
+                {egfr_l_val<90 AND egfr_l_val>=60 => 2},
+                {egfr_l_val<60 AND egfr_l_val>=45 => 3},
+                {egfr_l_val<45 AND egfr_l_val>=30 => 4},
+                {egfr_l_val<30 AND egfr_l_val>=15 => 5},
+                {egfr_l_val<15 => 6},
+                {=>0};
+
+        
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
+    
+      -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_uacr_metrics';
+
+    
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to stage CKD */
+        
+          #define_ruleblock(ckd,
+            {
+                description: "Rule block to stage CKD",
+                version: "0.0.2.3",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:2
+                
+            }
+        );
+        
+        #doc(,
+            {
+                txt : "calculate uacr metrics"
+            }
+        );
+        
+       
+        acr_l => eadv.lab_ua_acr._.lastdv();
+        
+        
+        acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
+        
+        #doc(,
+            {
+                txt : "check for eGFR and uACR persistence based on KDIGO persistence definition "
+            }
+        );
+        
+        
+        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
+        
+        pers : {acr_3m_n>0 => 1},{=>0};
+        
+        
+        #doc(,
+            {
+                txt : "Apply KDIGO 2012 staging",
+                cite: "ckd_ref1, ckd_ref2"
+            }
+        );
+        
+            
+        [[rb_id]]: {acr_l_val<3 => 1},
+                {acr_l_val<30 AND acr_l_val>=3 => 2},
+                {acr_l_val<300 AND acr_l_val>=30 => 3},
+                {acr_l_val>300 => 4},{=>0};
+                
+
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_access';
+
+    
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to stage CKD */
+        
+          #define_ruleblock(ckd,
+            {
+                description: "Rule block to stage CKD",
+                version: "0.0.2.3",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:2
+                
+            }
+        );
+        
+       #doc(,
+            {
+                txt : "Access formation"
+            }
+        );
+        
+        avf => eadv.caresys_3450901.dt.max();
+        
+        
+        avf_has : { avf!?  =>1},{=>0};
+        
+                
+        #define_attribute(
+            avf_has,
+            {
+                label:"AVF present",
+                is_reportable:1,
+                type:2
+            }
+        );
+
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
+    
+    
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd_careplan';
+
+    
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to stage CKD */
+        
+          #define_ruleblock(ckd,
+            {
+                description: "Rule block to stage CKD",
+                version: "0.0.2.3",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:2
+                
+            }
+        );
+        
+       #doc(,
+            {
+                txt : "Gather careplan info and extract CKD specific component"
+            }
+        );
+        
+        cp_l => eadv.careplan_h9_v1.val.lastdv();
+        
+        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
+        
+        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
+        
+        #doc(,
+            {
+                txt : " Encounters with specialist services"
+            }
+        );
+        
+        enc_n => eadv.enc_op_renal.dt.count();
+        enc_ld => eadv.enc_op_renal.dt.max();
+        enc_fd => eadv.enc_op_renal.dt.min();
+        
+        enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
+
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
+    
+     
+    -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='ckd2';
+
+    
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to stage CKD */
+        
+          #define_ruleblock(ckd,
+            {
+                description: "Rule block to stage CKD",
+                version: "0.0.2.3",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:2
+                
+            }
+        );
+        
+       #doc(,
+            {
+                txt : "Gather egfr metrics "
+            }
+        );
+        
+        egfr_l_val => rout_ckd_egfr_metrics.egfr_l_val.val.bind();
+        egfr_l_dt => rout_ckd_egfr_metrics.egfr_l_dt.val.bind();
+        
+        egfr_outdated => rout_ckd_egfr_metrics.egfr_outdated.val.bind();
+        egfr_single => rout_ckd_egfr_metrics.egfr_single.val.bind();
+        egfr_decline => rout_ckd_egfr_metrics.egfr_decline.val.bind();
+        egfr_rapid_decline => rout_ckd_egfr_metrics.egfr_rapid_decline.val.bind();
+        egfr_slope2 => rout_ckd_egfr_metrics.egfr_slope2.val.bind();
+        
+        
+        [[rb_id]] : {. =>1};
+        ';
+            rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+        
+    -- END OF RULEBLOCK --
 END;
 
 
