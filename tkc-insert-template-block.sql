@@ -550,7 +550,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <</md>>
         <<schiz>><b><li>Psychotic disorder</li></b>
         <ul>
-            <li>Diagnosed (<<code_shiz_dt />>) and medicated</li>
+            <<code_shiz_dt>><li>Diagnosed (<<code_shiz_dt />>) and medicated</li><</code_shiz_dt>>
+            <<rx_n05a_dt>><li>medicated for ?</li><</rx_n05a_dt>>
         </ul>
         <</schiz>>
         <<epil>><b><li>Seizure disorder</li></b>
@@ -1138,3 +1139,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
 
     ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (152,'periop_nsqip','periop_nsqip','
+   <ul>
+        <li><b>Perioperative mortality prediction</b></li>
+        <ul>
+            <li>ACS NSQIP</li>
+            <ul>
+                <li>Perioperative mortality risk <<pmp_score />>%</li>             
+            </ul>
+        </ul>
+   
+   </ul>
+
+');

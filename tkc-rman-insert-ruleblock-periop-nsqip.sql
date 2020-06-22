@@ -69,6 +69,7 @@ BEGIN
         
         obesity => rout_cd_obesity.cd_obesity.val.bind();
         
+        low => rout_cd_nutr_low.cd_nutr_low.val.bind();
 
         
         w_inpt : {.=>0},{=>6};
@@ -96,11 +97,13 @@ BEGIN
         
         w_dnr : {.=>0},{=>5};
         
+        w_low : { low=1 =>1 },{=>0};
+        
         w_obesity : { obesity=1 =>-1},{=>0};
         
         pmp_sum : {.=> w_inpt + w_sepsis + w_poor_func + w_ca_diss + w_age 
             + w_cardiac + w_pulm + w_renal + w_steroids 
-            + w_bleeding + w_dnr + w_obesity};
+            + w_bleeding + w_dnr + w_low + w_obesity};
         
         pmp_score : { pmp_sum  between -1 and 5 => 0.1},
                     { pmp_sum  between 6 and 10 => 0.6},
