@@ -269,44 +269,112 @@ BEGIN
             );
             #doc(,
                 {
-                    txt:"valvular heart disease based on coding"
+                    txt:"rheumatic heart disease based on coding"
                 }
-            );     
+            );  
             
-             #doc(,
+            rhd_dt => eadv.[icd_i05%,icd_i06%,icd_i07%,icd_i08%,icd_i09%,icpc_k71%].dt.min();
+            
+            rhd_aet : {rhd_dt!? => 1},{=>0};
+            
+            #doc(,
                 {
-                    txt:"mitral and aortic including rheumatic and non-rheumatic"
+                    txt:"mitral  including rheumatic and non-rheumatic"
                 }
             ); 
             
-            vhd_mv_icd => eadv.[icd_i34_%,icd_i05%].dt.min();
             
-            vhd_mv_icpc => eadv.[icpc_k83005,icpc_k83007,icpc_k83004,icpc_k73006,icpc_k71005].dt.min();
-
-            vhd_mvr => eadv.[icpc_k54009].dt.min();
             
-            vhd_av_icd => eadv.[icd_i35_%,icd_i06%].dt.min();
+            mv_s_dt => eadv.[icd_i05_0,icd_i05_2,icd_34_2,icpc_k73006, icpc_k83007,icpc_k71005].dt.min();
             
-            vhd_av_icpc => eadv.[icpc_k71008,icpc_k83006,icpc_k83015,icpc_k83002,icpc_k83001].dt.min();
+            mv_i_dt => eadv.[icd_i05_1,icd_i05_2,icd_34_0,icpc_k83004].dt.min();
             
-            vhd_avr => eadv.[icpc_k54005].dt.min();
-
+            mv_r_dt => eadv.[icpc_k54009].dt.min();
             
-             #doc(,
+            mv_s : {mv_s_dt!? => 1},{=>0};
+            
+            mv_i : {mv_i_dt!? => 1},{=>0};
+            
+            mv_r : {mv_r_dt!? => 1},{=>0};
+            
+            mv : { greatest(mv_s,mv_i,mv_r)>0 => 1},{=>0};
+            
+            #doc(,
                 {
-                    txt:"other valvular including rheumatic heart disease and infective endocarditis"
+                    txt:"Aortic  including rheumatic and non-rheumatic"
                 }
             ); 
-            vhd_ov_icd => eadv.[icd_i07%,icd_i08%,icd_i09%,icd_i36%,icd_i37%].dt.min();
             
-            vhd_ie_icd => eadv.[icd_i33%,icd_i38%,icd_i39%].dt.min();
+                        
+            av_s_dt => eadv.[icd_i06_0,icd_35_0, icpc_k83006,icpc_k71008].dt.min();
             
-            vhd_icpc => eadv.[icpc_k83%].dt.min();
+            av_i_dt => eadv.[icd_i06_1,icd_35_1,icpc_k83004].dt.min();
             
-            vhd : { coalesce(vhd_mv_icd,vhd_mv_icpc,vhd_mvr,vhd_av_icd,vhd_av_icpc,vhd_avr,vhd_ov_icd,vhd_ie_icd,vhd_icpc)!? =>1},{=>0};
+            av_r_dt => eadv.[icpc_k54005].dt.min();
+            
+            av_s : { av_s_dt!? => 1},{=>0};
+            
+            av_i : { av_i_dt!? => 1},{=>0};
+            
+            av_r : { av_r_dt!? => 1},{=>0};
+            
+            av : {greatest(av_s,av_i,av_r)>0 => 1},{=>0};
+            
+            #doc(,
+                {
+                    txt:"Tricuspid  including rheumatic and non-rheumatic"
+                }
+            ); 
+            
+            tv_s_dt => eadv.[icd_i07_0,icd_36_0].dt.min();
+            
+            tv_i_dt => eadv.[icd_i07_1,icd_36_1,icpc_k83012].dt.min();
+            
+            tv_r_dt => eadv.[icpc_k54019].dt.min();
+            
+            tv_s : { tv_s_dt!? => 1},{=>0};
+            
+            tv_i : { tv_i_dt!? => 1},{=>0};
+            
+            tv_r : { tv_r_dt!? => 1},{=>0};
+            
+            tv : { greatest(tv_s,tv_i,tv_r)>0 => 1},{=>0};
+            
+           
+             #doc(,
+                {
+                    txt:" infective endocarditis"
+                }
+            ); 
+            
+           
             
             
-            [[rb_id]] : {vhd=1 =>1},{=>0};
+            vhd_ie_icd_dt => eadv.[icd_i33%,icd_i38%,icd_i39%].dt.min();
+            
+            #doc(,
+                {
+                    txt:" cardiac outpatient encounters"
+                }
+            ); 
+            
+            car_enc_l_dt => eadv.enc_op_car.dt.last();
+            
+            #doc(,
+                {
+                    txt:" anticoagulation"
+                }
+            ); 
+            
+            rxn_anticoag_dt => rout_cd_cardiac_rx.rxn_anticoag.val.bind();
+        
+            rxn_anticoag : { rxn_anticoag_dt!? => 1},{=>0};
+
+            vhd : { greatest(mv,av,tv)>0 =>1},{=>0};
+            
+            
+            
+            [[rb_id]] : {.=>vhd};
             
             
             #define_attribute(
@@ -314,6 +382,76 @@ BEGIN
                 {
                     label:"Valvular heart disease",
                     desc:"Presence of Valvular heart disease",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            mv_s,
+                {
+                    label:"Mitral valve stenosis",
+                    desc:"Presence of Mitral valve stenosis",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            mv_i,
+                {
+                    label:"Mitral valve insufficiency",
+                    desc:"Presence of Mitral valve insufficiency or regurgitation",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            mv_r,
+                {
+                    label:"Mitral valve replacement",
+                    desc:"Presence of Mitral valve replacement",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            av_s,
+                {
+                    label:"Aortic valve stenosis",
+                    desc:"Presence of Aortic valve stenosis",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            av_i,
+                {
+                    label:"Aortic valve insufficiency",
+                    desc:"Presence of Aortic valve insufficiency or regurgitation",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            av_r,
+                {
+                    label:"Aortic valve replacement",
+                    desc:"Presence of Aortic valve replacement",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+            
+            #define_attribute(
+            rhd_aet,
+                {
+                    label:"Rheumatic heart disease",
+                    desc:"Presence of Rheumatic heart disease",
                     is_reportable:1,
                     type:2
                 }
@@ -593,6 +731,60 @@ BEGIN
                 {
                     label:"Rx cardiac meds",
                     desc:"Presence of cardiac",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_cardiac_enc';
+
+    
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess cardiac encounters  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess cardiac encounters",
+                version: "0.1.2.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+           car_enc_f_dt => eadv.enc_op_car.dt.first();
+           
+           car_enc_l_dt => eadv.enc_op_car.dt.last();
+           
+           [[rb_id]] : {car_enc_l_dt!? => 1},{=>0};
+           
+            
+            #define_attribute(
+            [[rb_id]],
+                {
+                    label:"cardiac outpatient encounter",
+                    desc:"Presence of cardiac outpatient encounter",
                     is_reportable:1,
                     type:2
                 }

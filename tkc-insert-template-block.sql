@@ -1,5 +1,7 @@
 REM INSERTING into RMAN_RPT_TEMPLATE_BLOCKS
+
 SET DEFINE OFF;
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
     <style>
                 .syn_alert_box {
@@ -464,16 +466,38 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
             <<vhd>><li><b>Valvular heart disease</b>
             <ul>
-                <<vhd_mv_icd>><li>Mitral valve disease <<vhd_mv_icd />></li><</vhd_mv_icd>>
-                <<vhd_av_icd>><li>Aortic valve disease <<vhd_av_icd />></li><</vhd_av_icd>>
-                <<vhd_ov_icd>><li>Non aortic-mitral valve disease <<vhd_ov_icd />></li><</vhd_ov_icd>>
                 <<vhd_ie_icd>><li>Infective endocarditis <<vhd_ie_icd />></li><</vhd_ie_icd>>
                 <<vhd_icpc>><li>Valvular disease NOS<<vhd_icpc />></li><</vhd_icpc>>
+                <<rhd_aet>><li>Likely due to <b>rheumatic</b> heart disease</li><</rhd_aet>>
+                <<car_enc_l_dt>><li>Last outpatient encounter <<car_enc_l_dt />></li><</car_enc_l_dt>>
+            </ul>
+            <ul>
+                <<mv>><li>Mitral valve involvement</li><</mv>>
+                <ul>
+                    <<mv_s>><li>Mitral stenosis <<mv_s_dt />></li><</mv_s>>
+                    <<mv_i>><li>Mitral regurgitation <<mv_i_dt />></li><</mv_i>>
+                    <<mv_r>><li>Mitral replacement <<mv_r_dt />></li><</mv_r>>
+                </ul>
+            </ul>
+            <ul>
+                <<av>><li>Aortic valve involvement</li><</av>>
+                <ul>
+                    <<av_s>><li>Aortic stenosis <<av_s_dt />></li><</av_s>>
+                    <<av_i>><li>Aortic regurgitation <<av_i_dt />></li><</av_i>>
+                    <<av_r>><li>Aortic replacement <<av_r_dt />></li><</av_r>>
+                </ul>
+            </ul>
+            <ul>
+                <<tv>><li>Tricuspid valve involvement</li><</tv>>
+                <ul>
+                    <<tv_s>><li>Tricuspid stenosis <<tv_s_dt />></li><</tv_s>>
+                    <<tv_i>><li>Tricuspid regurgitation <<tv_i_dt />></li><</tv_i>>
+                    <<tv_r>><li>Tricuspid replacement <<tv_r_dt />></li><</tv_r>>
+                </ul>
+                <<rxn_anticoag>><li>On anticoagulation </li><</rxn_anticoag>>
             </ul>
             <</vhd>>
-            <<chf>><li><b>Congestive heart failure</b>
 
-            <</chf>>
 
         </ul>
 
@@ -526,7 +550,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <</md>>
         <<schiz>><b><li>Psychotic disorder</li></b>
         <ul>
-            <li>Diagnosed (<<code_shiz_dt />>) and medicated</li>
+            <<code_shiz_dt>><li>Diagnosed (<<code_shiz_dt />>) and medicated</li><</code_shiz_dt>>
+            <<rx_n05a_dt>><li>medicated for ?</li><</rx_n05a_dt>>
         </ul>
         <</schiz>>
         <<epil>><b><li>Seizure disorder</li></b>
@@ -1114,3 +1139,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
 
     ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (152,'periop_nsqip','periop_nsqip','
+   <ul>
+        <li><b>Perioperative mortality prediction</b></li>
+        <ul>
+            <li>ACS NSQIP</li>
+            <ul>
+                <li>Perioperative mortality risk <<pmp_score />>%</li>             
+            </ul>
+        </ul>
+   
+   </ul>
+
+');
