@@ -40,7 +40,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
                 
     </style>
     <div class="syn_dmg_box">
-        <h3>Synopsis masked for validation</h3>
+        <h3>Synopsis masked for validation.</h3>
         
     <div>
     

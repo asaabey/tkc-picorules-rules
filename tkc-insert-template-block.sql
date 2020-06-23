@@ -69,12 +69,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<dmg_source=5>><b>MIWATJ</b><hr /><</dmg_source=5>>    
             <<dmg_source=6>><b>ANYINGINYI</b><hr /><</dmg_source=6>> 
             <<dmg_source=8>><b>CONGRESS</b><hr /><</dmg_source=8>>
-            <<pcis_n>><i>PCIS encounters(N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
-            <<eacs_n>><i>EACS encounters(N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
-            <<miwatj_n>><i>MIWATJ encounters(N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
-            <<laynhapuy_n>><i>LAYNHAPUY encounters(N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
-            <<anyinginyi_n>><i>ANYINGINYI encounters(N=<<anyinginyi_n />>, last=<<anyinginyi_ld />>)</i><</anyinginyi_n>>
-            <<congress_n>><i>CONGRESS encounters(N=<<congress_n />>, last=<<congress_n />>)</i><</congress_n>>
+            <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
+            <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
+            <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
+            <<laynhapuy_n>><i>LAYNHAPUY encounters (N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
+            <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
+            <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
 
     <</dmg_source>>
     </div>
@@ -87,7 +87,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
         <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
 
-        <<episode_single=0>><<loc_single=0>>visited <b><<loc_def$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
+        <<episode_single=0>><<loc_single=0>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
         <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
     </div>
     <hr />
@@ -280,7 +280,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
             <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
             <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
-            <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />>and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
+            <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />> and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
             <<avf>><li>An arterio-venous fistula has been created on <<avf />></li><</avf>>
             <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
             <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
@@ -301,8 +301,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<dm_fd_year>><li>since <<dm_fd_year />></li><</dm_fd_year>>
             <<dm_dx_uncoded>><li>not coded on primary care EHR</li><</dm_dx_uncoded>>
             <<cd_dm_dx_code=110000>><li>based only on hospital records on <<dm_icd_fd />></li><</cd_dm_dx_code=110000>>
-            <<cd_dm_dx_code=101110>><li>based on primary EHR,lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=101110>>
-            <<cd_dm_dx_code=111110>><li>based on hospital and primary EHR,lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=111110>>
+            <<cd_dm_dx_code=101110>><li>based on primary EHR, lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=101110>>
+            <<cd_dm_dx_code=111110>><li>based on hospital and primary EHR, lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=111110>>
             <<cd_dm_dx_code=100000>><li>based on a single HbA1c of <<gluc_hba1c_high_f_val />> on <<gluc_hba1c_high_f_dt />></li><</cd_dm_dx_code=100000>>
 
     ');
@@ -402,7 +402,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <ul>
             <<cad>><li><b>Coronary artery disease</b>
             <ul>
-                <<cabg>><li>Cornoary artery bypass grafting <<cabg />></li><</cabg>>
+                <<cabg>><li>Coronary artery bypass grafting <<cabg />></li><</cabg>>
                 <<ami_icd_null>><li>No recorded myocardial infarction in hospital</li><</ami_icd_null>>
                 <<stemi_fd>><li>First STEMI <<stemi_fd />></li><</stemi_fd>>
 
@@ -633,7 +633,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','<ul>
-        <li>aetiology
+        <li>Aetiology
             <ul>
                 <<aet_multiple=1>><li>Multiple aetiology is suggested
                 <ul>
@@ -907,16 +907,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (58,'cd_ckd_recm_1','ckd','
     <<dx_ckd_diff>><div>Recommendation [1.2] Update diagnosis to CKD stage<<ckd_stage />> </div><</dx_ckd_diff>>
     <<egfr_outdated>><div>Recommendation [1.3] Repeat renal function tests.</div><</egfr_outdated>>
-    <<cp_mis>><div>Recommendation [1.7] Update care plan to include appropriate stage of CKD</div><</cp_mis>>
+    <<cp_mis>><div>Recommendation [1.7] Modify care plan to include appropriate stage of CKD</div><</cp_mis>>
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (59,'cd_dm_rec_1','cd_dm','
     <<n0_st=3>><div>Recommendation [2.3] Suggest optimizing glycaemic control</div><</n0_st=3>>
     <<n0_st=4>><div>Recommendation [2.3] Suggest optimizing glycaemic control</div><</n0_st=4>>
-    <<cp_dm=0>><div>Recommendation [2.4] Suggest updating care plan to include diabetes</div><</cp_dm=0>>
+    <<cp_dm=0>><div>Recommendation [2.4] Suggest modify care plan to include diabetes</div><</cp_dm=0>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (60,'cd_cvra_rec_1','cvra','
-    <<cvra=3>><<cp_hicvr=0>><div>Recommendation [4.1] Update PCIS care plan to include high CVR </div><</cp_hicvr=0>><</cvra=3>>
+    <<cvra=3>><<cp_hicvr=0>><div>Recommendation [4.1] Suggest modify care plan to include high CVR </div><</cp_hicvr=0>><</cvra=3>>
     <<cvra=3>><<smoke0=30>><div>Recommendation [4.2] Given high CVR status the smoking cessation is strongly advised </div><</smoke0=30>><</cvra=3>>
     <<cvra=2>><<smoke0=30>><div>Recommendation [4.2] Given moderate CVR status the smoking cessation is advised </div><</smoke0=30>><</cvra=2>>
 
@@ -1100,7 +1100,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
               stroke-width="49"
               stroke-dasharray="<<tir_arc />> <<circum />>"
               />
-        <text x="70" y="150" style="font-size:24px;">TIR% <<tir_pct />>%</text>
+        <text x="70" y="150" style="font-size:24px;">Time in range % <<tir_pct />>%</text>
 
     </svg>
     </div>

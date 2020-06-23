@@ -168,7 +168,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
             <<miwatj_n>><i>MIWATJ encounters(N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
             <<laynhapuy_n>><i>LAYNHAPUY encounters(N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
             <<anyinginyi_n>><i>ANYINGINYI encounters(N=<<anyinginyi_n />>, last=<<anyinginyi_ld />>)</i><</anyinginyi_n>>
-            <<congress_n>><i>CONGRESS encounters(N=<<congress_n />>, last=<<congress_n />>)</i><</congress_n>>
+            <<congress_n>><i>CONGRESS encounters(N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
         
     <</dmg_source>>
     </div>
@@ -185,7 +185,7 @@ INSERT INTO rman_rpt_templates (compositionid,templateid,ruleblockid,placementid
     <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
         <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
         
-        <<episode_single=0>><<loc_single=0>>visited <b><<loc_def$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
+        <<episode_single=0>><<loc_single=0>>Visited <b><<loc_def$loc_sublocality />></b>  (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
         <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
     </div>
     <hr />
