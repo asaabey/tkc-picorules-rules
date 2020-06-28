@@ -46,7 +46,7 @@ BEGIN
         
         cad => rout_cd_cardiac_cad.cd_cardiac_cad.val.bind();
         
-        ihd => rout_cd_cardiac_ihd.cd_cardiac_ihd.val.bind();
+        
         
         vhd => rout_cd_cardiac_vhd.cd_cardiac_vhd.val.bind();
         
@@ -85,7 +85,7 @@ BEGIN
                 { age between 70 and 79 => 1},
                 { age>=80 =>2};
         
-        w_cardiac : { greatest(ihd, vhd,htn)>0=>5},{=>0};   
+        w_cardiac : { greatest(cad, vhd,htn)>0=>5},{=>0};   
         
         w_pulm : { pulm=1 =>3},{=>0};
         
