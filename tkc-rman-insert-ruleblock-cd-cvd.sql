@@ -509,6 +509,8 @@ BEGIN
             
         af : {coalesce(af_icd,af_icpc)!? =>1},{=>0};
         
+        vhd => rout_cd_cardiac_vhd.cd_cardiac_vhd.val.bind();
+        
         cad =>rout_cd_cardiac_cad.cad.val.bind();
         
         chf =>rout_cd_cardiac_chf.chf.val.bind();
@@ -549,7 +551,7 @@ BEGIN
         
         dm_score : { dm>0 => 1},{=>0};
         
-        cha2ds2vasc : { af=1 => age_score + gender_score + chf_hx_score + cva_score +cvd_score + dm_score},{=>0};
+        cha2ds2vasc : { af=1 and vhd=0 => age_score + gender_score + chf_hx_score + cva_score +cvd_score + dm_score},{=>0};
         
             
         
@@ -558,8 +560,10 @@ BEGIN
         
         #define_attribute([[rb_id]],
             { 
-                label: "presence of AF",
-                type : 1001
+                label: "Presence of AF",
+                desc:"Presence of AF",
+                is_reportable:1,
+                type:1001
                 
             }
         );

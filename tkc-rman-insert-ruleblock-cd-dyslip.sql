@@ -51,7 +51,7 @@ BEGIN
         ldl_subopt : { (ldl_val/ldl_unl)>1.2 =>1},{=>0};
         
         
-        [[rb_id]] :  {(ascvd=1 and nvl(ldl_val,0)>1.8) or nvl(ldl_val,0)>4.9 or dyslip_code_dt!? => 1},{=>0};
+        [[rb_id]] :  {((ascvd=1 and nvl(ldl_val,0)>1.8)) or nvl(ldl_val,0)>4.9 or dyslip_code_dt!? => 1},{=>0};
   
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

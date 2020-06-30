@@ -513,7 +513,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <b><li>Atrial fibrillation</li></b>
         <ul>
             <li>Diagnosed <<af_dt />></li>
-            <li>CHA2DS2VASC score  : <<cha2ds2vasc />></li>
+            <<vhd=0>><li>Non-valvular AF</li><</vhd=0>>
+            <<vhd=1>><li>Valvular AF</li><</vhd=1>>
+            <<cha2ds2vasc>><li>CHA2DS2VASC score  : <<cha2ds2vasc />></li><</cha2ds2vasc>>
             <<rxn_anticoag>><li>Anticoagulation <<rxn_anticoag_dt />></li><</rxn_anticoag>>
             <<rxn_anticoag=0>><li>Not on anticoagulation </li><</rxn_anticoag=0>>
         </ul>
