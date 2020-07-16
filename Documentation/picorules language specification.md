@@ -207,13 +207,13 @@ SELECT
 ```clojure
 #<compiler_directive>(<ruleblock id>,<json object>);
 ```
-            - Picorules supports the following compiler directives
-                - define_ruleblock
-                - define_attribute
-                - doc
-            - define_ruleblock()
-                - This compiler directive is mandatory and defines meta-data used for compilation
-                - ```clojure
+   - Picorules supports the following compiler directives
+       - define_ruleblock
+       - define_attribute
+       - doc
+   - define_ruleblock()
+       - This compiler directive is mandatory and defines meta-data used for compilation
+ ```clojure
 #define_ruleblock(test1,
             {
                 description: "This is a test algorithm",
@@ -230,24 +230,28 @@ SELECT
                 filter : "6811"
                 
             }
-        );```
-                - The json object has the following properties
-                    - description
-                        - datatype : string
-                    - version
-                    - blockid: "test1",
-                    - target_table:"rout_test1",
-                    - environment:"DEV_2",
-                    - rule_owner:"TKCADMIN",
-                    - is_active:1,
-                    - def_exit_prop:"test1",
-                    - def_predicate:">0",
-                    - exec_order:1,
-                    - out_att : "test1",
-                    - filter : "6811"
-            - define_attribute()
-                - This compiler directive is used to define hyper-attributes
-                - ```clojure
+        );
+```
+
+
+  - The json object has the following properties
+      - description
+          - datatype : string
+      - version
+      - blockid: "test1",
+      - target_table:"rout_test1",
+      - environment:"DEV_2",
+      - rule_owner:"TKCADMIN",
+      - is_active:1,
+      - def_exit_prop:"test1",
+      - def_predicate:">0",
+      - exec_order:1,
+      - out_att : "test1",
+      - filter : "6811"
+- define_attribute()
+  - This compiler directive is used to define hyper-attributes
+              - 
+```clojure
 #define_attribute(
             test_attribute,
             {
@@ -279,6 +283,6 @@ SELECT
             - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIxMzA0MjA2MDIsODgwMTQ4NjY2LDEyMz
-MxMzQ1NjVdfQ==
+eyJoaXN0b3J5IjpbNTM1OTcxMjQzLDg4MDE0ODY2NiwxMjMzMT
+M0NTY1XX0=
 -->
