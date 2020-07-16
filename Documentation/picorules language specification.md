@@ -275,3 +275,6 @@ SELECT
             - compiled to SELECT * CASE WHEN ELSE FROM cte
             - results in a single hyper-attribute
 - Syntax specification
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbMTIzMzEzNDU2NV19
+-->
