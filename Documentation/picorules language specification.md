@@ -134,14 +134,14 @@ SELECT
     LEFT OUTER JOIN cte002 ON cte002.eid = cte000.eid
     LEFT OUTER JOIN cte003 ON cte003.eid = cte000.eid;
 ```
-        - ## 
-        - Functional statementConditional statement
-        - variable name followed by '=>' operatorvariable name followed by ':' operator
-        - -Must be preceeded by functional statements
-        - reads from eadv tabletransforms variables or applies boolean logic
-        - references attributes (and hyper-attributes if .where() function used)references only hyper attributes
-        - compiled to SELECT * FROM eadvcompiled to SELECT * CASE WHEN ELSE FROM cte
-        - results in a single hyper-attributeresults in a single hyper-attribute
+ 
+- Functional statementConditional statement
+- variable name followed by '=>' operatorvariable name followed by ':' operator
+- -Must be preceeded by functional statements
+- reads from eadv tabletransforms variables or applies boolean logic
+- references attributes (and hyper-attributes if .where() function used)references only hyper attributes
+- compiled to SELECT * FROM eadvcompiled to SELECT * CASE WHEN ELSE FROM cte
+- results in a single hyper-attributeresults in a single hyper-attribute
 - Requirements
     - Clinical information model
         - EADV model
@@ -204,8 +204,9 @@ SELECT
             
         - compiler directives
             - Compiler directives are used to define meta-data describing ruleblock and attribute properties. These statements are not compiled to SQL, but define how compilation is performed. The statements are identified by the following form.
-            - ```clojure
-#<compiler_directive>(<ruleblock id>,<json object>);```
+```clojure
+#<compiler_directive>(<ruleblock id>,<json object>);
+```
             - Picorules supports the following compiler directives
                 - define_ruleblock
                 - define_attribute
@@ -278,5 +279,6 @@ SELECT
             - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODgwMTQ4NjY2LDEyMzMxMzQ1NjVdfQ==
+eyJoaXN0b3J5IjpbLTIxMzA0MjA2MDIsODgwMTQ4NjY2LDEyMz
+MxMzQ1NjVdfQ==
 -->
