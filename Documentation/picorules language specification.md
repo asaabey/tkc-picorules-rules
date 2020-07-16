@@ -262,6 +262,7 @@ SELECT
             }
         );
 ```
+
                 - The json object has the following properties
                     label:"description of test attribute",
                     is_reportable:1,
@@ -286,6 +287,6 @@ SELECT
    - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc1NjgyMjUzMSw4ODAxNDg2NjYsMTIzMz
-EzNDU2NV19
+eyJoaXN0b3J5IjpbLTExMjE1NTg0NDMsODgwMTQ4NjY2LDEyMz
+MxMzQ1NjVdfQ==
 -->
