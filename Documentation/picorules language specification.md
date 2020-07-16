@@ -33,6 +33,7 @@
  ```javascript
 hb_last => eadv.lab_bld_haemoglobin.val.last();
 ```
+
  This is compiled into the following SQL statement
 ```cte001 AS (
     SELECT
@@ -133,7 +134,6 @@ SELECT
     LEFT OUTER JOIN cte002 ON cte002.eid = cte000.eid
     LEFT OUTER JOIN cte003 ON cte003.eid = cte000.eid;
 ```
-
         - ## 
         - Functional statementConditional statement
         - variable name followed by '=>' operatorvariable name followed by ':' operator
@@ -278,5 +278,5 @@ SELECT
             - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4OTYwOTk0MDcsMTIzMzEzNDU2NV19
+eyJoaXN0b3J5IjpbLTQ2NzMxMzE1LDEyMzMxMzQ1NjVdfQ==
 -->
