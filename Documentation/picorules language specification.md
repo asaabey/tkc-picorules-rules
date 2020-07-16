@@ -30,12 +30,11 @@
             - Conditional statements : operate on variables created by functional statements.
         - All statements must end with a semi-colon
         - example functional statement
-       ```javascript
+ ```javascript
 hb_last => eadv.lab_bld_haemoglobin.val.last();
 ```
-        - 
-        - This is compiled into the following SQL statement
-        - ```cte001 AS (
+ This is compiled into the following SQL statement
+```cte001 AS (
     SELECT
         eadv.eid,
         val,
@@ -132,7 +131,9 @@ SELECT
     cte003.is_anaemicFROM
     cte000
     LEFT OUTER JOIN cte002 ON cte002.eid = cte000.eid
-    LEFT OUTER JOIN cte003 ON cte003.eid = cte000.eid;```
+    LEFT OUTER JOIN cte003 ON cte003.eid = cte000.eid;
+```
+
         - ## 
         - Functional statementConditional statement
         - variable name followed by '=>' operatorvariable name followed by ':' operator
@@ -277,5 +278,5 @@ SELECT
             - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTk1ODcwOTU3NCwxMjMzMTM0NTY1XX0=
+eyJoaXN0b3J5IjpbLTE4OTYwOTk0MDcsMTIzMzEzNDU2NV19
 -->
