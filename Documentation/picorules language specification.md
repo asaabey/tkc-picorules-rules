@@ -201,7 +201,7 @@ SELECT
                 - FUNCTIONAL_EXPRESSION Class
                 - CONDITIONAL_EXPRESSION Class
                 - DYNAMIC_SQL_EXPRESSION Class
-            - 
+            
         - compiler directives
             - Compiler directives are used to define meta-data describing ruleblock and attribute properties. These statements are not compiled to SQL, but define how compilation is performed. The statements are identified by the following form.
             - ```clojure
@@ -278,5 +278,5 @@ SELECT
             - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ2NzMxMzE1LDEyMzMxMzQ1NjVdfQ==
+eyJoaXN0b3J5IjpbODgwMTQ4NjY2LDEyMzMxMzQ1NjVdfQ==
 -->
