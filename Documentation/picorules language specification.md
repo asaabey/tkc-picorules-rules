@@ -266,23 +266,26 @@ SELECT
                     label:"description of test attribute",
                     is_reportable:1,
                     type:2
-            - doc()
-                - This compiler directive is used to add documentation and citations
-        - functional statements
-            - variable name followed by '=>' operator
-            - reads from eadv table
-            - references attributes (and hyper-attributes if .where() function used)
-            - compiled to SELECT * FROM eadv
-            - results in a single hyper-attribute
-        - conditional statements
-            - variable name followed by ':' operator
-            - Must be preceeded by functional statements
-            - transforms variables or applies boolean logic
-            - references only hyper attributes
-            - compiled to SELECT * CASE WHEN ELSE FROM cte
-            - results in a single hyper-attribute
+
+
+
+- doc()
+       - This compiler directive is used to add documentation and citations
+- functional statements
+   - variable name followed by '=>' operator
+   - reads from eadv table
+   - references attributes (and hyper-attributes if .where() function used)
+   - compiled to SELECT * FROM eadv
+   - results in a single hyper-attribute
+- conditional statements
+   - variable name followed by ':' operator
+   - Must be preceeded by functional statements
+   - transforms variables or applies boolean logic
+   - references only hyper attributes
+   - compiled to SELECT * CASE WHEN ELSE FROM cte
+   - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNTM1OTcxMjQzLDg4MDE0ODY2NiwxMjMzMT
-M0NTY1XX0=
+eyJoaXN0b3J5IjpbMTc1NjgyMjUzMSw4ODAxNDg2NjYsMTIzMz
+EzNDU2NV19
 -->
