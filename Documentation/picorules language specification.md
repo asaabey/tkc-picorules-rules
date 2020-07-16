@@ -30,8 +30,9 @@
             - Conditional statements : operate on variables created by functional statements.
         - All statements must end with a semi-colon
         - example functional statement
-        - ```javascript
-hb_last => eadv.lab_bld_haemoglobin.val.last();```
+       ```javascript
+hb_last => eadv.lab_bld_haemoglobin.val.last();
+```
         - 
         - This is compiled into the following SQL statement
         - ```cte001 AS (
@@ -276,5 +277,5 @@ SELECT
             - results in a single hyper-attribute
 - Syntax specification
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIzMzEzNDU2NV19
+eyJoaXN0b3J5IjpbLTk1ODcwOTU3NCwxMjMzMTM0NTY1XX0=
 -->
