@@ -84,8 +84,6 @@ WITH cte000 AS (
         eid
     FROM
         eadv
-    WHERE
-        1 = 1
     GROUP BY
         eid
 ), cte001 AS (
@@ -134,13 +132,11 @@ WITH cte000 AS (
 SELECT
     cte000.eid,
     cte002.hb_last,
-    cte003.is_anaemic,
-    cte004.test2
+    cte003.is_anaemic
 FROM
     cte000
     LEFT OUTER JOIN cte002 ON cte002.eid = cte000.eid
-    LEFT OUTER JOIN cte003 ON cte003.eid = cte000.eid
-    LEFT OUTER JOIN cte004 ON cte004.eid = cte000.eid;
+    LEFT OUTER JOIN cte003 ON cte003.eid = cte000.eid;
 ```
 
 

@@ -258,6 +258,56 @@ BEGIN
 
         COMMIT;
     -- END OF RULEBLOCK --
+    
+        -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='test6';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Test  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a test algorithm",
+                version: "0.0.0.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"DEV_2",
+                rule_owner:"TKCADMIN",
+                is_active:0,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+        na_ser1 => eadv.lab_bld_sodium.val.serialize2().where(dt > sysdate-365);
+        
+        na_ser2 => eadv.lab_bld_sodium.val.serialize22().where(dt > sysdate-365);
+        
+        [[rb_id]] : {1=1 =>1};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "This is a test variable uics"
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

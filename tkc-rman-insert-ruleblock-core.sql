@@ -60,6 +60,18 @@ BEGIN
         
         ld => eadv.[icd%,icpc%,lab%,rxnc%].dt.max();
         
+        ts : { .=> round((ld-fd)/365,2)};
+        
+        icpc_d : { ts>0 => round(icpc_n/ts,2)};
+        
+        icd_d : { ts>0 => round(icd_n/ts,2)};
+        
+        lab_d : { ts>0 => round(lab_n/ts,2)};
+        
+        dmg_d : { ts>0 => round(dmg_n/ts,2)};
+        
+        rxnc_d : { ts>0 => round(rxnc_n/ts,2)};
+        
         icpc : { icpc_n>0 => 1},{=>0};
         
         icd : { icd_n>0 => 1},{=>0};
