@@ -156,7 +156,9 @@ BEGIN
         dm_rxn_ins_int => eadv.[rxnc_a10ac].dt.min().where(val=1);
         dm_rxn_ins_mix => eadv.[rxnc_a10ad].dt.min().where(val=1);
         dm_rxn_ins_short => eadv.[rxnc_a10ab].dt.min().where(val=1);
-        dm_rxn_bg => eadv.[rxnc_a10ba].dt.min().where(val=1);
+        dm_rxn_bg => eadv.rxnc_a10ba.dt.min().where(val=1);
+        
+        
         dm_rxn_dpp4 => eadv.[rxnc_a10bh].dt.min().where(val=1);
         dm_rxn_glp1 => eadv.[rxnc_a10bj].dt.min().where(val=1);
         dm_rxn_sglt2 => eadv.[rxnc_a10bk].dt.min().where(val=1);

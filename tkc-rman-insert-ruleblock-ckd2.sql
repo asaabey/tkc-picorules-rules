@@ -1636,7 +1636,7 @@ BEGIN
                 environment:"PROD",
                 rule_owner:"TKCADMIN",
                 rule_author:"asaabey@gmail.com",
-                is_active:2,
+                is_active:0,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:2

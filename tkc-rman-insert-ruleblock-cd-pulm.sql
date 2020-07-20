@@ -38,7 +38,7 @@ BEGIN
             }
         );
         
-        code_copd_dt => eadv.[icpc_r95%].dt.max();
+        code_copd_dt => eadv.[icpc_r95%,icd_j44%].dt.max();
         
         rx_r03_dt => eadv.[rxnc_r03%].dt.max().where(val=1);
         
