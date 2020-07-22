@@ -563,7 +563,7 @@ BEGIN
                 label: "Presence of AF",
                 desc:"Presence of AF",
                 is_reportable:1,
-                type:1001
+                type:2
                 
             }
         );
