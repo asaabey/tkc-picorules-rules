@@ -130,15 +130,17 @@ BEGIN
             
         );
 
+        ln_zero_ex1 : { nvl(least(age,tc,hdl,sbp),0)=0 => 1},{=>0};
         
-        risk_5_chd : {risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
+        risk_5_chd : {risk_high_ovr=0 and ln_zero_ex1=0 => 
+            round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
             (-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+(-0.2767*smoke)+(-0.7181*LN(tc/hdl))+
             (-0.1759*1)+(-0.1999*1*(1-male))+(-0.5865*0)+(0*0*male)))/(EXP(0.9145)*EXP(-0.2784*(15.5305+(28.4441*(1-male))+
             (-1.4792*LN(age))+(0*LN(age)*LN(age))+(-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+
             (-0.2767*smoke)+(-0.7181*LN(tc/hdl))+(-0.1759*1)+(-0.1999*1*(1-male))+(-0.5865*0)+(0*0*male))))))),2)
         };
         
-        risk_5_mi : { risk_high_ovr=0 and nvl(hdl,0)>0 => round(100*(1-EXP(-EXP((LN(5)-(11.4712+(10.5109*(1-male))+(-0.7965*LN(age))+(0*LN(age)*LN(age))+
+        risk_5_mi : { risk_high_ovr=0 and ln_zero_ex1=0 => round(100*(1-EXP(-EXP((LN(5)-(11.4712+(10.5109*(1-male))+(-0.7965*LN(age))+(0*LN(age)*LN(age))+
             (-5.4216*LN(age)*(1-male))+(0.7101*LN(age)*LN(age)*(1-male))+(-0.6623*LN(sbp))+(-0.2675*smoke)+(-0.4277*LN(tc/hdl))+
             (-0.1534*dm)+(-0.1165*dm*(1-male))+(0*lvh)+(-0.1588*lvh*male)))/(EXP(3.4064)*EXP(-0.8584*(11.4712+(10.5109*(1-male))+
             (-0.7965*LN(age))+(0*LN(age)*LN(age))+(-5.4216*LN(age)*(1-male))+(0.7101*LN(age)*LN(age)*(1-male))+(-0.6623*LN(sbp))+

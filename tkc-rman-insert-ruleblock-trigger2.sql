@@ -647,7 +647,7 @@ BEGIN
         
         ckd_stage =>rout_ckd.ckd_stage.val.bind();
         
-        avf => rout_ckd.avf.val.bind();
+        avf => rout_ckd.avf_has.val.bind();
         
         eb => rout_ckd.egfr_slope2.val.bind();
         

@@ -57,7 +57,7 @@ BEGIN
         
         htn => rout_cd_htn.htn.val.bind();
         
-        cad => rout_cd_cardiac.cardiac.val.bind();
+        cad => rout_cd_cardiac_cad.cad.val.bind();
         
         obesity => rout_cd_obesity.cd_obesity.val.bind();
         

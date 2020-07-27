@@ -249,7 +249,7 @@ BEGIN
         
         bpc => rout_cd_htn.bp_control.val.bind();
         
-        cad => rout_cd_cardiac.cardiac.val.bind();
+        cad => rout_cd_cardiac_cad.cad.val.bind();
         #doc(,
             {
                 txt:"Gather existing medications",
