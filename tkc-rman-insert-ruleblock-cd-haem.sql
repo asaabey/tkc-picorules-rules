@@ -69,9 +69,13 @@ BEGIN
         
         #define_attribute([[rb_id]],
             { 
-                label: "Presence of haematological disease"
+                label: "Presence of haematological disease",
+                is_reportable:1,
+                type:2
             }
         );
+        
+        
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

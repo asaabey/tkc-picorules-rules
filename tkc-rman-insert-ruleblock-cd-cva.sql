@@ -34,7 +34,7 @@ BEGIN
                 is_active:2,
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
-                exec_order:5
+                exec_order:1
                 
             }
         );
@@ -53,6 +53,16 @@ BEGIN
         
         [[rb_id]] :  {cva_dt!? => 1},{=>0};
         
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Stroke",
+                desc:"Presence of haemorrhagic or thromboembolic stroke",
+                is_reportable:1,
+                type:2
+            }
+        );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
