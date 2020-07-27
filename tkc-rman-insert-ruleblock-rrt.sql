@@ -36,7 +36,7 @@ BEGIN
                 def_exit_prop:"[[rb_id]]",
                 def_predicate:">0",
                 exec_order:1,
-                filter: "SELECT eid FROM rout_core_info_entropy WHERE icd=1 or icpc=1"
+                filter: ""
                 
             }
         );

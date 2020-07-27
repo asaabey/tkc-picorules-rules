@@ -47,6 +47,9 @@ alter package rman_pckg compile;
 --Compile rules
 execute rman_pckg.compile_active_ruleblocks;
 
+--drop rout & rt tables
+execute TKC.rman_pckg.drop_rout_tables_direct;
+
 
 
 
