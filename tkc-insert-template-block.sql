@@ -77,7 +77,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<laynhapuy_n>><i>LAYNHAPUY encounters (N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
             <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
             <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
-
+            ,within last 3 years
     <</dmg_source>>
     </div>
     <hr />
@@ -297,8 +297,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <ul>
 
         <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>></li><</dm_type=1>>
-        <<dm_type=2>><li><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>></li><</dm_type=2>>
+        <<dm_type=2>><li><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><<dm2_mm_3>> ? <</dm2_mm_3>><<dm2_mm_4>> ? <</dm2_mm_4>></li><</dm_type=2>>
         <ul>
+            <<dm2_mm_3>><li>Dm2 codes predate pre-diabetes</li> <</dm2_mm_3>>
+            <<dm2_mm_4>><li>Codes suggestive of non type 1 or non-type 2</li> <</dm2_mm_4>>
             <<dm_mixed>><li>coded as type 1? on <<dm1_fd />></li><</dm_mixed>>
             <<dm_fd_year>><li>since <<dm_fd_year />></li><</dm_fd_year>>
             <<dm_dx_uncoded>><li>not coded on primary care EHR</li><</dm_dx_uncoded>>
@@ -369,22 +371,24 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <ul>
         <li><b>Hypertension</b>
         <ul>
-            <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
+            <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_from_obs>> from observations <</htn_from_obs>> <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
             <<mu_1>><li>Average systolic BP during last year was <<mu_1 />> mmHg</li><</mu_1>>
-
+            <li><<sbp_outdated=1>>No readings within last two years<</sbp_outdated=1>></li>
+            <<sbp_outdated=0>>
             <li>
+                
                 <<bp_trend=0>>No comment on the trend<</bp_trend=0>>
                 <<bp_trend=1>>Hypertension control appears to have improved compared to last year<</bp_trend=1>>
                 <<bp_trend=2>>Hypertension control appears to have worsened compared to last year<</bp_trend=2>>        
 
             </li>
-
+            
 
             <<bp_control=3>><li>BP control appears to be adequate</li><</bp_control=3>>
             <<bp_control=2>><li>BP control can be optimised</li><</bp_control=2>>
             <<bp_control=1>><li>BP control appears to sub-optimal</li><</bp_control=1>>
             <<bp_control=0>><li>could not be determined</li><</bp_control=0>>
-
+            <</sbp_outdated=0>>
             <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
             <ul>
                 <<htn_rxn_arb>><li>Angiotensin receptor blocker (ARB)</li><</htn_rxn_arb>>
@@ -1127,7 +1131,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
               stroke-width="49"
               stroke-dasharray="<<tir_arc />> <<circum />>"
               />
-        <text x="70" y="150" style="font-size:24px;">Time in range % <<tir_pct />>%</text>
+        <text x="70" y="150" style="font-size:18px;">Time in range % <<tir_pct />>%</text>
 
     </svg>
     </div>

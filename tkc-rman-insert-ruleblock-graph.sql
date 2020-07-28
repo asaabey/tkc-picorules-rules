@@ -205,7 +205,7 @@ BEGIN
             
             
             
-            [[rb_id]] : { (htn >0 and sigma_1 >1) or rrt>0 =>1},{=>0};
+            [[rb_id]] : { htn >0  or rrt>0 =>1},{=>0};
             
             
             

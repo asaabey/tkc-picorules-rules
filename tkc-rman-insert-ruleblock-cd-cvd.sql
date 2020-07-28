@@ -273,6 +273,8 @@ BEGIN
                 }
             );  
             
+            
+            
             rhd_dt => eadv.[icd_i05%,icd_i06%,icd_i07%,icd_i08%,icd_i09%,icpc_k71%].dt.min();
             
             rhd_aet : {rhd_dt!? => 1},{=>0};
@@ -789,6 +791,65 @@ BEGIN
                 {
                     label:"cardiac outpatient encounter",
                     desc:"Presence of cardiac outpatient encounter",
+                    is_reportable:1,
+                    type:2
+                }
+            );
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_cardiac_rhd';
+
+    
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess rheumatic heart disease  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess rheumatic heart disease",
+                version: "0.1.2.1",
+                blockid: "[[rb_id]]",
+                target_table:"rout_[[rb_id]]",
+                environment:"PROD",
+                rule_owner:"TKCADMIN",
+                rule_author:"asaabey@gmail.com",
+                is_active:2,
+                def_exit_prop:"[[rb_id]]",
+                def_predicate:">0",
+                exec_order:1
+                
+            }
+        );
+        
+            #doc(,
+                {
+                    txt:"rheumatic heart disease based on coding"
+                }
+            );  
+            
+            rhd_dt => eadv.[icd_i05%,icd_i06%,icd_i07%,icd_i08%,icd_i09%,icpc_k71%].dt.min();
+            
+            rhd_aet : {rhd_dt!? => 1},{=>0};
+           
+            [[rb_id]] : {. => rhd_aet};
+            
+            #define_attribute(
+            [[rb_id]],
+                {
+                    label:"rheumatic heart disease",
+                    desc:"Presence of rheumatic heart disease",
                     is_reportable:1,
                     type:2
                 }

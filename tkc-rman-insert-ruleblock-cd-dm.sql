@@ -73,15 +73,25 @@ BEGIN
         
         dm1_fd : {.=> least_date(dm1_icd_fd,dm1_icpc_fd) };
         
-        dm2_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e11%,icd_e14%].dt.min();
+        dm2_icd_fd => eadv.[icd_e08%,icd_e11%,icd_e14%].dt.min();
         
         dm2_icpc_fd => eadv.icpc_t90%.dt.min();
         
         dm2_fd : {.=> least_date(dm2_icd_fd,dm2_icpc_fd) };
         
+        dm3_icd_fd => eadv.icd_e09%.dt.min();
+               
+        dm3_fd : {.=> dm3_icd_fd };
+        
+        predm_icpc_fd => eadv.icpc_a91011.dt.min();
+        
+        predm_icd_fd => eadv.icd_r73_03%.dt.min();
+        
+        predm_fd : {.=>least_date(predm_icd_fd,predm_icpc_fd)};
+        
         dm_mixed : { dm1_fd!? and dm2_fd!? => 1},{=>0};
         
-        dm_icd_fd : {.=> least_date(dm1_icd_fd,dm2_icd_fd) };
+        dm_icd_fd : {.=> least_date(dm1_icd_fd,dm2_icd_fd,dm3_icd_fd) };
         
         dm_icpc_fd : {.=> least_date(dm1_icpc_fd,dm2_icpc_fd) };
         
@@ -213,6 +223,10 @@ BEGIN
         dm2_mm_1 : { dm=1 and dm_type_1=0 and dm_rxn=0 and gluc_hba1c_val<6 =>1 },{=>0};
         
         dm2_mm_2 : { dm=1 and dm_type_1=0 and gluc_hba1c_high_f_dt!? and dm_lab=0 =>1 },{=>0};
+        
+        dm2_mm_3 : { predm_fd > dm2_fd =>1},{=>0};
+        
+        dm2_mm_4 : { dm3_fd!? and dm2_fd? and dm1_fd? and predm_fd? =>1},{=>0};
         
         cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_lab*100 + dm_rxn*10};
         

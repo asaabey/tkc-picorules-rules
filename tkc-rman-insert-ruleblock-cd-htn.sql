@@ -129,6 +129,8 @@ BEGIN
         
         htn_type_2 => eadv.[icd_i15_%].dt.count(0);
         
+        htn_from_obs : { htn_fd_obs<htn_fd_code =>1},{htn_fd_obs!? and htn_fd_code? =>1},{=>0};
+        
         #doc(,
             {
                 txt:"Hypertension chronology"
@@ -156,16 +158,18 @@ BEGIN
         );
         
         
-        sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365); 
+        sigma_2 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-730 and dt<sysdate-365); 
         mu_2 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
         
-        sigma_1 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-365); 
+        sigma_1 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-365); 
         mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
         slice140_1_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-365);
         slice140_1_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-365);
         
+        
+        sbp_outdated : {nvl(greatest(sigma_2,sigma_1),0)=0 => 1},{=>0};
         
         #doc(,
             {

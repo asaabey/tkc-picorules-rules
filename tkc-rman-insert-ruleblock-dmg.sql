@@ -389,7 +389,10 @@ BEGIN
         loc_last_2y => eadv.dmg_location.val.serializedv2(substr(val,2)~dt).where(dt>sysdate-365 and substr(val,-1)=1);
         
         
+        
         loc_def : {loc_last_val=loc_last_1_val and last_dt-last_1_dt>90 => loc_last_val},{=>loc_mode_def}
+        
+        loc_def_fd => eadv.dmg_location.dt.min().where(substr(val,2)=loc_last_val);
         
         loc_district : {loc_def!? => substr(loc_def,4,2)};
         
