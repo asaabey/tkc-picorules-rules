@@ -47,7 +47,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
                 }
 
+                #toggleView {
+                    display: none;
+                }
 
+                #toggleView:target {
+                    display: block;
+                }
+                
                 .body {
                     font-family:Arial, Helvetica, sans-serif;
                 }
@@ -715,8 +722,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (24,'cd_ckd_dx_1','ckd_diagnostics','
     <ul>
-    <li>Diagnostic workup
-    <ul>
+    <li>Diagnostic workup <a href="#toggleView">+</a>
+    <ul id="toggleView">
     <li>Basic urinalysis
     <<ua_null=1>> not performed <</ua_null=1>>
     <<ua_rbc_ld>> last performed on <<ua_rbc_ld />> and shows<</ua_rbc_ld>>
@@ -732,6 +739,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <li>SFLC assay: <<sflc_null=1>>not performed <</sflc_null=1>><<sflc_null=0>><<sflc_kappa_ld>>last performed on <</sflc_kappa_ld>><<sflc_kappa_ld />><</sflc_null=0>></li>
     <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
     <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
+     <a href="#">collapse</a>
     </ul>
     </li>
     </ul>
