@@ -442,17 +442,7 @@ BEGIN
      
      #define_ruleblock(ckd_cause,
             {
-                description: "Rule block to determine causality for CKD",
-                version: "0.0.2.2",
-                blockid: "ckd_cause",
-                target_table:"rout_ckd_cause",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"ckd_cause",
-                def_predicate:">0",
-                exec_order:3
+                description: "Rule block to determine causality for CKD"
                 
             }
     );
@@ -660,9 +650,10 @@ BEGIN
             }
         );
           
-        enc_n => eadv.enc_op_renal.dt.count();
-        enc_ld => eadv.enc_op_renal.dt.max();
-        enc_fd => eadv.enc_op_renal.dt.min();
+        enc_n => eadv.[enc_op_ren,enc_op_rdu].dt.count();
+        enc_ld => eadv.[enc_op_ren,enc_op_rdu].dt.max();
+        enc_fd => eadv.[enc_op_ren,enc_op_rdu].dt.min();
+        
         avf => eadv.caresys_3450901.dt.max();
         
         cp_l => eadv.careplan_h9_v1.val.lastdv();
