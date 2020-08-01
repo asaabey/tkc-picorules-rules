@@ -267,27 +267,18 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Test  */
         
         #define_ruleblock([[rb_id]],
             {
                 description: "This is a test algorithm",
-                version: "0.0.0.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:0,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
+                is_active:0
                 
             }
         );
         
-        na_ser1 => eadv.lab_bld_sodium.val.serialize2().where(dt > sysdate-365);
+        na_ser1 => eadv.lab_bld_sodium.val.serializedv3(val,dt,10).where(dt>sysdate-730);
         
-        na_ser2 => eadv.lab_bld_sodium.val.serialize22().where(dt > sysdate-365);
+        
         
         [[rb_id]] : {1=1 =>1};
         

@@ -39,7 +39,7 @@
 
 
 --Init citations
-@"tkc-create-rman-ruleblocks-citations.sql";
+@"tkc-insert-citations.sql";
 
 --Re-init Rman package
 alter package rman_pckg compile;
