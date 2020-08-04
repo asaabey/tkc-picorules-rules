@@ -276,7 +276,7 @@ BEGIN
             }
         );
         
-        na_ser1 => eadv.lab_bld_sodium.val.serializedv3(val,dt,10).where(dt>sysdate-730);
+        na_ser1 => eadv.lab_bld_sodium._.serializedv4(val,dt,5).where(dt>sysdate-(365*3));
         
         
         
