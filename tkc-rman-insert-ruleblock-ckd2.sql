@@ -723,20 +723,10 @@ BEGIN
     
         /* Rule block to determine diagnostics */
         
-        #define_ruleblock(ckd_diagnostics,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine diagnostics",
-                version: "0.0.2.1",
-                blockid: "ckd_diagnostics",
-                target_table:"rout_ckd_diagnostics",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"ckd_dx",
-                def_predicate:">0",
-                exec_order:3
-                
+                version: "0.0.2.1"
             }
         );
              
@@ -762,19 +752,20 @@ BEGIN
                 
         sflc_kappa_lv => eadv.lab_bld_sflc_kappa.val.last();
         sflc_lambda_lv => eadv.lab_bld_sflc_lambda.val.last();
-        sflc_kappa_ld => eadv.lab_bld_sflc_kappa.dt.max();
-        sflc_lambda_ld => eadv.lab_bld_sflc_lambda.dt.max();
+        sflc_kappa_ld => eadv.[lab_bld_sflc_kappa,lab_code_c332x].dt.max();
+        sflc_lambda_ld => eadv.[lab_bld_sflc_lambda,lab_code_c332x].dt.max();
+        
         
         paraprot_lv => eadv.lab_bld_spep_paraprotein.val.last();
-        paraprot_ld => eadv.lab_bld_spep_paraprotein.dt.max();
+        paraprot_ld => eadv.[lab_bld_spep_paraprotein,lab_code_c331n].dt.max();
         
         pr3_lv => eadv.lab_bld_anca_pr3.val.last();
         mpo_lv => eadv.lab_bld_anca_mpo.val.last();
-        pr3_ld => eadv.lab_bld_anca_pr3.dt.max();
-        mpo_ld => eadv.lab_bld_anca_mpo.dt.max();
+        pr3_ld => eadv.[lab_bld_anca_pr3,lab_code_c314v].dt.max();
+        mpo_ld => eadv.[lab_bld_anca_mpo,lab_code_c314v].dt.max();
         
         dsdna_lv => eadv.lab_bld_dsdna.val.last();
-        dsdna_ld => eadv.lab_bld_dsdna.dt.max();
+        dsdna_ld => eadv.[lab_bld_dsdna,lab_code_c331b].dt.max();
         
         c3_lv => eadv.lab_bld_complement_c3.val.last();
         c4_lv => eadv.lab_bld_complement_c4.val.last();
@@ -783,7 +774,9 @@ BEGIN
         c4_ld => eadv.lab_bld_complement_c4.dt.max();
         
         ris_usk_ld => eadv.enc_ris_usk.dt.max();
-        ris_bxk_ld => eadv.enc_ris_bxk.dt.max();
+        ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141].dt.max();
+        
+        
         
         c3_pos : { nvl(c3_lv,0)<0.2 and nvl(c3_lv,0)>0 => 1},{=>0};
         c4_pos : { nvl(c4_lv,0)<0.2 and nvl(c4_lv,0)>0 => 1},{=>0};
@@ -826,12 +819,13 @@ BEGIN
         
         
         
-        bxk_null : { ris_bxk_ld is null =>1},{=>0};
+        bxk_null : { ris_bxk_ld?  =>1},{=>0};
         
         
-        ckd_dx : {ckd>=1 => 1},{=>0};
+        [[rb_id]] : {ckd>=1 => 1},{=>0};
      
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
