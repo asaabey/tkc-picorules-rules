@@ -10,235 +10,6 @@ DECLARE
 
 BEGIN
      
-
-    -- BEGINNING OF RULEBLOCK --
-    
-        
-    rb.blockid:='ckd_c_gn';
-   
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-     /* Rule block to determine CKD by cause */ 
-     
-     
-     #define_ruleblock([[rb_id]],
-            {
-                description: "Rule block to determine CKD by cause",
-                is_active:0
-                
-            }
-     );
-     
-     #doc(,{txt :"
-        Chronic glomerular injury or suggestive of
-     "});
-     
-     
-     gn_ln => eadv.icd_m32_14.dt.min(); 
-     
-     gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
-     
-     #doc(,{txt :"
-        N00  U88007 Acute nephritic syndrome
-        N01  Rapidly progressive nephritic syndrome
-        N02  Recurrent and persistent hematuria
-        N03  U88008 Chronic nephritic syndrome
-        N04  U88003 U88002  Nephrotic syndrome
-        N05  U88005	U88004  Unspecified nephritic syndrome
-        N06  Isolated proteinuria with specified morphological lesion
-        N07  Hereditary nephropathy not elsewhere classified
-        N08  U88001 Glomerular disorders in diseases classified elsewhere
-     "});
-     
-     c_n00 => eadv.[icd_n00%,icpc_u88007].dt.min();
-     
-     c_n01 => eadv.[icd_n01%].dt.min();
-     
-     c_n03 => eadv.[icd_n03%,icpc_u88007].dt.min();
-     
-     c_n04 => eadv.[icd_n04%,icpc_u88003,icpc_u88002].dt.min();
-     
-     c_n05 => eadv.[icd_n05%,icpc_u88004,icpc_u88005].dt.min();
-     
-     c_n07 => eadv.[icd_n07%].dt.min();
-     
-     c_n08 => eadv.[icd_n08%,icpc_u88001].dt.min();
-     
-     c_u88 => eadv.[icpc_u88005].dt.min();
-     
-     
-     
-     #doc(,{txt :"
-        N10  Acute pyelonephritis
-        N11  Chronic tubulo-interstitial nephritis
-        N12  Tubulo-interstitial nephritis not specified as acute or chronic
-        N13  Obstructive and reflux uropathy
-        N14  Drug- and heavy-metal-induced tubulo-interstitial and tubular conditions
-        N15  Other renal tubulo-interstitial diseases
-        N16  Renal tubulo-interstitial disorders in diseases classified elsewhere
-     "});
-     
-     
-     c_n10_n16 => eadv.[icd_n10%,icd_n11%,icd_n12%,icd_n13%,icd_n14%,icd_n15%,icd_n16%].dt.min();
-     
-     
-     #doc(,{txt :"
-        N17  Acute kidney failure
-        N18  Chronic kidney disease (CKD)
-        N19  Unspecified kidney failure
-     "});
-
-     c_n17 => eadv.[icd_n17%].dt.min();
-     
-     
-     #doc(,{txt :"
-        N20  Calculus of kidney and ureter
-        N21  Calculus of lower urinary tract
-        N22  Calculus of urinary tract in diseases classified elsewhere
-        N23  Unspecified renal colic
-     "});
-     
-     c_n20_n23 => eadv.[icd_n20%,icd_n21%,icd_n22%,icd_n23%].dt.min();
-     
-     #doc(,{txt :"
-        N25  Disorders resulting from impaired renal tubular function
-        N26  Unspecified contracted kidney
-        N27  Small kidney of unknown cause
-        N28  Other disorders of kidney and ureter not elsewhere classified
-        N29  Other disorders of kidney and ureter in diseases classified elsewhere
-     "});
-     
-     c_n26_n27 => eadv.[icd_n26%,icd_n27%].dt.min();
-     
-     #doc(,{txt :"
-        N30  Cystitis
-        N31  Neuromuscular dysfunction of bladder not elsewhere classified
-        N32  Other disorders of bladder
-        N33  Bladder disorders in diseases classified elsewhere
-        N34  Urethritis and urethral syndrome
-        N35  Urethral stricture
-        N36  Other disorders of urethra
-        N37  Urethral disorders in diseases classified elsewhere
-        N39  Other disorders of urinary system
-     "});
-     
-     
-     c_n30_n39 => eadv.[icd_n3%].dt.min();
-     
-     #doc(,{txt :"
-        N40  Benign prostatic hyperplasia
-     "}); 
-     
-     c_n40 => eadv.[icd_n40%].dt.min();
-     
-     #doc(,{txt :"
-        Q60  Renal agenesis and other reduction defects of kidney
-        Q61  Cystic kidney disease
-        Q62  Congenital obstructive defects of renal pelvis and congenital malformations of ureter
-        Q63  Other congenital malformations of kidney
-        Q64  Other congenital malformations of urinary system
-        "
-     });
-     
-     c_q60 => eadv.[icd_q60%].dt.min();
-     
-     c_q61 => eadv.[icd_q61%].dt.min();
-     
-     c_q62 => eadv.[icd_q62%].dt.min();
-     
-     c_q63 => eadv.[icd_q63%].dt.min();
-     
-     c_q64 => eadv.[icd_q64%].dt.min();
-     
-     
-     aet_dm : {ckd>0 and dm>0 =>1},{=>0};
-     
-     #doc(,
-        {
-            txt :"CKD due to structural and Genetic disease needs to be included here"
-        }
-        
-     );
-     
-     
-     #define_attribute(
-            aet_dm,
-            {
-                label:"CKD aetiology likely diabetes",
-                desc:"Integer [0-1] if CKD aetiology likely diabetes ",
-                is_reportable:1,
-                type:2
-            }
-     );
-     
-     aet_htn : {ckd>0 and htn>0 and dm=0 =>1},{=>0};
-     
-     #define_attribute(
-            aet_htn,
-            {
-                label:"CKD aetiology likely hypertension",
-                desc:"Integer [0-1] if CKD aetiology likely hypertension",
-                is_reportable:1,
-                type:2
-            }
-     );
-     
-     aet_gn_ln : {ckd>0 and gn_ln>0 =>1},{=>0};
-     
-     #define_attribute(
-            aet_gn_ln,
-            {
-                label:"CKD aetiology likely Lupus nephritis",
-                desc:"Integer [0-1] if CKD aetiology likely Lupus nephritis ",
-                is_reportable:1,
-                type:2
-            }
-     );
-     
-     aet_gn_x : {ckd>0 and gn_x>0 and dm=0 =>1},{=>0};
-     
-     #define_attribute(
-            aet_gn_x,
-            {
-                label:"CKD aetiology likely other GN",
-                desc:"Integer [0-1] if CKD aetiology likely other GN ",
-                is_reportable:1,
-                type:2
-            }
-     );
-
-     aet_cardinality : { ckd>0 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
-     
-     aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
-     
-     #doc(,
-        {
-            txt :"Determine causality"
-        }
-        
-    );
-     
-     [[rb_id]] : { ckd>0 and greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
-     
-     
-     #define_attribute(
-            ckd_cause,
-            {
-                label:"CKD cause",
-                desc:"Integer [0-1] if CKD aetiology found ",
-                is_reportable:0,
-                type:2
-            }
-    );
-    ';
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    -- END OF RULEBLOCK --
-    
-    -- BEGINNING OF RULEBLOCK --
     
         
     rb.blockid:='ckd_cause';
@@ -1562,6 +1333,19 @@ BEGIN
         
         pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
         
+        #doc(,
+            {
+                txt : "Evidence of renal injury satisfying ckd without G and A"
+            }
+        );
+        
+        c_gn => rout_ckd_c_gn.ckd_c_gn.val.bind();
+        
+        c_tid => rout_ckd_c_tid.ckd_c_tid.val.bind();
+        
+        c_rnm => rout_ckd_c_rnm.ckd_c_rnm.val.bind();
+        
+        c_crit : { greatest(c_gn,c_tid,c_rnm)>0 =>1},{=>0};
         
         #doc(,
             {
@@ -1579,6 +1363,15 @@ BEGIN
                 {egfr_l_val<30 AND egfr_l_val>=15  AND rrt=0 => `G4`},
                 {egfr_l_val<15 AND rrt=0 => `G5`},
                 {=>`NA`};
+                
+                
+        cga_g_val:  {egfr_l_val>=90 AND rrt=0 => 1},
+                {egfr_l_val<90 AND egfr_l_val>=60  AND rrt=0 => 2},
+                {egfr_l_val<60 AND egfr_l_val>=45  AND rrt=0 => 3},
+                {egfr_l_val<45 AND egfr_l_val>=30  AND rrt=0 => 4},
+                {egfr_l_val<30 AND egfr_l_val>=15  AND rrt=0 => 5},
+                {egfr_l_val<15 AND rrt=0 => 6},
+                {=>0};
             
         cga_a: {acr_l_val<3 => `A1`},
                 {acr_l_val<30 AND acr_l_val>=3 => `A2`},
@@ -1596,15 +1389,23 @@ BEGIN
             }
         );
         
-        
-        
-        ckd_stage :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => `1`},
-                {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => `2`},
-                {cga_g=`G3A` => `3A`},
-                {cga_g=`G3B` => `3B`},
-                {cga_g=`G4` => `4`},
-                {cga_g=`G5` => `5`},
+        ckd_stage :{cga_g_val=1 and (cga_a_val>1 or c_crit=1) => `1`},
+                {cga_g_val=2 and (cga_a_val>1 or c_crit=1) => `2`},
+                {cga_g_val=3 => `3A`},
+                {cga_g_val=4 => `3B`},
+                {cga_g_val=5 => `4`},
+                {cga_g_val=6 => `5`},
                 {=> null};
+        
+                
+        ckd_stage_val :{cga_g_val=1 and (cga_a_val>1 or c_crit=1) => 1},
+                {cga_g_val=2 and (cga_a_val>1 or c_crit=1) => 2},
+                {cga_g_val=3 => 3},
+                {cga_g_val=4 => 4},
+                {cga_g_val=5 => 5},
+                {cga_g_val=6 => 6},
+                {=> 0};
+            
         #doc(,
             {
                 txt : "KDIGO 2012 numeric composite attribute"
