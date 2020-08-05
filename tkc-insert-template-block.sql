@@ -1188,3 +1188,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
    </ul>
 
 ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (153,'ckd_labs_ga','ckd_labs_ga','
+   
+   
+   <hr/> 
+   <div class="syn_synopsis_box">
+   <h3>GA Labs</h3>
+        <<egfr />>
+        <<creat />>
+        <<uacr />>
+   </div>
+
+');
