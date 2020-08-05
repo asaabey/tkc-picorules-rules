@@ -2,6 +2,8 @@ REM INSERTING into RMAN_RPT_TEMPLATE_BLOCKS
 
 SET DEFINE OFF;
 
+TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
     <style>
                 .syn_alert_box {
@@ -207,6 +209,25 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         </ul>
     </li>
     <</rrt=1>>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (160,'rrt_hd_acc_iv','rrt_hd_acc_iv','
+    
+    <ul>
+    <li><b>Vascular access surveillance</b>
+        <ul>
+            <<av_us_ld>><li>Last US fistulogram <<av_us_ld />></li><</av_us_ld>>
+            <<av_gram_ld>><li>Last DSA fistulogram <<av_gram_ld />></li><</av_gram_ld>>
+            <<av_plasty_ld>><li>DSA fistuloplasty [<<av_plasty_ld />>-<<av_plasty_1_ld />>][<<av_plasty_n />>]</li><</av_plasty_ld>>
+            <<av_plasty_ld>><li>
+                <<iv_periodicity=99>>Periodicity cannot be determined<</iv_periodicity=99>>
+                <<iv_periodicity=3>>Periodicity 3 monthly<</iv_periodicity=3>>
+                <<iv_periodicity=6>>Periodicity 6 monthly<</iv_periodicity=6>>
+                <<iv_periodicity=12>>Periodicity yearly<</iv_periodicity=12>>
+                
+            </li><</av_plasty_ld>>
+        </ul>
+    </li>
+    </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (16,'rrt_2_syn','rrt','
     <<rrt=2>>
@@ -732,7 +753,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>>
         <<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>>
     <</ua_null=0>></li>
-    <li>ANA Serology: <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>> and is <</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
+    <li>ANA Serology: <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>>;<</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
     <li>ANCA Serology: <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld />><</anca_null=0>></li>
     <li>Complements: <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld />><</c3c4_null=0>></li>
     <li>Serum PEP: <<spep_null=1>>not performed <</spep_null=1>><<spep_null=0>><<paraprot_ld>>last performed on <</paraprot_ld>><<paraprot_ld />><</spep_null=0>></li>

@@ -773,8 +773,8 @@ BEGIN
         c3_ld => eadv.lab_bld_complement_c3.dt.max();
         c4_ld => eadv.lab_bld_complement_c4.dt.max();
         
-        ris_usk_ld => eadv.enc_ris_usk.dt.max();
-        ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141].dt.max();
+        ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney].dt.max();
+        ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney].dt.max();
         
         
         

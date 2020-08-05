@@ -449,6 +449,77 @@ BEGIN
    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
     -- END OF RULEBLOCK --
+    
+        
+      -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='rrt_hd_acc_iv';
+
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine Fistula intervention*/
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Rule block to determine Tx metrics",
+                is_active:2,
+                filter: "SELECT eid FROM rout_rrt WHERE rrt IN (1,4)"
+                
+            }
+        );
+
+        #doc(,
+            {
+                txt : "Intervntion codes from RIS episodes"
+            }
+        );
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        avf_us_ld => eadv.ris_code_usavfist.dt.last();
+        
+        av_gram_ld => eadv.ris_code_dshfist.dt.last();
+        
+        av_plasty_ld => eadv.ris_code_dshplas1.dt.last();
+        
+        av_plasty_1_ld => eadv.ris_code_dshplas1.dt.last(1);
+        
+        av_plasty_fd => eadv.ris_code_dshplas1.dt.first();
+        
+        av_plasty_n => eadv.ris_code_dshplas1.dt.count();
+        
+        av_surv_ld : {.=> greatest(avf_us_ld,av_gram_ld,av_plasty_ld)};
+        
+        plasty_gap : {.=> av_plasty_ld-av_plasty_1_ld};
+        
+        iv_periodicity : {plasty_gap between 0 and 100 => 3},
+                        {plasty_gap between 100 and 200 => 6},
+                        {plasty_gap between 200 and 600 => 12},
+                        {plasty_gap >400 or plasty_gap?=> 99};
+                        
+        av_iv : {av_plasty_ld!? => 1},{=>0};
+        
+        [[rb_id]] : { rrt in (1,4) and av_surv_ld!?=>1},{=>0};
+        
+        #define_attribute(
+            [[rb_id]] ,
+            {
+                label:"AV fistuloplasty",
+                is_reportable:1,
+                type:2
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
 END;
 
 
