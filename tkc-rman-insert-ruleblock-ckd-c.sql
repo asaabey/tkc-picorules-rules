@@ -86,7 +86,7 @@ BEGIN
      #define_attribute(
             [[rb_id]],
             {
-                label:"Glomerulonephritis (GN) Acute or Chronic",
+                label:"Glomerulonephritis GN Acute or Chronic",
                 desc:"Integer [0-1] if found ",
                 is_reportable:1,
                 type:2
@@ -96,7 +96,7 @@ BEGIN
      #define_attribute(
             gn_chronic,
             {
-                label:"Glomerulonephritis (GN) Chronic",
+                label:"Glomerulonephritis GN Chronic",
                 desc:"Integer [0-1] if found ",
                 is_reportable:1,
                 type:2
@@ -105,7 +105,7 @@ BEGIN
      #define_attribute(
             gn_nephritic,
             {
-                label:"Glomerulonephritis (GN) Nephritic",
+                label:"Glomerulonephritis GN Nephritic",
                 desc:"Integer [0-1] if found ",
                 is_reportable:1,
                 type:2
@@ -114,7 +114,7 @@ BEGIN
      #define_attribute(
             gn_nephrotic,
             {
-                label:"Glomerulonephritis (GN) Nephrotic",
+                label:"Glomerulonephritis GN Nephrotic",
                 desc:"Integer [0-1] if found ",
                 is_reportable:1,
                 type:2
