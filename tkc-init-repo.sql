@@ -3,6 +3,7 @@
 
 
 --Init rules
+@"tkc-rman-insert-ruleblock-ckd-c.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-core";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
@@ -39,7 +40,7 @@
 
 
 --Init citations
-@"tkc-create-rman-ruleblocks-citations.sql";
+@"tkc-insert-citations.sql";
 
 --Re-init Rman package
 alter package rman_pckg compile;
