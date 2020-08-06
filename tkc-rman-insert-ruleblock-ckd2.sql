@@ -367,7 +367,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine diagnostics",
-                version: "0.0.2.1"
+                is_active:2
             }
         );
              
@@ -483,20 +483,10 @@ BEGIN
     
         /* Rule block to determine CKD complications */
         
-        #define_ruleblock(ckd_complications,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine CKD complications",
-                version: "0.0.2.2",
-                blockid: "ckd_complications",
-                target_table:"rout_ckd_complications",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"ckd_compx",
-                def_predicate:">0",
-                exec_order:3
-                
+                is_active:2                
             }
         );
                 
@@ -925,22 +915,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to stage CKD */
+        /* Rule block to Calculate egfr metrics */
         
-          #define_ruleblock(ckd,
+          #define_ruleblock([[rb_id]],
             {
-                description: "Rule block to stage CKD",
-                version: "0.0.2.3",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
-                
+                description: "Rule block to Calculate egfr metrics",
+                is_active:2                
             }
         );
         
@@ -1066,21 +1046,12 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to stage CKD */
+        /* Rule block to Calculate uacr metrics */
         
-          #define_ruleblock(ckd,
+          #define_ruleblock([[rb_id]],
             {
-                description: "Rule block to stage CKD",
-                version: "0.0.2.3",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
+                description: "Rule block to Calculate uacr metrics",
+                is_active:2
                 
             }
         );
@@ -1147,16 +1118,7 @@ BEGIN
           #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to stage CKD",
-                version: "0.0.2.3",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
+                is_active:2
                 
             }
         );
@@ -1203,11 +1165,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to stage CKD */
+        /* Rule block to assess careplan */
         
           #define_ruleblock([[rb_id]],
             {
-                description: "Rule block to stage CKD",
+                description: "Rule block to assess careplan",
                 is_active:2
                 
             }
