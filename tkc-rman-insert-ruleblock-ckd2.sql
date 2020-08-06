@@ -612,10 +612,10 @@ BEGIN
         
         rcm_bicarb : {hco3_low=1 and b05_ld? => 1},{=>0};
         
-        ckd_compx : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high)>0=> 1},{=>0};
+        [[rb_id]] : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high)>0=> 1},{=>0};
         
         #define_attribute(
-            ckd_compx,
+            [[rb_id]],
             {
                 label:"CKD complication present",
                 desc:"Integer [0-1] if CKD current complication present",
