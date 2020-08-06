@@ -1,12 +1,3 @@
-DROP TABLE rman_ruleblocks_citation;
-/
-
-CREATE TABLE rman_ruleblocks_citation (
-    citation_id     VARCHAR2(100),
-    citation_body   VARCHAR2(4000),
-    CONSTRAINT pk_rman_ruleblocks_citation PRIMARY KEY ( citation_id )
-);
-/
 
 INSERT INTO rman_ruleblocks_citation VALUES (
 'rrt_hd_icd',
