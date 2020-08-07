@@ -25,17 +25,8 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess [[rb_id]]",
-                version: "0.0.2.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:"",
-                exec_order:5
+                description: "Ruleblock to assess [[rb_id]]",                
+                is_active:2
                 
             }
         );
@@ -55,7 +46,7 @@ BEGIN
         
         dm => rout_cd_dm_dx.dm.val.bind();
         
-        htn => rout_cd_htn.htn.val.bind();
+        htn => rout_cd_htn.cd_htn.val.bind();
         
         cad => rout_cd_cardiac_cad.cad.val.bind();
         

@@ -647,16 +647,7 @@ BEGIN
         #define_ruleblock(egfr_fit,
             {
                 description: "Rule block to determine egfr fit",
-                version: "0.0.2.1",
-                blockid: "egfr_fit",
-                target_table:"rout_egfr_fit",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:0,
-                def_exit_prop:"egfr_fit",
-                def_predicate:">0",
-                exec_order:1
+                is_active:0
                 
             }
         );

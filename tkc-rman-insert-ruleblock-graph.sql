@@ -26,15 +26,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to plot egfr graph 2",
-                    version: "0.0.1.1",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2
+                   
+                    is_active:2
                     
                 }
             );
@@ -137,15 +130,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to plot bp graph",
-                    version: "0.0.1.1",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2
+                   
+                    is_active:2
                     
                 }
             );
@@ -156,7 +142,7 @@ BEGIN
             
             bp_graph_canvas_y : {1=1 => 100};
             
-            htn => rout_cd_htn.htn.val.bind();
+            htn => rout_cd_htn.cd_htn.val.bind();
             
             sigma_1 => rout_cd_htn.sigma_1.val.bind();
             
@@ -231,15 +217,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to plot hba1c graph",
-                    version: "0.0.1.1",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2
+                   
+                    is_active:2
                     
                 }
             );
@@ -322,15 +301,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to plot acr graph ",
-                    version: "0.0.1.1",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2
+                    
+                    is_active:2
                     
                 }
             );
@@ -400,15 +372,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to plot hb graph",
-                    version: "0.0.1.1",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2
+                    
+                    is_active:2
                     
                 }
             );
@@ -478,15 +443,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to plot phosphate graph",
-                    version: "0.0.1.1",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2
+                    is_active:2
+                    
                     
                 }
             );

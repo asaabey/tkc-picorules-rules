@@ -495,7 +495,7 @@ BEGIN
         
         cva =>rout_cd_cardiac_cad.cva.val.bind();
         
-        htn =>rout_cd_htn.htn.val.bind();
+        htn =>rout_cd_htn.cd_htn.val.bind();
         
         dm =>rout_cd_dm_dx.dm.val.bind();
         

@@ -25,7 +25,8 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Rule block to gather lab tests"
+                description: "Rule block to gather lab tests",
+                is_active:0
                 
             }
         );

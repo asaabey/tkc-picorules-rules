@@ -23,19 +23,11 @@ BEGIN
     
         /* Optimized Rule block for cube generation in CKD*/
         
-        #define_ruleblock(ckd_dense,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Optimized Rule block for cube generation in CKD",
-                version: "0.0.1.0",
-                blockid: "ckd_dense",
-                target_table:"rout_ckd_dense",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
                 is_active:0,
-                def_exit_prop:"ckd_dense",
-                def_predicate:">0",
-                exec_order:1
+
                 
             }
         );
@@ -209,6 +201,8 @@ BEGIN
         assert_level : {. => 100000 + ckd_pers*10000 + asm_viol_ex*1000 + ckd_prog*100};
 
     ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
@@ -229,15 +223,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "This is the at_risk_dense algorithm",
-                version: "0.0.0.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:0,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:2
+                is_active:0
                 
             }
         );

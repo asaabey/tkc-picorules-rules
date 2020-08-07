@@ -23,20 +23,11 @@ BEGIN
     
         /* Ruleblock to assess obesity  */
         
-        #define_ruleblock(cd_obesity,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess obesity",
-                version: "0.0.2.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
-                
+                is_active:2
+
             }
         );
         
@@ -110,16 +101,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess loss of weight",
-                version: "0.0.0.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
+                is_active:2
                 
             }
         );

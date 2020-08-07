@@ -22,18 +22,11 @@ BEGIN
         /* Algorithm to assess Medication  */
         
             
-             #define_ruleblock(rx_desc,
+             #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to serialize active medications",
-                    version: "0.0.1.1",
-                    blockid: "rx_desc",
-                    target_table:"rout_rx_desc",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:2,
-                    def_exit_prop:"rx_desc",
-                    def_predicate:">0",
-                    exec_order:1
+                    
+                    is_active:2
                     
                 }
             );
@@ -45,9 +38,10 @@ BEGIN
             
             rx_n => eadv.rx_desc.val.count(0);
             
-            rx_desc : {rx_n>0 =>1},{=>0};
+            [[rb_id]] : {rx_n>0 =>1},{=>0};
             
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     

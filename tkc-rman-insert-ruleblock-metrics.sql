@@ -28,15 +28,8 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to derive egfr metrics",
-                    version: "0.0.1.2",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
+                    
                     is_active:0,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:2,
                     filter : "select eid from rout_rrt where rrt=0"
                     
                     
@@ -209,15 +202,7 @@ BEGIN
              #define_ruleblock([[rb_id]],
                 {
                     description: "Algorithm to derive uACR metrics",
-                    version: "0.0.1.2",
-                    blockid: "[[rb_id]]",
-                    target_table:"rout_[[rb_id]]",
-                    environment:"DEV_2",
-                    rule_owner:"TKCADMIN",
-                    is_active:0,
-                    def_exit_prop:"[[rb_id]]",
-                    def_predicate:">0",
-                    exec_order:1
+                    is_active:0
                     
                 }
             );

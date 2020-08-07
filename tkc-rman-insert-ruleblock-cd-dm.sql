@@ -23,16 +23,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess diabetic diagnosis",
-                version: "0.1.2.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
+                is_active:2
                 
             }
         );
@@ -266,16 +257,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess diabetes",
-                version: "0.1.2.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
                 is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:2,
                 filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
                 
             }
@@ -390,17 +372,8 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess diabetic glycaemic control",
-                version: "0.1.2.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
+                description: "Ruleblock to assess diabetic glycaemic control",                
                 is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:2,
                 filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
                 
             }
@@ -512,16 +485,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess diabetic management",
-                version: "0.1.2.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
                 is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:2,
                 filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
                 
             }

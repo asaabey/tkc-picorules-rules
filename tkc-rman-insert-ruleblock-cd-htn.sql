@@ -23,20 +23,10 @@ BEGIN
     
         /* Algorithm to assess hypertension  */
         
-        #define_ruleblock(cd_htn,
+        #define_ruleblock([[rb_id]],
             {
-                description: "Algorithm to assess hypertension",
-                version: "0.1.2.2",
-                blockid: "cd_htn",
-                target_table:"rout_cd_htn",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"htn",
-                def_predicate:">0",
-                exec_order:1,
-                out_att : "htn_icpc,htn_fd_yr,mu_1,mu_2,slice140_1_n,bp_trend,bp_control,htn_rxn,htn_rxn_arb,htn_rxn_acei,htn_rxn_ccb,htn_rxn_bb,htn_rxn_diuretic_thiazide,htn_rxn_diuretic_loop,iq_tier,iq_sbp,htn"
+                description: "Algorithm to assess hypertension",                
+                is_active:2
                 
             }
         );
@@ -193,12 +183,16 @@ BEGIN
         
         bp_control : { n_qt_1 >=0.75 => 3},{ n_qt_1<0.75 and n_qt_1>=0.25 => 2 },{ n_qt_1<0.25 => 1},{=>0};
         
+        
+        
         htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>2 =>1},{=>0};
+        
+        [[rb_id]] : {.=> htn};
         
         htn_dx_uncoded : {htn_obs>=3 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
         
         #define_attribute(
-            htn,
+            [[rb_id]],
             {
                 label:"Hypertension",
                 desc:"Presence of Hypertension",
@@ -209,6 +203,8 @@ BEGIN
         
         
     ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
@@ -218,7 +214,7 @@ BEGIN
   
    -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='htn_rcm';
+    rb.blockid:='cd_htn_rcm';
 
     
     
@@ -228,19 +224,11 @@ BEGIN
     
         /* Ruleblock to assess hypertension pharmacology recommendations */
         
-        #define_ruleblock(htn_rcm,
+        #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess hypertension pharmacology recommendations",
-                version: "0.1.2.1",
-                blockid: "htn_rcm",
-                target_table:"rout_htn_rcm",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                rule_author:"asaabey@gmail.com",
-                is_active:2,
-                def_exit_prop:"htn_rcm",
-                def_predicate:">0",
-                exec_order:5
+                description: "Ruleblock to assess hypertension pharmacology recommendations",                
+                is_active:2
+                
                 
             }
         );
@@ -249,7 +237,7 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
-        htn => rout_cd_htn.htn.val.bind();
+        htn => rout_cd_htn.cd_htn.val.bind();
         
         bpc => rout_cd_htn.bp_control.val.bind();
         
@@ -301,7 +289,7 @@ BEGIN
             }
         );
         
-        htn_rcm :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
+        [[rb_id]] :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
                     { htn=1 and bpc>1 and raas=0 and k_state=3 and ccb=0 => 12 },
                     { htn=1 and bpc>1 and raas=1 and ccb=0 => 22 },
                     { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=0 and k_state>1 => 33 },
@@ -313,6 +301,7 @@ BEGIN
                     {=>0};
 
     ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     

@@ -23,18 +23,10 @@ BEGIN
     
         /* Algorithm to detect nephrotic syndrome */
         
-         #define_ruleblock(tg4410,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to detect nephrotic syndrome",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:"2",
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:"5"
+                is_active:2
                 
                 
             }
@@ -161,18 +153,12 @@ BEGIN
     
         /* Algorithm to detect nephritic syndrome */
         
-         #define_ruleblock(tg4420,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to detect nephritic syndrome",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
+                
                 is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5,
+                
                 priority:2
                 
             }
@@ -292,18 +278,11 @@ BEGIN
     
         /*  Algorithm to generate AKI trigger from community  */
         
-         #define_ruleblock(tg4100,
+         #define_ruleblock(rb_id,
             {
                 description: "Algorithm to generate AKI trigger from labs",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"PROD",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                
+                is_active:2
                 
             }
         );
@@ -457,18 +436,11 @@ BEGIN
     
         /*  Algorithm to generate AKI from hospital coded diagnosis   */
         
-         #define_ruleblock(tg4110,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to generate AKI from hospital coded diagnosis",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
+                
                 is_active:0,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5,
                 priority:2
                 
             }
@@ -520,18 +492,11 @@ BEGIN
     
         /*  Algorithm to generate CKD2 or 3, rapid progression (20% decline per annum)   */
         
-         #define_ruleblock(tg4610,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to generate CKD2 or 3 rapid progression 20% decline per annum ",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                
+                is_active:2
                 
             }
         );
@@ -619,18 +584,10 @@ BEGIN
         /*  Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF   */
         
         
-         #define_ruleblock(tg4620,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                is_active:2
                 
             }
         );
@@ -692,18 +649,11 @@ BEGIN
     
         /*  Algorithm to detect new RRT   */
         
-         #define_ruleblock(tg4720,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to detect new RRT",
-                version: "0.0.1.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                
+                is_active:2
                 
             }
         );
@@ -755,18 +705,12 @@ BEGIN
     
         /*  Algorithm medication safety concern in CKD   */
         
-         #define_ruleblock(tg4660,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm medication safety concern in CKD ",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
+                
                 is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5,
+                
                 priority:2
                 
             }
@@ -837,18 +781,12 @@ BEGIN
     
         /*  Algorithm to detect detect untreated chronic disease   */
         
-         #define_ruleblock(tg2610,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to detect untreated chronic disease",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                
+                is_active:2
+                
                 
             }
         );
@@ -935,18 +873,11 @@ BEGIN
     
         /*  Algorithm to detect high haemoglobin while on ESA  */
         
-         #define_ruleblock(tg4810,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to detect high haemoglobin while on ESA",
-                version: "0.0.1.2",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                
+                is_active:2
                 
             }
         );

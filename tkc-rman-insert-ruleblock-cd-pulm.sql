@@ -25,15 +25,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "This is a algorithm to identify pulmonary disease",
-                version: "0.0.0.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:1
+                is_active:2
                 
             }
         );

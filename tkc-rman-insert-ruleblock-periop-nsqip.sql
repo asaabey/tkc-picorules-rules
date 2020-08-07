@@ -25,15 +25,8 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "algorithm to apply ACS NSQIP ",
-                version: "0.0.0.1",
-                blockid: "[[rb_id]]",
-                target_table:"rout_[[rb_id]]",
-                environment:"DEV_2",
-                rule_owner:"TKCADMIN",
-                is_active:2,
-                def_exit_prop:"[[rb_id]]",
-                def_predicate:">0",
-                exec_order:5
+                
+                is_active:2
                 
             }
         );
@@ -50,7 +43,7 @@ BEGIN
         
         vhd => rout_cd_cardiac_vhd.cd_cardiac_vhd.val.bind();
         
-        htn_0 => rout_cd_htn.htn.val.bind();
+        htn_0 => rout_cd_htn.cd_htn.val.bind();
         
         htn_rx => rout_cd_htn.htn_rxn.val.bind();
         
