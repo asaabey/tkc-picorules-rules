@@ -207,26 +207,29 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         
-        hd_dt => eadv.icd_z49_1.dt.max();
+        hd_ld => eadv.icd_z49_1.dt.max();
         
-        hd_dt_2w => eadv.icd_z49_1.dt.max().where(dt> sysdate-14);
-
-        hd0_2w_f : { hd_dt_2w!? => 1},{=>0};
+        hd_fd => eadv.icd_z49_1.dt.min();
+        
+        hd_n => eadv.icd_z49_1.dt.count();
+        
+        hd0_2w_f : { (sysdate - hd_ld)<14 => 1},{=>0};
+        
+        tspan : { . => hd_ld-hd_fd };
+        
+        tspan_y : { .=> round(tspan/365,1) };
+        
+        hd_oe : { tspan > 1 => round(100*(hd_n /tspan)/0.427,0)},{=>0};
         
         hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
         
+        hd_sl : { .=> round(hd_tr*100,0) };
         
         
-        [[rb_id]] : {. =>1};
         
-        #define_attribute(
-            rrt_hhd,
-            {
-                label:"RRT Home haemodialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
+        [[rb_id]] : {rrt=1 =>1};
+        
+       
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -320,6 +323,8 @@ BEGIN
         );
         
         rrt => rout_rrt.rrt.val.bind();
+        
+        z49_reg => eadv.icd_z49_1.dt.temporal_regularity().where(dt > sysdate-365);
         
         
         [[rb_id]] : {. =>1};

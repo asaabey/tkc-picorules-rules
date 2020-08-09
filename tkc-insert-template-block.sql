@@ -197,7 +197,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<rrt=1>>
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
-            <li>Currently on satelite haemodialysis, since <<hd_dt_min />></li>
+            <li>Currently on satellite haemodialysis, since <<hd_dt_min />></li>
             <<rrt_past=1>>
                 <li>Past renal replacement therapies</li>
                     <ul>
@@ -1201,3 +1201,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
    </div>
 
 ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (154,'rrt_1_metrics','rrt_1_metrics','
+    <<rrt=1>>
+    <ul>
+        <<tspan_y>><li>Dialysis vintage <<tspan_y />> years</li><</tspan_y>>
+        <li>Regularity <<hd_sl />>% </li>
+        <li>Thrice weekly target achievement <<hd_oe />>% </li>
+    </ul>
+    <</rrt=1>>
+    ');
