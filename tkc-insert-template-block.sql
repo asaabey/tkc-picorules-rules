@@ -1211,3 +1211,28 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </ul>
     <</rrt=1>>
     ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (155,'at_risk','at_risk','
+    <<at_risk=1>>
+    <ul>
+    <li><b>At risk of CKD</b></li>
+        <ul>
+            <li>CKD criteria not met</li>
+            <li>Risk factors</li>
+            <ul>
+                <<dm>><li>Diabetes mellitus</li><</dm>>
+                <<htn>><li>Hypertension</li><</htn>>
+                <<cad>><li>Coronary artery disease</li><</cad>>
+                <<obesity>><li>Obesity</li><</obesity>>
+                <<struc>><li>GU tract abnormalities</li><</struc>>
+                <<lit>><li>Nephro-Urolithiasis</li><</lit>>
+                <<aki>><li>AKI</li><</aki>>
+                <<gn>><li>Resolved Glomerulonephritis</li><</gn>>
+                <<tid>><li>Tubulo-interstitial disease</li><</tid>>
+                <<obst>><li>Obstructive uropathy</li><</obst>>
+                <<cti>><li>Connective tissue disorder</li><</cti>>
+            </ul>
+        </ul>
+    </ul>
+    <</at_risk=1>>
+    ');
