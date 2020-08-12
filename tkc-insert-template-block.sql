@@ -1236,3 +1236,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </ul>
     <</at_risk=1>>
     ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (156,'cd_rheum_sle','cd_rheum_sle','
+    <ul>
+    <li><b>Systemic Lupus Erythematosus</b></li>
+        <ul>
+            <li>Diagnosed <<icpc_fd />> </li>
+            <ul>
+                <<rxn_l04ax>><li>Thiopurine <<rxn_l04ax />></li><</rxn_l04ax>>
+                <<rxn_p01ba>><li>Hydroxychloroquine <<rxn_p01ba />></li><</rxn_p01ba>>
+            </ul>
+        </ul>
+    </ul>
+    
+    ');

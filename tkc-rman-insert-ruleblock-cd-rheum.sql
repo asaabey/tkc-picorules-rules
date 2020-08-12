@@ -30,16 +30,21 @@ BEGIN
             }
         );
         
-        icd_fd => eadv.[icd_m32_9].dt.min();
+        icd_fd => eadv.[icd_m32_%].dt.min();
         
         icpc_fd => eadv.[icpc_l99056,icpc_l99065].dt.min();
         
+        rxn_l04ax => eadv.[rxnc_l04ax].dt.min().where(val=1);
         
-        [[rb_id]] : { low_cat>0 =>1},{=>0};
+        rxn_p01ba => eadv.[rxnc_p01ba].dt.min().where(val=1);
+        
+        
+        
+        [[rb_id]] : { coalesce(icd_fd,icpc_fd)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
             { 
-                label: "Presence of haematological disease",
+                label: "Presence of SLE",
                 is_reportable:1,
                 type:2
             }

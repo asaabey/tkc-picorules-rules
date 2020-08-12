@@ -59,6 +59,8 @@ BEGIN
      gn_ln => eadv.icd_m32_14.dt.count(0); 
      gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
      
+     sle => rout_cd_rheum_sle.cd_rheum_sle.val.bind();
+     
      #doc(,{txt :"
         N00  Acute nephritic syndrome
         N01  Rapidly progressive nephritic syndrome
@@ -200,7 +202,7 @@ BEGIN
             }
      );
      
-     aet_gn_ln : {ckd>0 and gn_ln>0 =>1},{=>0};
+     aet_gn_ln : {ckd>0 and (gn_ln>0 or sle>0) =>1},{=>0};
      
      #define_attribute(
             aet_gn_ln,
@@ -212,7 +214,7 @@ BEGIN
             }
      );
      
-     aet_gn_x : {ckd>0 and gn_x>0 and dm=0 =>1},{=>0};
+     aet_gn_x : {ckd>0 and (gn_x>0 or sle>0) =>1},{=>0};
      
      #define_attribute(
             aet_gn_x,
