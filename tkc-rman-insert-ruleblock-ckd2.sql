@@ -371,62 +371,60 @@ BEGIN
         
         
         
-        acr_lv => eadv.lab_ua_acr.val.last();
+        acr => eadv.lab_ua_acr._.lastdv();
         
-        
-        ua_rbc_lv => eadv.[lab_ua_rbc,lab_ua_poc_rbc].val.last();
-        ua_rbc_ld => eadv.[lab_ua_rbc,lab_ua_poc_rbc].dt.max();
-        
-        ua_wcc_lv => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].val.last();
-        ua_wcc_ld => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes].dt.max();
                 
-        sflc_kappa_lv => eadv.lab_bld_sflc_kappa.val.last();
-        sflc_lambda_lv => eadv.lab_bld_sflc_lambda.val.last();
-        sflc_kappa_ld => eadv.[lab_bld_sflc_kappa,lab_code_c332x].dt.max();
-        sflc_lambda_ld => eadv.[lab_bld_sflc_lambda,lab_code_c332x].dt.max();
+        ua_rbc => eadv.[lab_ua_rbc,lab_ua_poc_rbc]._.lastdv();
         
+                
+        ua_wcc => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes]._.lastdv();
+                
+        sflc_kappa => eadv.[lab_bld_sflc_kappa,lab_code_c332x]._.lastdv();
+        sflc_lambda => eadv.[lab_bld_sflc_lambda,lab_code_c332x]._.lastdv();
         
-        paraprot_lv => eadv.lab_bld_spep_paraprotein.val.last();
-        paraprot_ld => eadv.[lab_bld_spep_paraprotein,lab_code_c331n].dt.max();
+        spep => eadv.[lab_bld_spep_paraprotein,lab_code_c331n]._.lastdv();
         
-        pr3_lv => eadv.lab_bld_anca_pr3.val.last();
-        mpo_lv => eadv.lab_bld_anca_mpo.val.last();
-        pr3_ld => eadv.[lab_bld_anca_pr3,lab_code_c314v].dt.max();
-        mpo_ld => eadv.[lab_bld_anca_mpo,lab_code_c314v].dt.max();
+        pr3 => eadv.[lab_bld_anca_pr3,lab_code_c314v]._.lastdv();
+        mpo => eadv.[lab_bld_anca_mpo,lab_code_c314v]._.lastdv();
         
-        dsdna_lv => eadv.lab_bld_dsdna.val.last();
-        dsdna_ld => eadv.[lab_bld_dsdna,lab_code_c331b].dt.max();
+        anca => eadv.[lab_code_c314v]._.lastdv();
         
-        c3_lv => eadv.lab_bld_complement_c3.val.last();
-        c4_lv => eadv.lab_bld_complement_c4.val.last();
+        ana => eadv.[lab_code_316b]._.lastdv();
+        dsdna => eadv.[lab_bld_dsdna,lab_code_c331b]._.lastdv();
         
-        c3_ld => eadv.lab_bld_complement_c3.dt.max();
-        c4_ld => eadv.lab_bld_complement_c4.dt.max();
+        c3 => eadv.lab_bld_complement_c3._.lastdv();
+        c4 => eadv.lab_bld_complement_c4._.lastdv();
+        
+        b2gpa => eadv.[lab_code_c319x]._.lastdv();
+        aca => eadv.[lab_code_c323b]._.lastdv();
+        
+        cryo => eadv.[lab_code_c327t]._.lastdv();
+        
+        gbma => eadv.[lab_code_c333n]._.lastdv();
+        
+        asot => eadv.[lab_code_s2136]._.lastdv();
+        
         
         ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney].dt.max();
         ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney].dt.max();
         
         
         
-        c3_pos : { nvl(c3_lv,0)<0.2 and nvl(c3_lv,0)>0 => 1},{=>0};
-        c4_pos : { nvl(c4_lv,0)<0.2 and nvl(c4_lv,0)>0 => 1},{=>0};
+        c3_pos : { nvl(c3_val,0)<0.2 and nvl(c3_val,0)>0 => 1},{=>0};
+        c4_pos : { nvl(c4_val,0)<0.2 and nvl(c4_val,0)>0 => 1},{=>0};
         
-        dsdna_pos : { nvl(dsdna_lv,0)>6 => 1},{=>0};
-        sflc_ratio : { nvl(sflc_lambda_lv,0)>0 => round(nvl(sflc_kappa_lv,0)/sflc_lambda_lv,2)},{=1};
+         
+        
+        dsdna_pos : { nvl(dsdna_val,0)>6 => 1},{=>0};
+        sflc_ratio : { nvl(sflc_lambda_val,0)>0 => round(nvl(sflc_kappa_val,0)/sflc_lambda_val,2)},{=1};
         
         sflc_ratio_abn : {sflc_ratio<0.26 or sflc_ratio>1.65 =>1 },{=>0};
         
-        ua_rbc_pos : {nvl(ua_rbc_lv,0)>=30 =>1},{=>0};
-        ua_wcc_pos : {nvl(ua_wcc_lv,0)>=30 =>1},{=>0};
-        ua_acr_pos : {nvl(acr_lv,0)>30 =>1},{=>0};
+        ua_rbc_pos : {nvl(ua_rbc_val,0)>=30 =>1},{=>0};
+        ua_wcc_pos : {nvl(ua_wcc_val,0)>=30 =>1},{=>0};
+        ua_acr_pos : {nvl(acr_val,0)>30 =>1},{=>0};
         
-        ua_null : { ua_rbc_ld is null => 1},{=>0};
-        sflc_null : { sflc_kappa_ld is null =>1},{=>0};
-        spep_null : { paraprot_ld is null =>1},{=>0};
-        dsdna_null : { dsdna_ld is null =>1},{=>0};
-        anca_null : {  pr3_ld is null =>1},{=>0};
-        c3c4_null : {  c3_ld is null =>1},{=>0};
-        
+          
         
         ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
                 { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
@@ -451,8 +449,9 @@ BEGIN
         
         bxk_null : { ris_bxk_ld?  =>1},{=>0};
         
+        canddt : {coalesce(ua_rbc_dt,spep_dt,ana_dt,dsdna_dt,anca_dt,c3_dt,asot_dt,aca_dt,b2gpa_dt,cryo_dt,ris_usk_ld,ris_bxk_ld)!? =>1},{=>0};
         
-        [[rb_id]] : {ckd>=1 => 1},{=>0};
+        [[rb_id]] : {ckd>=0 and canddt=1 => 1},{=>0};
      
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
