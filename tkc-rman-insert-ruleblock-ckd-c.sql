@@ -69,7 +69,7 @@ BEGIN
      
      c_u88 => eadv.[icpc_u88005].dt.min();
      
-     c_m3214 =>eadv.icd_m32_14.dt.min(); 
+     c_m3214 =>eadv.[icd_m32_14].dt.min(); 
      
      gn : { coalesce(c_n00,c_n01,c_n02,c_n03,c_n04,c_n05,c_n07,c_n08,c_u88,c_m3214)!? =>1},{=>0};
      

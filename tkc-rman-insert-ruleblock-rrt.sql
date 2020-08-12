@@ -324,7 +324,7 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         
-        z49_reg => eadv.icd_z49_1.dt.temporal_regularity().where(dt > sysdate-365);
+        
         
         
         [[rb_id]] : {. =>1};
@@ -468,6 +468,60 @@ BEGIN
             [[rb_id]] ,
             {
                 label:"AV fistuloplasty",
+                is_reportable:1,
+                type:2
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
+    
+      
+      -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='rrt_hd_param';
+
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine Haemodialysis parameters*/
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Rule block to determine Haemodialysis parameters",
+                is_active:2
+                
+            }
+        );
+
+        
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        mode => eadv.[psi_hd_param_mode]._.lastdv();
+        
+        hours => eadv.[psi_hd_param_hrs]._.lastdv();
+        
+        ibw => eadv.[psi_hd_param_ibw]._.lastdv();
+        
+        dx => eadv.[psi_hd_param_dx]._.lastdv();        
+        
+        mode_hdf : {mode_val in (20,22)=>1},{=>0};
+        
+        
+        [[rb_id]] : { rrt in (1,4) and coalesce(mode_val,hours_val,ibw_val,dx_val)!? =>1},{=>0};
+        
+        #define_attribute(
+            mode_hdf,
+            {
+                label:"Dialysis mode Haemodiafiltration",
                 is_reportable:1,
                 type:2
             }

@@ -691,7 +691,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
 
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','<ul>
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','
+    <<rrt=0>>
+    <ul>
+        
         <li>Aetiology
             <ul>
                 <<aet_multiple=1>><li>Multiple aetiology is suggested
@@ -728,6 +731,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             </ul>
         </li>
     </ul>
+    <</rrt=0>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (23,'cd_ckd_journey_1','ckd_journey','
     <ul>
@@ -1249,4 +1253,60 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         </ul>
     </ul>
     
+    ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (157,'rrt_hd_param','rrt_hd_param','
+    <ul>
+    <li>Haemodialysis prescription <<mode_dt />></li>
+        <ul>
+            <<mode_val=10>><li>High Flux haemodialysis</li><</mode_val=10>>
+            <<mode_val=20>><li>Haemodialfitration (post dilutional)</li><</mode_val=20>>
+            <<mode_val=22>><li>Haemodialfitration (mixed dilutional</li>)<</mode_val=22>>
+            <<hours_val>><li>Hours : <<hours_val />></li><</hours_val>>
+            <<dx_val>><li>Dialyzer : <<dx_val />></li><</dx_val>>
+            <<ibw_val>><li>IBW : <<ibw_val />> kg</li><</ibw_val>>
+        </ul>
+    </ul>
+    
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (158,'rrt_cause_syn_1','ckd_cause','
+       <<rrt=1>>
+       <ul>
+         <li>Aetiology</li>
+         <ul>
+                <<aet_multiple=1>><li>Multiple aetiology is suggested</li>
+                <ul>
+                    <<aet_dm=1>><li>diabetes mellitus</li><</aet_dm=1>>
+                    <<aet_htn=1>><li>hypertension</li><</aet_htn=1>>
+                    <<aet_gn_ln=1>><li>lupus nephritis</li><</aet_gn_ln=1>>
+                    <<aet_gn_x=1>><li>glomerulopathy NOS</li><</aet_gn_x=1>>
+                    <<c_n00>><li>Acute nephritic syndrome <<c_n00 />></li><</c_n00>>
+                    <<c_n01>><li>Rapidly progressive nephritic syndrome <<c_n01 />></li><</c_n01>>
+                    <<c_n03>><li>Chronic nephritic syndrome <<c_n03 />></li><</c_n03>>
+                    <<c_n04>><li>Nephrotic syndrome <<c_n04 />></li><</c_n04>>
+                    <<c_n05>><li>Unspecified nephritic syndrome <<c_n05 />></li><</c_n05>>
+                    <<c_n07>><li>Hereditary nephropathy, not elsewhere classified <<c_n07 />></li><</c_n07>>
+                    <<c_n08>><li>Glomerular disorders in diseases classified elsewhere <<c_n08 />></li><</c_n08>>
+                    <<c_n10_n16>><li>Renal tubulo-interstitial diseases <<c_n10_n16 />></li><</c_n10_n16>>
+                    <<c_n17>><li>Acute kidney failure and chronic kidney disease <<c_n17 />></li><</c_n17>>
+                    <<c_n20_n23>><li>Urolithiasis <<c_n20_n23 />></li><</c_n20_n23>>
+                    <<c_n26_n26>><li>Unspecified contracted kidney <<c_n26_n27 />></li><</c_n26_n27>>
+                    <<c_n30_n39>><li>Other diseases of the urinary system including bladder dysfunction<<c_n30_n39 />></li><</c_n30_n39>>
+                    <<c_n40>><li>Benign prostatic hyperplasia <<c_n40 />></li><</c_n40>>
+                    <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_c_q60>>
+                    <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
+                    <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
+                    <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_c_q63>>
+                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_c_q64>>
+                </ul>
+                <</aet_multiple=1>>
+                <<aet_multiple=0>>
+                    <li>
+                        Potential cause for CKD is <strong><<aet_dm>>diabetic kidney disease (DKD)<</aet_dm>>
+                        <<aet_htn>>,hypertensive kidney disease<</aet_htn>><<aet_gn_ln>>,lupus nephritis<</aet_gn_ln>></strong>
+                    </li>
+                <</aet_multiple=0>>
+            </ul>
+    </ul>
+    <</rrt=1>>
     ');

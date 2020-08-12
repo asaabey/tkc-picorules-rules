@@ -39,22 +39,8 @@ BEGIN
      dm => rout_cd_dm_dx.dm.val.bind(); 
      htn => rout_cd_htn.htn.val.bind();
      ckd => rout_ckd.ckd.val.bind();
-     
-     #doc(,
-        {
-            txt :"Calculate information quantity [IQ]"
-        }
-        
-    );
-     
-     
-     /* 
-     iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-730); 
-     iq_egfr => eadv.lab_bld_egfr_c.val.count(0).where(dt>sysdate-730); 
-     iq_coding => eadv.[icd_%,icpc_%].dt.count(0); 
-     iq_tier: {iq_coding>1 and least(iq_egfr,iq_uacr)>=2 => 4}, {least(iq_egfr,iq_uacr)>=2 => 3}, {least(iq_egfr,iq_uacr)>=1 => 2}, {iq_egfr>0 or iq_uacr>0 => 1}, {=>0}; 
-     */ 
-    
+     rrt => rout_rrt.rrt.val.bind();
+   
      
      gn_ln => eadv.icd_m32_14.dt.count(0); 
      gn_x => eadv.[icd_n0%,icpc_u88%].dt.count(0); 
@@ -169,8 +155,9 @@ BEGIN
      
      c_q64 => eadv.[icd_q64%].dt.min();
      
+     canddt : {ckd>0 or rrt>0=>1},{=>0};
      
-     aet_dm : {ckd>0 and dm>0 =>1},{=>0};
+     aet_dm : {canddt=1 and dm>0 =>1},{=>0};
      
      #doc(,
         {
@@ -190,7 +177,7 @@ BEGIN
             }
      );
      
-     aet_htn : {ckd>0 and htn>0 and dm=0 =>1},{=>0};
+     aet_htn : {canddt=1 and htn>0 and dm=0 =>1},{=>0};
      
      #define_attribute(
             aet_htn,
@@ -202,7 +189,7 @@ BEGIN
             }
      );
      
-     aet_gn_ln : {ckd>0 and (gn_ln>0 or sle>0) =>1},{=>0};
+     aet_gn_ln : {canddt=1 and (gn_ln>0 or sle>0) =>1},{=>0};
      
      #define_attribute(
             aet_gn_ln,
@@ -214,7 +201,7 @@ BEGIN
             }
      );
      
-     aet_gn_x : {ckd>0 and (gn_x>0 or sle>0) =>1},{=>0};
+     aet_gn_x : {canddt=1 and (gn_x>0 or sle>0) =>1},{=>0};
      
      #define_attribute(
             aet_gn_x,
@@ -226,9 +213,9 @@ BEGIN
             }
      );
 
-     aet_cardinality : { ckd>0 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
+     aet_cardinality : { canddt=1 => aet_dm + aet_htn + aet_gn_ln + aet_gn_x };
      
-     aet_multiple : { ckd>0 and aet_cardinality >1 => 1},{=>0};
+     aet_multiple : { canddt=1 and aet_cardinality >1 => 1},{=>0};
      
      #doc(,
         {
@@ -237,7 +224,7 @@ BEGIN
         
     );
      
-     [[rb_id]] : { ckd>0 and greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
+     [[rb_id]] : { greatest(aet_dm,aet_htn,aet_gn_ln,aet_gn_x)>0 => 1},{=>0};
      
      
      #define_attribute(
