@@ -8,7 +8,12 @@
 @"tkc-rman-insert-ruleblock-core";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
-@"tkc-rman-insert-ruleblock-cd-cvd.sql";
+
+@"tkc-rman-insert-ruleblock-cd-cardiac-cad.sql";
+@"tkc-rman-insert-ruleblock-cd-cardiac-vhd.sql";
+@"tkc-rman-insert-ruleblock-cd-cardiac-chf.sql";
+@"tkc-rman-insert-ruleblock-cd-cardiac-misc.sql";
+
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
 @"tkc-rman-insert-ruleblock-cd-dyslip.sql";
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";

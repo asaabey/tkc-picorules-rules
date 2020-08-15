@@ -561,6 +561,15 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<ldl_dt>><li>Last LDL-C value <<ldl_val />>(<<ldl_dt />>)</li><</ldl_dt>>
             <<ascvd>><li>Secondary prevention as there is past atherosclerotic cvd </li><</ascvd>>
             <<ldl_subopt=1>><li>Suboptimal control (LDL-C level 20% above threshold of <<ldl_unl />>)</li><</ldl_subopt=1>>
+            <<fhc_prob=4>>
+                <li>Definite familial hypercholesterolaemia based on an abbreviated dutch lipid score of <<dls />></li>
+            <</fhc_prob=4>>
+            <<fhc_prob=3>>
+                <li>Probable familial hypercholesterolaemia based on an abbreviated dutch lipid score of <<dls />></li>
+            <</fhc_prob=3>>
+            <<fhc_prob=2>>
+                <li>Possible familial hypercholesterolaemia based on an abbreviated dutch lipid score of <<dls />></li>
+            <</fhc_prob=2>>
         </ul>
 
     </ul>
