@@ -747,26 +747,45 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (24,'cd_ckd_dx_1','ckd_diagnostics','
     <ul>
-    <li>Diagnostic workup <a href="#toggleView">+</a>
-    <ul id="toggleView">
-    <li>Basic urinalysis
-    <<ua_null=1>> not performed <</ua_null=1>>
-    <<ua_rbc_ld>> last performed on <<ua_rbc_ld />> and shows<</ua_rbc_ld>>
-    <<ua_null=0>>
-        <<ua_pos=0>> no significant findings<</ua_pos=0>>
-        <<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>>
-        <<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>>
-    <</ua_null=0>></li>
-    <li>ANA Serology: <<dsdna_null=1>>not performed <</dsdna_null=1>><<dsdna_null=0>><<dsdna_ld>>last performed on <</dsdna_ld>><<dsdna_ld />><<dsdna_ld>>;<</dsdna_ld>><<dsdna_pos=1>>SIGNIFICANT <</dsdna_pos=1>><</dsdna_null=0>></li>
-    <li>ANCA Serology: <<anca_null=1>>not performed <</anca_null=1>><<anca_null=0>><<pr3_ld>>last performed on <</pr3_ld>><<pr3_ld />><</anca_null=0>></li>
-    <li>Complements: <<c3c4_null=1>>not performed <</c3c4_null=1>><<c3c4_null=0>><<c3_ld>>last performed on <</c3_ld>><<c3_ld />><</c3c4_null=0>></li>
-    <li>Serum PEP: <<spep_null=1>>not performed <</spep_null=1>><<spep_null=0>><<paraprot_ld>>last performed on <</paraprot_ld>><<paraprot_ld />><</spep_null=0>></li>
-    <li>SFLC assay: <<sflc_null=1>>not performed <</sflc_null=1>><<sflc_null=0>><<sflc_kappa_ld>>last performed on <</sflc_kappa_ld>><<sflc_kappa_ld />><</sflc_null=0>></li>
-    <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
-    <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
-     <a href="#">collapse</a>
-    </ul>
-    </li>
+        <li>Diagnostic workup</li>
+        <ul>
+            <li>Basic urinalysis
+            <<ua_null=1>> not performed <</ua_null=1>>
+            <<ua_rbc_ld>> last performed on <<ua_rbc_ld />> and shows<</ua_rbc_ld>>
+            <<ua_null=0>>
+                <<ua_pos=0>> no significant findings<</ua_pos=0>>
+                <<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>>
+                <<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>>
+            <</ua_null=0>></li>
+            
+            <<ana_dt>><li>ANA Serology: <<ana_dt />></li><</ana_dt>>
+            <<dsdna_dt>><li>DsDNA Serology: <<dsdna_dt />><<dsdna_pos=1>>:SIGNIFICANT <</dsdna_pos=1>></li><</dsdna_dt>>
+            
+            <<anca_dt>><li>ANCA Serology: <<anca_dt />></li><</anca_dt>>
+            
+            <<c3_dt>><li>Complements: <<c3_dt />>
+                <<c3_pos=1>>,C3 hypocomplementaemia <</c3_pos=1>>
+                <<c4_pos=1>>,C4 hypocomplementaemia <</c4_pos=1>>
+            </li><</c3_dt>>
+            
+            <<spep_dt>><li>Serum protein electrophoresis: <<spep_dt />></li><</spep_dt>>
+            
+            <<sflc_kappa_dt>><li>SFLC assay: <<sflc_kappa_dt />>
+                <<sflc_ratio_abn=1>>:SIGNIFICANT <</sflc_ratio_abn=1>>
+            </li><</sflc_kappa_dt>>
+            
+            <<gbma_dt>><li>Anti-GBM : <<gbma_dt />></li><</gbma_dt>>
+            
+            <<aca_dt>><li>Anti-cardiolipin : <<aca_dt />></li><</aca_dt>>
+            <<b2gpa_dt>><li>Anti-beta 2 glycoprotein 1 : <<b2gpa_dt />></li><</b2gpa_dt>>
+            
+            <<cryo_dt>><li>Cryoglobulin : <<cryo_dt />></li><</cryo_dt>>
+            
+            <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
+            <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
+             
+        </ul>
+        
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (25,'cd_ckd_compx_1','ckd_complications','<ul>
