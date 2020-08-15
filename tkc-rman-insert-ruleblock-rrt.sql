@@ -39,7 +39,11 @@ BEGIN
         );
         hd_z49_n => eadv.icd_z49_1.dt.count();
         
+        hd_131_n => eadv.[caresys_1310000].dt.count();
+        
         hd_z49_1y_n => eadv.icd_z49_1.dt.count().where(dt>sysdate-365);
+        
+        hd_131_1y_n => eadv.[caresys_1310000].dt.count().where(dt>sysdate-365);
         
         hd_dt0 => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(); 
         hd_dt => eadv.icd_z49_1.dt.max(); 
@@ -86,7 +90,7 @@ BEGIN
             }
         );
         
-        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and hd_z49_1y_n>10  and hd_dt>sysdate-365 => 1},
+        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_1y_n>10 or hd_131_1y_n>10)  and hd_dt>sysdate-365 => 1},
             {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) => 2},
             {tx_dt > nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
             {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) => 4},
