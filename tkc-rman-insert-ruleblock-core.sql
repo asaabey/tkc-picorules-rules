@@ -43,13 +43,15 @@ BEGIN
         
         lab_n => eadv.[lab_%].dt.count();
         
+        obs_n => eadv.[obs_%].dt.count();
+        
         dmg_n => eadv.[dmg_%].dt.count();
         
         rxnc_n => eadv.[rxnc_%].dt.count();
         
-        fd => eadv.[icd%,icpc%,lab%,rxnc%].dt.min();
+        fd => eadv.[icd%,icpc%,lab%,rxnc%,obs%].dt.min();
         
-        ld => eadv.[icd%,icpc%,lab%,rxnc%].dt.max();
+        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%].dt.max();
         
         ts : { .=> round((ld-fd)/365,2)};
         
@@ -58,6 +60,8 @@ BEGIN
         icd_d : { ts>0 => round(icd_n/ts,2)};
         
         lab_d : { ts>0 => round(lab_n/ts,2)};
+        
+        obs_d : { ts>0 => round(obs_n/ts,2)};
         
         dmg_d : { ts>0 => round(dmg_n/ts,2)};
         
@@ -69,11 +73,13 @@ BEGIN
         
         lab : { lab_n>0 => 1},{=>0};
         
+        obs : { obs_n>0 => 1},{=>0};
+        
         rxnc : { rxnc_n>0 => 1},{=>0};
         
         
         
-        core_info_entropy : { . => icpc + icd + lab  + rxnc};
+        core_info_entropy : { . => icpc + icd + lab  + rxnc + obs};
         
         #define_attribute(
             core_info_entropy,
