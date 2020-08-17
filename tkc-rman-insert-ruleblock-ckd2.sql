@@ -1108,7 +1108,7 @@ BEGIN
             }
         );
         
-        avf => eadv.caresys_3450901.dt.max();
+        avf => eadv.[caresys_3450901,caresys_3451200,caresys_3451800].dt.max();
         
         
         avf_has : { avf!?  =>1},{=>0};

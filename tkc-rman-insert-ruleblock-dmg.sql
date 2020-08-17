@@ -426,7 +426,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Algorithm to assess demographics",
+                description: "Algorithm to assess demographic source",
                 is_active:2
                 
             }
@@ -465,19 +465,26 @@ BEGIN
         
         congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,1,1)=8);
         
-        phc_1 :   { greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,pcis_n,congress_n)=0 =>0},
-                        { pcis_n > greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,congress_n) => 1},
-                        { eacs_n > greatest(laynhapuy_n,miwatj_n,anyinginyi_n,congress_n) => 3},
-                        { laynhapuy_n > greatest(miwatj_n,anyinginyi_n,congress_n) => 4},
-                        { miwatj_n > greatest(anyinginyi_n,congress_n) => 5},
-                        { anyinginyi_n > congress_n =>6},
-                        { congress_n>0 =>8};
+        wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,1,1)=9);
+        
+        wurli_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,1,1)=9);
+        
+        phc_1 :   { greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,pcis_n,congress_n,wurli_n)=0 =>0},
+                        { pcis_n > greatest(eacs_n,laynhapuy_n,miwatj_n,anyinginyi_n,congress_n,wurli_n) => 1},
+                        { eacs_n > greatest(laynhapuy_n,miwatj_n,anyinginyi_n,congress_n,wurli_n) => 3},
+                        { laynhapuy_n > greatest(miwatj_n,anyinginyi_n,congress_n,wurli_n) => 4},
+                        { miwatj_n > greatest(anyinginyi_n,congress_n,wurli_n) => 5},
+                        { anyinginyi_n > greatest(congress_n,wurli_n) =>6},
+                        { congress_n > wurli_n =>8},
+                        { wurli_n>0 =>9};
         
         phc_pcis : { phc_1=1 => 1 },{=>0};
         
         phc_miwatj : { phc_1=5 => 1 },{=>0};
         
         phc_congress : { phc_1=8 => 1 },{=>0};
+        
+        phc_wurli : { phc_1=9 => 1 },{=>0};
 
         
         [[rb_id]] : { phc_1!? => phc_1 };    
@@ -518,6 +525,16 @@ BEGIN
                 is_reportable:1
             }
         );
+        
+        #define_attribute(
+            phc_wurli,
+            {
+                label:"Demographic phc source Wurli",
+                type:2,
+                is_reportable:1
+            }
+        );
+       
        
                 
     ';

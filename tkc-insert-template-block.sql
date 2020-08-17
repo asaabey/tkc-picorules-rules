@@ -74,22 +74,26 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<dmg_source>>
 
             Primary health care network:
-            <<dmg_source=1>><b>NTG PCIS</b><hr /><</dmg_source=1>> 
-            <<dmg_source=3>><b>NTG EACS</b><hr /><</dmg_source=3>>    
-            <<dmg_source=4>><b>LAYNHAPUY</b><hr /><</dmg_source=4>>    
-            <<dmg_source=5>><b>MIWATJ</b><hr /><</dmg_source=5>>    
-            <<dmg_source=6>><b>ANYINGINYI</b><hr /><</dmg_source=6>> 
-            <<dmg_source=8>><b>CONGRESS</b><hr /><</dmg_source=8>>
+            <<dmg_source=1>><span class="badge badge-warning">NTG PCIS</span><</dmg_source=1>> 
+            <<dmg_source=3>><span class="badge badge-warning">NTG EACS</span><</dmg_source=3>>
+            <<dmg_source=4>><span class="badge badge-warning">LAYNHAPUY</span><</dmg_source=4>>
+            <<dmg_source=5>><span class="badge badge-warning">MIWATJ</span><</dmg_source=5>>
+            <<dmg_source=6>><span class="badge badge-warning">ANYINGINYI</span><</dmg_source=6>>
+            <<dmg_source=8>><span class="badge badge-warning">CONGRESS</span><</dmg_source=8>>
+            <<dmg_source=9>><span class="badge badge-warning">WURLI</span><</dmg_source=9>>
+
             <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
             <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
             <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
             <<laynhapuy_n>><i>LAYNHAPUY encounters (N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
             <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
             <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
+            <<wurli_n>><i>WURLI encounters (N=<<wurli_n />>, last=<<wurli_ld />>)</i><</wurli_n>>
             ,within last 3 years
+            
     <</dmg_source>>
     </div>
-    <hr />
+    
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
