@@ -20,6 +20,8 @@
 @"tkc-rman-insert-ruleblock-cd-haem.sql";
 @"tkc-rman-insert-ruleblock-cd-cns.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm.sql";
+@"tkc-rman-insert-ruleblock-cd-rheum.sql";
+
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
