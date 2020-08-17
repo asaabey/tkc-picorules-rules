@@ -79,7 +79,7 @@ BEGIN
         enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
         
                 
-        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 and dod is null => 1},{=>0};
+        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? => 1},{=>0};
         
         #doc(,
             {
@@ -212,7 +212,7 @@ BEGIN
         enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
         
                 
-        ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 and dod is null => 1},{=>0};
+        ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 or dod!? => 1},{=>0};
         
         #doc(,
             {
@@ -456,7 +456,7 @@ BEGIN
         
         aki_icd => eadv.[icd_n17%].dt.count(0).where(dt>sysdate-180);
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? => 1},{=>0};
           
         [[rb_id]] : {aki_icd>0 and ex_flag=0 => 1},{=>0};
           
@@ -545,7 +545,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? and enc!? => 1},{=>0};
+        ex_flag : {dod!? or enc!? => 1},{=>0};
           
         [[rb_id]] : {
                         ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh 
@@ -617,7 +617,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? => 1},{=>0};
           
         [[rb_id]] : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null and ex_flag=0 => 1},{=>0};
         
@@ -673,7 +673,7 @@ BEGIN
           
         pd_start : {pd_dt_min > sysdate-90 => 1},{=>0};
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? => 1},{=>0};
           
         [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
         
@@ -750,7 +750,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? => 1},{=>0};
           
         [[rb_id]] : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
         
@@ -832,7 +832,7 @@ BEGIN
         
         dm_untreat : {dm=1 and nvl(dm_rxn,0)=0 and nvl(hba1c_n0_val,0)>8 => 1},{=>0};
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? => 1},{=>0};
 
         #doc(,
             {
@@ -890,7 +890,7 @@ BEGIN
         
         hb_i1 => eadv.lab_bld_hb.val.lastdv(1);
         
-        ex_flag : {dod is not null => 1},{=>0};
+        ex_flag : {dod!? => 1},{=>0};
 
         #doc(,
             {
