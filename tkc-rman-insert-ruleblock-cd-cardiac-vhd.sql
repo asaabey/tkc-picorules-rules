@@ -317,9 +317,11 @@ BEGIN
         
         dm_score : { dm>0 => 1},{=>0};
         
-        cha2ds2vasc : { af=1 and vhd=0 => age_score + gender_score + chf_hx_score + cva_score +cvd_score + dm_score},{=>0};
+        nv_af : { af=1 and vhd=0 =>1},{=>0};
         
-            
+        cha2ds2vasc : { nv_af=1 => age_score + gender_score + chf_hx_score + cva_score +cvd_score + dm_score},{=>0};
+        
+           
         
         
         [[rb_id]] : {af=1 =>1},{=>0};
@@ -328,6 +330,16 @@ BEGIN
             { 
                 label: "Presence of AF",
                 desc:"Presence of AF",
+                is_reportable:1,
+                type:2
+                
+            }
+        );
+        
+        #define_attribute(nv_af,
+            { 
+                label: "Presence of Non-Valvular AF",
+                desc:"Presence of Non-Valvular AF",
                 is_reportable:1,
                 type:2
                 

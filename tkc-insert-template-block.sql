@@ -370,7 +370,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 <li>Current medication classes
                 <ul>
                     <<dm_rxn_su>><li>sulphonylurea</li><</dm_rxn_su>>
+                    <<dm_rxn_bg>><li>biguanide (<<dm_rxn_bg />>)</li><</dm_rxn_bg>>
                     <<dm_rxn_ins_long>><li>long-acting insulin</li><</dm_rxn_ins_long>>
+                    <<dm_rxn_ins_int>><li>Intermediate-acting insulin</li><</dm_rxn_ins_int>>
+                    <<dm_rxn_ins_mix>><li>Mixed insulin</li><</dm_rxn_ins_mix>>
+                    <<dm_rxn_ins_short>><li>short-acting insulin</li><</dm_rxn_ins_short>>
                     <<dm_rxn_glp1>><li>GLP1 analogue</li><</dm_rxn_glp1>>
                     <<dm_rxn_dpp4>><li>DPP4 inhibitor (<<dm_rxn_dpp4 />>)</li><</dm_rxn_dpp4>>
                     <<dm_rxn_sglt2>><li>SGLT2 inhibitor</li><</dm_rxn_sglt2>>

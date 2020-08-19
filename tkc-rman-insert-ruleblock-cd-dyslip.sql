@@ -74,11 +74,52 @@ BEGIN
                     { dls<3 =1},
                     {=>0};
         
+        
+        fhc_prob4 : { fhc_prob=4 =>1},{=>0};
+        
+        fhc_prob3 : { fhc_prob=3 =>1},{=>0};
+        
+        fhc_prob2 : { fhc_prob=2 =>1},{=>0};
+        
+        fhc_prob1 : { fhc_prob=1 =>1},{=>0};
+        
         ldl_subopt : { (ldl_val/ldl_unl)>1.2 =>1},{=>0};
+        
+        
         
         
         [[rb_id]] :  {((ascvd=1 and nvl(ldl_val,0)>1.8)) or nvl(ldl_val,0)>4.9 or dyslip_code_dt!? or fhc_prob>1 => 1},{=>0};
         
+        
+        #define_attribute(
+            fhc_prob4,
+            {
+                label:"Definitive Familial Hypercholesterolaemia based on modified DLS",
+                desc:"Definitive Familial Hypercholesterolaemia based on modified DLS",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            fhc_prob3,
+            {
+                label:"Probable Familial Hypercholesterolaemia based on modified DLS",
+                desc:"Probable Familial Hypercholesterolaemia based on modified DLS",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            fhc_prob2,
+            {
+                label:"Possible Familial Hypercholesterolaemia based on modified DLS",
+                desc:"Possible Familial Hypercholesterolaemia based on modified DLS",
+                is_reportable:1,
+                type:2
+            }
+        );
         
         #define_attribute(
             [[rb_id]],
@@ -89,6 +130,9 @@ BEGIN
                 type:2
             }
         );
+        
+        
+        
   
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -96,6 +140,7 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);  
     -- END OF RULEBLOCK --
 END;
+
 
 
 

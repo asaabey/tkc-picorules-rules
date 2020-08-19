@@ -445,13 +445,23 @@ BEGIN
             }
         );
         
-        
+        bxk : { ris_bxk_ld!? =>1},{=>0};  
         
         bxk_null : { ris_bxk_ld?  =>1},{=>0};
         
         canddt : {coalesce(ua_rbc_dt,spep_dt,ana_dt,dsdna_dt,anca_dt,c3_dt,asot_dt,aca_dt,b2gpa_dt,cryo_dt,ris_usk_ld,ris_bxk_ld)!? =>1},{=>0};
         
         [[rb_id]] : {ckd>=0 and canddt=1 => 1},{=>0};
+        
+        #define_attribute(
+            bxk,
+            {
+                label:"Native kidney biopsy",
+                desc:"Native kidney biopsy",
+                is_reportable:1,
+                type:2
+            }
+        );
      
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
