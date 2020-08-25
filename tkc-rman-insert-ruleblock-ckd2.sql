@@ -451,7 +451,11 @@ BEGIN
         
         canddt : {coalesce(ua_rbc_dt,spep_dt,ana_dt,dsdna_dt,anca_dt,c3_dt,asot_dt,aca_dt,b2gpa_dt,cryo_dt,ris_usk_ld,ris_bxk_ld)!? =>1},{=>0};
         
-        [[rb_id]] : {ckd>=0 and canddt=1 => 1},{=>0};
+        canddt_gn_wu : {ckd>0 and canddt=1 =>1},{=>0};
+        
+        canddt_bx : {canddt=1 =>1},{=>0};
+        
+        [[rb_id]] : {greatest(canddt_gn_wu,canddt_bx)>0 => 1},{=>0};
         
         #define_attribute(
             bxk,

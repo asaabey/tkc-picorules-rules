@@ -71,6 +71,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
 
     <div class="syn_dmg_box">
+    <a href="mailto:asanga.abeyaratne@nt.gov.au?subject=EID: <<eid />>">Feedback</a>
+    <hr />
+    
     <<dmg_source>>
 
             Primary health care network:
@@ -184,21 +187,22 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
 
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (12,'frame_synthesis_begin','dmg','
-    <hr />
-    <div class="syn_synopsis_box">
-        <h3>Relevant Diagnoses</h3>
-        <hr />
-        <div>
-    ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (13,'frame_synthesis_left_begin','dmg','
-    <div>
-    ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (14,'rrt_frame_begin','rrt','
-    <ul>
-    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (12,'frame_synthesis_begin','dmg','
+--    <hr />
+--    <div class="syn_synopsis_box">
+--        <h3>Relevant Diagnoses</h3>
+--        <hr />
+--        <div>
+--    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (13,'frame_synthesis_left_begin','dmg','
+--    <div>
+--    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (14,'rrt_frame_begin','rrt','
+--    <ul>
+--    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (15,'rrt_1_syn','rrt','
     <<rrt=1>>
+    <ul>
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
             <li>Currently on satellite haemodialysis, since <<hd_dt_min />></li>
@@ -212,6 +216,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <</rrt_past=1>>
         </ul>
     </li>
+    </ul>
     <</rrt=1>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (160,'rrt_hd_acc_iv','rrt_hd_acc_iv','
@@ -235,6 +240,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (16,'rrt_2_syn','rrt','
     <<rrt=2>>
+    <ul>
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
             <li>Currently on peritoneal dialysis, since <<pd_dt_min />></li>
@@ -248,10 +254,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <</rrt_past=1>>
         </ul>
     </li>
+    </ul>
     <</rrt=2>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (17,'rrt_3_syn','rrt','
     <<rrt=3>>
+    <ul>
     <li><b>Renal transplant due to (ESRD)</b>
         <ul>
             <li>Functioning allograft, since <<tx_dt />></li>
@@ -265,6 +273,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <</rrt_past=1>>
         </ul>
     </li>
+    </ul>
     <</rrt=3>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (18,'rrt_4_syn','rrt','
@@ -300,9 +309,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <</rxn>>
     </ul>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (20,'rrt_frame_end','rrt','
-    </ul>
-    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (21,'cd_ckd_syn_1','ckd','
     <ul>
         <li><b>CKD stage <<ckd_stage />></b>
@@ -324,6 +331,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             </li>
         </ul>
         </li>
+    </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (27,'cd_dm_syn_1','cd_dm_dx','
     <ul>
@@ -340,9 +348,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<cd_dm_dx_code=101110>><li>based on primary EHR, lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=101110>>
             <<cd_dm_dx_code=111110>><li>based on hospital and primary EHR, lab tests and presence of medication <<dm_icpc_fd />></li><</cd_dm_dx_code=111110>>
             <<cd_dm_dx_code=100000>><li>based on a single HbA1c of <<gluc_hba1c_high_f_val />> on <<gluc_hba1c_high_f_dt />></li><</cd_dm_dx_code=100000>>
-
+        </ul>
+    </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (28,'cd_dm_syn_2','cd_dm_comp','
+       <ul>
+            <ul>
             <li>Non-renal microvascular complications present
                 <ul>
                     <<dm_micvas_retino>>
@@ -357,16 +368,29 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     <</dm_micvas_retino>>
                     <<dm_micvas_neuro>><li>Diabetic neuropathy (<<dm_micvas_neuro />>)</li><</dm_micvas_neuro>>
                 </ul>
-            </li
+            </li>
+            </ul>
+        </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (29,'cd_dm_syn_3','cd_dm_glyc_cntrl','
+       <ul>
+            <ul>
             <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val />> % (<<hba1c_n0_dt />>)</li><</hba1c_n_tot>>
+            </ul> 
+       </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (30,'cd_dm_syn_4','cd_dm_dx','
-            <<dm_rxn=0>>
+
+    <<dm_rxn=0>>
+    <ul>
+        <ul>
                 <li>No medications recorded</li>
-            <</dm_rxn=0>>
-            <<dm_rxn>>
+        </ul>
+    </ul>
+    <</dm_rxn=0>>
+    <<dm_rxn>>
+    <ul>
+        <ul>    
                 <li>Current medication classes
                 <ul>
                     <<dm_rxn_su>><li>sulphonylurea</li><</dm_rxn_su>>
@@ -380,21 +404,23 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     <<dm_rxn_sglt2>><li>SGLT2 inhibitor</li><</dm_rxn_sglt2>>
                 </ul>
                 </li>
-            <</dm_rxn>>
+        </ul>
+    </ul>
+    <</dm_rxn>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (31,'cd_dm_syn_5','cd_dm_mx','
-             <<cp_dm=0>>
+    <<cp_dm=0>>
+    <ul><ul>
                 <li>PCIS diabetes careplan was not detected [2.4]</li>
-            <</cp_dm=0>>
-            <<cp_dm>>
+    </ul></ul>
+    <</cp_dm=0>>
+    <<cp_dm>>
+    <ul><ul>
                 <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
-            <</cp_dm>>
+    <ul><ul>
+    <</cp_dm>>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (32,'cd_dm_syn_6','cd_dm_dx','
-             </ul>
-        </li>
-    </ul>
-    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (33,'cd_obesity','cd_obesity','
     <ul>
         <<cd_obesity>><li><b>Obesity</b></li><</cd_obesity>>
@@ -418,8 +444,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 <<bp_trend=2>>Hypertension control appears to have worsened compared to last year<</bp_trend=2>>        
 
             </li>
-            
-
             <<bp_control=3>><li>BP control appears to be adequate</li><</bp_control=3>>
             <<bp_control=2>><li>BP control can be optimised</li><</bp_control=2>>
             <<bp_control=1>><li>BP control appears to sub-optimal</li><</bp_control=1>>
@@ -440,7 +464,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (35,'cd_cardiac_cad_syn','cd_cardiac_cad','
-
         <ul>
             <<cad>><li><b>Coronary artery disease</b>
             <ul>
@@ -647,12 +670,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
     </ul>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (44,'frame_synthesis_left_end','dmg','
-    </div>
-    ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (45,'frame_synthesis_end','dmg','
-    </div></div>
-    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (44,'frame_synthesis_left_end','dmg','
+--    </div>
+--    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (45,'frame_synthesis_end','dmg','
+--    </div></div>
+--    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (46,'rx_syn_1','rx_desc','
     <hr/> 
     <div class="syn_synopsis_box">
@@ -710,7 +733,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','
     <<rrt=0>>
-    <ul>
+    <ul><ul>
         
         <li>Aetiology
             <ul>
@@ -747,11 +770,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 <</aet_multiple=0>>
             </ul>
         </li>
-    </ul>
+    </ul></ul>
+    
     <</rrt=0>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (23,'cd_ckd_journey_1','ckd_journey','
-    <ul>
+    <ul><ul>
+    
         <li>Renal services engagement</li>
         <<enc_multi=0>><li><<enc_ld>>Nephrologist reviews <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
         <<enc_multi>><li>Nephrologist reviews: \t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li> <</enc_multi>>
@@ -760,11 +785,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <<dietn>><li>Renal Dietician review (last): \t<<dietn />></li><</dietn>>
         <<sw>><li>Renal social work review (last): \t<<sw />></li><</sw>>
         <<avf_ld>><li>CKD Access (AVF) formation date: \t\t<<avf_ld />></li><</avf_ld>>
-    </ul>
+    </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (24,'cd_ckd_dx_1','ckd_diagnostics','
-    <ul>
+    <ul><ul>
         <li>Diagnostic workup</li>
+        <<canddt_gn_wu=1>>
         <ul>
             <li>Basic urinalysis
             <<ua_null=1>> not performed <</ua_null=1>>
@@ -797,44 +823,46 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<b2gpa_dt>><li>Anti-beta 2 glycoprotein 1 : <<b2gpa_dt />></li><</b2gpa_dt>>
             
             <<cryo_dt>><li>Cryoglobulin : <<cryo_dt />></li><</cryo_dt>>
-            
+        </ul>
+        <</canddt_gn_wu=1>>
+        <<canddt_bx=1>>    
+        <ul>
             <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
             <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
              
         </ul>
-        
-    </ul>
+        <</canddt_bx=1>>
+    </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (25,'cd_ckd_compx_1','ckd_complications','<ul>
-    <li>CKD Complications
-    <ul>
-    <li>Haemopoetic function
-    <ul>
-    <<hb_lv>><li>Last haemoglobin on <<hb_ld />> is <<hb_lv />> g/L</li><</hb_lv>>
-    <<hb_state=2>><li>acceptable range</li><</hb_state=2>>
-    <<hb_state=1>><<mcv_state=11>><li>consistent with severe microcytic anaemia</li><</mcv_state=11>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=12>><li>consistent with microcytic anaemia</li><</mcv_state=12>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=20>><li>consistent with normocytic anaemia</li><</mcv_state=20>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=31>><li>consistent with macrocytic anaemia</li><</mcv_state=31>><</hb_state=1>>
-    <<hb_state=1>><<mcv_state=0>><li>consistent with anaemia<</mcv_state=0>></li><</hb_state=1>>
-    <<esa_state=0>><li>No ESA use</li><</esa_state=0>>
-    <<esa_state=1>><li>Current ESA use</li><</esa_state=1>>
-    <<esa_state=2>><li>Past ESA use but not current</li><</esa_state=2>>
-    <<iron_low>><li>Iron stores low/<li><</iron_low>>
-    </ul>
-    </li>
-    <li>Acid-base balance
-    <ul>
-    <<hco3_low>><li>low tCO2 at <<hco3_lv />> mmol/l likely due to metabolic acidosis</li><</hco3_low>>
-    </ul>
-    </li>
-    </ul>
-    </li>
-    </ul>
+    <ul><ul>
+        <li>CKD Complications
+        <ul>
+            <li>Haemopoetic function
+            <ul>
+                <<hb_lv>><li>Last haemoglobin on <<hb_ld />> is <<hb_lv />> g/L</li><</hb_lv>>
+                <<hb_state=2>><li>acceptable range</li><</hb_state=2>>
+                <<hb_state=1>><<mcv_state=11>><li>consistent with severe microcytic anaemia</li><</mcv_state=11>><</hb_state=1>>
+                <<hb_state=1>><<mcv_state=12>><li>consistent with microcytic anaemia</li><</mcv_state=12>><</hb_state=1>>
+                <<hb_state=1>><<mcv_state=20>><li>consistent with normocytic anaemia</li><</mcv_state=20>><</hb_state=1>>
+                <<hb_state=1>><<mcv_state=31>><li>consistent with macrocytic anaemia</li><</mcv_state=31>><</hb_state=1>>
+                <<hb_state=1>><<mcv_state=0>><li>consistent with anaemia<</mcv_state=0>></li><</hb_state=1>>
+                <<esa_state=0>><li>No ESA use</li><</esa_state=0>>
+                <<esa_state=1>><li>Current ESA use</li><</esa_state=1>>
+                <<esa_state=2>><li>Past ESA use but not current</li><</esa_state=2>>
+                <<iron_low>><li>Iron stores low/<li><</iron_low>>
+            </ul>
+            </li>
+            <li>Acid-base balance
+            <ul>
+                <<hco3_low>><li>low tCO2 at <<hco3_lv />> mmol/l likely due to metabolic acidosis</li><</hco3_low>>
+            </ul>
+            </li>
+        </ul>
+        </li>
+    </ul></ul>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (26,'cd_ckd_syn_2','ckd','
-    </ul>
-    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (52,'hb_graph','hb_graph','
     <hr />
     <div class="syn_synopsis_box">
@@ -1244,11 +1272,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (154,'rrt_1_metrics','rrt_1_metrics','
     <<rrt=1>>
-    <ul>
+    <ul><ul>
         <<tspan_y>><li>Dialysis vintage <<tspan_y />> years</li><</tspan_y>>
         <li>Regularity <<hd_sl />>% </li>
         <li>Thrice weekly target achievement <<hd_oe />>% </li>
-    </ul>
+    </ul></ul>
     <</rrt=1>>
     ');
 
@@ -1292,7 +1320,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (157,'rrt_hd_param','rrt_hd_param','
-    <ul>
+    <ul><ul>
     <li>Haemodialysis prescription <<mode_dt />></li>
         <ul>
             <<mode_val=10>><li>High Flux haemodialysis</li><</mode_val=10>>
@@ -1303,11 +1331,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<ibw_val>><li>IBW : <<ibw_val />> kg</li><</ibw_val>>
         </ul>
     </ul>
+    </ul>
     
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (158,'rrt_cause_syn_1','ckd_cause','
        <<rrt=1>>
-       <ul>
+       <ul><ul>
          <li>Aetiology</li>
          <ul>
                 <<aet_multiple=1>><li>Multiple aetiology is suggested</li>
@@ -1343,6 +1372,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     </li>
                 <</aet_multiple=0>>
             </ul>
-    </ul>
+    </ul></ul>
     <</rrt=1>>
     ');

@@ -1,5 +1,19 @@
-REM INSERTING into RMAN_RPT_COMP_TEMP
+
 TRUNCATE TABLE rman_rpt_comp_temp;
+
+/*
+Header      20xxxx
+Alerts      30xxxx
+Priority    50xxxx
+Synthesis   60xxxx
+Recommend   70xxxx
+
+RRT         xx11xx
+CKD         xx21xx
+Obesity     xx29xx
+Htn         xx31xx
+Cardiac     xx41xx
+*/
 
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,5,304100);

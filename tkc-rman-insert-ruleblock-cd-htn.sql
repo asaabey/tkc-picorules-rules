@@ -307,6 +307,38 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+        
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_htn_bp_control';
+
+    
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Ruleblock to assess blood pressure control */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Ruleblock to assess blood pressure control ",                
+                is_active:2
+                
+                
+            }
+        );
+        
+       
+
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
    
 END;
 
