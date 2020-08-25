@@ -294,7 +294,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <</rrt=4>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (19,'rrt_3_metric','rrt_tx','
-    <ul>
+    <ul><ul>
     <<cr_min_dt>><li>Best graft function creatinine <<cr_min_val />> on <<cr_min_dt />></li><</cr_min_dt>> 
     <<cr_last_dt>><li>Last recorded creatinine <<cr_last_val />> on <<cr_last_dt />></li><</cr_last_dt>>
     <<rxn>>
@@ -307,7 +307,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         </ul>
     </li>
     <</rxn>>
-    </ul>
+    </ul></ul>
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (21,'cd_ckd_syn_1','ckd','
@@ -417,7 +417,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<cp_dm>>
     <ul><ul>
                 <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
-    <ul><ul>
+    </ul></ul>
     <</cp_dm>>
     ');
 
@@ -435,7 +435,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <ul>
             <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_from_obs>> from observations <</htn_from_obs>> <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
             <<mu_1>><li>Average systolic BP during last year was <<mu_1 />> mmHg</li><</mu_1>>
-            <li><<sbp_outdated=1>>No readings within last two years<</sbp_outdated=1>></li>
+            <<sbp_outdated=1>><li>No readings within last two years</li><</sbp_outdated=1>>
             <<sbp_outdated=0>>
             <li>
                 
@@ -1374,4 +1374,41 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             </ul>
     </ul></ul>
     <</rrt=1>>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (159,'ldl_graph','ldl_graph','
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>LDL profile for the last <<dspan_y />> years</h5>
+
+    <div class="syn_container">
+
+
+    <svg height=<<g_graph_canvas_y />> width=<<g_graph_canvas_x />>>
+            <defs>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="5" markerHeight="5">
+                  <circle cx="5" cy="5" r="10" fill="blue" />
+                </marker>
+                <linearGradient id="grad12" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:0.3" />
+                </linearGradient>
+            </defs>
+        <polyline points="<<xy_coords />>" 
+          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+          <line x1="0" x2="<<g_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+          <line x1="0" x2="<<g_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+          <rect x="0" y="<<line_target_upper_y />>"  width="<<g_graph_canvas_x />>" height="40" fill="url(#grad12)" />
+
+          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<g_graph_y_max />></text>
+          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<g_graph_y_min />></text>
+    </svg>
+    <br />
+
+    
+    </div>
+    </div>
+
     ');
