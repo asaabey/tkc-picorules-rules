@@ -936,16 +936,31 @@ BEGIN
         
         egfr_l1 => eadv.lab_bld_egfr_c._.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
         
-        egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
+        egfr_l2 => eadv.lab_bld_egfr_c._.lastdv().where(dt < egfr_l_dt-365);
         
-        /*
         egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
         
-        egfr_tspan : {1=1 => egfr_l_dt-egfr_f_dt};
-        */
+        egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
+        
+        
         #doc(,
             {
-                txt : "Check for 1 year egfr assumption violation"
+                txt : "Check for 30 day egfr assumption violation with a threshold of 20% change between last and 30 days avg"
+            }
+        );
+        
+        egfr_30_n2 => eadv.lab_bld_egfr_c.val.count().where(dt>egfr_l_dt-30);
+        egfr_30_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
+        
+        egfr_30_qt : {egfr_30_n2>=2 => round(egfr_l_val/egfr_30_mu,2)};
+        
+        asm_viol_30 : {nvl(egfr_30_qt,1)>1.2 or nvl(egfr_30_qt,1)<0.8  => 1},{=> 0};
+        
+        
+
+        #doc(,
+            {
+                txt : "Check for 1 year egfr assumption violation with absolute 20 units change"
             }
         );
         
@@ -953,18 +968,14 @@ BEGIN
         
         asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
         
+        
         #doc(,
             {
-                txt : "Check for 1 month egfr assumption violation"
+                txt : "Composite Assumption violation "
             }
         );
         
-        egfr_1m_n2 => eadv.lab_bld_egfr_c.val.count(0).where(dt>egfr_l_dt-30);
-        egfr_1m_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
-        
-        egfr_1m_qt : {egfr_1m_n2>=2 => round(egfr_l_val/egfr_1m_mu,2)};
-        
-        asm_viol_1m : {nvl(egfr_1m_qt,1)>1.2 or nvl(egfr_1m_qt,1)<0.8  => 1},{=> 0};
+        g_asm_viol_ex : { asm_viol_1y=1 or asm_viol_30=1 =>0},{=>1};
                
         #doc(,
             {
@@ -972,7 +983,6 @@ BEGIN
             }
         );
 
-        
         
         
         egfr_max => eadv.lab_bld_egfr_c._.maxldv();
@@ -995,12 +1005,27 @@ BEGIN
         
         
         
+        
         #doc(,
             {
-                txt : "check for eGFR and uACR persistence based on KDIGO persistence definition "
+                txt : "Check for 90 day egfr persistence"
             }
         );
         
+        
+        g_pers : { egfr_l1_val<90 and egfr_l_val<60 => 1},{ egfr_l2_val<90 and egfr_l_val<60 =>1},{=>0};
+        
+        #doc(,
+            {
+                txt : "Check for 1y egfr progression"
+            }
+        );
+        
+        ckd_prog : { egfr_l2_val!? =>1},{=>0};
+   
+        l_l2_delta : { egfr_l2_val!? => egfr_l_val-egfr_l2_val};
+        
+        g_stage_prog : {l_l2_delta < -15 =>1},{=>0};
 
         #doc(,
             {
@@ -1063,16 +1088,23 @@ BEGIN
         
         #doc(,
             {
-                txt : "check for eGFR and uACR persistence based on KDIGO persistence definition "
+                txt : "check for uACR persistence based on KDIGO persistence definition "
             }
         );
         
         
         acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
         
-        pers : {acr_3m_n>0 => 1},{=>0};
+        a_pers : {acr_3m_n>0 => 1},{=>0};
+        
+        #doc(,
+            {
+                txt : "check for uACR assumption violation"
+            }
+        );
         
         
+        a_asm_viol_ex : { . =>1};
         #doc(,
             {
                 txt : "Apply KDIGO 2012 staging",
@@ -1244,25 +1276,20 @@ BEGIN
         
         #doc(,
             {
-                txt : "Check for 1 year egfr assumption violation"
+                txt : "Check for egfr and uacr assumption violation exclusion "
             }
         );
         
         
+        g_asm_viol_ex => rout_ckd_egfr_metrics.g_asm_viol_ex.val.bind();
+               
+        a_asm_viol_ex => rout_ckd_uacr_metrics.a_asm_viol_ex.val.bind();
         
-        asm_viol_1y => rout_ckd_egfr_metrics.asm_viol_1y.val.bind();
-        
-        #doc(,
-            {
-                txt : "Check for 1 month egfr assumption violation"
-            }
-        );
-        
-        asm_viol_1m  => rout_ckd_egfr_metrics.asm_viol_1m.val.bind();
+        asm_viol_ex : { g_asm_viol_ex=1 and a_asm_viol_ex=1 =>1},{=>0};
         
         #doc(,
             {
-                txt : "calculate uacr metrics"
+                txt : "Gather uacr metrics"
             }
         );
         
@@ -1279,14 +1306,11 @@ BEGIN
             }
         );
         
+        g_pers => rout_ckd_egfr_metrics.g_pers.val.bind();
         
+        a_pers => rout_ckd_uacr_metrics.a_pers.val.bind();
         
-        
-        
-        egfr_3m_n => eadv.lab_bld_egfr_c.val.count(0).where(dt<egfr_l_dt-90 and val<60);
-        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
-        
-        pers : {least(egfr_3m_n,acr_3m_n)>0 => 1},{=>0};
+        pers : {greatest(g_pers,a_pers)>0 => 1},{=>0};
         
         #doc(,
             {
@@ -1369,13 +1393,10 @@ BEGIN
         
         
         
-        [[rb_id]] :{cga_g=`G1` and cga_a in (`A2`,`A3`,`A4`) => 1},
-                {cga_g=`G2` and cga_a in (`A2`,`A3`,`A4`) => 2},
-                {cga_g=`G3A` => 3},
-                {cga_g=`G3B` => 4},
-                {cga_g=`G4` => 5},
-                {cga_g=`G5` => 6},
-                {=> 0};
+        [[rb_id]] : {. => ckd_stage_val};
+        
+        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000};
+        
         #doc(,
             {
                 txt : "KDIGO 2012 binary attributes"
