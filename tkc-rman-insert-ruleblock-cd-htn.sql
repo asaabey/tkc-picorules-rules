@@ -187,6 +187,10 @@ BEGIN
         
         htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>2 =>1},{=>0};
         
+        htn_prev : { htn_fd!? => 1 },{=>0};
+        
+        htn_incd : { htn_fd > sysdate - 365 => 1},{=>0};
+        
         [[rb_id]] : {.=> htn};
         
         htn_dx_uncoded : {htn_obs>=3 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};

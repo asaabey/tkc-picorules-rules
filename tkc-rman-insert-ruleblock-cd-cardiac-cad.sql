@@ -111,7 +111,13 @@ BEGIN
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k76%].dt.min();        
                 
-            cad_ex_ami :{ coalesce(cad_chronic_icd,cad_ihd_icpc)!? =>1},{=>0};    
+            cad_ex_ami :{ coalesce(cad_chronic_icd,cad_ihd_icpc)!? =>1},{=>0};   
+            
+            cad_fd : { . => least_date(cad_ihd_icpc,cad_chronic_icd)};
+            
+            cad_prev : { cad_fd!? => 1 },{=>0};
+        
+            cad_incd : { cad_fd > sysdate - 365 => 1},{=>0};
             
             cad : { greatest(ami,cad_ex_ami)>0 or cabg!? =>1 },{=>0};
             
@@ -137,6 +143,8 @@ BEGIN
             cva : { cva_dt!? =>1},{=>0};
            
             pvd : { pvd_dt!? =>1},{=>0};
+            
+            
             
             #doc(,
                 {

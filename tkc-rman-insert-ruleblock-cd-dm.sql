@@ -192,6 +192,10 @@ BEGIN
                     {dm_mixed=1 =>2},
                     {=>0};
         
+        dm_prev : { dm_fd!? => 1 },{=>0};
+        
+        dm_incd : { dm_fd > sysdate - 365 => 1},{=>0};
+        
         
         dm_dx_code_flag : {greatest(dm_icd_coded,dm_icpc_coded)>0 => 1},{=>0};
         
@@ -221,7 +225,7 @@ BEGIN
         
         cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_lab*100 + dm_rxn*10};
         
-        cd_dm_dx : { . => dm};
+        [[rb_id]] : { . => dm};
         
         #define_attribute(
             dm,
