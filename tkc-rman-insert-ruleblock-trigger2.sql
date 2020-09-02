@@ -522,7 +522,7 @@ BEGIN
         
         eb : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};  
         
-        egfr_l_l1_qt : {egfr_l1_val!? =>(egfr_l_val/egfr_l1_val)},{=>0};
+        egfr_l_l1_qt : { coalesce(egfr_l1_val,0)>0 =>(egfr_l_val/egfr_l1_val)},{=>0};
         
         egfr_ss : { egfr_l_l1_qt>0.8 and egfr_l_l1_qt<1.2 =>1 },{=>0};
         
