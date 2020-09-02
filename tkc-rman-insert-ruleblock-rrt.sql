@@ -65,7 +65,7 @@ BEGIN
                 txt : "Transplant problem ICPC2p coding"
             }
         );
-        tx_dt => eadv.icpc_u28001.dt.max();
+        tx_dt_icpc => eadv.icpc_u28001.dt.max();
         
         #doc(,
             {
@@ -73,6 +73,8 @@ BEGIN
             }
         );
         tx_dt_icd => eadv.icd_z94_0.dt.max();
+        
+        tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
         
         #doc(,
             {

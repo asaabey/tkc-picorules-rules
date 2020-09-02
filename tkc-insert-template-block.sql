@@ -71,7 +71,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
 
     <div class="syn_dmg_box">
-    <a href="mailto:asanga.abeyaratne@nt.gov.au?subject=EID: <<eid />>">Feedback</a>
+    <a href="mailto:asanga.abeyaratne@nt.gov.au?subject=TKC Feedback EID: <<eid />>">Feedback</a>
     <hr />
     
     <<dmg_source>>
@@ -828,7 +828,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <<canddt_bx=1>>    
         <ul>
             <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
-            <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<bxk_null=0>>Kidney biopsy on <<ris_bxk_ld />><</bxk_null=0>></li>
+            <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<ris_bxk_ld>>Kidney biopsy on <<ris_bxk_ld />><</ris_bxk_ld>></li>
              
         </ul>
         <</canddt_bx=1>>
@@ -931,24 +931,24 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <tbody>
         <tr class="syn_tr">
             <td><strong>Lab</strong></td>
-            <td><strong><<creat1_dt />></strong></td>
-            <td><strong><<creat2_dt />></strong></td>
-            <td><strong><<creat3_dt />></strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
 
         </tr>
         <tr class="syn_tr">
             <td>Creatinine (umol)</td>
-            <td><<creat1_val>><strong><<creat1_val />></strong> <</creat1_val>></td>
-            <td><<creat2_val>><strong><<creat2_val />></strong> <</creat2_val>></td>
-            <td><<creat3_val>><strong><<creat3_val />></strong> <</creat3_val>></td>
+            <td><<creat1_val>><strong><<creat1_val />></strong>(<<creat1_dt />>) <</creat1_val>></td>
+            <td><<creat2_val>><strong><<creat2_val />></strong> (<<creat2_dt />>)<</creat2_val>></td>
+            <td><<creat3_val>><strong><<creat3_val />></strong> (<<creat3_dt />>)<</creat3_val>></td>
 
             <td></td>
         </tr>
         <tr class="syn_tr">
             <td>eGFR (ml/min/1.72m)</td>
-            <td><<egfr1_val>><strong><<egfr1_val />></strong> <</egfr1_val>></td>
-            <td><<egfr2_val>><strong><<egfr2_val />></strong> <</egfr2_val>></td>
-            <td><<egfr3_val>><strong><<egfr3_val />></strong> <</egfr3_val>></td>
+            <td><<egfr1_val>><strong><<egfr1_val />></strong>(<<egfr1_dt />>) <</egfr1_val>></td>
+            <td><<egfr2_val>><strong><<egfr2_val />></strong>(<<egfr2_dt />>) <</egfr2_val>></td>
+            <td><<egfr3_val>><strong><<egfr3_val />></strong>(<<egfr3_dt />>) <</egfr3_val>></td>
 
         </tr>
 
@@ -960,9 +960,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 <div>Sodium (mmol/l)</div>
 
             </td>
-            <td><<sodium1_val>><strong><<sodium1_val />></strong> <</sodium1_val>></td>
-            <td><<sodium2_val>><strong><<sodium2_val />></strong> <</sodium2_val>></td>
-            <td><<sodium3_val>><strong><<sodium3_val />></strong> <</sodium3_val>></td>
+            <td><<sodium1_val>><strong><<sodium1_val />></strong> (<<sodium1_dt />>)<</sodium1_val>></td>
+            <td><<sodium2_val>><strong><<sodium2_val />></strong> (<<sodium2_dt />>) <</sodium2_val>></td>
+            <td><<sodium3_val>><strong><<sodium3_val />></strong> (<<sodium3_dt />>)<</sodium3_val>></td>
 
         </tr>
         <tr class="syn_tr">
@@ -971,9 +971,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
 
             </td>
-            <td><<potassium1_val>><strong><<potassium1_val />></strong> <</potassium1_val>></td>
-            <td><<potassium2_val>><strong><<potassium2_val />></strong> <</potassium2_val>></td>
-            <td><<potassium3_val>><strong><<potassium3_val />></strong> <</potassium3_val>></td>
+            <td><<potassium1_val>><strong><<potassium1_val />></strong>(<<potassium1_dt />>) <</potassium1_val>></td>
+            <td><<potassium2_val>><strong><<potassium2_val />></strong>(<<potassium2_dt />>) <</potassium2_val>></td>
+            <td><<potassium3_val>><strong><<potassium3_val />></strong>(<<potassium3_dt />>) <</potassium3_val>></td>
 
         <td> </td>
         </tr>
@@ -981,9 +981,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (56,'ckd_labs_tbl3','ckd_labs','
         <tr class="syn_tr">
             <td>CO2 (mmol/l)</td>
-            <td><<bicarb1_val>><strong><<bicarb1_val />></strong> <</bicarb1_val>></td>
-            <td><<bicarb2_val>><strong><<bicarb2_val />></strong> <</bicarb2_val>></td>
-            <td><<bicarb3_val>><strong><<bicarb3_val />></strong> <</bicarb3_val>></td>
+            <td><<bicarb1_val>><strong><<bicarb1_val />></strong>(<<bicarb1_dt />>) <</bicarb1_val>></td>
+            <td><<bicarb2_val>><strong><<bicarb2_val />></strong>(<<bicarb2_dt />>) <</bicarb2_val>></td>
+            <td><<bicarb3_val>><strong><<bicarb3_val />></strong>(<<bicarb3_dt />>) <</bicarb3_val>></td>
 
         </tr>
         <tr class="syn_tr">
@@ -1002,16 +1002,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         </tr>
         <tr class="syn_tr">
             <td>Calcium (mmol/l)</td>
-            <td><<calcium1_val>><strong><<calcium1_val />></strong> <</calcium1_val>></td>
-            <td><<calcium2_val>><strong><<calcium2_val />></strong> <</calcium2_val>></td>
-            <td><<calcium3_val>><strong><<calcium3_val />></strong> <</calcium3_val>></td>
+            <td><<calcium1_val>><strong><<calcium1_val />></strong>(<<calcium1_dt />>) <</calcium1_val>></td>
+            <td><<calcium2_val>><strong><<calcium2_val />></strong>(<<calcium2_dt />>) <</calcium2_val>></td>
+            <td><<calcium3_val>><strong><<calcium3_val />></strong>(<<calcium3_dt />>) <</calcium3_val>></td>
 
         </tr>
         <tr class="syn_tr">
             <td>Phosphate (mmol/l)</td>
-            <td><<phos1_val>><strong><<phos1_val />></strong> <</phos1_val>></td>
-            <td><<phos2_val>><strong><<phos2_val />></strong> <</phos2_val>></td>
-            <td><<phos3_val>><strong><<phos3_val />></strong> <</phos3_val>></td>
+            <td><<phos1_val>><strong><<phos1_val />></strong> (<<phos1_dt />>) <</phos1_val>></td>
+            <td><<phos2_val>><strong><<phos2_val />></strong> (<<phos2_dt />>)<</phos2_val>></td>
+            <td><<phos3_val>><strong><<phos3_val />></strong> (<<phos3_dt />>)<</phos3_val>></td>
 
 
 
