@@ -77,13 +77,22 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<dmg_source>>
 
             Primary health care network:
-            <<dmg_source=1>><span class="badge badge-warning">NTG PCIS</span><</dmg_source=1>> 
-            <<dmg_source=3>><span class="badge badge-warning">NTG EACS</span><</dmg_source=3>>
+            <<dmg_source=1>><span class="badge badge-info">NTG PCIS</span><</dmg_source=1>> 
+            <<dmg_source=3>><span class="badge badge-info">NTG EACS</span><</dmg_source=3>>
             <<dmg_source=4>><span class="badge badge-warning">LAYNHAPUY</span><</dmg_source=4>>
             <<dmg_source=5>><span class="badge badge-warning">MIWATJ</span><</dmg_source=5>>
             <<dmg_source=6>><span class="badge badge-warning">ANYINGINYI</span><</dmg_source=6>>
             <<dmg_source=8>><span class="badge badge-warning">CONGRESS</span><</dmg_source=8>>
             <<dmg_source=9>><span class="badge badge-warning">WURLI</span><</dmg_source=9>>
+            <br />
+            <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS</span><</pcis_n>> 
+            <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS</span><</eacs_n>>
+            
+            <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</laynhapuy_n>>
+            <<miwatj_n>><span class="badge badge-pill badge-warning">MIWATJ</span><</miwatj_n>>
+            
+            <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS</span><</congress_n>>
+            <<wurli_n>><span class="badge badge-pill badge-warning">WURLI</span><</wurli_n>>
 
             <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
             <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
