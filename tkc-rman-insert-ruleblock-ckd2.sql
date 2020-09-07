@@ -1255,7 +1255,10 @@ BEGIN
             }
         );
         
-       rrt => rout_rrt.rrt.val.bind(); 
+       rrt => rout_rrt.rrt.val.bind();
+       
+       hd_131_n => rout_rrt.hd_131_n.val.bind();
+       
        #doc(,
             {
                 txt : "Gather egfr metrics "
@@ -1586,6 +1589,7 @@ BEGIN
             }
         );
         
+        mm1 : { ckd>3 and coalesce(hd_131_n,0)>0 =>1},{=>0};
         
         
         ';

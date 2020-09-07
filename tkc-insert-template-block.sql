@@ -183,7 +183,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <h5>
     Alert: New commencement on Renal replacement therapy (Trigger 4720)
     </h5>
-    <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min />>. <<hd_start>>
+    <<hd_start>>Patient has been commenced on haemodialysis on <<hd_dt_min />>. <</hd_start>>
+    <<pd_start>>Patient has been commenced on peritoneal dialysis on <<pd_dt_min />>. <</pd_start>>
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (11,'alert_tg4810','tg4810','
@@ -321,8 +322,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (21,'cd_ckd_syn_1','ckd','
     <ul>
-        <li><b>CKD stage <<ckd_stage />></b>
+        <li><b>CKD stage <<ckd_stage />></b><<mm1>>?<</mm1>>
         <ul>
+            <<mm1>><li>Could be a dialysis patient with non-captured episodes</li><</mm1>>
             <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
             <<dx_ckd=0>><li>No coded diagnosis on the EHR (ICD/ICPC coding) [1.2]</li><</dx_ckd=0>>
             <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>

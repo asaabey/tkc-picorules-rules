@@ -674,6 +674,8 @@ BEGIN
           
         pd_start : {pd_dt_min > sysdate-90 => 1},{=>0};
         
+        rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
+        
         ex_flag : {dod!? => 1},{=>0};
           
         [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
