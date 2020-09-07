@@ -1568,7 +1568,9 @@ BEGIN
         
         cp_mis :{cp_ckd_val>0 and (ckd - cp_ckd_val)>=2 => 1},{=>0};
         
+        avf => rout_ckd_access.avf.val.bind();
         avf_has => rout_ckd_access.avf_has.val.bind();
+        
         
         #define_attribute(
             cp_mis,
