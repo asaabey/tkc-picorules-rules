@@ -1165,7 +1165,7 @@ BEGIN
             avf_has,
             {
                 label:"AVF present",
-                is_reportable:1,
+                is_reportable:0,
                 type:2
             }
         );
