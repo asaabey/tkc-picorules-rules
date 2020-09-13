@@ -49,38 +49,36 @@ BEGIN
         htn => rout_cd_htn.cd_htn.val.bind();
         
         cad => rout_cd_cardiac_cad.cad.val.bind();
+        cva => rout_cd_cardiac_cad.cva.val.bind();
+        pvd => rout_cd_cardiac_cad.pvd.val.bind();
+        
+        cvd : { greatest(cad,cva,pvd)>0 =>1},{=>0};
         
         obesity => rout_cd_obesity.cd_obesity.val.bind();
         
-        gn => rout_ckd_c_gn.ckd_c_gn.val.bind();
         
-        tid => rout_ckd_c_tid.ckd_c_tid.val.bind();
+        aki_fd => eadv.[icd_n17%].dt.min();
+        
+        aki : {aki_fd!? =>1},{=>0};
+        
+        smoker => eadv.status_smoking_h2_v1.val.last().where(val>=29);
+        
         
         dod => rout_dmg.dod.val.bind();
     
         #doc(,
             {
-                txt:"Gather risk factors from coding"
+                txt:"Check if active"
             }
         );
        
         
         
-        lab_ld => eadv.[lab_bld%].dt.max().where(dt > sysdate-730);
-        
         obs_ld => eadv.[obs%].dt.max().where(dt > sysdate-730);
         
-        is_active_2y : {coalesce(lab_ld,obs_ld)!? and dod? => 1},{=>0};
+        is_active_2y : {obs_ld!? and dod? => 1},{=>0};
               
-        obst => eadv.[icd_e66%,icpc_t82%].dt.min();
-            
-        lit => eadv.[icd_n20,icd_n21,icd_n22,icd_n23,icpc_u95%].dt.min();
         
-        struc => eadv.[icd_n25,icd_n26,icd_n27,icd_n28,icd_n29,icpc_u28006].dt.min();
-            
-        cti => eadv.[icd_l00%,icd_l01%,icd_l02%,icd_l03%,icd_l04%,icd_l05%,icd_l06%,icd_l07%,icd_l08%,icd_l09%,icd_m86%,icpc_s76%].dt.min();
-        
-        aki => eadv.[icd_n17%].dt.min();
         
         #doc(,
             {
@@ -89,14 +87,37 @@ BEGIN
         );
         
             
-        [[rb_id]] : {(greatest(dm,htn,cad,obesity)>0 or coalesce(obst,lit,struc,aki,cti)!?)  
+        [[rb_id]] : {greatest(dm,htn,cvd,obesity,aki,smoker)>0   
                 and ckd=0 
                 and rrt=0 =>1},
                 {=>0};
         
         active : {. => is_active_2y};
         
+        
+        
         tkc_cohort : { greatest(ckd,rrt,at_risk)>0 =>1},{=>0};
+        
+        
+        #doc(,
+            {
+                txt:"Determine if renal screened"
+            }
+        );
+        
+        egfr_ld => eadv.lab_bld_egfr.dt.max().where(dt > sysdate-365);
+        
+        acr_ld => eadv.lab_ua_acr.dt.max().where(dt > sysdate-365);
+        
+        bp_ld => eadv.obs_bp_systolic.dt.max().where(dt > sysdate-365);
+        
+        screen_egfr : { egfr_ld!? =>1},{=>0};
+        
+        screen_acr : { acr_ld!? =>1},{=>0};
+        
+        screen_bp : { bp_ld!? =>1},{=>0};
+        
+        screen_3 : { . => screen_egfr + screen_acr + screen_bp};
         
         #define_attribute(
             [[rb_id]],
