@@ -144,7 +144,58 @@ BEGIN
                     type:2
                 }
         );
+        #define_attribute(
+            smoker,
+                {
+                    label:"Prevalent smoker",
+                    is_reportable:1,
+                    type:2
+                }
+        );
+        #define_attribute(
+            aki,
+                {
+                    label:"Past AKI by hospital coding",
+                    is_reportable:1,
+                    type:2
+                }
+        );
         
+        #define_attribute(
+            screen_egfr,
+                {
+                    label:"screened by egfr within last 1y",
+                    is_reportable:1,
+                    type:2
+                }
+        );
+        
+        #define_attribute(
+            screen_acr,
+                {
+                    label:"screened by uACR within last 1y",
+                    is_reportable:1,
+                    type:2
+                }
+        );
+        
+        #define_attribute(
+            screen_bp,
+                {
+                    label:"screened by blood pressure within last 1y",
+                    is_reportable:1,
+                    type:2
+                }
+        );
+        
+        #define_attribute(
+            screen_3,
+                {
+                    label:"screened by blood pressure uACR and eGFR within last 1y as per recommendations",
+                    is_reportable:1,
+                    type:2
+                }
+        );
         
     ';
     

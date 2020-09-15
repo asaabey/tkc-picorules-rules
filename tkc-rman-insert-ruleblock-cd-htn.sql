@@ -55,8 +55,9 @@ BEGIN
         );
        
         
-        htn_icd => eadv.[icd_i10%,icd_i15%].dt.count(0);
-        htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.count(0);
+        
+        htn_icd => eadv.[icd_i10%,icd_i15%].dt.min();
+        htn_icpc => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
         
         #doc(,
             {
@@ -110,12 +111,16 @@ BEGIN
         );
         
         
-        htn_fd_code => eadv.[icd_i10%,icd_i15%,icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
+        
+        
+        htn_fd_code : { . => least_date(htn_icd,htn_icpc)};
+        
         htn_fd_obs => eadv.obs_bp_systolic.dt.min().where(val>140);
         
-        htn_fd : {coalesce(htn_fd_code,htn_fd_obs) is not null => least(nvl(htn_fd_code,to_date(`01012999`,`DDMMYYYY`)),nvl(htn_fd_obs,to_date(`01012999`,`DDMMYYYY`)))};
         
-        htn_fd_yr : { htn_fd is not null => to_char(htn_fd,`YYYY`) };
+        htn_fd : { .=> least_date(htn_fd_code,htn_fd_obs)};
+        
+        htn_fd_yr : { htn_fd!? => to_char(htn_fd,`YYYY`) };
         
         htn_type_2 => eadv.[icd_i15_%].dt.count(0);
         
@@ -185,7 +190,7 @@ BEGIN
         
         
         
-        htn : {greatest(htn_icd,htn_icpc)>0 or htn_obs>2 =>1},{=>0};
+        htn : {coalesce(htn_icd,htn_icpc)!? or htn_obs>2 =>1},{=>0};
         
         htn_prev : { htn_fd!? => 1 },{=>0};
         
@@ -193,12 +198,32 @@ BEGIN
         
         [[rb_id]] : {.=> htn};
         
-        htn_dx_uncoded : {htn_obs>=3 and greatest(htn_icd,htn_icpc)=0 => 1},{=>0};
+        htn_dx_uncoded : {htn_obs>=3 and coalesce(htn_icd,htn_icpc)? => 1},{=>0};
         
         #define_attribute(
             [[rb_id]],
             {
                 label:"Hypertension",
+                desc:"Presence of Hypertension",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            htn_incd,
+            {
+                label:"Incident Hypertension",
+                desc:"Presence of Hypertension",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            htn_prev,
+            {
+                label:"Prevalent Hypertension",
                 desc:"Presence of Hypertension",
                 is_reportable:1,
                 type:2

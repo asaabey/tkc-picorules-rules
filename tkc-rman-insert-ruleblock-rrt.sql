@@ -135,7 +135,7 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Renal replacement therapy category.",
+                label:"Prevalent renal replacement therapy category [1=HD, 2=PD, 3=TX, 4=HHD]",
                 desc:"Integer [1-4] where 1=HD, 2=PD, 3=TX, 4=HHD",
                 is_reportable:0,
                 type:2
@@ -173,6 +173,33 @@ BEGIN
             rrt_hhd,
             {
                 label:"RRT Home haemodialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            hd_incd,
+            {
+                label:"Incident Haemodialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            pd_incd,
+            {
+                label:"Incident Peritoneal dialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            rrt_incd,
+            {
+                label:"Incident Peritoneal or haemodialysis",
                 is_reportable:1,
                 type:2
             }

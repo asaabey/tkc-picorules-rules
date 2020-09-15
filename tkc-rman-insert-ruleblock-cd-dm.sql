@@ -237,6 +237,36 @@ BEGIN
             }
         );
         
+        #define_attribute(
+            dm_prev,
+            {
+                label:"Prevalent Diabetes Mellitus",
+                desc:"Presence of Type 2/1 Diabetes mellitus",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            dm_incd,
+            {
+                label:"Incident Diabetes Mellitus",
+                desc:"Presence of Type 2/1 Diabetes mellitus",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+        #define_attribute(
+            dm_dx_uncoded,
+            {
+                label:"Absent ICPC2+ coding indicating Diabetes Mellitus",
+                desc:"",
+                is_reportable:1,
+                type:2
+            }
+        );
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
