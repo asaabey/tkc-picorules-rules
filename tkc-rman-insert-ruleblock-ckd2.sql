@@ -1164,8 +1164,8 @@ BEGIN
         #define_attribute(
             avf_has,
             {
-                label:"AVF present",
-                is_reportable:0,
+                label:"Prevalent arteriovenous fistula for haemodialysis",
+                is_reportable:1,
                 type:2
             }
         );
@@ -1525,6 +1525,16 @@ BEGIN
                 {dx_ckd=0 => `0`};
                 
         #define_attribute(
+            dx_ckd,
+            {
+                label:"CKD stage on EHR as per ICPC2+ Code",
+                desc:"Integer",
+                is_reportable:0,
+                type:2
+            }
+        );
+        
+        #define_attribute(
             dx_ckd_stage,
             {
                 label:"CKD stage on EHR as per ICPC2+ Code",
@@ -1541,6 +1551,16 @@ BEGIN
             {
                 label:"Difference between coded and calculated",
                 desc:"Algebraic difference between numeric stages ",
+                is_reportable:0,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            assert_level,
+            {
+                label:"Composite indicating persistence and no assumption violation",
+                desc:"Composite number",
                 is_reportable:0,
                 type:2
             }
