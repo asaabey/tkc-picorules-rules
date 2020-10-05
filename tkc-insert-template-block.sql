@@ -72,6 +72,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
     <div class="syn_dmg_box">
     <a href="mailto:asanga.abeyaratne@nt.gov.au?subject=TKC Feedback EID: <<eid />>">Feedback</a>
+    
+    <rman_img:img1 />
     <hr />
     
     <<dmg_source>>
