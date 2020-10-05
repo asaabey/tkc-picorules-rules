@@ -1218,9 +1218,9 @@ BEGIN
             }
         );
         
-        enc_n => eadv.enc_op_renal.dt.count();
-        enc_ld => eadv.enc_op_renal.dt.max();
-        enc_fd => eadv.enc_op_renal.dt.min();
+        enc_n => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.count();
+        enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
+        enc_fd => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.min();
         
         enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
 

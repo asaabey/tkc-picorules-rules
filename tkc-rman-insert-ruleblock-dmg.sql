@@ -35,6 +35,8 @@ BEGIN
         
         gender => eadv.dmg_gender.val.last();
         
+        alive : {dod? => 1},{=>0};
+        
         /* Constants */
         st_rman_ver : {.=> 1000};
         
@@ -68,6 +70,15 @@ BEGIN
             {
                 label:"Gender [male=1 female=2]",
                 type:12,
+                is_reportable:1
+            }
+        );
+        
+        #define_attribute(
+            alive,
+            {
+                label:"Alive with absent DOD",
+                type:02,
                 is_reportable:1
             }
         );
