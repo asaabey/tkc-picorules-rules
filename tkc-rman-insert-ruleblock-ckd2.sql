@@ -406,7 +406,7 @@ BEGIN
         
         
         ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney].dt.max();
-        ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney].dt.max();
+        ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney,bxk].dt.max();
         
         
         
@@ -1154,7 +1154,9 @@ BEGIN
             }
         );
         
-        avf => eadv.[caresys_3450901,caresys_3451200,caresys_3451800,icpc_k99049].dt.max();
+        avf => eadv.[caresys_3450901,caresys_3451200,caresys_3451800,icpc_k99049,icd_z49_0].dt.max();
+                
+                
         
         
         avf_has : { avf!?  =>1},{=>0};

@@ -38,7 +38,7 @@ BEGIN
         
         rxn_p01ba => eadv.[rxnc_p01ba].dt.min().where(val=1);
         
-        
+        sle_fd : { .=> least_date(icd_fd,icpc_fd)};
         
         [[rb_id]] : { coalesce(icd_fd,icpc_fd)!? =>1},{=>0};
         
