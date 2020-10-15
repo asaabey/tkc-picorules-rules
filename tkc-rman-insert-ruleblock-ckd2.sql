@@ -509,21 +509,17 @@ BEGIN
         );
         
         
+        hb => eadv.lab_bld_hb._.lastdv().where(dt>sysdate-365);
         
-        hb_lv => eadv.lab_bld_hb.val.last();
-        hb_ld => eadv.lab_bld_hb.dt.max();
+        pth => eadv.lab_bld_pth._.lastdv().where(dt>sysdate-365);
         
-        plt_lv => eadv.lab_bld_platelets.val.last();
+        wcc_neut => eadv.lab_bld_wcc_neutrophils._.lastdv().where(dt>sysdate-365);
         
-        wcc_neut_lv => eadv.lab_bld_wcc_neutrophils.val.last();
-        wcc_eos_lv => eadv.lab_bld_wcc_eosinophils.val.last();
+        wcc_eos => eadv.lab_bld_wcc_eosinophils._.lastdv().where(dt>sysdate-365);
         
-        rbc_mcv_lv => eadv.lab_bld_rbc_mcv.val.last();
+        rbc_mcv => eadv.lab_bld_rbc_mcv._.lastdv().where(dt>sysdate-365);
         
-        
-        
-        esa_lv => eadv.rxnc_b03xa.val.last();
-        esa_ld => eadv.rxnc_b03xa.dt.max();
+        esa => eadv.rxnc_b03xa._.lastdv().where(dt>sysdate-365);
         
         b05_ld => eadv.[rxnc_b05cb,rxnc_b05xa].dt.max().where(val=1);
         
@@ -533,26 +529,18 @@ BEGIN
             }
         );
         
+        k => eadv.lab_bld_potassium._.lastdv().where(dt>sysdate-365);
         
+        ca => eadv.lab_bld_calcium_corrected._.lastdv().where(dt>sysdate-365);
         
-        k_lv => eadv.lab_bld_potassium.val.last();
-        k_ld => eadv.lab_bld_potassium.dt.max();
+        phos => eadv.lab_bld_phosphate._.lastdv().where(dt>sysdate-365);
         
+        hco3 => eadv.lab_bld_bicarbonate._.lastdv().where(dt>sysdate-365);
         
-        ca_lv => eadv.lab_bld_calcium_corrected.val.last();
-        ca_ld => eadv.lab_bld_calcium_corrected.val.last();
+        alb => eadv.lab_bld_albumin._.lastdv().where(dt>sysdate-365);
         
-        phos_lv => eadv.lab_bld_phosphate.val.last();
-        hco3_lv => eadv.lab_bld_bicarbonate.val.last();
+        fer => eadv.lab_bld_ferritin._.lastdv().where(dt>sysdate-365);
         
-        alb_lv => eadv.lab_bld_albumin.val.last();
-        
-        
-        pth_lv => eadv.lab_bld_pth.val.last();
-        pth_ld => eadv.lab_bld_pth.val.last();
-        
-        fer_lv => eadv.lab_bld_ferritin.val.last();
-        fer_ld => eadv.lab_bld_ferritin.dt.max();
         
         #doc(,
             {
@@ -561,23 +549,23 @@ BEGIN
         );
         
         
-        hb_state : { nvl(hb_lv,0)>0 and nvl(hb_lv,0)<100 =>1},
-                    { nvl(hb_lv,0)>=100 and nvl(hb_lv,0)<180 =>2},
-                    { nvl(hb_lv,0)>180 =>3},
+        hb_state : { nvl(hb_val,0)>0 and nvl(hb_val,0)<100 =>1},
+                    { nvl(hb_val,0)>=100 and nvl(hb_val,0)<180 =>2},
+                    { nvl(hb_val,0)>180 =>3},
                     {=>0};
                     
-        mcv_state : { hb_state=1 and nvl(rbc_mcv_lv,0)>0 and nvl(rbc_mcv_lv,0)<70 => 11 },
-                    { hb_state=1 and nvl(rbc_mcv_lv,0)>=70 and nvl(rbc_mcv_lv,0)<80 => 12 },
-                    { hb_state=1 and nvl(rbc_mcv_lv,0)>=80 and nvl(rbc_mcv_lv,0)<=100 => 20 },
-                    { hb_state=1 and nvl(rbc_mcv_lv,0)>=100 => 31 },{ =>0};
+        mcv_state : { hb_state=1 and nvl(rbc_mcv_val,0)>0 and nvl(rbc_mcv_val,0)<70 => 11 },
+                    { hb_state=1 and nvl(rbc_mcv_val,0)>=70 and nvl(rbc_mcv_val,0)<80 => 12 },
+                    { hb_state=1 and nvl(rbc_mcv_val,0)>=80 and nvl(rbc_mcv_val,0)<=100 => 20 },
+                    { hb_state=1 and nvl(rbc_mcv_val,0)>=100 => 31 },{ =>0};
                     
-        iron_low : { hb_state=1 and nvl(fer_lv,0)>0 and nvl(fer_lv,0)<250 => 1},{=>0};
+        iron_low : { hb_state=1 and nvl(fer_val,0)>0 and nvl(fer_val,0)<250 => 1},{=>0};
         
         thal_sig : {mcv_state=11 =>1 },{=>0};
         
-        esa_null : { esa_lv? =>1},{=>0};
+        esa_null : { esa_dt? =>1},{=>0};
         
-        esa_state : { esa_null=0 and esa_lv=1 => 1},{ esa_null=0 and esa_lv=0 => 2},{=>0};
+        esa_state : { esa_null=0 and esa_val=1 => 1},{ esa_null=0 and esa_val=0 => 2},{=>0};
         
         #doc(,
             {
@@ -585,13 +573,11 @@ BEGIN
             }
         );
         
+        alb_low : { alb_val<32 => 1},{=>0};
         
+        phos_high : {phos_val>=2 =>1},{=>0};
         
-        phos_null : {phos_lv? =>1},{=>0};
-        phos_high : {phos_null=0 and phos_lv>=2 =>1},{=>0};
-        
-        pth_null : {pth_lv? =>1},{=>0};
-        pth_high : {pth_null=0 and pth_lv>=63 =>1},{=>0};
+        pth_high : {pth_val>=63 =>1},{=>0};
         
         #doc(,
             {
@@ -600,8 +586,7 @@ BEGIN
         );
         
         
-        k_null : {k_lv? =>1},{=>0};
-        k_high : {k_null=0 and k_lv>=6 =>1},{=>0};      
+        k_high : {k_val>=6 =>1},{=>0};      
         
         #doc(,
             {
@@ -609,19 +594,71 @@ BEGIN
             }
         );
         
+        ckd_anm_no_esa : { hb_state=1 and ckd>4 and esa_state=0 =>1 },{=>0};
         
-        hco3_null : {hco3_lv? =>1},{=>0};
-        hco3_low : {hco3_null=0 and hco3_lv<22 =>1},{=>0};
+        hco3_low : {hco3_val<22 =>1},{=>0};
         
         rcm_bicarb : {hco3_low=1 and b05_ld? => 1},{=>0};
         
-        [[rb_id]] : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high)>0=> 1},{=>0};
+        [[rb_id]] : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_low)>0=> 1},{=>0};
         
         #define_attribute(
             [[rb_id]],
             {
                 label:"CKD complication present",
                 desc:"Integer [0-1] if CKD current complication present",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            pth_high,
+            {
+                label:"Hyperphosphataemia due to CKD",
+                is_reportable:1,
+                type:2
+            }
+        );
+        #define_attribute(
+            phos_high,
+            {
+                label:"Likely secondary hyperparathyroidism due to CKD",
+                is_reportable:1,
+                type:2
+            }
+        );
+        #define_attribute(
+            alb_low,
+            {
+                label:"Hypoalbuminaemia in CKD",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            k_high,
+            {
+                label:"Hyperkalaemia in CKD",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            k_high,
+            {
+                label:"Hyperkalaemia in CKD",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            ckd_anm_no_esa,
+            {
+                label:"Anaemia in CKD without ESA",
                 is_reportable:1,
                 type:2
             }

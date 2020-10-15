@@ -259,9 +259,9 @@ BEGIN
         
         anyinginyi_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=6);
         
-        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=8);
+        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13,14));
         
-        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=8);
+        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13,14));
         
         wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=9);
         
@@ -279,7 +279,7 @@ BEGIN
         
         phc_miwatj : { phc_1=5 => 1 },{=>0};
         
-        phc_congress : { phc_1=8 => 1 },{=>0};
+        phc_congress : { phc_1 in(8,11,12,13,14) => 1 },{=>0};
         
         phc_wurli : { phc_1=9 => 1 },{=>0};
 

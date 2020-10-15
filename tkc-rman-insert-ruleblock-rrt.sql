@@ -84,7 +84,7 @@ BEGIN
         homedx_dt => eadv.[icpc_u59j99].dt.max();
         
         
-        ren_enc => eadv.enc_op_renal.dt.max();
+        ren_enc => eadv.[enc_op%].dt.max();
         
         #doc(,
             {
