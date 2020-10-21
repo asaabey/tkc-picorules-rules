@@ -155,6 +155,9 @@ BEGIN
      
      c_q64 => eadv.[icd_q64%].dt.min();
      
+     c_c64 => eadv.[icd_c64%,icpc_u75003,icpc_u52014].dt.min();
+     
+     
      canddt : {ckd>0 or rrt>0=>1},{=>0};
      
      aet_dm : {canddt=1 and dm>0 =>1},{=>0};
@@ -1192,17 +1195,20 @@ BEGIN
             }
         );
         
-        avf => eadv.[caresys_3450901,caresys_3451200,caresys_3451800,icpc_k99049,icd_z49_0].dt.max();
+        avf_proc => eadv.[caresys_3450901,caresys_3451200,caresys_3451800].dt.max();
+        
+        avf_icpc => eadv.icpc_k99049.dt.max();        
                 
-                
+        avf_icd => eadv.icd_z49_0.dt.max();        
         
+        avf : { coalesce(avf_proc,avf_icd,avf_icpc)!?  =>1},{=>0};
         
-        avf_has : { avf!?  =>1},{=>0};
+        avf_dt : { coalesce(avf_proc,avf_icd,avf_icpc)!? => least_date(avf_proc,avf_icd,avf_icpc)};
         
-        [[rb_id]] :{ avf!? =>1},{=>0};
+        [[rb_id]] :{ .=> avf};
                 
         #define_attribute(
-            avf_has,
+            avf,
             {
                 label:"Prevalent arteriovenous fistula for haemodialysis",
                 is_reportable:1,
@@ -1629,7 +1635,7 @@ BEGIN
         cp_mis :{cp_ckd_val>0 and (ckd - cp_ckd_val)>=2 => 1},{=>0};
         
         avf => rout_ckd_access.avf.val.bind();
-        avf_has => rout_ckd_access.avf_has.val.bind();
+        avf_dt => rout_ckd_access.avf_dt.val.bind();
         
         
         #define_attribute(

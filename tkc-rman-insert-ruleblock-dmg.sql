@@ -259,19 +259,19 @@ BEGIN
         
         anyinginyi_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=6);
         
-        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13,14));
+        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(8,10,11,12,13));
         
-        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13,14));
+        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(8,10,11,12,13));
         
-        wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=9);
+        wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=14);
         
-        wurli_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=9);
+        wurli_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=14);
         
-        kwhb_n => eadv.dmg_location.dt.count().where(dt>sysdate-1000 and substr(val,2,2)=10);
+        kwhb_n => eadv.dmg_location.dt.count().where(dt>sysdate-1000 and substr(val,2,2)=9);
         
-        kwhb_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=10);
+        kwhb_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=9);
         
-        phc_0 => eadv.dmg_location.val.stats_mode().where(dt > sysdate-1000 and substr(val,2,2) in (1,4,5,6,8,9,10));
+        phc_0 => eadv.dmg_location.val.stats_mode().where(dt > sysdate-1000 and substr(val,2,2) in (1,4,5,6,8,9,10,11,12,13,14));
         
         phc_1 : { phc_0!? => to_number(substr(phc_0,2,2))},{=>0};
         

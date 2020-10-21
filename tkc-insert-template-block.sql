@@ -71,7 +71,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
 
     <div class="syn_dmg_box">
-    <a href="mailto:asanga.abeyaratne@nt.gov.au?subject=TKC Feedback EID: <<eid />>">Feedback</a>
+    <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>">Feedback</a>
     
     <rman_img:img1 />
     <hr />
@@ -335,7 +335,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
             <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
             <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />> and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
-            <<avf>><li>An arterio-venous fistula has been created on <<avf />></li><</avf>>
+            <<avf>><li>An <strong>arterio-venous fistula</strong> has been created on <<avf_dt />></li><</avf>>
             <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
             <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
             <ul>
@@ -1375,7 +1375,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
                     <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
                     <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_c_q63>>
-                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_c_q64>>
+                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_q64>>
+                    <<c_c64>><li>Renal cell carcinoma<<c_c64 />></li><</c_c64>>
                 </ul>
                 <</aet_multiple=1>>
                 <<aet_multiple=0>>
