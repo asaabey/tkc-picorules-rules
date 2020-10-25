@@ -750,12 +750,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         
         <li>Aetiology
             <ul>
-                <<aet_multiple=1>><li>Multiple aetiology is suggested
+                <<aet_multiple=1>><li>Potential cause for CKD
                 <ul>
                     <<aet_dm=1>><li>diabetes mellitus</li><</aet_dm=1>>
                     <<aet_htn=1>><li>hypertension</li><</aet_htn=1>>
                     <<aet_gn_ln=1>><li>lupus nephritis</li><</aet_gn_ln=1>>
-                    <<aet_gn_x=1>><li>glomerulopathy NOS</li><</aet_gn_x=1>>
+                    <<aet_gn=1>><li>glomerulopathy NOS</li><</aet_gn=1>>
                     <<c_n00>><li>Acute nephritic syndrome <<c_n00 />></li><</c_n00>>
                     <<c_n01>><li>Rapidly progressive nephritic syndrome <<c_n01 />></li><</c_n01>>
                     <<c_n03>><li>Chronic nephritic syndrome <<c_n03 />></li><</c_n03>>
@@ -773,7 +773,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
                     <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
                     <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_c_q63>>
-                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_c_q64>>
+                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_q64>>
+                    <<c_c64>><li>Renal cell cancer<<c_c64 />></li><</c_c64>>
                 </ul></li>
                 <</aet_multiple=1>>
                 <<aet_multiple=0>>
@@ -1425,4 +1426,83 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     </div>
 
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (200,'ca_solid','ca_solid','
+    <ul>
+    <li><b>Solid organ cancer</b></li>
+        <<ca_breast_fd>>
+        <ul>
+            <li>Breast carcinoma <<ca_breast_fd />></li> 
+        </ul>
+        <</ca_breast_fd>>
+        <<ca_prostate_fd>>
+        <ul>
+            <li>Prostate carcinoma <<ca_prostate_fd />></li> 
+        </ul>
+        <</ca_prostate_fd>>
+        <<ca_crc_fd>>
+        <ul>
+            <li>Prostate carcinoma <<ca_crc_fd />></li> 
+        </ul>
+        <</ca_crc_fd>>
+        <<ca_rcc_fd>>
+        <ul>
+            <li>Renal cell carcinoma <<ca_rcc_fd />></li> 
+        </ul>
+        <</ca_rcc_fd>>
+        <<ca_lung_fd>>
+        <ul>
+            <li>Lung carcinoma <<ca_lung_fd />></li> 
+        </ul>
+        <</ca_lung_fd>>
+    </ul>
+    
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (210,'ca_mets','ca_mets','
+    <ul>
+    <ul>
+    <li><b>Metastatic disease</b></li>
+        <<bone_met_fd>>
+        <ul>
+            <li>Bone metastatases <<bone_met_fd />></li>
+        </ul>
+        <</bone_met_fd>>
+        <<cns_met_fd>>
+        <ul>
+            <li>Brain or CNS metastatases <<cns_met_fd />></li>
+        </ul>
+        <</cns_met_fd>>
+        <<adr_met_fd>>
+        <ul>
+            <li>Adrenal metastatases <<adr_met_fd />></li>
+        </ul>
+        <</adr_met_fd>>
+        <<liver_met_fd>>
+        <ul>
+            <li>Liver metastatases <<liver_met_fd />></li>
+        </ul>
+        <</liver_met_fd>>
+        <<lung_met_fd>>
+        <ul>
+            <li>Liver metastatases <<lung_met_fd />></li>
+        </ul>
+        <</lung_met_fd>>
+        <<perit_met_fd>>
+        <ul>
+            <li>Peritoneal metastatases <<perit_met_fd />></li>
+        </ul>
+        <</perit_met_fd>>
+        <<nodal_met_fd>>
+        <ul>
+            <li>Nodal metastatases <<nodal_met_fd />></li>
+        </ul>
+        <</nodal_met_fd>>
+        <<nos_met_fd>>
+        <ul>
+            <li>Metastatases NOS <<nos_met_fd />></li>
+        </ul>
+        <</nos_met_fd>>
+    </ul>
+    </ul>
+    
     ');
