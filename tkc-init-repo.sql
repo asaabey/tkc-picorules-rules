@@ -37,6 +37,7 @@
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
 @"tkc-rman-insert-ruleblock-ca.sql";
+@"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
 
 -- Init templates
 --@"tkc-create-rman-rpt-templates-neph2-h-3.sql";

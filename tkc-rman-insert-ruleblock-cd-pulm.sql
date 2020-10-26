@@ -40,7 +40,7 @@ BEGIN
         
         #define_attribute([[rb_id]],
             { 
-                label: "Presence of Pulmonary disease"
+                label: "Presence of COPD"
             }
         );
     ';

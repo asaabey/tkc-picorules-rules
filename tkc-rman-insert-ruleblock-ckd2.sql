@@ -408,7 +408,7 @@ BEGIN
         asot => eadv.[lab_code_s2136]._.lastdv();
         
         
-        ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney].dt.max();
+        ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney,usk].dt.max();
         ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney,bxk].dt.max();
         
         
@@ -452,10 +452,9 @@ BEGIN
         
         bxk_null : { ris_bxk_ld?  =>1},{=>0};
         
-        canddt : {coalesce(ua_rbc_dt,spep_dt,ana_dt,dsdna_dt,anca_dt,c3_dt,asot_dt,aca_dt,b2gpa_dt,cryo_dt,ris_usk_ld,ris_bxk_ld)!? 
-                    and ckd>0 =>1},{=>0};
+        canddt : {coalesce(ua_rbc_dt,spep_dt,ana_dt,dsdna_dt,anca_dt,c3_dt,asot_dt,aca_dt,b2gpa_dt,cryo_dt,ris_usk_ld,ris_bxk_ld)!? =>1},{=>0};
         
-        canddt_gn_wu : {ckd>0 and canddt=1 =>1},{=>0};
+        canddt_gn_wu : {canddt=1 =>1},{=>0};
         
         canddt_bx : {canddt=1 =>1},{=>0};
         
@@ -1263,6 +1262,7 @@ BEGIN
                 txt : " Encounters with specialist services"
             }
         );
+        
         
         enc_n => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.count();
         enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();

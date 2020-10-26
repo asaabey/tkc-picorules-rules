@@ -14,45 +14,41 @@ BEGIN
     
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='cd_rheum_sle';
+    rb.blockid:='cd_endo_hypothyroid';
     
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
     
-        /*  This is a algorithm to identify SLE e-phenotype  */
+        /*  This is a algorithm to identify hypothyroidism  */
         
         #define_ruleblock([[rb_id]],
             {
-                description: "This is a algorithm to identify SLE e-phenotype",
+                description: "This is a algorithm to identify hypothyroidism",
                 is_active:2
                 
             }
         );
         
-        icd_fd => eadv.[icd_m32_%].dt.min();
+        cong_fd => eadv.[icd_e03_1,icpc_t86004].dt.min();
         
-        icpc_fd => eadv.[icpc_l99056,icpc_l99065].dt.min();
+        rx_induced_fd => eadv.[icd_e03_2,icpc_t86008].dt.min();
         
+        post_mx_fd => eadv.[icd_89%,icpc_t86005,icpc_t86006].dt.min();
         
+        nos_fd => eadv.[icpc_t86009,icpc_t86003,icd_e03_5,icd_e03_8,icd_e03_9].dt.min();
         
-        rxn_l04ax => eadv.[rxnc_l04ax].dt.min().where(val=1);
+        code_fd : { . => least_date(cong_fd,rx_induced_fd,post_mx_fd,nos_fd)};
         
-        rxn_p01ba => eadv.[rxnc_p01ba].dt.min().where(val=1);
+        rx_h03aa_ld => eadv.[rxnc_h03aa].dt.max().where(val=1);
         
-        sle_fd : { .=> least_date(icd_fd,icpc_fd)};
-        
-        [[rb_id]] : { sle_fd!? =>1},{=>0};
+        [[rb_id]] : { coalesce(code_fd,rx_h03aa_ld)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
             { 
-                label: "Presence of SLE",
-                is_reportable:1,
-                type:2
+                label: "Presence of hypothyroidism"
             }
         );
-        
-        
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

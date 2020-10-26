@@ -87,10 +87,7 @@ BEGIN
         );
         
             
-        [[rb_id]] : {greatest(dm,htn,cvd,obesity,aki,smoker)>0   
-                and ckd=0 
-                and rrt=0 =>1},
-                {=>0};
+        [[rb_id]] : {ckd=0 and rrt=0 =>1},{=>0};
         
         active : {. => is_active_2y};
         

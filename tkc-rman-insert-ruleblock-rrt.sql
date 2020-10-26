@@ -60,6 +60,8 @@ BEGIN
         
         pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
+        pd_ex_dt => eadv.[caresys_1311000].dt.min();
+        
         #doc(,
             {
                 txt : "Transplant problem ICPC2p coding"
@@ -92,8 +94,8 @@ BEGIN
             }
         );
         
-        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_1y_n>10 or hd_131_1y_n>10)  and hd_dt>sysdate-365 => 1},
-            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) => 2},
+        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) => 1},
+            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_ex_dt? => 2},
             {tx_dt > nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
             {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) => 4},
             {=>0};
@@ -102,6 +104,8 @@ BEGIN
                 txt: "Generate binary variables for rrt categories"
             }
         );
+        
+        rrt_mm1 : { hd_dt<sysdate-90 =>1},{=>0};
             
         rrt_hd : {rrt=1 => 1},{=>0};
         
@@ -472,6 +476,8 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         
+        avf_dt => rout_ckd_access.avf_dt.val.bind();
+        
         avf_us_ld => eadv.ris_code_usavfist.dt.last();
         
         av_gram_ld => eadv.ris_code_dshfist.dt.last();
@@ -495,7 +501,7 @@ BEGIN
                         
         av_iv : {av_plasty_ld!? => 1},{=>0};
         
-        [[rb_id]] : { rrt in (1,4) and av_surv_ld!?=>1},{=>0};
+        [[rb_id]] : { rrt in (1,4) and (av_surv_ld!? or avf_dt!?)=>1},{=>0};
         
         #define_attribute(
             [[rb_id]] ,

@@ -218,11 +218,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <li><b>End-stage renal failure (ESRD)</b>
         <ul>
             <li>Currently on satellite haemodialysis, since <<hd_dt_min />></li>
+            <li><<rrt_mm1=1>><span class="badge badge-danger">Discrepancy</span>No recent episodes. Private dialysis provider ? recovered CKD?<</rrt_mm1=1>></li>
             <<rrt_past=1>>
                 <li>Past renal replacement therapies</li>
                     <ul>
                         <<tx_dt>><li>Past failed renal transplant <<tx_dt />></li><</tx_dt>>
-                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt />></li><</pd_dt>>
+                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt_min />>-<<pd_dt />></li><</pd_dt>>
                         <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
                     </ul>
             <</rrt_past=1>>
@@ -233,9 +234,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (160,'rrt_hd_acc_iv','rrt_hd_acc_iv','
     
-    <ul>
-    <li><b>Vascular access surveillance</b>
+    <ul><ul>
+    <li>Vascular access
         <ul>
+            <<avf_dt>><li><b>AVF</b> date <<avf_dt />></li><</avf_dt>>
             <<av_us_ld>><li>Last US fistulogram <<av_us_ld />></li><</av_us_ld>>
             <<av_gram_ld>><li>Last DSA fistulogram <<av_gram_ld />></li><</av_gram_ld>>
             <<av_plasty_ld>><li>DSA fistuloplasty [<<av_plasty_ld />>-<<av_plasty_1_ld />>][<<av_plasty_n />>]</li><</av_plasty_ld>>
@@ -248,7 +250,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             </li><</av_plasty_ld>>
         </ul>
     </li>
-    </ul>
+    </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (16,'rrt_2_syn','rrt','
     <<rrt=2>>
@@ -746,7 +748,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (22,'cd_ckd_cause_syn_1','ckd_cause','
-    <<rrt=0>>
     <ul><ul>
         
         <li>Aetiology
@@ -786,8 +787,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             </ul>
         </li>
     </ul></ul>
-    
-    <</rrt=0>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (23,'cd_ckd_journey_1','ckd_journey','
     <ul><ul>
@@ -1272,6 +1271,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
 ');
 
+
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (153,'ckd_labs_ga','ckd_labs_ga','
    
    
@@ -1324,7 +1325,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <ul>
     <li><b>Systemic Lupus Erythematosus</b></li>
         <ul>
-            <li>Diagnosed <<icpc_fd />> </li>
+            <li>Diagnosed <<sle_fd />> </li>
             <ul>
                 <<rxn_l04ax>><li>Thiopurine <<rxn_l04ax />></li><</rxn_l04ax>>
                 <<rxn_p01ba>><li>Hydroxychloroquine <<rxn_p01ba />></li><</rxn_p01ba>>
@@ -1507,3 +1508,34 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </ul>
     
     ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (170,'cd_pulm','cd_pulm','
+    <ul>
+    <li><b>Chronic obstructive pulmonary disease</b></li>
+        <ul>
+            <<code_copd_dt>><li>Diagnosed <<code_copd_dt />></li><</code_copd_dt>>
+            <<rx_r03_dt>><li>Bronchodilator therapy <<rx_r03_dt />></li><</rx_r03_dt>>
+        </ul>
+    </ul>
+    
+    ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (180,'cd_endo_hypothyroid','cd_endo_hypothyroid','
+    <ul>
+    <li><b>Hypothyroidism</b></li>
+        <ul>
+            <<code_fd>><li>Cause</li><</code_fd>>
+            <ul>
+                <<cong_fd>><li>Congenital <<cong_fd />></li><</cong_fd>>
+                <<rx_induced_fd>><li>Acquired <<rx_induced_fd />></li><</rx_induced_fd>>
+                <<post_mx_fd>><li>Post ablative therapy <<post_mx_fd />></li><</post_mx_fd>>
+                <<nos_fd>><li>Unspecified cause <<nos_fd />></li><</nos_fd>>
+            </ul>
+            <<rx_h03aa_ld>><li>Thyroxin replacement therapy <<rx_h03aa_ld />></li><</rx_h03aa_ld>>
+        </ul>
+    </ul>
+    
+    ');
+/
+-- Compile rman_tmplts
+alter package rman_tmplts compile;
