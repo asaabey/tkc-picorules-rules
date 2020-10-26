@@ -338,6 +338,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<avf>><li>An <strong>arterio-venous fistula</strong> has been created on <<avf_dt />></li><</avf>>
             <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
             <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
+            <<rsc_ld>><li><b>Renal supportive care <<rsc_ld />></b></li><</rsc_ld>>
             <ul>
                 <<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>>
             </ul>

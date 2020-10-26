@@ -1269,8 +1269,30 @@ BEGIN
         enc_fd => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.min();
         
         enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
+        
+        #doc(,
+            {
+                txt : "Supportive care"
+            }
+        );
+        
+        rsc_ld => eadv.icpc_u59011.dt.last();
+        
+        rsc : {rsc_ld!? =>1},{=>0};
+        
+        
 
-        [[rb_id]] : {. => cp_ckd_val};  
+        [[rb_id]] : {. => cp_ckd_val};
+        
+        
+         #define_attribute(
+            rsc,
+            {
+                label:"Renal supportive care",
+                is_reportable:1,
+                type:2
+            }
+        );
             
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -1552,6 +1574,8 @@ BEGIN
         cp_ckd_val => rout_ckd_careplan.cp_ckd_val.val.bind();
         
         cp_ckd_ld => rout_ckd_careplan.cp_ckd_ld.val.bind();
+        
+        rsc_ld => rout_ckd_careplan.rsc_ld.val.bind();
         
         #doc(,
             {
