@@ -163,7 +163,7 @@ BEGIN
         slice140_1_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-365);
         slice140_1_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-365);
         
-        
+        avg_bp_1y : { .=> round(mu_1,1)};
         sbp_outdated : {nvl(greatest(sigma_2,sigma_1),0)=0 => 1},{=>0};
         
         #doc(,

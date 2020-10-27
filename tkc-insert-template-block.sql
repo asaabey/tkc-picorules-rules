@@ -98,6 +98,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS</span><</congress_n>>
             <<wurli_n>><span class="badge badge-pill badge-warning">WURLI</span><</wurli_n>>
 
+            
+
             <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
             <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
             <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
@@ -1124,83 +1126,92 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (49,'acr_graph_acr','acr_graph','
     <hr />
     <div class="syn_synopsis_box">
-    <h5>uACR profile for the last <<dspan_y />> years</h5>
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            uACR profile for the last <<dspan_y />> years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                      <svg height=<<acr_graph_canvas_y />> width=<<acr_graph_canvas_x />>>
+                            <style> .small { font:Ariel 8px;font-weight:normal;} </style>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+                                  <circle cx="5" cy="5" r="10" fill="blue" />
+                                </marker>
+                            </defs>
+                        <polyline points="<<xy_coords />>" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="<<acr_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <line x1="0" x2="<<acr_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<acr_graph_y_max />></text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<acr_graph_y_min />></text>
+                    </svg>
+                    <svg height=10 width=<<acr_graph_canvas_x />>>
 
-    <div class="syn_container">
-
-
-    <svg height=<<acr_graph_canvas_y />> width=<<acr_graph_canvas_x />>>
-            <style>
-                    .small { font:Ariel 8px;font-weight:normal;}
-            </style>
-            <defs>
-                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-                    markerWidth="5" markerHeight="5">
-                  <circle cx="5" cy="5" r="10" fill="blue" />
-                </marker>
-            </defs>
-        <polyline points="<<xy_coords />>" 
-          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-          <line x1="0" x2="<<acr_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <line x1="0" x2="<<acr_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-
-
-          <text x="330" y="12" class="small"><<acr_graph_y_max />></text>
-          <text x="330" y="94" class="small"><<acr_graph_y_min />></text>
-
-
-    </svg>
-    <br />
-
-    <svg height=10 width=<<acr_graph_canvas_x />>>
-    <style>
-                    .small { font:Ariel 8px;font-weight:normal;}
-    </style>
-        <text x="0" y="10" class="small"><<acr_f_dt />></text>  
-        <text x="290" y="10" class="small"><<acr_l_dt />></text> 
-    </svg>
-    </div>
+                        <text x="0" y="10" style="fill: #000000; stroke: none; font-size: 10px;"><<acr_f_dt />></text>  
+                        <text x="290" y="10" style="fill: #000000; stroke: none; font-size: 10px;"><<acr_l_dt />></text> 
+                    </svg>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small><strong>Last <<acr_l_val />> (<<acr_l_dt />>) </strong></small></li>
+                        <li class="list-group-item"><small>Max <<acr_max_val />> (<<acr_max_dt />>) </small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (50,'hba1c_graph','hba1c_graph','
     <hr />
     <div class="syn_synopsis_box">
-    <h5>Hba1c profile for the last <<dspan_y />> years</h5>
+    
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            Hba1c profile for the last <<dspan_y />> years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <svg height=<<hba1c_graph_canvas_y />> width=<<hba1c_graph_canvas_x />>>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+                                  <circle cx="5" cy="5" r="10" fill="blue" />
+                                </marker>
+                                <linearGradient id="grad12" x1="0%" y1="100%" x2="0%" y2="0%">
+                                        <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:0.3" />
+                                        <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:0.3" />
+                                </linearGradient>
+                            </defs>
+                        <polyline points="<<xy_coords />>" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                
+                          <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                
+                          <rect x="0" y="<<line_target_upper_y />>"  width="<<hba1c_graph_canvas_x />>" height="40" fill="url(#grad12)" />
+                
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_max />></text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_min />></text>
+                    </svg>
+                    <svg height=10 width=<<hba1c_graph_canvas_x />>>
+                        <text x="0" y="10" style="fill: #000000; stroke: none; font-size: 10px;"><<hba1c_f_dt />></text>  
+                        <text x="290" y="10"style="fill: #000000; stroke: none; font-size: 10px;" ><<hba1c_l_dt />></text> 
+                    </svg>
+            </div>
+            <div class="col-md-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small><strong>Last <<hba1c_l_val />> (<<hba1c_l_dt />>) </strong></small></li>
+                        <li class="list-group-item"><small>Max <<hba1c_max_val />> (<<hba1c_max_dt />>) </small></li>
+                        <li class="list-group-item"><small>Min <<hba1c_min_val />> (<<hba1c_min_dt />>) </small></li>
+                        
+                    </ul>
+            </div>
+        </div>
+        </div>
 
-    <div class="syn_container">
-
-
-    <svg height=<<hba1c_graph_canvas_y />> width=<<hba1c_graph_canvas_x />>>
-            <defs>
-                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-                    markerWidth="5" markerHeight="5">
-                  <circle cx="5" cy="5" r="10" fill="blue" />
-                </marker>
-                <linearGradient id="grad12" x1="0%" y1="100%" x2="0%" y2="0%">
-                        <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:0.3" />
-                        <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:0.3" />
-                </linearGradient>
-            </defs>
-        <polyline points="<<xy_coords />>" 
-          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-          <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <line x1="0" x2="<<hba1c_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <rect x="0" y="<<line_target_upper_y />>"  width="<<hba1c_graph_canvas_x />>" height="40" fill="url(#grad12)" />
-
-          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_max />></text>
-          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hba1c_graph_y_min />></text>
-    </svg>
-    <br />
-
-    <svg height=10 width=<<hba1c_graph_canvas_x />>>
-        <text x="0" y="10" style="fill: #000000; stroke: none; font-size: 10px;"><<hba1c_f_dt />></text>  
-        <text x="290" y="10"style="fill: #000000; stroke: none; font-size: 10px;" ><<hba1c_l_dt />></text> 
-    </svg>
     </div>
     </div>
 
@@ -1208,54 +1219,42 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (51,'graph_bp','bp_graph','
     <hr />
     <div class="syn_synopsis_box">
-    <h5>Blood pressure profile for the last 5 years</h5>
-
-    <div class="syn_container">
-
-    <div class="syn_col_left">
-
-
-        <svg height=<<bp_graph_canvas_y />> width=<<bp_graph_canvas_x />>>
-        <defs>
-            <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-                markerWidth="5" markerHeight="5">
-              <circle cx="5" cy="5" r="10" fill="blue" />
-            </marker>
-        </defs>
-    <polyline points="<<xy_coords />>" 
-      style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-      <line x1="0" x2="<<bp_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-      <line x1="0" x2="<<bp_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-      <rect x="0" y="<<line_target_upper_y />>"  width="<<bp_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
-
-      <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<bp_graph_y_max />></text>
-      <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<bp_graph_y_min />></text>
-    </svg>
-
+    
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            Blood pressure profile for the last 5 years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                     <svg height=<<bp_graph_canvas_y />> width=<<bp_graph_canvas_x />>>
+                        <defs>
+                            <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+                              <circle cx="5" cy="5" r="10" fill="blue" />
+                            </marker>
+                        </defs>
+                        <polyline points="<<xy_coords />>" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="<<bp_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <line x1="0" x2="<<bp_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <rect x="0" y="<<line_target_upper_y />>"  width="<<bp_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<bp_graph_y_max />></text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<bp_graph_y_min />></text>
+                    </svg>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small>Time in range <<tir_pct />>%</small></li>
+                        <li class="list-group-item"><small>Maximum <<sbp_max />> mmHg</small></li>
+                        <li class="list-group-item"><small>Minimum <<sbp_min />> mmHg</small></li>
+                        <li class="list-group-item"><small>Average (1y) <<avg_bp_1y />> mmHg</small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
     </div>
-     <div class="syn_col_right">
-
-        <svg height="200" width="200">
-
-        <circle r="50" cx="120" cy="50" fill="white" stroke="<<pie_colour />>" />
-        <circle r="<<radius />>" cx="120" cy="50" fill="white" 
-              stroke="<<pie_colour />>"
-              stroke-width="49"
-              stroke-dasharray="<<tir_arc />> <<circum />>"
-              />
-        <text x="70" y="150" style="font-size:18px;">Time in range % <<tir_pct />>%</text>
-
-    </svg>
-    </div>
-
-
-
-
-
-
-    </div>
+    
     </div>
 
     ');
