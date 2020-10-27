@@ -1263,6 +1263,7 @@ BEGIN
             }
         );
         
+        ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
         
         enc_n => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.count();
         enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
@@ -1280,15 +1281,23 @@ BEGIN
         
         rsc : {rsc_ld!? =>1},{=>0};
         
+        ckd_careplan_doc : {. => cp_ckd_val};
         
-
-        [[rb_id]] : {. => cp_ckd_val};
+        [[rb_id]] : { ckd_careplan_doc>0 or rsc=1 or enc_null=0 or ref_ren_ld!? => 1},{=>0};
         
         
          #define_attribute(
             rsc,
             {
                 label:"Renal supportive care",
+                is_reportable:1,
+                type:2
+            }
+        );
+        #define_attribute(
+            ref_ren,
+            {
+                label:"Renal referral from primary care",
                 is_reportable:1,
                 type:2
             }
@@ -1576,6 +1585,8 @@ BEGIN
         cp_ckd_ld => rout_ckd_careplan.cp_ckd_ld.val.bind();
         
         rsc_ld => rout_ckd_careplan.rsc_ld.val.bind();
+        
+        ref_ld => rout_ckd_careplan.ref_ren_ld.val.bind();
         
         #doc(,
             {

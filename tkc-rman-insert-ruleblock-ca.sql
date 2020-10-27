@@ -8,6 +8,57 @@ DECLARE
     rb rman_ruleblocks%rowtype;
 BEGIN
 
+
+    
+-- BEGINNING OF RULEBLOCK --
+
+    rb.blockid := 'ca_careplan';
+    DELETE FROM rman_ruleblocks
+    WHERE
+        blockid = rb.blockid;
+
+    rb.picoruleblock := '
+    
+        /*  This is a algorithm to identify cancer careplan  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a algorithm to identify cancer careplan",
+                is_active:2
+                
+            }
+        );
+        
+        
+        op_enc_ld => eadv.enc_op_onc.dt.max();
+        
+        
+        [[rb_id]] : { op_enc_ld!? => 1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Attendance at oncology clinic",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks (
+        blockid,
+        picoruleblock
+    ) VALUES (
+        rb.blockid,
+        rb.picoruleblock
+    );
+
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+
  -- BEGINNING OF RULEBLOCK --
 
     rb.blockid := 'ca_mets';
@@ -71,6 +122,7 @@ BEGIN
     COMMIT;
     -- END OF RULEBLOCK --
     
+    
 -- BEGINNING OF RULEBLOCK --
 
     rb.blockid := 'ca_solid';
@@ -104,6 +156,8 @@ BEGIN
         ca_lung_fd => rout_ca_lung.code_fd.val.bind();
         
         any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd)!? => 1},{=>0};
+        
+        op_enc_ld => rout_ca_careplan.op_enc_ld.val.bind();
         
         [[rb_id]] : { any_ca=1 or ca_mets=1 => 1},{=>0};
         
@@ -155,6 +209,15 @@ BEGIN
         
         code_fd : { . => least_date(icd_fd,icpc_fd)};
         
+        #doc(,
+                {
+                    txt:"Aromatase inhibitor or anti-oestrogen therapy"
+                }
+        );  
+        
+        rxnc_l02bg => eadv.rxnc_l02bg.dt.min().where(val=1);
+        
+        rxnc_l02ba => eadv.rxnc_l02ba.dt.min().where(val=1);
                 
         [[rb_id]] : { code_fd!? =>1},{=>0};
         

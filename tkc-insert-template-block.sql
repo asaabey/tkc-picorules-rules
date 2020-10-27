@@ -68,12 +68,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </style>
 
     ');
+    
+    
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
 
     <div class="syn_dmg_box">
     <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>">Feedback</a>
     
-    <rman_img:img1 />
+    
     <hr />
     
     <<dmg_source>>
@@ -337,6 +339,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
             <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
             <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />> and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
+            <<ref_ld>><li>Last renal <b>referral</b> <<ref_ld />></li><</ref_ld>>
             <<avf>><li>An <strong>arterio-venous fistula</strong> has been created on <<avf_dt />></li><</avf>>
             <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
             <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
@@ -1432,11 +1435,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (200,'ca_solid','ca_solid','
     <ul>
     <li><b>Solid organ cancer</b></li>
-        <<ca_breast_fd>>
-        <ul>
-            <li>Breast carcinoma <<ca_breast_fd />></li> 
-        </ul>
-        <</ca_breast_fd>>
         <<ca_prostate_fd>>
         <ul>
             <li>Prostate carcinoma <<ca_prostate_fd />></li> 
@@ -1457,10 +1455,25 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <li>Lung carcinoma <<ca_lung_fd />></li> 
         </ul>
         <</ca_lung_fd>>
+        <ul>
+            <<op_enc_ld>><li>Last oncology clinic visit <<op_enc_ld />></li><</op_enc_ld>>
+        </ul>
     </ul>
     
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (210,'ca_mets','ca_mets','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (210,'ca_breast','ca_breast','
+    <ul>
+        <ul>
+            <li>Breast carcinoma <<code_fd />></li> 
+            <ul>
+                <<rxnc_l02bg>><li>Aromatase inhibitor <<rxnc_l02bg />></li><</rxnc_l02bg>>
+                <<rxnc_l02ba>><li>Anti-oestrogren therapy <<rxnc_l02ba />></li><</rxnc_l02ba>>
+            </ul>
+        </ul>
+    </ul>
+    
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (250,'ca_mets','ca_mets','
     <ul>
     <ul>
     <li><b>Metastatic disease</b></li>
@@ -1504,6 +1517,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <li>Metastatases NOS <<nos_met_fd />></li>
         </ul>
         <</nos_met_fd>>
+    
     </ul>
     </ul>
     
@@ -1532,6 +1546,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 <<nos_fd>><li>Unspecified cause <<nos_fd />></li><</nos_fd>>
             </ul>
             <<rx_h03aa_ld>><li>Thyroxin replacement therapy <<rx_h03aa_ld />></li><</rx_h03aa_ld>>
+        </ul>
+    </ul>
+    
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (300,'cd_cirrhosis','cd_cirrhosis','
+    <ul>
+    <li><b>Cirrhosis of liver</b></li>
+        <ul>
+            <<code_fd>><li>Diagnosed <<code_fd />></li><</code_fd>>
+            
         </ul>
     </ul>
     
