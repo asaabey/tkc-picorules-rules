@@ -4,75 +4,76 @@ SET DEFINE OFF;
 
 TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
-    <style>
-                .syn_alert_box {
-                    border-style: none;border-color: brown;border-radius: 10px;padding: 10px
-                }
-                .syn_dmg_box {
-                    border-style: none;border-color: green;border-radius: 10px;padding: 10px
-                }
-                .syn_synopsis_box {
-                    border-style: none;border-color: darkgray;border-radius: 10px;padding: 10px
-                }
-                .syn_recm_box {
-                    border-style: none;border-color: darkorange;border-radius: 10px;padding: 10px
-                }
-                .syn_notes_box {
-                    border-style: none;background-color: mintcream; border-color: #ccffe6 ;border-radius: 10px;padding: 10px
-                }
-                .syn_table {
-                  border-collapse: collapse;
-                  border-spacing: 0;
-                  width: 80%;
-                  border: 1px none #ddd;
-                  padding: 10px;
-                }
-
-                .syn_tr:nth-child(even) {
-                    background-color: #f2f2f2;
-                }
-
-                .syn_container {
-                    width : 90%;
-                    margin : auto;
-                }
-
-                .syn_col_left {
-                    width:350;
-                    float: left;
-                }
-
-                .syn_col_right {
-                    margin-left:350;
-                    width:200;
-
-                }
-
-                #toggleView {
-                    display: none;
-                }
-
-                #toggleView:target {
-                    display: block;
-                }
-                
-                .body {
-                    font-family:Arial, Helvetica, sans-serif;
-                }
-
-
-
-
-
-    </style>
-
-    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
+--    <style>
+--                .syn_alert_box {
+--                    border-style: none;border-color: brown;border-radius: 10px;padding: 10px
+--                }
+--                .syn_dmg_box {
+--                    border-style: none;border-color: green;border-radius: 10px;padding: 10px
+--                }
+--                .syn_synopsis_box {
+--                    border-style: none;border-color: darkgray;border-radius: 10px;padding: 10px
+--                }
+--                .syn_recm_box {
+--                    border-style: none;border-color: darkorange;border-radius: 10px;padding: 10px
+--                }
+--                .syn_notes_box {
+--                    border-style: none;background-color: mintcream; border-color: #ccffe6 ;border-radius: 10px;padding: 10px
+--                }
+--                .syn_table {
+--                  border-collapse: collapse;
+--                  border-spacing: 0;
+--                  width: 80%;
+--                  border: 1px none #ddd;
+--                  padding: 10px;
+--                }
+--
+--                .syn_tr:nth-child(even) {
+--                    background-color: #f2f2f2;
+--                }
+--
+--                .syn_container {
+--                    width : 90%;
+--                    margin : auto;
+--                }
+--
+--                .syn_col_left {
+--                    width:350;
+--                    float: left;
+--                }
+--
+--                .syn_col_right {
+--                    margin-left:350;
+--                    width:200;
+--
+--                }
+--
+--                #toggleView {
+--                    display: none;
+--                }
+--
+--                #toggleView:target {
+--                    display: block;
+--                }
+--                
+--                .body {
+--                    font-family:Arial, Helvetica, sans-serif;
+--                }
+--
+--
+--
+--
+--
+--    </style>
+--
+--    ');
     
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
 
-    <div class="syn_dmg_box">
+    <div class="card">
+    <div class="card-body">
     <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>">Feedback</a>
     <hr />
     <<dmg_source>>
@@ -106,21 +107,30 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             
     <</dmg_source>>
     </div>
+    </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
-
-    <div class="syn_dmg_box">
+    <div class="card">
+    <div class="card-body">
     <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
         <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
 
         <<episode_single=0>><<loc_single=0>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
         <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
     </div>
+    </div>
     <hr />
-
     ');
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (4,'alert_tg2610','tg2610','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (10,'dmg_residency','dmg_residency','
+    <div class="card">
+      <div class="card-body">
+        Residential care resident
+      </div>
+    </div>
+    ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (304,'alert_tg2610','tg2610','
     <div class="syn_alert_box">
     <h5>
     Alert: Potentially untreated chronic disease (Trigger 2610)
@@ -130,7 +140,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />) and serum potassium is <<k_val />> mmol/l (<<k_dt />>).<</ckd_untreat>>
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (5,'alert_tg4100','tg4100','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (305,'alert_tg4100','tg4100','
     <div class="syn_alert_box">
     <h5>Alert: Acute kidney injury in community (Trigger 4100)</h5>
     Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>. <br /> 
@@ -141,7 +151,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     last recorded creatinine is <<cr_lv />>umol/l on <<cr_ld />>.
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (6,'alert_tg4410','tg4410','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (306,'alert_tg4410','tg4410','
     <div class="syn_alert_box">
     <h5>
     Alert: Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
@@ -152,7 +162,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<iq_tier=4>>It is noted that autoimmune and other relevant serological tests have been performed.<</iq_tier=4>>
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (7,'alert_tg4610','tg4610','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (307,'alert_tg4610','tg4610','
     <div class="syn_alert_box">
     <h5>Alert: Unmanaged possible early CKD with rapid progression (Trigger 4610)</h5>
     The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb /> ml/min/yr without a recent specialist encounter. <br />
@@ -160,14 +170,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria. <</ckd_null>>
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (8,'alert_tg4620','tg4620','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (308,'alert_tg4620','tg4620','
     <div class="syn_alert_box">
     <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
     There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter. <br />
     <<avf>>Please note the AVF creation on <<avf />>.<</avf>>
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (9,'alert_tg4660','tg4660','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (309,'alert_tg4660','tg4660','
     <div class="syn_alert_box">
     <h5>
     Alert: Medication safety concern (Trigger 4660)
@@ -178,7 +188,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<rx_nsaids>>NSAIDS may cause additional renal injury.<</rx_nsaids>>
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (10,'alert_tg4720','tg4720','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (310,'alert_tg4720','tg4720','
     <div class="syn_alert_box">
     <h5>
     Alert: New commencement on Renal replacement therapy (Trigger 4720)
@@ -187,7 +197,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <<pd_start>>Patient has been commenced on peritoneal dialysis on <<pd_dt_min />>. <</pd_start>>
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (11,'alert_tg4810','tg4810','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (311,'alert_tg4810','tg4810','
     <div class="syn_alert_box">
     <h5>Alert: High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
     Current haemoglobin is <<hb_i_val />> g/L which has increased from a previous hb of <<hb_i1_val />> g/L. <br />
