@@ -31,6 +31,10 @@ BEGIN
         
         cp_l => eadv.careplan_h9_v1._.lastdv();
         
+        phc => rout_dmg_source.phc_1.val.bind();
+        
+        is_pcis : { phc=1 =>1},{=>0};
+        
         #doc(,
             {
                 txt:"Assign binary careplan attributes based on positional values "

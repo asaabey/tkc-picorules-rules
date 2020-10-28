@@ -1253,6 +1253,10 @@ BEGIN
         
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
+        phc => rout_dmg_source.phc_1.val.bind();
+        
+        is_pcis : { phc=1 =>1},{=>0};
+        
         cp_ckd_val : {cp_l_val!? => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
         cp_ckd_ld : {cp_l_dt!? => cp_l_dt};
@@ -1583,6 +1587,8 @@ BEGIN
         cp_ckd_val => rout_ckd_careplan.cp_ckd_val.val.bind();
         
         cp_ckd_ld => rout_ckd_careplan.cp_ckd_ld.val.bind();
+        
+        is_pcis => rout_ckd_careplan.is_pcis.val.bind();
         
         rsc_ld => rout_ckd_careplan.rsc_ld.val.bind();
         

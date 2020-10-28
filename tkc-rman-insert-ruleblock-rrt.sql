@@ -76,6 +76,20 @@ BEGIN
         );
         tx_dt_icd => eadv.icd_z94_0.dt.min();
         
+        tx_dt_icd_last => eadv.icd_z94_0.dt.max();
+        
+        hd_tx_tx2_n => eadv.icd_z49_1.dt.count().where(dt between tx_dt_icd and tx_dt_icd_last );
+        
+        hd_tx_tx2_ld => eadv.icd_z49_1.dt.max().where(dt between tx_dt_icd and tx_dt_icd_last );
+        
+        hd_tx2 => eadv.icd_z49_1.dt.count().where(dt > tx_dt_icd_last + 30 );
+        
+        tx_multi_fd => eadv.icd_z94_0.dt.min().where(dt > hd_tx_tx2_ld );
+        
+        tx_multi_flag : { hd_tx_tx2_n >40 =>1},{=>0};
+        
+        tx_multi_current : { tx_multi_flag =1 and coalesce(hd_tx2,0)=0 =>1},{=>0};        
+        
         tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
         
         #doc(,
@@ -94,10 +108,10 @@ BEGIN
             }
         );
         
-        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) => 1},
-            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_ex_dt? => 2},
-            {tx_dt > nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
-            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) => 4},
+        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 => 1},
+            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_ex_dt? and tx_multi_current=0 => 2},
+            {tx_dt >= nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) or tx_multi_current=1 => 3},
+            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
             {=>0};
         #doc(,
             {
@@ -127,12 +141,27 @@ BEGIN
                     {rrt=4 and coalesce(hd_dt,tx_dt,pd_dt)!? => 1},
                     {=>0};
         ;
+        #doc(,
+            {
+                txt:"Return to hd post tx or pd failures"
+            }
+        );
+        
+        
+        ret_hd_post_tx => eadv.icd_z49_1.dt.min().where(dt > tx_dt + 90);
+        
+        ret_hd_post_pd => eadv.icd_z49_1.dt.min().where(dt > pd_dt_min + 90);
+        
+        
+        
         
         #doc(,
             {
                 txt:"Current transplant patient based on 2y encounter activity"
             }
         );
+        
+        
         
         tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
         
@@ -204,6 +233,15 @@ BEGIN
             rrt_incd,
             {
                 label:"Incident Peritoneal or haemodialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            tx_multi_flag,
+            {
+                label:"Renal transplant multi-parity",
                 is_reportable:1,
                 type:2
             }
@@ -417,6 +455,10 @@ BEGIN
         cr_min => eadv.lab_bld_creatinine._.minfdv().where(dt > tx_dt);
         
         cr_last => eadv.lab_bld_creatinine._.lastdv().where(dt > tx_dt);
+        
+        
+        
+        
         
         rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
         

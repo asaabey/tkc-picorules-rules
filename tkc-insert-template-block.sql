@@ -74,10 +74,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
     <div class="syn_dmg_box">
     <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>">Feedback</a>
-    
-    
     <hr />
-    
     <<dmg_source>>
 
             Primary health care network:
@@ -98,8 +95,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS</span><</congress_n>>
             <<wurli_n>><span class="badge badge-pill badge-warning">WURLI</span><</wurli_n>>
 
-            
-
             <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
             <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
             <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
@@ -111,8 +106,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             
     <</dmg_source>>
     </div>
-    
-
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
 
@@ -126,6 +119,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <hr />
 
     ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (4,'alert_tg2610','tg2610','
     <div class="syn_alert_box">
     <h5>
@@ -226,8 +220,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<rrt_past=1>>
                 <li>Past renal replacement therapies</li>
                     <ul>
-                        <<tx_dt>><li>Past failed renal transplant <<tx_dt />></li><</tx_dt>>
-                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt_min />>-<<pd_dt />></li><</pd_dt>>
+                        <<tx_dt>><li>Past failed renal transplant <<tx_dt />> - <<ret_hd_post_tx />></li><</tx_dt>>
+                        <<pd_dt>><li>Past peritoneal dialysis <<pd_dt_min />> - <<ret_hd_post_pd />></li><</pd_dt>>
                         <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
                     </ul>
             <</rrt_past=1>>
@@ -280,7 +274,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <ul>
     <li><b>Renal transplant due to (ESRD)</b>
         <ul>
-            <li>Functioning allograft, since <<tx_dt />></li>
+            <<tx_multi_current>><li>Multiparity detected</li><</tx_multi_current>>
+            <<tx_multi_current=0>><li>Functioning allograft, since <<tx_dt />></li><</tx_multi_current=0>>
+            <<tx_multi_current=1>><li>Functioning allograft, since <<tx_multi_fd />></li><</tx_multi_current=1>>
+            <<tx_multi_current=1>><li>First graft <<tx_dt />></li><</tx_multi_current=1>>
             <<rrt_past=1>>
                 <li>Past renal replacement therapies</li>
                     <ul>
@@ -343,12 +340,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />> and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
             <<ref_ld>><li>Last renal <b>referral</b> <<ref_ld />></li><</ref_ld>>
             <<avf>><li>An <strong>arterio-venous fistula</strong> has been created on <<avf_dt />></li><</avf>>
-            <<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>>
-            <<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>>
+            
+            
             <<rsc_ld>><li><b>Renal supportive care <<rsc_ld />></b></li><</rsc_ld>>
-            <ul>
-                <<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>>
-            </ul>
+            
+            <<is_pcis=1>><<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>><</is_pcis=1>>
+            <<is_pcis=1>><<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>><</is_pcis=1>>
+            <<is_pcis=1>><ul><<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>></ul><</is_pcis=1>>
             </li>
         </ul>
         </li>

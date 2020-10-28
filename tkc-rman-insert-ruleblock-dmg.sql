@@ -345,6 +345,51 @@ BEGIN
     
     
     -- END OF RULEBLOCK 
+    
+            -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='dmg_residency';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess residential status */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess residential status",
+                is_active:2
+                
+            }
+        );
+         
+        mbs731 => eadv.mbs_731.dt.max().where(dt > sysdate -730);
+        
+        nhr : { mbs731!? => 1},{=>0};
+        
+        [[rb_id]] : { nhr=1 => 1 },{=>0};    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Nursing home resident",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+        
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
 END;
 
 
