@@ -176,6 +176,10 @@ BEGIN
         
         sbp_min_2y => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-730);
         
+        sbp_max => eadv.obs_bp_systolic.val.max();
+        
+        sbp_min => eadv.obs_bp_systolic.val.min();
+        
         sbp_target_max : {1=1 => 140};
         
         sbp_target_min : {1=1 => 100};
