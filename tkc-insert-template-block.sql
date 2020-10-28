@@ -954,16 +954,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <hr />
     <div class="syn_synopsis_box">
     <h5>Lab data panel</h5>
-    <table class="syn_table">
+    <table class="table table-striped">
         <tbody>
-        <tr class="syn_tr">
+        <tr>
             <td><strong>Lab</strong></td>
             <td></td>
             <td></td>
             <td></td>
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td>Creatinine (umol)</td>
             <td><<creat1_val>><strong><<creat1_val />></strong>(<<creat1_dt />>) <</creat1_val>></td>
             <td><<creat2_val>><strong><<creat2_val />></strong> (<<creat2_dt />>)<</creat2_val>></td>
@@ -971,7 +971,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
             <td></td>
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td>eGFR (ml/min/1.72m)</td>
             <td><<egfr1_val>><strong><<egfr1_val />></strong>(<<egfr1_dt />>) <</egfr1_val>></td>
             <td><<egfr2_val>><strong><<egfr2_val />></strong>(<<egfr2_dt />>) <</egfr2_val>></td>
@@ -982,7 +982,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (55,'ckd_labs_tbl2','ckd_labs','
-        <tr class="syn_tr">
+        <tr>
             <td>
                 <div>Sodium (mmol/l)</div>
 
@@ -992,7 +992,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <td><<sodium3_val>><strong><<sodium3_val />></strong> (<<sodium3_dt />>)<</sodium3_val>></td>
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td>
             <div>Potassium (mmol/l)</div>
 
@@ -1002,39 +1002,39 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <td><<potassium2_val>><strong><<potassium2_val />></strong>(<<potassium2_dt />>) <</potassium2_val>></td>
             <td><<potassium3_val>><strong><<potassium3_val />></strong>(<<potassium3_dt />>) <</potassium3_val>></td>
 
-        <td> </td>
+        
         </tr>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (56,'ckd_labs_tbl3','ckd_labs','
-        <tr class="syn_tr">
+        <tr>
             <td>CO2 (mmol/l)</td>
             <td><<bicarb1_val>><strong><<bicarb1_val />></strong>(<<bicarb1_dt />>) <</bicarb1_val>></td>
             <td><<bicarb2_val>><strong><<bicarb2_val />></strong>(<<bicarb2_dt />>) <</bicarb2_val>></td>
             <td><<bicarb3_val>><strong><<bicarb3_val />></strong>(<<bicarb3_dt />>) <</bicarb3_val>></td>
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td> </td>
             <td> </td>
             <td> </td>
             <td> </td>
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td> </td>
             <td> </td>
             <td> </td>
             <td> </td>
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td>Calcium (mmol/l)</td>
             <td><<calcium1_val>><strong><<calcium1_val />></strong>(<<calcium1_dt />>) <</calcium1_val>></td>
             <td><<calcium2_val>><strong><<calcium2_val />></strong>(<<calcium2_dt />>) <</calcium2_val>></td>
             <td><<calcium3_val>><strong><<calcium3_val />></strong>(<<calcium3_dt />>) <</calcium3_val>></td>
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td>Phosphate (mmol/l)</td>
             <td><<phos1_val>><strong><<phos1_val />></strong> (<<phos1_dt />>) <</phos1_val>></td>
             <td><<phos2_val>><strong><<phos2_val />></strong> (<<phos2_dt />>)<</phos2_val>></td>
@@ -1043,7 +1043,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 
 
         </tr>
-        <tr class="syn_tr">
+        <tr>
             <td>uACR (mg/mmol)</td>
             <td><<uacr1_val>><strong><<uacr1_val />></strong> (<<uacr1_dt />>)<</uacr1_val>></td>
             <td><<uacr2_val>><strong><<uacr2_val />></strong> (<<uacr2_dt />>)<</uacr2_val>></td>
@@ -1562,6 +1562,18 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     <li><b>Cirrhosis of liver</b></li>
         <ul>
             <<code_fd>><li>Diagnosed <<code_fd />></li><</code_fd>>
+            
+        </ul>
+    </ul>
+    
+    ');
+/
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (410,'id_sti','id_sti','
+    <ul>
+    <li><b>Recurrent Soft tissue infection</b></li>
+        <ul>
+            <<code_ld>><li>Last episode <<code_ld />></li><</code_ld>>
+            <li><<icd_n />> infections over <<gap />> years</li>
             
         </ul>
     </ul>
