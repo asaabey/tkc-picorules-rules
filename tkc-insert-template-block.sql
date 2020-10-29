@@ -1252,10 +1252,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 </div>
                 <div class="col-md-4">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><small>Time in range <<tir_pct />>%</small></li>
+                        <<tir_pct>><li class="list-group-item"><small>Time in range <<tir_pct />>%</small></li><</tir_pct>>
                         <li class="list-group-item"><small>Maximum <<sbp_max />> mmHg</small></li>
                         <li class="list-group-item"><small>Minimum <<sbp_min />> mmHg</small></li>
-                        <li class="list-group-item"><small>Average (1y) <<avg_bp_1y />> mmHg</small></li>
+                        <<avg_bp_1y>><li class="list-group-item"><small>Average (1y) <<avg_bp_1y />> mmHg</small></li><</avg_bp_1y>>
                     </ul>
                 </div>
             </div>

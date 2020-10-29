@@ -259,9 +259,13 @@ BEGIN
         
         anyinginyi_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=6);
         
-        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(8,10,11,12,13));
+        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13));
         
-        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(8,10,11,12,13));
+        congress_mutitjulu_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) =10);
+        
+        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13));
+        
+        congress_mutitjulu_ld => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) =10);
         
         wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=14);
         
@@ -280,6 +284,8 @@ BEGIN
         phc_miwatj : { phc_1=5 => 1 },{=>0};
         
         phc_congress : { phc_1 in(8,11,12,13,14) => 1 },{=>0};
+        
+        phc_congress_mutitjulu : { phc_1=10 =>1},{=>0};
         
         phc_wurli : { phc_1=9 => 1 },{=>0};
 
@@ -320,6 +326,15 @@ BEGIN
             phc_congress,
             {
                 label:"Demographic phc source Congress",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+        #define_attribute(
+            phc_congress_mutitjulu,
+            {
+                label:"Demographic phc source Congress Mutitjulu",
                 type:2,
                 is_reportable:1
             }

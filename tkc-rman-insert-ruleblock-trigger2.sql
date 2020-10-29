@@ -64,6 +64,7 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         dm => rout_cd_dm_dx.dm.val.bind();
+        ckd => rout_ckd.ckd.val.bind();
        
         #doc(,
             {
@@ -75,11 +76,14 @@ BEGIN
         
         dx_nephrotic => eadv.[icd_n04%].dt.count(0);
         
+        ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
+    
+        enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
                 
-        enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
+        enc_ren : { coalesce(ref_ren_ld,enc_ld)!? =>1},{=>0};
         
                 
-        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? => 1},{=>0};
+        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? or ckd>4 => 1},{=>0};
 
         
         #doc(,
@@ -277,7 +281,7 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to generate AKI trigger from community  */
+        /*  Algorithm to generate AKI trigger   */
         
          #define_ruleblock(rb_id,
             {
@@ -288,11 +292,9 @@ BEGIN
             }
         );
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"External bindings"
-            }
-        );
+        });
         
           dod => rout_dmg.dod.val.bind();
           
@@ -310,17 +312,24 @@ BEGIN
           
           cr_span_days : {1=1 => cr_ld-cr_fd}; 
           cr_tail_days : {1=1 => ROUND(SYSDATE-cr_ld,0)}; 
-        #doc(,
-            {
+        
+        #doc(,{
                 txt:"Minima Maxima and last"
-            }
-        );  
+        });  
           
         
           cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365); 
           cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365); 
-          cr_min_1y => eadv.lab_bld_creatinine.val.min().where(dt>sysdate-365);
+          cr_min_1y_real => eadv.lab_bld_creatinine.val.min().where(dt>sysdate-365);
+          
+        #doc(,{
+                txt:"adjust creatinine for unusually low values due to error"
+        }); 
          
+          cr_median_1y => eadv.lab_bld_creatinine.val.median().where(dt<cr_ld-90);  
+         
+          cr_min_1y : { cr_min_1y_real > 40 => cr_min_1y_real},{=> cr_median_1y};  
+          
          #doc(,
             {
                 txt:"Date of event and window"
@@ -337,8 +346,7 @@ BEGIN
                 txt:"Determine true baseline"
             }
         );
-        
-       
+
           
           cr_avg_2y => eadv.lab_bld_creatinine.val.avg().where(val<cr_max_1y and val>cr_min_1y and dt>sysdate-730);
           cr_avg_min_1y_qt : {nvl(cr_avg_2y,0)>0 => round(cr_min_1y/cr_avg_2y,1) };
@@ -688,7 +696,7 @@ BEGIN
                     is_reportable:1,
                     is_trigger:1,
                     type:2,
-                    priority:1
+                    priority:3
                 }
             ); 
 

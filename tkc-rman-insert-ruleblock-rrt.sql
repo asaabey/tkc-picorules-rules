@@ -74,29 +74,45 @@ BEGIN
                 txt : "Transplant problem ICD coding"
             }
         );
+        
+        
+        
         tx_dt_icd => eadv.icd_z94_0.dt.min();
         
+        #doc(,{ 
+            txt : "Handling muliparity based on intervening hd " 
+        } );
+                
         tx_dt_icd_last => eadv.icd_z94_0.dt.max();
+        
+        #doc(,{ 
+            txt : "Number and last date of hd between transplant codes indicating graft failure and multi parity" 
+        } );
         
         hd_tx_tx2_n => eadv.icd_z49_1.dt.count().where(dt between tx_dt_icd and tx_dt_icd_last );
         
         hd_tx_tx2_ld => eadv.icd_z49_1.dt.max().where(dt between tx_dt_icd and tx_dt_icd_last );
         
+        #doc(,{ 
+            txt : "Number of hd after last transplant indicating graft failure" 
+        } );
+        
         hd_tx2 => eadv.icd_z49_1.dt.count().where(dt > tx_dt_icd_last + 30 );
         
         tx_multi_fd => eadv.icd_z94_0.dt.min().where(dt > hd_tx_tx2_ld );
         
-        tx_multi_flag : { hd_tx_tx2_n >40 =>1},{=>0};
+        tx_multi_flag : { hd_tx_tx2_n >10 =>1},{=>0};
         
         tx_multi_current : { tx_multi_flag =1 and coalesce(hd_tx2,0)=0 =>1},{=>0};        
         
         tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
         
-        #doc(,
-            {
+        tx_active : { tx_dt_icd_last!? and coalesce(hd_tx2,0)=0 =>1 },{=>0};
+        
+        #doc(,{
                 txt : "Home-haemodialysis ICPC2p coding"
-            }
-        );
+        });
+        
         homedx_dt => eadv.[icpc_u59j99].dt.max();
         
         
@@ -108,10 +124,11 @@ BEGIN
             }
         );
         
-        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 => 1},
+        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 and tx_active=0 => 1},
             {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_ex_dt? and tx_multi_current=0 => 2},
             {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
             {tx_dt!? and tx_multi_current=1 => 3},
+            {tx_active=1 => 3},
             {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
             {=>0};
         #doc(,

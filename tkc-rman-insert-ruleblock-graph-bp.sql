@@ -44,9 +44,9 @@ BEGIN
             
             sigma_1 => rout_cd_htn.sigma_1.val.bind();
             
-            sbp_max => rout_cd_htn.sbp_max_2y.val.bind();
+            sbp_max => rout_cd_htn.sbp_max.val.bind();
             
-            sbp_min => rout_cd_htn.sbp_min_2y.val.bind();
+            sbp_min => rout_cd_htn.sbp_min.val.bind();
             
             sbp_target_max => rout_cd_htn.sbp_target_max.val.bind();
             
