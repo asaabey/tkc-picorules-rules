@@ -1224,6 +1224,81 @@ BEGIN
     -- END OF RULEBLOCK --
     
     
+        -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='engmnt_renal';
+
+    
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to assess encounters with renal */
+        
+          #define_ruleblock([[rb_id]],
+            {
+                description: "Rule block to assess encounters with renal",
+                is_active:2
+                
+            }
+        );
+        
+        #doc(,{
+                txt : "Referral from primary care for renal"
+        });
+        
+        ref_ren_n => eadv.[ref_nephrologist,icpc_u67004].dt.count();       
+        ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
+        
+        ref_renal : { coalesce(ref_ren_n,0)>0 =>1},{=>0};
+        
+        #doc(,{
+                txt : " Encounters with specialist services"
+        });
+        
+        enc_n => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.count();
+        enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
+        enc_fd => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.min();
+        
+        enc_ld_1y => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max().where(dt>sysdate-365);
+        
+        enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
+        
+        enc_renal_1y :  {enc_ld_1y!? =>1},{=>0};
+        
+        enc_null : { coalesce(enc_n,0)=0 =>1},{=>0};
+        
+        
+        [[rb_id]] : { ref_renal>0 or enc_renal>0 => 1},{=>0};
+        
+        
+         #define_attribute(
+            enc_renal,
+            {
+                label:"Encounter with renal services",
+                is_reportable:1,
+                type:2
+            }
+        );
+        #define_attribute(
+            ref_renal,
+            {
+                label:"Renal referral from primary care",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+            
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
+    
     -- BEGINNING OF RULEBLOCK --
     
         
@@ -1254,32 +1329,16 @@ BEGIN
         cp_l => eadv.careplan_h9_v1.val.lastdv();
         
         phc => rout_dmg_source.phc_1.val.bind();
-        
+               
         is_pcis : { phc=1 =>1},{=>0};
         
         cp_ckd_val : {cp_l_val!? => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
         
         cp_ckd_ld : {cp_l_dt!? => cp_l_dt};
         
-        #doc(,
-            {
-                txt : " Encounters with specialist services"
-            }
-        );
-        
-        ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
-        
-        enc_n => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.count();
-        enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
-        enc_fd => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.min();
-        
-        enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
-        
-        #doc(,
-            {
+        #doc(,{
                 txt : "Supportive care"
-            }
-        );
+        });
         
         rsc_ld => eadv.icpc_u59011.dt.last();
         
@@ -1287,7 +1346,7 @@ BEGIN
         
         ckd_careplan_doc : {. => cp_ckd_val};
         
-        [[rb_id]] : { ckd_careplan_doc>0 or rsc=1 or enc_null=0 or ref_ren_ld!? => 1},{=>0};
+        [[rb_id]] : { ckd_careplan_doc>0 or rsc=1=> 1},{=>0};
         
         
          #define_attribute(
@@ -1479,7 +1538,9 @@ BEGIN
         
         [[rb_id]] : {. => ckd_stage_val};
         
-        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000};
+        egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
+        
+        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100};
         
         #doc(,
             {
@@ -1592,7 +1653,7 @@ BEGIN
         
         rsc_ld => rout_ckd_careplan.rsc_ld.val.bind();
         
-        ref_ld => rout_ckd_careplan.ref_ren_ld.val.bind();
+        
         
         #doc(,
             {
@@ -1659,11 +1720,14 @@ BEGIN
             }
         );
         
-        enc_n => rout_ckd_careplan.enc_n.val.bind();
-        enc_ld => rout_ckd_careplan.enc_ld.val.bind();
-        enc_fd => rout_ckd_careplan.enc_fd.val.bind();
         
-        enc_null : {nvl(enc_n,0)=0 => 0},{=>1};
+        ref_ld => rout_engmnt_renal.ref_ren_ld.val.bind();
+        
+        enc_ld => rout_engmnt_renal.enc_ld.val.bind();
+        
+        enc_n => rout_engmnt_renal.enc_n.val.bind();
+        
+        enc_fd => rout_engmnt_renal.enc_fd.val.bind();
         
         #doc(,
             {

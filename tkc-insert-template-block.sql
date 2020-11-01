@@ -4,70 +4,7 @@ SET DEFINE OFF;
 
 TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
 
---Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (1,'frame_main_header','dmg','
---    <style>
---                .syn_alert_box {
---                    border-style: none;border-color: brown;border-radius: 10px;padding: 10px
---                }
---                .syn_dmg_box {
---                    border-style: none;border-color: green;border-radius: 10px;padding: 10px
---                }
---                .syn_synopsis_box {
---                    border-style: none;border-color: darkgray;border-radius: 10px;padding: 10px
---                }
---                .syn_recm_box {
---                    border-style: none;border-color: darkorange;border-radius: 10px;padding: 10px
---                }
---                .syn_notes_box {
---                    border-style: none;background-color: mintcream; border-color: #ccffe6 ;border-radius: 10px;padding: 10px
---                }
---                .syn_table {
---                  border-collapse: collapse;
---                  border-spacing: 0;
---                  width: 80%;
---                  border: 1px none #ddd;
---                  padding: 10px;
---                }
---
---                .syn_tr:nth-child(even) {
---                    background-color: #f2f2f2;
---                }
---
---                .syn_container {
---                    width : 90%;
---                    margin : auto;
---                }
---
---                .syn_col_left {
---                    width:350;
---                    float: left;
---                }
---
---                .syn_col_right {
---                    margin-left:350;
---                    width:200;
---
---                }
---
---                #toggleView {
---                    display: none;
---                }
---
---                #toggleView:target {
---                    display: block;
---                }
---                
---                .body {
---                    font-family:Arial, Helvetica, sans-serif;
---                }
---
---
---
---
---
---    </style>
---
---    ');
+
     
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
@@ -131,13 +68,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (304,'alert_tg2610','tg2610','
-    <div class="syn_alert_box">
-    <h5>
-    Alert: Potentially untreated chronic disease (Trigger 2610)
-    </h5>
-    <<dm_untreat>>Likely to require pharmacotherapy for glycaemic control. No active medications are detected. <</dm_untreat>>
-    <<ckd_untreat>>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease. <</ckd_untreat>>
-    <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />) and serum potassium is <<k_val />> mmol/l (<<k_dt />>).<</ckd_untreat>>
+    <div class="alert alert-warning" role="alert">
+        <h5>
+        Alert: Potentially untreated chronic disease (Trigger 2610)
+        </h5>
+        <<dm_untreat>>Likely to require pharmacotherapy for glycaemic control. No active medications are detected. <</dm_untreat>>
+        <<ckd_untreat>>Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease. <</ckd_untreat>>
+        <<ckd_untreat>>Last systolic BP is <<sbp_val />> mmHg ( <<sbp_dt />>) and serum potassium is <<k_val />> mmol/l (<<k_dt />>).<</ckd_untreat>>
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (305,'alert_tg4100','tg4100','
@@ -171,10 +108,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (308,'alert_tg4620','tg4620','
-    <div class="syn_alert_box">
-    <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
-    There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter. <br />
-    <<avf>>Please note the AVF creation on <<avf />>.<</avf>>
+    <div class="alert alert-warning" role="alert">
+        <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
+        There is CKD stage <<ckd_stage />> disease with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter. <br />
+        There is no recorded access creation
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (309,'alert_tg4660','tg4660','
@@ -207,19 +144,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
 
     ');
---Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (12,'frame_synthesis_begin','dmg','
---    <hr />
---    <div class="syn_synopsis_box">
---        <h3>Relevant Diagnoses</h3>
---        <hr />
---        <div>
---    ');
---Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (13,'frame_synthesis_left_begin','dmg','
---    <div>
---    ');
---Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (14,'rrt_frame_begin','rrt','
---    <ul>
---    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (15,'rrt_1_syn','rrt','
     <<rrt=1>>
     <ul>

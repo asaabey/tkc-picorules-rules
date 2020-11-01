@@ -76,11 +76,10 @@ BEGIN
         
         dx_nephrotic => eadv.[icd_n04%].dt.count(0);
         
-        ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
-    
-        enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
                 
-        enc_ren : { coalesce(ref_ren_ld,enc_ld)!? =>1},{=>0};
+        ref_ren => rout_engmnt_renal.ref_renal.val.bind();
+        
+        enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
                 
         ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? or ckd>4 => 1},{=>0};
@@ -214,7 +213,9 @@ BEGIN
         
         
         
-        enc_ren => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
+        ref_ren => rout_engmnt_renal.ref_renal.val.bind();
+        
+        enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
                 
         ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 or dod!? => 1},{=>0};
@@ -539,7 +540,9 @@ BEGIN
         
         ckd_null : { nvl(ckd,0)=0 =>1},{=0};
         
-        enc => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
+        ref_ren => rout_engmnt_renal.ref_renal.val.bind();
+        
+        enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
         #doc(,
             {
@@ -554,7 +557,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? or enc!? => 1},{=>0};
+        ex_flag : {dod!? or enc_ren=1 => 1},{=>0};
           
         [[rb_id]] : {
                         ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh 
@@ -611,13 +614,19 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
+        eb => rout_ckd_egfr_metrics.egfr_slope2.val.bind();
+        
+        assert_level => rout_ckd.assert_level.val.bind();
+        
         ckd_stage =>rout_ckd.ckd_stage.val.bind();
         
         avf => rout_ckd.avf.val.bind();
         
-        eb => rout_ckd.egfr_slope2.val.bind();
         
-        enc => eadv.enc_op_renal.dt.count(0).where(dt>sysdate-365);
+        
+        ref_ren => rout_engmnt_renal.ref_renal.val.bind();
+        
+        enc_ren_1y => rout_engmnt_renal.enc_renal_1y.val.bind();
           
         #doc(,
             {
@@ -626,9 +635,9 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? => 1},{=>0};
+        ex_flag : {dod!? or enc_ren_1y=1 and assert_level<111100 => 1},{=>0};
           
-        [[rb_id]] : {ckd>4 and nvl(eb,0)<-5 and enc=0 and avf is null and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : {ckd=6  and avf=0 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 [[rb_id]],
