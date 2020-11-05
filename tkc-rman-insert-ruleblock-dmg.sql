@@ -118,6 +118,8 @@ BEGIN
         /*
         Key index
         01   source         (3 digits)
+             1 digit : parity
+             2 digits: Source table code
         02   state          (1 digits 7 default)
         03   region         (1 digit)
         04   district       (2 digits)
@@ -231,51 +233,47 @@ BEGIN
         );
                 
         
-        tc_caresys_n => eadv.dmg_location.dt.count().where(substr(val,2,2)=2);
+        tc_caresys_n => eadv.dmg_location.dt.count().where(substr(val,2,2)=11);
         
-        tc_caresys_ld => eadv.dmg_location.dt.max().where(substr(val,2,2)=2);
+        tc_caresys_ld => eadv.dmg_location.dt.max().where(substr(val,2,2)=11);
         
-        tc_labtrak_n => eadv.dmg_location.dt.count().where(substr(val,2,2)=7);
+        tc_labtrak_n => eadv.dmg_location.dt.count().where(substr(val,2,2)=12);
         
-        tc_labtrak_ld => eadv.dmg_location.dt.max().where(substr(val,2,2)=7);
+        tc_labtrak_ld => eadv.dmg_location.dt.max().where(substr(val,2,2)=12);
         
-        pcis_n => eadv.dmg_location.dt.count().where(dt>sysdate-1000 and substr(val,2,2)=1);
+        pcis_n => eadv.dmg_location.dt.count().where(dt>sysdate-1000 and substr(val,2,2)=21);
         
-        pcis_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=1);
+        pcis_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=21);
         
-        eacs_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=3);
+        eacs_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=22);
         
-        eacs_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=3);
+        eacs_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=22);
         
-        laynhapuy_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=4);
+        laynhapuy_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=33);
         
-        laynhapuy_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=4);
+        laynhapuy_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=33);
         
-        miwatj_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=5);
+        miwatj_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=34);
         
-        miwatj_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=5);
+        miwatj_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=34);
         
-        anyinginyi_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=6);
+        anyinginyi_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=32);
         
-        anyinginyi_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=6);
+        anyinginyi_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=32);
         
-        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13));
+        congress_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) in(37,38,39,41,42));
         
-        congress_mutitjulu_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) =10);
+        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(37,38,39,41,42));
         
-        congress_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2) in(8,11,12,13));
+        wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=36);
         
-        congress_mutitjulu_ld => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2) =10);
+        wurli_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=36);
         
-        wurli_n => eadv.dmg_location.dt.count(0).where(dt>sysdate-1000 and substr(val,2,2)=14);
+        kwhb_n => eadv.dmg_location.dt.count().where(dt>sysdate-1000 and substr(val,2,2)=35);
         
-        wurli_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=14);
+        kwhb_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=35);
         
-        kwhb_n => eadv.dmg_location.dt.count().where(dt>sysdate-1000 and substr(val,2,2)=9);
-        
-        kwhb_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=9);
-        
-        phc_0 => eadv.dmg_location.val.stats_mode().where(dt > sysdate-1000 and substr(val,2,2) in (1,4,5,6,8,9,10,11,12,13,14));
+        phc_0 => eadv.dmg_location.val.stats_mode().where(dt > sysdate-1000 and substr(val,2,2) between 20 and 50);
         
         phc_1 : { phc_0!? => to_number(substr(phc_0,2,2))},{=>0};
         
@@ -285,7 +283,6 @@ BEGIN
         
         phc_congress : { phc_1 in(8,11,12,13,14) => 1 },{=>0};
         
-        phc_congress_mutitjulu : { phc_1=10 =>1},{=>0};
         
         phc_wurli : { phc_1=9 => 1 },{=>0};
 
