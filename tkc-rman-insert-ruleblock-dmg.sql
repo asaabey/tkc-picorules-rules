@@ -273,6 +273,7 @@ BEGIN
         
         kwhb_ld => eadv.dmg_location.dt.max().where(dt>sysdate-1000 and substr(val,2,2)=35);
         
+        
         phc_0 => eadv.dmg_location.val.stats_mode().where(dt > sysdate-1000 and substr(val,2,2) between 20 and 50);
         
         phc_1 : { phc_0!? => to_number(substr(phc_0,2,2))},{=>0};
