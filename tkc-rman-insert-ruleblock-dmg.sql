@@ -278,16 +278,16 @@ BEGIN
         
         phc_1 : { phc_0!? => to_number(substr(phc_0,2,2))},{=>0};
         
-        phc_pcis : { phc_1=1 => 1 },{=>0};
+        phc_pcis : { phc_1=21 => 1 },{=>0};
         
-        phc_miwatj : { phc_1=5 => 1 },{=>0};
+        phc_miwatj : { phc_1=34 => 1 },{=>0};
         
-        phc_congress : { phc_1 in(8,11,12,13,14) => 1 },{=>0};
+        phc_congress : { phc_1 in(36,37,38,39,41,42) => 1 },{=>0};
         
         
-        phc_wurli : { phc_1=9 => 1 },{=>0};
+        phc_wurli : { phc_1=36 => 1 },{=>0};
 
-        phc_kwhb : { phc_1=10 => 1 },{=>0};
+        phc_kwhb : { phc_1=35 => 1 },{=>0};
         
         
         [[rb_id]] : { phc_1!? => phc_1 };    
