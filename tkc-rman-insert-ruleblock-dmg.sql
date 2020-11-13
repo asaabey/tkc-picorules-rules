@@ -35,6 +35,8 @@ BEGIN
         
         gender => eadv.dmg_gender.val.last();
         
+        age : { dob!? => round((sysdate-dob)/365.25,0)};
+        
         alive : {dod? => 1},{=>0};
         
         /* Constants */
@@ -232,6 +234,13 @@ BEGIN
             }
         );
                 
+        loc_def => rout_dmg_loc.loc_def.val.bind();
+        
+        loc_mode_n => rout_dmg_loc.loc_mode_n.val.bind();
+        
+        loc_n => rout_dmg_loc.loc_n.val.bind();
+        
+        mode_pct => rout_dmg_loc.mode_pct.val.bind();
         
         tc_caresys_n => eadv.dmg_location.dt.count().where(substr(val,2,2)=11);
         
@@ -403,6 +412,8 @@ BEGIN
     
     
     -- END OF RULEBLOCK 
+    
+
 END;
 
 

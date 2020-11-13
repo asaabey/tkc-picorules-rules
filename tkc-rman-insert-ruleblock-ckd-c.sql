@@ -226,7 +226,7 @@ BEGIN
         Q62  Congenital obstructive defects of renal pelvis and congenital malformations of ureter
         Q63  U85005 U85009 U99020 Other congenital malformations of kidney
         Q64  Other congenital malformations of urinary system
-        Z90_5   U28006 Single kidney
+        Z90_5   U28006 Single kidney U52012 partial Nephrectomy U52006 partial Nephrectomy
         C64     U75003 U52014 Renal Neoplasm
         "
      });
@@ -245,9 +245,11 @@ BEGIN
      
      c_c64 => eadv.[icd_c64%,icpc_u75003,icpc_u52014].dt.min();
      
+     c_z90_5 => eadv.[icd_z90_5,icpc_u52012,icpc_u52006].dt.min();
+     
      apkd : { c_q61_2!? => 1},{=>0};
      
-     [[rb_id]] : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64)!? =>1 },{=>0};
+     [[rb_id]] : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 },{=>0};
      
      #define_attribute(
             [[rb_id]],
@@ -277,7 +279,7 @@ BEGIN
     
     -- END OF RULEBLOCK --
     
-    rb.blockid:='ckd_cause2';
+    rb.blockid:='ckd_cause';
    
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
@@ -457,7 +459,9 @@ BEGIN
      
      c_c64 => rout_ckd_c_rnm.c_q60.val.bind();
      
-     aet_rnm : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64)!? =>1 };
+     c_z90_5 => rout_ckd_c_rnm.c_z90_5.val.bind();
+     
+     aet_rnm : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 };
      
      #doc(,
         {
@@ -521,7 +525,7 @@ BEGIN
             }
      );
 
-     aet_cardinality : { canddt=1 => aet_dm + aet_htn + aet_gn_ln + aet_gn};
+     aet_cardinality : { canddt=1 => coalesce(aet_dm,0) + coalesce(aet_htn,0) + coalesce(aet_gn_ln,0) + coalesce(aet_gn,0) + coalesce(aet_rnm,0)};
      
      aet_multiple : { canddt=1 and aet_cardinality >1 => 1},{=>0};
      

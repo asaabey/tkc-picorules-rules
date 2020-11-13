@@ -511,17 +511,25 @@ BEGIN
             }
         );
         
-        #doc(,
-            {
-                txt:"Get CKD G stage and slope"
-            }
-        );
+        #doc(,{
+                txt:"Get CKD stage"
+        });
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
+        age => rout_dmg.age.val.bind();
         
         dod => rout_dmg.dod.val.bind();
         
         ckd => rout_ckd.ckd.val.bind();
-               
         
+        ckd_stage => rout_ckd.ckd_stage.val.bind();
+        
+        cga_a_val => rout_ckd.cga_a_val.val.bind();               
+               
+        #doc(,{
+                txt:"Get last l-1 and maximum where max is earlier than l-1"
+        });
         
         egfr_l => eadv.lab_bld_egfr_c._.lastdv().where(dt > sysdate-365);
         
@@ -529,16 +537,33 @@ BEGIN
         
         egfr_max => eadv.lab_bld_egfr_c._.maxldv().where(dt>sysdate-730 and dt < egfr_l1_dt);
         
+        #doc(,{
+                txt:"Calc slope from max to last"
+        });
+        
         eb : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};  
+        
+        #doc(,{
+                txt:"Calc l and l-1 ratio to establish steady within 6 months accepting 20pct variance"
+        });
+        
         
         egfr_l_l1_qt : { coalesce(egfr_l1_val,0)>0 =>(egfr_l_val/egfr_l1_val)},{=>0};
         
         egfr_ss : { egfr_l_l1_qt>0.8 and egfr_l_l1_qt<1.2 =>1 },{=>0};
         
+        #doc(,{
+                txt:"Slope threshold for 1 and 2 is -20 per year for 3 onwards -30"
+        });
+        
         eb_thresh : {ckd<3 => -20},{ckd>=3 and ckd<6 => -30};
         
         
         ckd_null : { nvl(ckd,0)=0 =>1},{=0};
+        
+        #doc(,{
+                txt:"Exclude existing referred or reviewed"
+        });
         
         ref_ren => rout_engmnt_renal.ref_renal.val.bind();
         
@@ -557,13 +582,19 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? or enc_ren=1 => 1},{=>0};
+        #doc(,
+            {
+                txt:"sensitivity adjustment with inclusion of a3 albuminuria"
+            }
+        );
+        ex_flag : {dod!? or enc_ren=1 or ref_ren=1  or dmg_source=0 or age>69 => 1},{=>0};
           
         [[rb_id]] : {
                         ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh 
                         and egfr_l_dt - egfr_max_dt >180 
                         and egfr_l_val<80 and egfr_max_val is not null 
                         and egfr_ss=1
+                        and cga_a_val>3
                         and ex_flag=0 => 1
                     },{=>0};
         
@@ -612,6 +643,8 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
+        age => rout_dmg.age.val.bind();
+        
         ckd => rout_ckd.ckd.val.bind();
         
         eb => rout_ckd_egfr_metrics.egfr_slope2.val.bind();
@@ -635,7 +668,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? or enc_ren_1y=1 and assert_level<111100 => 1},{=>0};
+        ex_flag : {dod!? or enc_ren_1y=1 or age>69 or assert_level<111100 => 1},{=>0};
           
         [[rb_id]] : {ckd=6  and avf=0 and ex_flag=0 => 1},{=>0};
         

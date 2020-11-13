@@ -5,6 +5,7 @@
 --Init rules
 @"tkc-rman-insert-ruleblock-ckd-c.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
+@"tkc-rman-insert-ruleblock-labs.sql";
 @"tkc-rman-insert-ruleblock-core";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
@@ -21,10 +22,12 @@
 @"tkc-rman-insert-ruleblock-cd-cns.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm.sql";
 @"tkc-rman-insert-ruleblock-cd-rheum.sql";
+@"tkc-rman-insert-ruleblock-ca.sql";
+@"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
+@"tkc-rman-insert-ruleblock-cd-liver.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
-@"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-rrt.sql";
 @"tkc-rman-insert-ruleblock-kfre.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
@@ -36,11 +39,8 @@
 @"tkc-rman-insert-ruleblock-graph-hba1c.sql";
 @"tkc-rman-insert-ruleblock-metrics";
 @"tkc-rman-insert-ruleblock-cube-accel.sql";
-@"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
-@"tkc-rman-insert-ruleblock-ca.sql";
-@"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
-@"tkc-rman-insert-ruleblock-cd-liver.sql";
+
 
 -- Init templates
 

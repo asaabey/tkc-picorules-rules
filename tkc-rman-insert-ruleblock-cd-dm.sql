@@ -469,6 +469,8 @@ BEGIN
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
         
+        last_hba1c : {hba1c_n0!? => hba1c_n0_val};
+        
         #doc(,
             {
                 txt:"Categories levels into 4 classes",
@@ -489,6 +491,16 @@ BEGIN
             {
                 label:"Diabetic glycaemic control",
                 desc:"Diabetic glycaemic control class",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+         #define_attribute(
+            hba1c_n0_val,
+            {
+                label:"Last HbA1c ngsp",
+                desc:"Last HbA1c ngsp",
                 is_reportable:1,
                 type:2
             }

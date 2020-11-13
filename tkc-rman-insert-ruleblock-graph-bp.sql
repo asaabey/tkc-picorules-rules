@@ -56,6 +56,7 @@ BEGIN
             
             sbp_graph => eadv.obs_bp_systolic.val.serializedv2(round(val,0)~dt).where(dt>sysdate-1825);    
             
+            sbp_graph_n => eadv.obs_bp_systolic.val.count().where(dt>sysdate-1825);    
             
             bp_graph_y_max : {1=1 => sbp_max};
             
@@ -89,7 +90,7 @@ BEGIN
             
             
             
-            [[rb_id]] : { (htn >0  or rrt>0) and sbp_graph_val!? =>1},{=>0};
+            [[rb_id]] : {  sbp_graph_n>2 and sbp_graph_val!? =>1},{=>0};
             
             
             

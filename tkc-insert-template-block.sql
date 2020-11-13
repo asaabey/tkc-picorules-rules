@@ -8,56 +8,66 @@ TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
     
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
-
-    <div class="card">
-    <div class="card-body">
-    <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>">Feedback</a>
-    <hr />
-    <<dmg_source>>
-
-            Primary health care network:
-            <<dmg_source=1>><span class="badge badge-info">NTG PCIS</span><</dmg_source=1>> 
-            <<dmg_source=3>><span class="badge badge-info">NTG EACS</span><</dmg_source=3>>
-            <<dmg_source=4>><span class="badge badge-warning">LAYNHAPUY</span><</dmg_source=4>>
-            <<dmg_source=5>><span class="badge badge-warning">MIWATJ</span><</dmg_source=5>>
-            <<dmg_source=6>><span class="badge badge-warning">ANYINGINYI</span><</dmg_source=6>>
-            <<dmg_source=8>><span class="badge badge-warning">CONGRESS</span><</dmg_source=8>>
-            <<dmg_source=9>><span class="badge badge-warning">WURLI</span><</dmg_source=9>>
-            <br />
-            <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS</span><</pcis_n>> 
-            <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS</span><</eacs_n>>
-            
-            <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</laynhapuy_n>>
-            <<miwatj_n>><span class="badge badge-pill badge-warning">MIWATJ</span><</miwatj_n>>
-            
-            <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS</span><</congress_n>>
-            <<wurli_n>><span class="badge badge-pill badge-warning">WURLI</span><</wurli_n>>
-
-            <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
-            <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
-            <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
-            <<laynhapuy_n>><i>LAYNHAPUY encounters (N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
-            <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
-            <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
-            <<wurli_n>><i>WURLI encounters (N=<<wurli_n />>, last=<<wurli_ld />>)</i><</wurli_n>>
-            ,within last 3 years
-            
-    <</dmg_source>>
+    <div class="row"> 
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <<dmg_source>>
+                            <span>Primary health care network:</span>
+                            <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
+                            <<dmg_source=22>><span class="badge badge-info">NTG EACS</span><</dmg_source=22>>
+                            <<dmg_source=33>><span class="badge badge-warning">LAYNHAPUY</span><</dmg_source=33>>
+                            <<dmg_source=31>><span class="badge badge-warning">MIWATJ</span><</dmg_source=31>>
+                            <<dmg_source=32>><span class="badge badge-warning">ANYINGINYI</span><</dmg_source=32>>
+                            <<dmg_source=37>><span class="badge badge-warning">CONGRESS</span><</dmg_source=37>>
+                            <<dmg_source=38>><span class="badge badge-warning">CONGRESS</span><</dmg_source=38>>
+                            <<dmg_source=39>><span class="badge badge-warning">CONGRESS</span><</dmg_source=39>>
+                            <<dmg_source=41>><span class="badge badge-warning">CONGRESS</span><</dmg_source=41>>
+                            <<dmg_source=42>><span class="badge badge-warning">CONGRESS</span><</dmg_source=42>>
+                            <<dmg_source=36>><span class="badge badge-warning">WURLI</span><</dmg_source=36>>
+                            <<dmg_source=35>><span class="badge badge-warning">KWHB</span><</dmg_source=35>>
+                            <br />
+                            <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS</span><</pcis_n>> 
+                            <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS</span><</eacs_n>>
+                            <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</laynhapuy_n>>
+                            <<miwatj_n>><span class="badge badge-pill badge-warning">MIWATJ</span><</miwatj_n>>
+                            <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS</span><</congress_n>>
+                            <<wurli_n>><span class="badge badge-pill badge-warning">WURLI</span><</wurli_n>>
+                            <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
+                            <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
+                            <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
+                            <<laynhapuy_n>><i>LAYNHAPUY encounters (N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
+                            <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
+                            <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
+                            <<wurli_n>><i>WURLI encounters (N=<<wurli_n />>, last=<<wurli_ld />>)</i><</wurli_n>>
+                            ,within last 3 years.
+                            <<loc_def>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%<</loc_def>>
+                    <</dmg_source>>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card text-right">
+                <div class="card-body">
+                    <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>" class="btn btn-primary btn-sm">Feedback</a>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
+    <br />
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
-    <div class="card">
-    <div class="card-body">
-    <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
-        <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
-
-        <<episode_single=0>><<loc_single=0>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
-        <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
-    </div>
-    </div>
-    <hr />
-    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
+--    <div class="card">
+--    <div class="card-body">
+--    <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
+--    <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
+--
+--    <<episode_single=0>><<loc_single=0>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
+--     <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
+--    </div>
+--    </div>
+--    <hr />
+--    ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (10,'dmg_residency','dmg_residency','
     <div class="card">
@@ -78,7 +88,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (305,'alert_tg4100','tg4100','
-    <div class="syn_alert_box">
+    <div class="alert alert-warning" role="alert">
     <h5>Alert: Acute kidney injury in community (Trigger 4100)</h5>
     Baseline creatinine is estimated to be <<cr_base />> umol/l and the maxima is <<cr_max_1y />> umol/l on <<cr_max_ld_1y />>. <br /> 
     This is consistent with an acute kidney injury (AKIN stage 2 or above). 
@@ -89,7 +99,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (306,'alert_tg4410','tg4410','
-    <div class="syn_alert_box">
+    <div class="alert alert-warning" role="alert">
     <h5>
     Alert: Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
     </h5>
@@ -100,11 +110,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (307,'alert_tg4610','tg4610','
-    <div class="syn_alert_box">
-    <h5>Alert: Unmanaged possible early CKD with rapid progression (Trigger 4610)</h5>
-    The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb /> ml/min/yr without a recent specialist encounter. <br />
-    <<egfrlv>>The last eGFR was <<egfrlv />> ml/min on <</egfrlv>><<egfrld />><<egfr_max_v>> with a decline from <<egfr_max_v />><<egfr_max_v />> ml/min on <</egfr_max_ld />>. <</egfr_max_ld>>
-    <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria. <</ckd_null>>
+    <div class="alert alert-warning" role="alert">
+        
+            <h5>Alert: Unmanaged possible early albuminuric CKD with rapid progression (Trigger 4610)</h5>
+            The current glomerular stage is <<ckd_stage />> with an annual decline of <<eb />> ml/min/yr without a recent specialist encounter or referral. <br />
+            <<egfr_l_val>>The last eGFR was <<egfr_l_val />> ml/min on <</egfr_l_val>><<egfr_l_dt />><<egfr_max_val>> with a decline from <<egfr_max_val />> ml/min on <<egfr_max_dt />>
+            <<ckd_null>>Please note the absence of CKD staging as this does not currently fullfill criteria. <</ckd_null>>
+        
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (308,'alert_tg4620','tg4620','
@@ -115,7 +127,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (309,'alert_tg4660','tg4660','
-    <div class="syn_alert_box">
+    <div class="alert alert-warning" role="alert">
     <h5>
     Alert: Medication safety concern (Trigger 4660)
     </h5>
@@ -126,7 +138,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (310,'alert_tg4720','tg4720','
-    <div class="syn_alert_box">
+    <div class="alert alert-warning" role="alert">
     <h5>
     Alert: New commencement on Renal replacement therapy (Trigger 4720)
     </h5>
@@ -135,7 +147,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     </div>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (311,'alert_tg4810','tg4810','
-    <div class="syn_alert_box">
+    <div class="alert alert-warning" role="alert">
     <h5>Alert: High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
     Current haemoglobin is <<hb_i_val />> g/L which has increased from a previous hb of <<hb_i1_val />> g/L. <br />
     The ESA was last prescribed on \t <<esa_dt />>. 
@@ -271,7 +283,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<egfr_l_val>><li>Last eGFR is <strong><<egfr_l_val />></strong> ml/min/1.73m2 (<<egfr_l_dt />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfr_l_val>>
             <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
             <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>
-            <<enc_null=0>><li>No captured encounters with renal services.</li><</enc_null=0>>
             <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />> and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
             <<ref_ld>><li>Last renal <b>referral</b> <<ref_ld />></li><</ref_ld>>
             <<avf>><li>An <strong>arterio-venous fistula</strong> has been created on <<avf_dt />></li><</avf>>
@@ -712,9 +723,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_c_q60>>
                     <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
                     <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
-                    <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_c_q63>>
-                    <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_q64>>
-                    <<c_c64>><li>Renal cell cancer<<c_c64 />></li><</c_c64>>
+                    <<c_q63>><li>Other congenital malformations of kidney <<c_q63 />></li><</c_c_q63>>
+                    <<c_q64>><li>Other congenital malformations of urinary system <<c_q64 />></li><</c_q64>>
+                    <<c_c64>><li>Renal cell cancer <<c_c64 />></li><</c_c64>>
+                    <<c_z90_5>><li>Complete or partial nephrectomy (Acquired single kidney) <<c_z90_5 />></li><</c_z90_5>>
                 </ul></li>
                 <</aet_multiple=1>>
                 <<aet_multiple=0>>

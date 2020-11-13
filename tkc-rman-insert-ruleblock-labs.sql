@@ -26,7 +26,7 @@ BEGIN
         #define_ruleblock(ckd_labs,
             {
                 description: "Rule block to gather lab tests",
-                is_active:2,
+                is_active:0,
                 
             }
         );
@@ -102,7 +102,7 @@ BEGIN
        -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_labs_euc';
+    rb.blockid:='labs_euc';
    
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
@@ -118,7 +118,7 @@ BEGIN
             }
         );
 
-       
+
        creat1 => eadv.lab_bld_creatinine.val.lastdv().where(dt>sysdate-730);
        creat2 => eadv.lab_bld_creatinine.val.lastdv(1).where(dt>sysdate-730);
        creat3 => eadv.lab_bld_creatinine.val.lastdv(2).where(dt>sysdate-730);
@@ -135,7 +135,7 @@ BEGIN
        bicarb2 => eadv.lab_bld_bicarbonate.val.lastdv(1).where(dt>sysdate-730);
        bicarb3 => eadv.lab_bld_bicarbonate.val.lastdv(2).where(dt>sysdate-730);
        
-       [[rb_id]] : {nvl(egfr1_val,0)>0 and nvl(egfr2_val,0)>0 => 1 },{=>0};
+       [[rb_id]] : {nvl(creat1_val,0)>0 and nvl(creat1_val,0)>0 => 1 },{=>0};
        
        
      
@@ -150,7 +150,7 @@ BEGIN
       -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_labs_cmp';
+    rb.blockid:='labs_cmp';
    
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
@@ -180,7 +180,7 @@ BEGIN
        
        
       
-       [[rb_id]] : {coalesce(calcium1_val,0)>0 and coalesce(calcium2_val,0)>0 => 1 },{=>0};
+       [[rb_id]] : {coalesce(calcium1_val,0)>0 => 1 },{=>0};
        
        
      
@@ -196,7 +196,7 @@ BEGIN
       -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_labs_cmp';
+    rb.blockid:='labs_egfr_uacr';
    
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
@@ -212,21 +212,100 @@ BEGIN
             }
         );
 
-       calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
-       calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
-       calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
+       egfr1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt>sysdate-730);
+       egfr2 => eadv.lab_bld_egfr_c.val.lastdv(1).where(dt>sysdate-730);
+       egfr3 => eadv.lab_bld_egfr_c.val.lastdv(2).where(dt>sysdate-730);
        
-       phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
-       phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
-       phos3 => eadv.lab_bld_phosphate.val.lastdv(2).where(dt>sysdate-730);
-
-       pth1 => eadv.lab_bld_pth.val.lastdv().where(dt>sysdate-730);
-       pth2 => eadv.lab_bld_pth.val.lastdv(1).where(dt>sysdate-730);
-       pth3 => eadv.lab_bld_pth.val.lastdv(2).where(dt>sysdate-730);
+      
+       uacr1 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-730);
+       uacr2 => eadv.lab_ua_acr.val.lastdv(1).where(dt>sysdate-730);
+       uacr3 => eadv.lab_ua_acr.val.lastdv(2).where(dt>sysdate-730);
        
        
       
-       [[rb_id]] : {coalesce(calcium1_val,0)>0 and coalesce(calcium2_val,0)>0 => 1 },{=>0};
+       [[rb_id]] : {coalesce(egfr1_val,0)>0 and coalesce(egfr2_val,0)>0 => 1 },{=>0};
+       
+       
+     
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+     -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='labs_haem';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to gather lab tests */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Rule block to gather lab tests",
+                is_active:2,
+                
+            }
+        );
+
+       hb1 => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-730);
+       hb2 => eadv.lab_bld_hb.val.lastdv(1).where(dt>sysdate-730);
+       hb3 => eadv.lab_bld_hb.val.lastdv(2).where(dt>sysdate-730);
+       
+       wcc_n1 => eadv.lab_bld_neutrophils.val.lastdv().where(dt>sysdate-730);
+       wcc_e1 => eadv.lab_bld_eosinophils.val.lastdv().where(dt>sysdate-730);
+       wcc_l1 => eadv.lab_bld_lymphocytes.val.lastdv().where(dt>sysdate-730);
+       
+       plt1 => eadv.lab_bld_platelets.val.lastdv().where(dt>sysdate-730);
+       
+      
+       [[rb_id]] : {coalesce(hb1_val,0)>0 and coalesce(hb2_val,0)>0 => 1 },{=>0};
+       
+       
+     
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    COMMIT;
+    -- END OF RULEBLOCK --
+    
+    
+      -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='labs_iron';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to gather lab tests */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Rule block to gather lab tests",
+                is_active:2,
+                
+            }
+        );
+
+            
+       
+       ferritin1 => eadv.lab_bld_ferritin.val.lastdv().where(dt>sysdate-730);
+       ferritin2 => eadv.lab_bld_ferritin.val.lastdv(1).where(dt>sysdate-730);
+       ferritin3 => eadv.lab_bld_ferritin.val.lastdv(2).where(dt>sysdate-730);
+       
+       
+      
+       [[rb_id]] : {coalesce(ferritin1_val,0)>0 => 1 },{=>0};
        
        
      
