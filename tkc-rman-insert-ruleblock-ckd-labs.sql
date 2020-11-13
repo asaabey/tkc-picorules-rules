@@ -23,7 +23,7 @@ BEGIN
     
         /* Rule block to gather lab tests */
         
-        #define_ruleblock(ckd_labs,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to gather lab tests",
                 is_active:2,
@@ -72,12 +72,7 @@ BEGIN
        hb1 => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-730);
        hb2 => eadv.lab_bld_hb.val.lastdv(1).where(dt>sysdate-730);
        hb3 => eadv.lab_bld_hb.val.lastdv(2).where(dt>sysdate-730);
-       
-       wcc_n1 => eadv.lab_bld_neutrophils.val.lastdv().where(dt>sysdate-730);
-       wcc_e1 => eadv.lab_bld_eosinophils.val.lastdv().where(dt>sysdate-730);
-       wcc_l1 => eadv.lab_bld_lymphocytes.val.lastdv().where(dt>sysdate-730);
-       
-       plt1 => eadv.lab_bld_platelets.val.lastdv().where(dt>sysdate-730);
+
        
        
        
@@ -86,7 +81,7 @@ BEGIN
        ferritin3 => eadv.lab_bld_ferritin.val.lastdv(2).where(dt>sysdate-730);
        
        
-       ckd_labs : {nvl(egfr1_val,0)>0 and nvl(egfr2_val,0)>0 => 1 },{=>0};
+       [[rb_id]] : {nvl(egfr1_val,0)>0 and nvl(egfr2_val,0)>0 => 1 },{=>0};
        
        
      
