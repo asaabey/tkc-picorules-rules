@@ -37,6 +37,8 @@ BEGIN
             }
         );
        
+        dod => eadv.dmg_dod.dt.max();
+       
         icpc_n => eadv.[icpc_%].dt.count();
         
         icd_n => eadv.[icd_%].dt.count();
@@ -49,9 +51,11 @@ BEGIN
         
         rxnc_n => eadv.[rxnc_%].dt.count();
         
-        fd => eadv.[icd%,icpc%,lab%,rxnc%,obs%].dt.min();
+        mbs_n => eadv.[mbs_%].dt.count();
         
-        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%].dt.max();
+        fd => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.min();
+        
+        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
         
         ts : { .=> round((ld-fd)/365,2)};
         
@@ -67,6 +71,8 @@ BEGIN
         
         rxnc_d : { ts>0 => round(rxnc_n/ts,2)};
         
+        mbs_d : { ts>0 => round(mbs_n/ts,2)};
+        
         icpc : { icpc_n>0 => 1},{=>0};
         
         icd : { icd_n>0 => 1},{=>0};
@@ -77,16 +83,22 @@ BEGIN
         
         rxnc : { rxnc_n>0 => 1},{=>0};
         
+        mbs : { mbs_n>0 => 1},{=>0};
+        
+        sigma : { . => icpc + icd + lab  + rxnc + obs + mbs};
+        
+        is_active : { sigma>0 and ld > sysdate-730 =>1 },{=>0};
+        
+        [[rb_id]] : {. => sigma};
         
         
-        core_info_entropy : { . => icpc + icd + lab  + rxnc + obs};
         
         #define_attribute(
-            core_info_entropy,
+            [[rb_id]],
             {
                 label:"Core information entropy",
                 desc:"Core information entropy",
-                is_reportable:1,
+                is_reportable:0,
                 type:2
             }
         );
