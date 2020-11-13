@@ -469,7 +469,7 @@ BEGIN
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
         
-        last_hba1c : {hba1c_n0!? => hba1c_n0_val};
+        last_hba1c : {hba1c_n0_val!? => hba1c_n0_val};
         
         #doc(,
             {

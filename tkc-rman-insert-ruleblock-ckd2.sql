@@ -8,7 +8,7 @@ DECLARE
 
     
 
---BEGIN
+BEGIN
 --     
 --    
 --        
@@ -1428,7 +1428,6 @@ DECLARE
         
         rsc_ld => eadv.icpc_u59011.dt.last();
         
-        pall_care_loc_ld => eadv
         
         rsc : {rsc_ld!? =>1},{=>0};
         
