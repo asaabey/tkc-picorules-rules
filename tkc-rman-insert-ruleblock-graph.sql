@@ -50,9 +50,9 @@ BEGIN
             
             
             
-            dspan : {1=1 => egfr_l_dt - egfr_f_dt };
+            dspan : { . => egfr_l_dt - egfr_f_dt };
             
-
+            yspan : { . => round((dspan/365.25),1)};
 
             egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt);
 
@@ -61,9 +61,9 @@ BEGIN
             
             egfr_graph_canvas_y : {1=1 => 400};
             
-            egfr_graph_y_max : {1=1 => 150};
+            egfr_graph_y_max : {1=1 => egfr_max_val + 10 };
             
-            egfr_graph_y_min : {1=1 => 0};
+            egfr_graph_y_min : {1=1 => egfr_min_val };
             
             
             

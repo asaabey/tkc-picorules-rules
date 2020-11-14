@@ -653,46 +653,54 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (47,'graph_egfr2','egfr_graph2','
     <hr />
+    
     <div class="syn_synopsis_box">
-    <h5>Temporal variation of eGFR</h5>
-    eGFR ml/min against time 
-    <div>
-    <svg height=<<egfr_graph_canvas_y />> width=<<egfr_graph_canvas_x />>>
-    <style>
-        .small { font:Ariel 18px;font-weight:normal;}
-    </style>
-    <defs>
-
-        <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-            markerWidth="5" markerHeight="5">
-          <circle cx="5" cy="5" r="10" fill="blue" />
-        </marker>
-
-      </defs>
-      <polyline points="<<xy_coords />>" 
-      style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-
-     <line x1="<<line1_x1 />>" x2="<<line1_x2 />>" y1="<<line1_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
-
-     <line x1="0" x2="<<line1_x2 />>" y1="<<line2_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
-
-     <line x1="0" x2="<<line1_x2 />>" y1="<<line1_y2 />>" y2="<<line1_y2 />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
-
-     <line x1="0" x2="<<line1_x2 />>" y1="<<line_max_y />>" y2="<<line_max_y />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
-
-     <text x="0" y="<<txt_upper_y />>" class="small"><<egfr_max_val />> ml/min</text>  
-
-     <text x="0" y="<<txt_lower_y />>" class="small"><<egfr_l_val />> ml/min</text>  
-
-     <text x="0" y="<<egfr_graph_canvas_y />>" class="small"><<egfr_f_dt />></text>  
-
-     <text x="510" y="<<egfr_graph_canvas_y />>" class="small" ><<egfr_l_dt />></text>  
-
-
-
-    </svg>
-
-    </div>
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            <h5>Temporal variation of eGFR over <<yspan />> years</h5>
+            (ml/min against time)
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                      <svg height=<<egfr_graph_canvas_y />> width=<<egfr_graph_canvas_x />>>
+                        <style>
+                            .small { font:Ariel 18px;font-weight:normal;}
+                        </style>
+                        <defs>
+                    
+                            <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                                markerWidth="5" markerHeight="5">
+                              <circle cx="5" cy="5" r="10" fill="blue" />
+                            </marker>
+                    
+                          </defs>
+                          <polyline points="<<xy_coords />>" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                    
+                         <line x1="<<line1_x1 />>" x2="<<line1_x2 />>" y1="<<line1_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
+                    
+                         <line x1="0" x2="<<line1_x2 />>" y1="<<line2_y1 />>" y2="<<line1_y2 />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/> 
+                    
+                         <line x1="0" x2="<<line1_x2 />>" y1="<<line1_y2 />>" y2="<<line1_y2 />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
+                    
+                         <line x1="0" x2="<<line1_x2 />>" y1="<<line_max_y />>" y2="<<line_max_y />>" style="fill:none;stroke:lightslategray;stroke-width:4;stroke-dasharray: 4 2"/>
+                    
+                         <text x="0" y="<<txt_upper_y />>" class="small"><<egfr_max_val />> ml/min</text>  
+                    
+                         <text x="0" y="<<txt_lower_y />>" class="small"><<egfr_l_val />> ml/min</text>  
+                    
+                         <text x="0" y="<<egfr_graph_canvas_y />>" class="small"><<egfr_f_dt />></text>  
+                    
+                         <text x="510" y="<<egfr_graph_canvas_y />>" class="small" ><<egfr_l_dt />></text>  
+                    
+                    
+                    
+                        </svg>
+                </div>
+               
+            </div>
+        </div>
     </div>
 
     ');
