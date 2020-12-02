@@ -89,6 +89,10 @@ BEGIN
         
         is_active : { sigma>0 and ld > sysdate-730 =>1 },{=>0};
         
+        is_study_cand1 : { lab_n>2 and obs_n>2 and is_active=1 =>1},{=>0};
+        
+        
+        
         [[rb_id]] : {. => sigma};
         
         

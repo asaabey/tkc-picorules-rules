@@ -671,7 +671,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                     
                             <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
                                 markerWidth="5" markerHeight="5">
-                              <circle cx="5" cy="5" r="10" fill="blue" />
+                              <circle cx="5" cy="5" r="5" fill="grey" />
                             </marker>
                     
                           </defs>
@@ -1265,7 +1265,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                 <<obesity>><li>Obesity</li><</obesity>>
                 <<struc>><li>GU tract abnormalities</li><</struc>>
                 <<lit>><li>Nephro-Urolithiasis</li><</lit>>
-                <<aki>><li>AKI</li><</aki>>
+                <<aki>><li>AKI <<aki_ld />></li><</aki>>
                 <<gn>><li>Resolved Glomerulonephritis</li><</gn>>
                 <<tid>><li>Tubulo-interstitial disease</li><</tid>>
                 <<obst>><li>Obstructive uropathy</li><</obst>>

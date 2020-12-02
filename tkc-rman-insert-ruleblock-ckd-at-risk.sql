@@ -53,14 +53,23 @@ BEGIN
         cva => rout_cd_cardiac_cad.cva.val.bind();
         pvd => rout_cd_cardiac_cad.pvd.val.bind();
         
+        aki_stage => rout_tg4100.akin_stage.val.bind();
+        
+        cr_max_ld => rout_tg4100.cr_max_ld_1y.val.bind();
+        
         cvd : { greatest(cad,cva,pvd)>0 =>1},{=>0};
         
         obesity => rout_cd_obesity.cd_obesity.val.bind();
         
         
-        aki_fd => eadv.[icd_n17%].dt.min();
         
-        aki : {aki_fd!? =>1},{=>0};
+        
+        aki_icd_ld => eadv.[icd_n17%].dt.max();
+        
+        
+        aki : {aki_icd_ld!? or aki_stage>1 =>1},{=>0};
+        
+        aki_ld : { coalesce(aki_icd_ld, cr_max_ld)!? => least_date(aki_icd_ld, cr_max_ld)};
         
         smoker => eadv.status_smoking_h2_v1.val.last().where(val>=29);
         
