@@ -49,7 +49,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <div class="col-sm-4">
             <div class="card text-right">
                 <div class="card-body">
-                    <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renalcsu@nt.gov.au&subject=TKC Feedback EID: <<eid />>" class="btn btn-primary btn-sm">Feedback</a>
+                    <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renal.csu@nt.gov.au&subject=TKC Feedback EID: <<eid />>" class="btn btn-primary btn-sm">Feedback</a>
                 </div>
             </div>
         </div>
@@ -278,8 +278,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
         <ul>
             <<mm1>><li>Could be a dialysis patient with non-captured episodes</li><</mm1>>
             <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
-            <<dx_ckd=0>><li>No coded diagnosis on the EHR (ICD/ICPC coding) [1.2]</li><</dx_ckd=0>>
-            <<dx_ckd>><li>The diagnosis on the EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>
+            <<dx_ckd=0>><li>No coded diagnosis on the primary care EHR (ICPC coding) [1.2]</li><</dx_ckd=0>>
+            <<dx_ckd>><li>The diagnosis on the primary care EHR is CKD stage <<dx_ckd_stage />> [1.2]</li><</dx_ckd>>
             <<egfr_l_val>><li>Last eGFR is <strong><<egfr_l_val />></strong> ml/min/1.73m2 (<<egfr_l_dt />>)<<egfr_outdated>> and is outdated [1.3].<</egfr_outdated>></li><</egfr_l_val>>
             <<acr_l_val>><li>Last uACR is <<acr_l_val />> mg/mmol (<<acr_l_dt />>)<<acr_outdated>> and is outdated [1.3].<</acr_outdated>></li><</acr_l_val>>
             <<egfr_decline>><li><<egfr_rapid_decline>>rapid <</egfr_rapid_decline>>progressive decline of renal function with an annual decline of <<egfr_slope2 />>ml/min/yr [1.3]</li><</egfr_decline>>

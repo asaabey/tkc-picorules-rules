@@ -45,13 +45,13 @@ BEGIN
         
         hd_131_1y_n => eadv.[caresys_1310000].dt.count().where(dt>sysdate-365);
         
-        hd_dt0 => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1].dt.max(); 
+        hd_dt0 => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
         hd_dt => eadv.icd_z49_1.dt.max(); 
         
-        hd_dt_min => eadv.icd_z49_1.dt.min();
+        hd_dt_min => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.min();
         
         #doc(,
             {   
