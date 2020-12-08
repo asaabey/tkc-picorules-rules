@@ -47,6 +47,10 @@ BEGIN
         
         hd_dt0 => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
         
+        mbs_13105_dt_max => eadv.mbs_13105.dt.max(); 
+        
+        mbs_13105_dt_min => eadv.mbs_13105.dt.min(); 
+        
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
         hd_dt => eadv.icd_z49_1.dt.max(); 
@@ -150,6 +154,10 @@ BEGIN
         rrt_tx : {rrt=3 => 1},{=>0};
         
         rrt_hhd : {rrt=4 => 1},{=>0};
+        
+        rrt_hd_rsd : { mbs_13105_dt_max!?=> 1 },{=>0};
+        
+        rrt_hd_rsd_1y : { mbs_13105_dt_max > sysdate - 365 => 1 },{=>0};
         
         hd_incd : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
           
