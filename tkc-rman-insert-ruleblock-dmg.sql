@@ -413,6 +413,51 @@ BEGIN
     
     -- END OF RULEBLOCK 
     
+              -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='dmg_eid_alt';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess alternative eid */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess alternative eid",
+                is_active:2
+                
+            }
+        );
+         
+        alt_eid_last => eadv.dmg_eid_alt.val.last();
+        
+        alt_eid_last_1 => eadv.dmg_eid_alt.val.last(1);
+
+        [[rb_id]] : { alt_eid_last!? => 1 },{=>0};    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Potential duplicate client",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+        
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
 
 END;
 

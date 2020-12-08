@@ -76,6 +76,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
       </div>
     </div>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (9,'dmg_eid_alt','dmg_eid_alt','
+    <div class="alert alert-warning" role="alert">
+      
+        <h5> Potential duplicate <a href="http://territorykidneycare-dev/#/patient-detail/<<alt_eid_last />>"><<alt_eid_last />></a>
+        <p>Record may be incomplete !</p>
+        </h5>
+        <<alt_eid_last_1>><h5> Another duplicate <<alt_eid_last_1 />></h5><</alt_eid_last_1>>
+      
+    </div>
+    ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (304,'alert_tg2610','tg2610','
     <div class="alert alert-warning" role="alert">
