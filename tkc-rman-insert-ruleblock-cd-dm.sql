@@ -87,18 +87,20 @@ BEGIN
         dm_icpc_fd : {.=> least_date(dm1_icpc_fd,dm2_icpc_fd) };
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt :"Code criteria for Gestational DM"
-            }
-        );
+        });
         
         gdm_code_fd => eadv.[icd_o24%,icpc_w85001,icpc_w85002].dt.min();
       
+        #doc(,{
+                txt :"Differentiate Type 1 prioritising ICPC"
+        });
         dm_code_fd : { . => least_date(dm_icd_fd,dm_icpc_fd) };
         
-        dm_type_1 : { coalesce(dm1_icpc_fd,dm1_icd_fd)!? => 1},{=>0}; 
         
+        
+        dm_type_1 : { dm1_icpc_fd!? => 1},{ dm2_icpc_fd? and dm1_icd_fd!? =>1},{=>0}; 
         
         
         

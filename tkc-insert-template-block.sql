@@ -1535,5 +1535,20 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
     
     ');
 /
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (810,'cd_rheum_ra','cd_rheum_ra','
+    <ul>
+    <li><b>Rheumatoid Arthritis</b></li>
+        <ul>
+            <li>Diagnosed <<ra_fd />> </li>
+            <ul>
+                <<rxn_l04ax>><li>Thiopurine <<rxn_l04ax />></li><</rxn_l04ax>>
+                <<rxn_p01ba>><li>Hydroxychloroquine <<rxn_p01ba />></li><</rxn_p01ba>>
+                <<rxn_a07ec>><li>Aminosalicylic acid and similar agents <<rxn_a07ec />></li><</rxn_a07ec>>
+            </ul>
+            <<op_enc_ld>><li>Last specialist clinic <<op_enc_ld />></li><</op_enc_ld>>
+        </ul>
+    </ul>
+    ');
 -- Compile rman_tmplts
 alter package rman_tmplts compile;
