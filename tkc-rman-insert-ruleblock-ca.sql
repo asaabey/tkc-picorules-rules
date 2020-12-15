@@ -30,7 +30,7 @@ BEGIN
         );
         
         
-        op_enc_ld => eadv.enc_op_onc.dt.max();
+        op_enc_ld => eadv.[enc_op_onc%].dt.max();
         
         
         [[rb_id]] : { op_enc_ld!? => 1},{=>0};
@@ -155,7 +155,9 @@ BEGIN
         
         ca_lung_fd => rout_ca_lung.code_fd.val.bind();
         
-        any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd)!? => 1},{=>0};
+        ca_thyroid_fd => rout_ca_thyroid.code_fd.val.bind();
+        
+        any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd,ca_thyroid_fd)!? => 1},{=>0};
         
         op_enc_ld => rout_ca_careplan.op_enc_ld.val.bind();
         
@@ -427,6 +429,57 @@ BEGIN
         #define_attribute([[rb_id]],
             { 
                 label: "Presence of lung carcinoma",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks (
+        blockid,
+        picoruleblock
+    ) VALUES (
+        rb.blockid,
+        rb.picoruleblock
+    );
+
+    COMMIT;
+    -- END OF RULEBLOCK -- 
+    
+       
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid := 'ca_thyroid';
+    DELETE FROM rman_ruleblocks
+    WHERE
+        blockid = rb.blockid;
+
+    rb.picoruleblock := '
+    
+        /*  This is a algorithm to identify thyroid carcinoma  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a algorithm to identify thyroid carcinoma",
+                is_active:2
+                
+            }
+        );
+        
+        icd_fd => eadv.[icd_c37%].dt.first();
+                
+        icpc_fd => eadv.[icpc_t71%].dt.first();
+        
+        code_fd : { . => least_date(icd_fd,icpc_fd)};
+      
+        [[rb_id]] : { code_fd!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of thyroid carcinoma",
                 is_reportable:1,
                 type:2
             }

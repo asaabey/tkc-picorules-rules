@@ -123,6 +123,58 @@ BEGIN
 
         COMMIT;
     -- END OF RULEBLOCK --
+    
+            -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_rheum_aps';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Algorithm to identify Antiphosphlipid syndrome  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to identify Antiphosphlipid syndrome",
+                is_active:2
+                
+            }
+        );
+        
+        icd_fd => eadv.[icd_d68_61%].dt.min();
+        
+        icpc_fd => eadv.[icpc_b83021].dt.min();
+
+        rxn_anticoag_dt => rout_cd_cardiac_rx.rxn_anticoag.val.bind();
+        
+        op_enc_ld => eadv.[enc_op_med_rhe].dt.max();
+        
+        aps_fd : { .=> least_date(icd_fd,icpc_fd)};
+        
+        [[rb_id]] : { aps_fd!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of Antiphosphlipid syndrome",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

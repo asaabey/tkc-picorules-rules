@@ -134,7 +134,12 @@ BEGIN
         
         mode_24_ => eadv.dmg_location.val.stats_mode().where(dt > sysdate - 730 and substr(val,-1)=1);
         
+        
+        
         mode_full_ => eadv.dmg_location.val.stats_mode().where(substr(val,-1)=1);
+        
+        
+        
         
         loc_mode_24 : {.=> to_number(substr(mode_24_,4))};
         
@@ -146,7 +151,11 @@ BEGIN
         
         last => eadv.dmg_location._.lastdv().where(substr(val,-1)=1 and dt > sysdate - 730);
         
+        last_t => eadv.dmg_location._.lastdv().where(substr(val,-1)<>1);
+        
         loc_last_val : {.=> to_number(substr(last_val,4))};       
+        
+        loc_last_t_val : {.=> to_number(substr(last_t_val,4))};  
         
         last_1 => eadv.dmg_location._.lastdv(1).where(substr(val,-1)=1 and dt > sysdate - 730);
         
@@ -157,13 +166,12 @@ BEGIN
         loc_mode_n => eadv.dmg_location.val.count().where(substr(val,4)=loc_mode_def);
         
         loc_last_n => eadv.dmg_location.val.count().where(substr(val,4)=loc_last_val);
+
+        loc_def : {loc_last_val=loc_last_1_val and last_dt-last_1_dt>90 => loc_last_val},{=> loc_mode_def};
+
+        loc_def_alt : {loc_def? =>loc_last_t_val};      
         
-        /*
-        loc_last_2y => eadv.dmg_location.val.serializedv2(substr(val,4)~dt).where(dt>sysdate-365 and substr(val,-1)=1);
-        */
-        
-        
-        loc_def : {loc_last_val=loc_last_1_val and last_dt-last_1_dt>90 => loc_last_val},{=>loc_mode_def}
+        loc_null : {coalesce(loc_def,loc_def_alt)?=>1},{=>0};
         
         loc_def_fd => eadv.dmg_location.dt.min().where(substr(val,4)=loc_last_val);
         
@@ -184,7 +192,7 @@ BEGIN
         
         
         
-        [[rb_id]] : { nvl(loc_def,0)>0 =>loc_def };    
+        [[rb_id]] : { coalesce(loc_def,0)>0 =>loc_def },{ coalesce(loc_def_alt,0)>0 => loc_def_alt},{=>0};    
         
         
         
@@ -235,6 +243,10 @@ BEGIN
         );
                 
         loc_def => rout_dmg_loc.loc_def.val.bind();
+        
+        loc_def_alt => rout_dmg_loc.loc_def_alt.val.bind();
+        
+        loc_null => rout_dmg_loc.loc_null.val.bind();
         
         loc_mode_n => rout_dmg_loc.loc_mode_n.val.bind();
         
@@ -299,7 +311,7 @@ BEGIN
         phc_kwhb : { phc_1=35 => 1 },{=>0};
         
         
-        [[rb_id]] : { phc_1!? => phc_1 };    
+        [[rb_id]] : { phc_1 > 0 => phc_1 },{=>99999};    
         
         #define_attribute(
             [[rb_id]],

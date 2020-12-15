@@ -8,10 +8,15 @@ TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
     
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (2,'dmg_source_summary','dmg_source','
+
     <div class="row"> 
         <div class="col-sm-8">
+
             <div class="card">
                 <div class="card-body">
+                    <<dmg_source=99999>>
+                        <h4>No primary care</h4>
+                    <</dmg_source=99999>>
                     <<dmg_source>>
                             <span>Primary health care network:</span>
                             <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
@@ -43,6 +48,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
                             ,within last 3 years.
                             <<loc_def>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%<</loc_def>>
                     <</dmg_source>>
+
                 </div>
             </div>
         </div>
@@ -79,7 +85,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (9,'dmg_eid_alt','dmg_eid_alt','
     <div class="alert alert-warning" role="alert">
       
-        <h5> Potential duplicate <a href="http://territorykidneycare-dev/#/patient-detail/<<alt_eid_last />>"><<alt_eid_last />></a>
+        <h5> Potential duplicate <a href="/#/patient-detail/<<alt_eid_last />>"><<alt_eid_last />></a>
         <p>Record may be incomplete !</p>
         </h5>
         <<alt_eid_last_1>><h5> Another duplicate <<alt_eid_last_1 />></h5><</alt_eid_last_1>>
@@ -1417,6 +1423,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <li>Lung carcinoma <<ca_lung_fd />></li> 
         </ul>
         <</ca_lung_fd>>
+        <<ca_thyroid_fd>>
+        <ul>
+            <li>Thyroid carcinoma <<ca_thyroid_fd />></li> 
+        </ul>
+        <</ca_thyroid_fd>>
         <ul>
             <<op_enc_ld>><li>Last oncology clinic visit <<op_enc_ld />></li><</op_enc_ld>>
         </ul>
@@ -1549,6 +1560,42 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
             <<op_enc_ld>><li>Last specialist clinic <<op_enc_ld />></li><</op_enc_ld>>
         </ul>
     </ul>
+    ');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (850,'cd_rheum_aps','cd_rheum_aps','
+    <ul>
+    <li><b>Antiphospholipid syndrome</b></li>
+        <ul>
+            <li>Diagnosed <<aps_fd />> </li>
+            <ul>
+                <<rxn_anticoag_dt>><li>Anticoagulated <<rxn_anticoag_dt />></li><</rxn_anticoag_dt>>
+            </ul>
+            <<op_enc_ld>><li>Last specialist clinic <<op_enc_ld />></li><</op_enc_ld>>
+        </ul>
+    </ul>
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (ID,TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (5010,'ckd_labs_block','ckd_labs','
+    <hr />
+    <h5>Lab data panel</h5>
+    <p>
+    <<creat1_val>>Creatinine <strong><<creat1_val />></strong>(<<creat1_dt />>) <</creat1_val>>
+    <<egfr1_val>>eGFR <strong><<egfr1_val />></strong>(<<egfr1_dt />>) <</egfr1_val>>
+    <<uacr1_val>>uACR <strong><<uacr1_val />></strong>(<<uacr1_dt />>) <</uacr1_val>>
+    <<sodium1_val>>Sodium <strong><<sodium1_val />></strong>(<<sodium1_dt />>) <</sodium1_val>>
+    <<potassium1_val>>Potassium <strong><<potassium1_val />></strong>(<<potassium1_dt />>) <</potassium1_val>>
+    <<biacrb1_val>>Bicarbonate <strong><<biacrb1_val />></strong>(<<biacrb1_dt />>) <</biacrb1_val>>
+    </p>
+    <p>
+    <<calcium1_val>>Calcium <strong><<calcium1_val />></strong>(<<calcium1_dt />>) <</calcium1_val>>
+    <<phos1_val>>Phosphate <strong><<phos1_val />></strong>(<<phos1_dt />>) <</phos1_val>>
+    </p>
+    <p>
+    <<hb1_val>>Haemoglobin <strong><<hb1_val />></strong>(<<hb1_dt />>) <</hb1_val>>
+    <<ferritin1_val>>Ferritin <strong><<ferritin1_val />></strong>(<<ferritin1_dt />>) <</ferritin1_val>>
+    </p>
+        
+
     ');
 -- Compile rman_tmplts
 alter package rman_tmplts compile;
