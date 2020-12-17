@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 9dbb291184bc0fe87c1477a1e928a9191aeac3af
+TRUNCATE TABLE rman_ruleblocks_citation;
 
 INSERT INTO rman_ruleblocks_citation VALUES (
 'rrt_hd_icd',
