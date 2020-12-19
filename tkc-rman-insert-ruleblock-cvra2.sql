@@ -141,16 +141,23 @@ BEGIN
         risk_5 : { risk_high_ovr=0 => nvl(risk_5_chd,0) + nvl(risk_5_mi,0)};
         
         
-        [[rb_id]] :  {risk_high_ovr=1 => 3},
+        cvra_cat :  {risk_high_ovr=1 => 3},
                     { risk_5 >=15 => 3},
                     { risk_5 >=10 and risk_5 <15 => 2},
                     { risk_5 <10 => 1},{=>0};
-        cvra_dx_uncoded : {cvra=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
+                    
+        cvra_dx_uncoded : {cvra_cat=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
         
+        [[rb_id]] :  { cvra_cat>2 => 1},{=>0};
             
-        
-        
-            
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"High CVRA",
+                type:2,
+                is_reportable:1
+            }
+        );    
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

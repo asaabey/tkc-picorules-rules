@@ -14,11 +14,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
             <div class="card">
                 <div class="card-body">
-                    <<dmg_source=99999>>
+                    <<dmg_source=999>>
                         <h4>No primary care</h4>
-                    <</dmg_source=99999>>
-                    <<dmg_source>>
-                            <span>Primary health care network:</span>
+                    <</dmg_source=999>>
+                    
+                            <<phc_0>><span>Primary health care network:</span><</phc_0>>
+                            
                             <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
                             <<dmg_source=22>><span class="badge badge-info">NTG EACS</span><</dmg_source=22>>
                             <<dmg_source=33>><span class="badge badge-warning">LAYNHAPUY</span><</dmg_source=33>>
@@ -45,10 +46,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                             <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
                             <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
                             <<wurli_n>><i>WURLI encounters (N=<<wurli_n />>, last=<<wurli_ld />>)</i><</wurli_n>>
-                            ,within last 3 years.
+                            
                             <<loc_def>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%<</loc_def>>
-                    <</dmg_source>>
-
+                    
                 </div>
             </div>
         </div>
@@ -91,6 +91,21 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<alt_eid_last_1>><h5> Another duplicate <<alt_eid_last_1 />></h5><</alt_eid_last_1>>
       
     </div>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_phc_null','dmg_source','
+    <<dmg_source=999>>
+        <div class="alert alert-warning" role="alert">
+            <h5> 
+            <p>Record may be incomplete ! No primary care records found</p>
+            </h5>
+            <p>This is most likely due</p>
+            <ol>
+                <li>Interstate client</li>
+                <li>Client of non-participating PHC</li>
+                <li>Linking failure</li>
+            </ol>
+        </div>
+    <</dmg_source=999>>
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('alert_tg2610','tg2610','

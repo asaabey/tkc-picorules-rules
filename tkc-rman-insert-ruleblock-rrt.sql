@@ -51,6 +51,10 @@ BEGIN
         
         mbs_13105_dt_min => eadv.mbs_13105.dt.min(); 
         
+        hhd_op_enc_dt_min => eadv.enc_op_ren_hdp.dt.min();
+        
+        hhd_op_enc_dt_max => eadv.enc_op_ren_hdp.dt.max();
+        
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
         hd_dt => eadv.icd_z49_1.dt.max(); 
@@ -120,7 +124,7 @@ BEGIN
                 txt : "Home-haemodialysis ICPC2p coding"
         });
         
-        homedx_dt => eadv.[icpc_u59j99].dt.max();
+        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_rdu_xwd,mbs_13105].dt.max();
         
         
         ren_enc => eadv.[enc_op%].dt.max();

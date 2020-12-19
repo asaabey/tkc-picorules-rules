@@ -311,7 +311,7 @@ BEGIN
         phc_kwhb : { phc_1=35 => 1 },{=>0};
         
         
-        [[rb_id]] : { phc_1 > 0 => phc_1 },{=>99999};    
+        [[rb_id]] : { phc_1 > 0 => phc_1 },{=>999};    
         
         #define_attribute(
             [[rb_id]],
