@@ -98,7 +98,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <h5> 
             <p>Record may be incomplete ! No primary care records found</p>
             </h5>
-            <p>This is most likely due</p>
+            <p>This is most likely due to</p>
             <ol>
                 <li>Interstate client</li>
                 <li>Client of non-participating PHC</li>
