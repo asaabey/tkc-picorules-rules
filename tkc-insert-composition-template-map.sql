@@ -8,8 +8,8 @@ Priority    50xxxx
 Synthesis   60xxxx
 Recommend   70xxxx
 
-RRT         xx11xx
-CKD         xx21xx
+Renal       xx11xx
+DM          xx21xx
 Obesity     xx29xx
 Htn         xx31xx
 Cardiac     xx41xx
@@ -20,7 +20,7 @@ Infection   xx81xx
 Carcinoma   xx91xx
 */
 
-
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='__header__'), 200000);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='alert_tg4100'),304100);
 
 
@@ -105,5 +105,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='cd_rheum_aps'),603020);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='cd_rheum_aps'),603022);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='ckd_labs_block'),651012);
+
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='cd_ckd_cause_nephrectomy'),601190);
 
 alter package rman_tmplts compile;

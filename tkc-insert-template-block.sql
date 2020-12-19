@@ -5,13 +5,14 @@ SET DEFINE OFF;
 TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
 
 
-    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_source','
+    <style>        
+    </style>
+    ');
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_source','
-
     <div class="row"> 
         <div class="col-sm-8">
-
             <div class="card">
                 <div class="card-body">
                     <<dmg_source=999>>
@@ -62,18 +63,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </div>
     <br />
     ');
---Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values (3,'dmg_loc_summary','dmg_loc','
---    <div class="card">
---    <div class="card-body">
---    <<episode_single>>Single episode at <<loc_last_val />> on <<loc_last_val />><</episode_single>>
---    <<episode_single=0>><<loc_single>>There have been <<loc_n />> visits to <b><<loc_def$loc_sublocality />></b> <</loc_single>><</episode_single=0>>
---
---    <<episode_single=0>><<loc_single=0>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%.<</loc_single=0>><</episode_single=0>>
---     <<episode_single=0>><<diff_last_mode=1>>The last visited site is <<loc_last_val$loc_sublocality />> and the most visited is <<loc_def$loc_sublocality />> <</diff_last_mode=1>> <</episode_single=0>>    
---    </div>
---    </div>
---    <hr />
---    ');
+
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_residency','dmg_residency','
     <div class="card">
@@ -209,7 +199,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <</rrt=1>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_hd_acc_iv','rrt_hd_acc_iv','
-    
     <ul><ul>
     <li>Vascular access
         <ul>
@@ -221,8 +210,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<iv_periodicity=99>>Periodicity cannot be determined<</iv_periodicity=99>>
                 <<iv_periodicity=3>>Periodicity 3 monthly<</iv_periodicity=3>>
                 <<iv_periodicity=6>>Periodicity 6 monthly<</iv_periodicity=6>>
-                <<iv_periodicity=12>>Periodicity yearly<</iv_periodicity=12>>
-                
+                <<iv_periodicity=12>>Periodicity yearly<</iv_periodicity=12>>                
             </li><</av_plasty_ld>>
         </ul>
     </li>
@@ -317,10 +305,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<enc_ld>><li>Last captured encounter with renal services was on <<enc_ld />> and there have been <<enc_n />> encounters since <<enc_fd />></li><</enc_ld>>
             <<ref_ld>><li>Last renal <b>referral</b> <<ref_ld />></li><</ref_ld>>
             <<avf>><li>An <strong>arterio-venous fistula</strong> has been created on <<avf_dt />></li><</avf>>
-            
-            
             <<rsc_ld>><li><b>Renal supportive care <<rsc_ld />></b></li><</rsc_ld>>
-            
             <<is_pcis=1>><<cp_ckd=0>><li>No current PCIS careplan for CKD</li><</cp_ckd=0>><</is_pcis=1>>
             <<is_pcis=1>><<cp_ckd>><li>CKD current PCIS careplan is <<cp_ckd />> updated on <<cp_ckd_ld />></li><</cp_ckd>><</is_pcis=1>>
             <<is_pcis=1>><ul><<cp_mis>><li>existing care plan may not be adequate [1.8]</li><</cp_mis>></ul><</is_pcis=1>>
@@ -330,8 +315,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_1','cd_dm_dx','
+    <br />
     <ul>
-
         <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>></li><</dm_type=1>>
         <<dm_type=2>><li><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><<dm2_mm_3>> ? <</dm2_mm_3>><<dm2_mm_4>> ? <</dm2_mm_4>></li><</dm_type=2>>
         <ul>
@@ -376,7 +361,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
        </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_4','cd_dm_dx','
-
     <<dm_rxn=0>>
     <ul>
         <ul>
@@ -418,6 +402,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_obesity','cd_obesity','
+    <br />
     <ul>
         <<cd_obesity>><li><b>Obesity</b></li><</cd_obesity>>
         <ul>
@@ -426,6 +411,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_htn_syn_1','cd_htn','
+    <br />
     <ul>
         <li><b>Hypertension</b>
         <ul>
@@ -460,6 +446,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_cad_syn','cd_cardiac_cad','
+        <br />
         <ul>
             <<cad>><li><b>Coronary artery disease</b>
             <ul>
@@ -492,6 +479,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_syn_1','cvra','
+    <br />
     <ul>
         <li><b>Cardiovascular risk (CVR)</b></li>
         <ul>
@@ -520,9 +508,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_vhd_syn','cd_cardiac_vhd','
-
+        <br />
         <ul>
-
             <<vhd>><li><b>Valvular heart disease</b>
             <ul>
                 <<vhd_ie_icd>><li>Infective endocarditis <<vhd_ie_icd />></li><</vhd_ie_icd>>
@@ -556,18 +543,18 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<rxn_anticoag>><li>On anticoagulation </li><</rxn_anticoag>>
             </ul>
             <</vhd>>
-
-
         </ul>
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_chf_syn','cd_cardiac_chf','
+        <br />
         <ul>
             <<chf>><li><b>Congestive heart failure</b>
             <</chf>>
         </ul>   
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_af','cd_cardiac_af','
+    <br />
     <ul>
         <b><li>Atrial fibrillation</li></b>
         <ul>
@@ -582,6 +569,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dyslip','cd_dyslip','
+    <br />
     <ul>
         <b><li>Dyslipidaemia</li></b>
         <ul>
@@ -602,6 +590,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cva_syn','cd_cva','
+    <br />
     <ul>
         <li><b>Cerebrovascular disease</b>
         <ul>
@@ -612,6 +601,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>  
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cns','cd_cns','
+    <br />
     <ul>
         <<md>><b><li>Mood disorder</li></b>
         <ul>
@@ -637,6 +627,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_haem','cd_haem','
+    <br />
     <ul>
         <<low_cat=3>><b><li>Pancytopaenia</li></b><</low_cat=3>>
         <<low_cat=2>><b><li>Bicytopaenia</li></b><</low_cat=2>>
@@ -663,12 +654,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <</wcc_low=1>>
             </ul>
         <</low_cat>>
-
     </ul>
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rx_syn_1','rx_desc','
     <hr/> 
+    <br />
     <div class="syn_synopsis_box">
     <h3>Medications</h3>
     <ol>
@@ -679,7 +670,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('graph_egfr2','egfr_graph2','
     <hr />
-    
     <div class="syn_synopsis_box">
     <div class="card" style="width: 640px;">
         <div class="card-header">
@@ -732,7 +722,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_cause_syn_1','ckd_cause','
     <ul><ul>
-        
         <li>Aetiology
             <ul>
                 <li>Potential cause for CKD</li>
@@ -762,32 +751,35 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<c_c64>><li>Renal cell cancer <<c_c64 />></li><</c_c64>>
                     <<c_z90_5>><li>Complete or partial nephrectomy (Acquired single kidney) <<c_z90_5 />></li><</c_z90_5>>
                 </ul>
-                
             </ul>
         </li>
     </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_cause_nephrectomy','ckd_cause','
-    <<c_z90_5>><ul>
-        <li><b>Nephrectomy</b></li>
+    <<c_z90_5>>
+        <br />
         <ul>
-            <li>First procedure <<c_z90_5 />></li>
+            <li><b>Nephrectomy</b></li>
+            <ul>
+                <li>First procedure <<c_z90_5 />></li>
+            </ul>
         </ul>
-    </ul><</c_z90_5>>
+    <</c_z90_5>>
         
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_journey_1','ckd_journey','
     <ul><ul>
-    
         <li>Renal services engagement</li>
-        <<enc_multi=0>><li><<enc_ld>>Nephrologist reviews <<enc_ld />><</enc_ld>></li><</enc_multi=0>>
-        <<enc_multi>><li>Nephrologist reviews: \t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li> <</enc_multi>>
-        <<edu_init>><li>CKD Education (initial): \t<<edu_init />></li><</edu_init>>
-        <<edu_rv>><li>CKD Education review (last): \t<<edu_rv />></li><</edu_rv>>
-        <<dietn>><li>Renal Dietician review (last): \t<<dietn />></li><</dietn>>
-        <<sw>><li>Renal social work review (last): \t<<sw />></li><</sw>>
-        <<avf_ld>><li>CKD Access (AVF) formation date: \t\t<<avf_ld />></li><</avf_ld>>
+        <ul>
+            <<enc_multi=0>><<enc_ld>><li>Nephrologist reviews <<enc_ld />></li><</enc_ld>><</enc_multi=0>>
+            <<enc_multi>><<enc_fd>><li>Nephrologist reviews: \t<<enc_fd />>-<<enc_ld />> [<<enc_n />>]</li><</enc_fd>><</enc_multi>>
+            <<edu_init>><li>CKD Education (initial): \t<<edu_init />></li><</edu_init>>
+            <<edu_rv>><li>CKD Education review (last): \t<<edu_rv />></li><</edu_rv>>
+            <<dietn>><li>Renal Dietician review (last): \t<<dietn />></li><</dietn>>
+            <<sw>><li>Renal social work review (last): \t<<sw />></li><</sw>>
+            <<avf_ld>><li>CKD Access (AVF) formation date: \t\t<<avf_ld />></li><</avf_ld>>
+        </ul>
     </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_dx_1','ckd_diagnostics','
@@ -803,41 +795,32 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<ua_pos=1>> haematuria with leucocyturia <</ua_pos=1>>
                 <<ua_pos=2>> haematuria without leucocyturia <</ua_pos=2>>
             <</ua_null=0>></li>
-            
             <<ana_dt>><li>ANA Serology: <<ana_dt />></li><</ana_dt>>
-            <<dsdna_dt>><li>DsDNA Serology: <<dsdna_dt />><<dsdna_pos=1>>:SIGNIFICANT <</dsdna_pos=1>></li><</dsdna_dt>>
-            
+            <<dsdna_dt>><li>DsDNA Serology: <<dsdna_dt />><<dsdna_pos=1>>:SIGNIFICANT <</dsdna_pos=1>></li><</dsdna_dt>>            
             <<anca_dt>><li>ANCA Serology: <<anca_dt />></li><</anca_dt>>
-            
             <<c3_dt>><li>Complements: <<c3_dt />>
                 <<c3_pos=1>>,C3 hypocomplementaemia <</c3_pos=1>>
                 <<c4_pos=1>>,C4 hypocomplementaemia <</c4_pos=1>>
             </li><</c3_dt>>
-            
             <<spep_dt>><li>Serum protein electrophoresis: <<spep_dt />></li><</spep_dt>>
-            
             <<sflc_kappa_dt>><li>SFLC assay: <<sflc_kappa_dt />>
                 <<sflc_ratio_abn=1>>:SIGNIFICANT <</sflc_ratio_abn=1>>
             </li><</sflc_kappa_dt>>
-            
             <<gbma_dt>><li>Anti-GBM : <<gbma_dt />></li><</gbma_dt>>
-            
             <<aca_dt>><li>Anti-cardiolipin : <<aca_dt />></li><</aca_dt>>
             <<b2gpa_dt>><li>Anti-beta 2 glycoprotein 1 : <<b2gpa_dt />></li><</b2gpa_dt>>
-            
             <<cryo_dt>><li>Cryoglobulin : <<cryo_dt />></li><</cryo_dt>>
         </ul>
         <</canddt_gn_wu=1>>
         <<canddt_bx=1>>    
         <ul>
             <li>Renal imaging: <<usk_null=1>>not performed <</usk_null=1>><<usk_null=0>>Most recent ultrasound kidney on <<ris_usk_ld />><</usk_null=0>></li>
-            <li>Kidney biopsy: <<bxk_null=1>>not performed <</bxk_null=1>><<ris_bxk_ld>>Kidney biopsy on <<ris_bxk_ld />><</ris_bxk_ld>></li>
-             
+            <<ris_bxk_ld>><li>Kidney biopsy on <<ris_bxk_ld />></li><</ris_bxk_ld>>             
         </ul>
         <</canddt_bx=1>>
     </ul></ul>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_compx_1','ckd_complications','<ul>
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_compx_1','ckd_complications','
     <ul><ul>
         <li>CKD Complications
         <ul>
@@ -1033,7 +1016,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('frame_recm_begin','dmg','
     <hr />
     <div class="syn_recm_box">
-    <h3>Recommendations</h3>
+    <h3>Comments</h3>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_recm_1','ckd','
     <<dx_ckd_diff>><div>Recommendation [1.2] Update diagnosis to CKD stage<<ckd_stage />> </div><</dx_ckd_diff>>
@@ -1244,6 +1227,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('periop_nsqip','periop_nsqip','
+   <br />
    <ul>
         <li><b>Perioperative mortality prediction</b></li>
         <ul>
@@ -1260,8 +1244,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_ga','ckd_labs_ga','
-   
-   
    <hr/> 
    <div class="syn_synopsis_box">
    <h3>GA Labs</h3>
@@ -1269,7 +1251,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<creat />>
         <<uacr />>
    </div>
-
 ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_1_metrics','rrt_1_metrics','
@@ -1308,6 +1289,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_sle','cd_rheum_sle','
+    <br />
     <ul>
     <li><b>Systemic Lupus Erythematosus</b></li>
         <ul>
@@ -1416,6 +1398,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ca_solid','ca_solid','
+    <br />
     <ul>
     <li><b>Solid organ cancer</b></li>
         <<ca_prostate_fd>>
@@ -1512,6 +1495,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_pulm','cd_pulm','
+    <br />
     <ul>
     <li><b>Chronic obstructive pulmonary disease</b></li>
         <ul>
@@ -1523,6 +1507,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_endo_hypothyroid','cd_endo_hypothyroid','
+    <br />
     <ul>
     <li><b>Hypothyroidism</b></li>
         <ul>
@@ -1536,9 +1521,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<rx_h03aa_ld>><li>Thyroxin replacement therapy <<rx_h03aa_ld />></li><</rx_h03aa_ld>>
         </ul>
     </ul>
-    
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cirrhosis','cd_cirrhosis','
+    <br />
     <ul>
     <li><b>Cirrhosis of liver</b></li>
         <ul>
@@ -1550,6 +1535,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 /
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_sti','id_sti','
+    <br />
     <ul>
     <li><b>Recurrent Soft tissue infection</b></li>
         <ul>
@@ -1563,6 +1549,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 /
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_ra','cd_rheum_ra','
+    <br />
     <ul>
     <li><b>Rheumatoid Arthritis</b></li>
         <ul>
@@ -1578,6 +1565,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_aps','cd_rheum_aps','
+    <br />
     <ul>
     <li><b>Antiphospholipid syndrome</b></li>
         <ul>
