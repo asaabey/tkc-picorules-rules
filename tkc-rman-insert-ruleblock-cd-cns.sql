@@ -74,7 +74,7 @@ BEGIN
         
         rx_n03_dt => eadv.[rxnc_n03%].dt.max().where(val=1);
         
-        epil : {code_epil_dt!? and rx_n03_dt!? => 1},{=>0};
+        epil : {code_epil_dt!? or rx_n03_dt!? => 1},{=>0};
         
         #doc(,
             {

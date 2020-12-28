@@ -175,9 +175,11 @@ BEGIN
         
         loc_def_fd => eadv.dmg_location.dt.min().where(substr(val,4)=loc_last_val);
         
-        loc_district : {loc_def!? => substr(loc_def,6,2)};
+        loc_region : {loc_def!? => to_number(substr(loc_def,2,1))};
         
-        loc_locality : {loc_def!? => substr(loc_def,8,5)};
+        loc_district : {loc_def!? => to_number(substr(loc_def,6,2))};
+        
+        loc_locality : {loc_def!? => to_number(substr(loc_def,8,5))};
         
         
         diff_last_mode : {loc_mode_def<>loc_last_val =>1},{=>0};
@@ -254,6 +256,10 @@ BEGIN
         
         mode_pct => rout_dmg_loc.mode_pct.val.bind();
         
+        hrn => rout_dmg_hrn.hrn_last.val.bind();
+        
+        loc_region => rout_dmg_loc.loc_region.val.bind();
+        
         tc_caresys_n => eadv.dmg_location.dt.count().where(substr(val,2,2)=11);
         
         tc_caresys_ld => eadv.dmg_location.dt.max().where(substr(val,2,2)=11);
@@ -310,6 +316,7 @@ BEGIN
 
         phc_kwhb : { phc_1=35 => 1 },{=>0};
         
+        tkc_provider : { coalesce(loc_region,0)=1 or phc_1 in(36,37,38,39,41,42) =>1},{=>2};
         
         [[rb_id]] : { phc_1 > 0 => phc_1 },{=>999};    
         
@@ -455,6 +462,51 @@ BEGIN
                 label:"Potential duplicate client",
                 type:2,
                 is_reportable:1
+            }
+        );
+        
+        
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
+        -- END OF RULEBLOCK 
+    
+              -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='dmg_hrn';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess HRN */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess HRN",
+                is_active:2
+                
+            }
+        );
+         
+        hrn_last => eadv.dmg_hrn.val.last();
+
+        [[rb_id]] : { hrn_last!? => 1 },{=>0};    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Last HRN",
+                type:2,
+                is_reportable:0
             }
         );
         

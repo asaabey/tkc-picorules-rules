@@ -175,6 +175,60 @@ BEGIN
 
         COMMIT;
     -- END OF RULEBLOCK --
+    
+               -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_rheum_gout';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  Algorithm to identify Gout  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to identify Gout",
+                is_active:2
+                
+            }
+        );
+        
+        icd_fd => eadv.[icd_m10%].dt.min();
+        
+        icpc_fd => eadv.[icpc_t92001].dt.min();
+
+        rxnc_m04aa_fd => eadv.[rxnc_m04aa].dt.min();
+        
+        rxnc_m04aa_ld => eadv.[rxnc_m04aa].dt.max().where(val=1);
+        
+        op_enc_ld => eadv.[enc_op_med_rhe].dt.max();
+        
+        gout_fd : { .=> least_date(icd_fd,icpc_fd,rxnc_m04aa_fd)};
+        
+        [[rb_id]] : { coalesce(icd_fd,icpc_fd,rxnc_m04aa_fd)!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of Gout",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

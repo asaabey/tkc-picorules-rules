@@ -357,7 +357,7 @@ BEGIN
         
         dr_icpc_f83 => eadv.icpc_f83002.dt.min();
         
-        dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1},{=>0};
+        dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1};
         
         #doc(,
             {
@@ -451,12 +451,13 @@ BEGIN
         );
         
         
-        hba1c_n_tot0 => eadv.lab_bld_hba1c_ngsp.dt.count();
-        hba1c_n_opt0 => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8);
+        hba1c_n_tot => eadv.lab_bld_hba1c_ngsp.dt.count().where(dt > sysdate-730);
+        hba1c_n_opt => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8 and dt > sysdate-730);
         
-        hba1c_n_opt :{hba1c_n_opt0 is not null => hba1c_n_opt0},{=>0};
         
-        hba1c_n_tot : {hba1c_n_tot0 is not null => hba1c_n_tot0},{=>0};
+        
+        
+        hba1c_max => eadv.lab_bld_hba1c_ngsp._.maxldv();
         
         #doc(,
             {
@@ -465,9 +466,7 @@ BEGIN
             }
         );
         
-        n_opt_qt :{hba1c_n_tot>0 => round((hba1c_n_opt/hba1c_n_tot),2)*100};
-        
-        
+        n_opt_qt :{coalesce(hba1c_n_tot,0)>0 => round((coalesce(hba1c_n_opt,0)/hba1c_n_tot),2)*100};
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
         

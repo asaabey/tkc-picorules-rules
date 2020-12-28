@@ -27,6 +27,7 @@
 @"tkc-rman-insert-ruleblock-ca.sql";
 @"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
 @"tkc-rman-insert-ruleblock-cd-liver.sql";
+@"tkc-rman-insert-ruleblock-cd-hep-b.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
@@ -48,7 +49,8 @@
 
 @"tkc-insert-compositions.sql"
 @"tkc-insert-template-block.sql"
-@"tkc-insert-composition-template-map.sql"
+-- called by template-block
+--@"tkc-insert-composition-template-map.sql"
 
 
 
