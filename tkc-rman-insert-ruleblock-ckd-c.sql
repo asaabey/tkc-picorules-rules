@@ -447,17 +447,17 @@ BEGIN
      
      c_q60 => rout_ckd_c_rnm.c_q60.val.bind();
      
-     c_q61 => rout_ckd_c_rnm.c_q60.val.bind();
+     c_q61 => rout_ckd_c_rnm.c_q61.val.bind();
      
-     c_q61_2 => rout_ckd_c_rnm.c_q60.val.bind();
+     c_q61_2 => rout_ckd_c_rnm.c_q61_2.val.bind();
      
-     c_q62 => rout_ckd_c_rnm.c_q60.val.bind();
+     c_q62 => rout_ckd_c_rnm.c_q62.val.bind();
      
-     c_q63 => rout_ckd_c_rnm.c_q60.val.bind();
+     c_q63 => rout_ckd_c_rnm.c_q63.val.bind();
      
-     c_q64 => rout_ckd_c_rnm.c_q60.val.bind();
+     c_q64 => rout_ckd_c_rnm.c_q64.val.bind();
      
-     c_c64 => rout_ckd_c_rnm.c_q60.val.bind();
+     c_c64 => rout_ckd_c_rnm.c_c64.val.bind();
      
      c_z90_5 => rout_ckd_c_rnm.c_z90_5.val.bind();
      

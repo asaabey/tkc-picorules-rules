@@ -742,10 +742,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<c_n26_n26>><li>Unspecified contracted kidney <<c_n26_n27 />></li><</c_n26_n27>>
                     <<c_n30_n39>><li>Other diseases of the urinary system including bladder dysfunction<<c_n30_n39 />></li><</c_n30_n39>>
                     <<c_n40>><li>Benign prostatic hyperplasia <<c_n40 />></li><</c_n40>>
-                    <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_c_q60>>
-                    <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
-                    <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
-                    <<c_q63>><li>Other congenital malformations of kidney <<c_q63 />></li><</c_c_q63>>
+                    <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_q60>>
+                    <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_q61>>
+                    <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_q62>>
+                    <<c_q63>><li>Other congenital malformations of kidney <<c_q63 />></li><</c_q63>>
                     <<c_q64>><li>Other congenital malformations of urinary system <<c_q64 />></li><</c_q64>>
                     <<c_c64>><li>Renal cell cancer <<c_c64 />></li><</c_c64>>
                     <<c_z90_5>><li>Complete or partial nephrectomy (Acquired single kidney) <<c_z90_5 />></li><</c_z90_5>>
