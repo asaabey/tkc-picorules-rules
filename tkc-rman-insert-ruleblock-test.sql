@@ -276,11 +276,13 @@ BEGIN
             }
         );
         
-        na_ser1 => eadv.lab_bld_sodium._.serializedv4(val,dt,5).where(dt>sysdate-(365*3));
+        n_t => eadv.[icd_%].dt.distinct_count().where(dt>sysdate-365);
         
+        n_1 => eadv.[icd_z49_1].dt.distinct_count().where(dt>sysdate-365);
         
+        n_d : {. => n_t-coalesce(n_1,0)};
         
-        [[rb_id]] : {1=1 =>1};
+        [[rb_id]] : { n_t!? =>1};
         
         #define_attribute([[rb_id]],
             { 

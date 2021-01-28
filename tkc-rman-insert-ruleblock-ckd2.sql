@@ -438,57 +438,7 @@ BEGIN
     -- END OF RULEBLOCK --
     
     
-    -- BEGINNING OF RULEBLOCK --
-    
-        
-    rb.blockid:='egfr_fit';
    
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Rule block to determine egfr fit */
-        
-        #define_ruleblock(egfr_fit,
-            {
-                description: "Rule block to determine egfr fit",
-                is_active:0
-                
-            }
-        );
-
-       egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
-       
-       egfr_min => eadv.lab_bld_egfr_c.val.minldv();
-       
-       egfr_first => eadv.lab_bld_egfr_c.val.firstdv();
-       
-       egfr_last => eadv.lab_bld_egfr_c.val.lastdv();
-       
-       egfr_n => eadv.lab_bld_egfr_c.val.count(0);
-       
-       egfr_b0_ => eadv.lab_bld_egfr_c.val.regr_slope();
-       
-       egfr_c0_ => eadv.lab_bld_egfr_c.val.regr_intercept();
-       
-       egfrs => eadv.lab_bld_egfr_c.val.serializedv(val~dt);
-       
-       egfr_b : { egfr_b0_ is not null => round(egfr_b0_,1)},{=>0};
-       
-       egfr_c : { egfr_c0_ is not null => round(egfr_c0_,0)},{=>0};
-       
-       dspan : { 1=1 => egfr_last_dt - egfr_first_dt};
-       
-       egfr_fit : { egfr_n >0 =>1},{=>0};
-     
-    ';
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    COMMIT;
-    -- END OF RULEBLOCK --
-    
     -- BEGINNING OF RULEBLOCK --
     
         
@@ -825,6 +775,10 @@ BEGIN
         
         egfr_l1 => eadv.lab_bld_egfr_c._.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
         
+        egfr_l1_mu => eadv.lab_bld_egfr_c.val.avg().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
+        
+        
+        
         egfr_l2 => eadv.lab_bld_egfr_c._.lastdv().where(dt < egfr_l_dt-365);
         
         egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
@@ -832,11 +786,9 @@ BEGIN
         egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Check for 30 day egfr assumption violation with a threshold of 20% change between last and 30 days avg"
-            }
-        );
+        });
         
         egfr_30_n2 => eadv.lab_bld_egfr_c.val.count().where(dt>egfr_l_dt-30);
         egfr_30_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
@@ -845,32 +797,32 @@ BEGIN
         
         asm_viol_30 : {nvl(egfr_30_qt,1)>1.2 or nvl(egfr_30_qt,1)<0.8  => 1},{=> 0};
         
+        #doc(,{
+                txt : "L1 average and 30 day average ratio to determine true 1y baseline egfr"
+        });
         
+        l1_30_qt : { egfr_30_mu>0 => round(egfr_l1_mu/egfr_30_mu,2) };
+        
+        egfr_base : { l1_30_qt > 2 => egfr_l1_val},{=> egfr_l_val};
 
-        #doc(,
-            {
+        #doc(,{
                 txt : "Check for 1 year egfr assumption violation with absolute 20 units change"
-            }
-        );
+        });
         
         egfr_1y_delta : {egfr_l1_val!? => egfr_l_val-egfr_l1_val};
         
         asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Composite Assumption violation "
-            }
-        );
+        });
         
         g_asm_viol_ex : { asm_viol_1y=1 or asm_viol_30=1 =>0},{=>1};
                
-        #doc(,
-            {
+        #doc(,{
                 txt : "calculate egfr slope and related metrics"
-            }
-        );
+        });
 
         
         
@@ -880,7 +832,7 @@ BEGIN
         
         #doc(,
             {
-                txt : "Slope between last and last maximum value, assuming last max represents baseline"
+                txt : "Slope between last and last maximum value assuming last max represents baseline"
             }
         );
         
@@ -895,20 +847,16 @@ BEGIN
         
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Check for 90 day egfr persistence"
-            }
-        );
+        });
         
         
-        g_pers : { egfr_l1_val<90 and egfr_l_val<60 => 1},{ egfr_l2_val<90 and egfr_l_val<60 =>1},{=>0};
+        g_pers : { l1_30_qt<2 and egfr_l1_val<90 and egfr_l_val<60 => 1},{ egfr_l2_val<90 and egfr_l_val<60 =>1},{=>0};
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Check for 1y egfr progression"
-            }
-        );
+        });
         
         ckd_prog : { egfr_l2_val!? =>1},{=>0};
    
@@ -925,12 +873,12 @@ BEGIN
         
         
         
-        [[rb_id]]:  {egfr_l_val>=90 => 1},
-                {egfr_l_val<90 AND egfr_l_val>=60 => 2},
-                {egfr_l_val<60 AND egfr_l_val>=45 => 3},
-                {egfr_l_val<45 AND egfr_l_val>=30 => 4},
-                {egfr_l_val<30 AND egfr_l_val>=15 => 5},
-                {egfr_l_val<15 => 6},
+        [[rb_id]]:  {egfr_base>=90 => 1},
+                {egfr_base<90 AND egfr_base>=60 => 2},
+                {egfr_base<60 AND egfr_base>=45 => 3},
+                {egfr_base<45 AND egfr_base>=30 => 4},
+                {egfr_base<30 AND egfr_base>=15 => 5},
+                {egfr_base<15 => 6},
                 {=>0};
 
         
@@ -982,9 +930,13 @@ BEGIN
         );
         
         
-        acr_3m_n => eadv.lab_ua_acr.val.count(0).where(dt<acr_l_dt-30 and val>3);
+        acr_1m_v3_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>3);
         
-        a_pers : {acr_3m_n>0 => 1},{=>0};
+        acr_1m_v30_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>=30);
+        
+        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>=300);
+        
+        a_pers : {coalesce(acr_1m_v3_n,0)>0 => 1},{=>0};
         
         #doc(,
             {
