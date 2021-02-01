@@ -930,11 +930,11 @@ BEGIN
         );
         
         
-        acr_1m_v3_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>3);
+        acr_1m_v3_n => eadv.lab_ua_acr.val.count().where(dt between acr_l_dt-90 and acr_l_dt-1825 and val>3);
         
-        acr_1m_v30_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>=30);
+        acr_1m_v30_n => eadv.lab_ua_acr.val.count().where(dt between acr_l_dt-90 and acr_l_dt-1825 and val>=30);
         
-        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>=300);
+        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt between acr_l_dt-90 and acr_l_dt-1825 and val>=300);
         
         a_pers : {coalesce(acr_1m_v3_n,0)>0 => 1},{=>0};
         
@@ -944,8 +944,10 @@ BEGIN
             }
         );
         
+        u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes].dt.lastdv().where(dt between acr_l_dt-14 and acr_l_dt+14);
         
-        a_asm_viol_ex : { . =>1};
+        
+        a_asm_viol_ex : { u_leuc_val=0 =>1},{=>0};
         #doc(,
             {
                 txt : "Apply KDIGO 2012 staging",
@@ -1343,6 +1345,8 @@ BEGIN
         egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
         
         assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100};
+        
+        mm2 : {assert_level<111100=>1},{=>0};
         
         #doc(,
             {

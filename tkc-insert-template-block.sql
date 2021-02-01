@@ -5,6 +5,15 @@ SET DEFINE OFF;
 TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
 
 
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__masked__','dmg_source','
+ _      ____  ____  _  __ _____ ____ 
+/ \__/|/  _ \/ ___\/ |/ //  __//  _ \
+| |\/||| / \||    \|   / |  \  | | \|
+| |  ||| |-||\___ ||   \ |  /_ | |_/|
+\_/  \|\_/ \|\____/\_|\_\\____\\____/
+                                     
+    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_source','
     <style>        
     </style>
@@ -285,8 +294,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_syn_1','ckd','
     <ul>
-        <li><b>CKD stage <<ckd_stage />></b><<mm1>>?<</mm1>>
+        <li><b>CKD stage <<ckd_stage />></b><<mm1>>?<</mm1>><<mm2>>??<</mm2>>
         <ul>
+            <<assert_level=101100>><li>Has not met persistent criteria</li><</assert_level=101100>>
             <<mm1>><li>Could be a dialysis patient with non-captured episodes</li><</mm1>>
             <<ckd_stage>><li><<dx_ckd>>Diagnosed <</dx_ckd>><<pers>>Persistent <</pers>>CKD stage <strong> (<<cga_g />><<cga_a />>)</strong> [1.1].</li><</ckd_stage>>
             <<dx_ckd=0>><li>No coded diagnosis on the primary care EHR (ICPC coding) [1.2]</li><</dx_ckd=0>>
