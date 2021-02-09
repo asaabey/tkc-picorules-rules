@@ -1561,6 +1561,21 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 /
 
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_cap','id_cap','
+    <br />
+    <ul>
+    <li><b>Respiratory infection requiring hospitalization</b></li>
+        <ul>
+            <<cap_viral_ld>><li>Viral pneumonia <<cap_viral_ld />></li><</cap_viral_ld>>
+            <<cap_strep_ld>><li>Streptococcal pneumonia <<cap_strep_ld />></li><</cap_strep_ld>>
+            <<cap_hi_ld>><li>Haemophilus pneumonia <<cap_hi_ld />></li><</cap_hi_ld>>
+            <<cap_mel_ld>><li>Melioidosis <<cap_mel_ld />></li><</cap_mel_ld>>
+            <<cap_nos_ld>><li>Melioidosis <<cap_nos_ld />></li><</cap_nos_ld>>
+        </ul>
+    </ul>
+    
+    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_ra','cd_rheum_ra','
     <br />
     <ul>

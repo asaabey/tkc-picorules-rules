@@ -67,6 +67,62 @@ BEGIN
 
         COMMIT;
     -- END OF RULEBLOCK --
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='id_cap';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  This is a algorithm to identify respiratory infections  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a algorithm to identify respiratory infections",
+                is_active:2
+                
+            }
+        );
+        
+        cap_viral_ld => eadv.[icd_j09,icd_j10,icd_j11,icd_j12].dt.max();
+        
+        cap_strep_ld => eadv.icd_j13.dt.max();
+        
+        cap_hi_ld => eadv.icd_j14.dt.max();
+        
+        cap_nos_ld => eadv.[icd_j18%].dt.max();
+        
+        cap_mel_ld => eadv.icpc_a78054.dt.max();
+        
+        [[rb_id]] : { coalesce(cap_viral_ld, cap_strep_ld,cap_hi_ld,cap_nos_ld,cap_mel_ld)!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of respiratory infection requiring hospitalization",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
+    
+    
+    
+    
 END;
 
 
