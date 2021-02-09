@@ -715,6 +715,12 @@ BEGIN
         
         u88v : { u88_att!? => to_number(substr(u88_att,-1))},{=>0};
         
+        n18_att => eadv.[icd_n18_1,icd_n18_2,icd_n18_3,icd_n18_4,icd_n18_5].att.last();
+        
+        n18v : {. => to_number(substr(n18_att,-1))},{=>0};
+        
+        
+        
         [[rb_id]] : { u99_dt > u88_dt => u99v },{ u88_dt > u99_dt => u88v},{ => greatest(u88v,u99v)};
         
         
@@ -1469,6 +1475,8 @@ BEGIN
         
         
         dx_ckd => rout_ckd_coded_dx.ckd_coded_dx.val.bind();
+        
+        dx_ckd_icd => rout_ckd_coded_dx.n18v.val.bind();
         
         dx_ckd_stage :{dx_ckd=1 => `1`},
                 {dx_ckd=2 => `2`},

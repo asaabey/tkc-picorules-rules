@@ -149,7 +149,7 @@ BEGIN
         
         loc_mode_def : {loc_mode_24!? => loc_mode_24},{loc_mode!? => loc_mode};
         
-        last => eadv.dmg_location._.lastdv().where(substr(val,-1)=1 and dt > sysdate - 730);
+        last => eadv.dmg_location._.lastdv().where(substr(val,-1)=1);
         
         last_t => eadv.dmg_location._.lastdv().where(substr(val,-1)<>1);
         
@@ -157,7 +157,7 @@ BEGIN
         
         loc_last_t_val : {.=> to_number(substr(last_t_val,4))};  
         
-        last_1 => eadv.dmg_location._.lastdv(1).where(substr(val,-1)=1 and dt > sysdate - 730);
+        last_1 => eadv.dmg_location._.lastdv(1).where(substr(val,-1)=1);
         
         loc_last_1_val : {.=> to_number(substr(last_1_val,4))};       
         

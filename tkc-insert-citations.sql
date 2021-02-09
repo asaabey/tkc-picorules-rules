@@ -384,3 +384,8 @@ INSERT INTO rman_ruleblocks_citation VALUES (
 'cd_obesity_ref2',
 'Purnell JQ. Definitions, Classification, and Epidemiology of Obesity. [Updated 2018 Apr 12]. In: Feingold KR, Anawalt B, Boyce A, et al., editors. Endotext [Internet]. South Dartmouth (MA): MDText.com, Inc.; 2000-. Available from: https://www.ncbi.nlm.nih.gov/books/NBK279167/');
 /
+
+INSERT INTO rman_ruleblocks_citation VALUES (
+'uacr_single_ref2',
+'Garg D, Naugler C, Bhella V, Yeasmin F. Chronic kidney disease in type 2 diabetes: Does an abnormal urine albumin-to-creatinine ratio need to be retested? Can Fam Physician. 2018 Oct;64(10):e446-e452. PMID: 30315036; PMCID: PMC6184958.');
+/
