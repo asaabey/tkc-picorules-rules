@@ -578,6 +578,89 @@ BEGIN
     
     -- END OF RULEBLOCK 
     
+    
+     rb.blockid:='cd_dm_rx_rcm';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Ruleblock to recommend diabetic pharmacotherapy*/
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Ruleblock to recommend diabetic pharmacotherapy",
+                is_active:2
+                
+            }
+        );
+        
+        
+        #doc(,{
+                txt:"Get careplan information"
+        });
+        
+        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+        
+        #doc(,{
+                txt:"Get past medication"
+        });
+        
+        
+        ins_long_0=> eadv.[rxnc_a10ae].dt.max().where(val=0);
+        ins_int_0 => eadv.[rxnc_a10ac].dt.max().where(val=0);
+        ins_mix_0 => eadv.[rxnc_a10ad].dt.max().where(val=0);
+        ins_short_0 => eadv.[rxnc_a10ab].dt.max().where(val=0);
+        
+        bg_0 => eadv.rxnc_a10ba.dt.max().where(val=0);
+        su_0 => eadv.[rxnc_a10bb].dt.max().where(val=0);
+    
+        dpp4_0 => eadv.[rxnc_a10bh].dt.max().where(val=0);
+        glp1_0 => eadv.[rxnc_a10bj].dt.max().where(val=0);
+        sglt2_0 => eadv.[rxnc_a10bk].dt.max().where(val=0);
+        
+        #doc(,{
+                txt:"Get cuurent medication"
+        });
+        
+        
+        ins_long => eadv.[rxnc_a10ae].dt.min().where(val=1);
+        ins_int => eadv.[rxnc_a10ac].dt.min().where(val=1);
+        ins_mix => eadv.[rxnc_a10ad].dt.min().where(val=1);
+        ins_short => eadv.[rxnc_a10ab].dt.min().where(val=1);
+        
+        bg => eadv.rxnc_a10ba.dt.min().where(val=1);
+        su => eadv.[rxnc_a10bb].dt.min().where(val=1);
+    
+        dpp4 => eadv.[rxnc_a10bh].dt.min().where(val=1);
+        glp1 => eadv.[rxnc_a10bj].dt.min().where(val=1);
+        sglt2 => eadv.[rxnc_a10bk].dt.min().where(val=1);
+        
+        #doc(,{
+                txt:"Derive contraindications"
+        });
+        
+        egfr_lv => eadv.lab_bld_egfr_c.val.last().where(dt>sysdate-90);
+        
+        bmi => rout_cd_obesity.bmi.val.bind();
+
+        panc_dt => eadv.[icpc_d99058,icpc_d99043,icd_k86%,icd_k85%].dt.max();
+        
+        
+        
+        [[rb_id]] : {dm=1 => 1},{=>0};
+        
+        
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
   
 END;
 
