@@ -1576,6 +1576,19 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     
     ');
 
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ipa_icu','ipa_icu','
+    <br />
+    <ul>
+    <li><b>Admission to Intensive care</b></li>
+        <ul>
+            <<icu_los_dt>><li>ICU bed days <<icu_los_val />>(<<icu_los_dt />>)</li><</icu_los_dt>>
+            <<icu_vent_los_dt>><li>Ventilation days <<icu_vent_los_val/>>(<<icu_vent_los_dt />>)</li><</icu_vent_los_dt>>
+        </ul>
+    </ul>
+    
+    ');
+
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_ra','cd_rheum_ra','
     <br />
     <ul>

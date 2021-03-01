@@ -51,6 +51,9 @@ BEGIN
         
         rxnc_n => eadv.[rxnc_%].dt.count();
         
+        
+        rxnc_active_n => eadv.[rxnc_%].dt.count().where(val=1);
+        
         mbs_n => eadv.[mbs_%].dt.count();
         
         fd => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.min();

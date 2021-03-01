@@ -926,40 +926,60 @@ BEGIN
        
         acr_l => eadv.lab_ua_acr._.lastdv();
         
+        acr_max_l => eadv.lab_ua_acr._.maxldv();
+        
+        acr_3_n => eadv.lab_ua_acr.dt.count().where(val >3);
+        
+        acr_n => eadv.lab_ua_acr.dt.count();
+        
+        sigma_l_max : {  acr_l_dt> acr_max_l_dt and acr_max_l_val>0 => round(acr_l_val/acr_max_l_val,2)};
+        
+        sigma_3n_n : {  coalesce(acr_n,0)>0 => round(acr_3_n/acr_n,2)};
         
         acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
         
-        #doc(,
-            {
+        acr_past_pers_flag : { acr_l_val<3 and sigma_3n_n>0 and acr_3_n>1 => 1},{=>0};
+        
+        acr_past_singular_flag : {acr_l_val<3 and sigma_3n_n>0 and acr_3_n=1 =>1},{=>0};
+        
+        acr_decline_flag : {sigma_l_max<0.75 and acr_max_l_val>=3 =>1},{=>0};
+        
+        
+        
+        #doc(,{
                 txt : "check for uACR persistence based on KDIGO persistence definition "
-            }
-        );
+        });
         
         
-        acr_1m_v3_n => eadv.lab_ua_acr.val.count().where(dt between acr_l_dt-90 and acr_l_dt-1825 and val>3);
+        acr_1m_v3_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-90 and val>=3);
         
-        acr_1m_v30_n => eadv.lab_ua_acr.val.count().where(dt between acr_l_dt-90 and acr_l_dt-1825 and val>=30);
+        /*
+        affects performance
         
-        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt between acr_l_dt-90 and acr_l_dt-1825 and val>=300);
+        acr_1m_v30_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-90 and val>=30);
         
+        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-90 and val>=300);
+        */
         a_pers : {coalesce(acr_1m_v3_n,0)>0 => 1},{=>0};
         
-        #doc(,
-            {
-                txt : "check for uACR assumption violation"
-            }
-        );
+        #doc(,{
+            txt : "check for uACR assumption violation"
+        });
         
-        u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes].dt.lastdv().where(dt between acr_l_dt-14 and acr_l_dt+14);
-        
+        u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes].dt.lastdv().where(dt > acr_l_dt-14 and dt < acr_l_dt+14);
         
         a_asm_viol_ex : { u_leuc_val=0 =>1},{=>0};
-        #doc(,
-            {
+        
+        #doc(,{
+            txt : "uACR criteria not otherwise met"
+        });
+        
+        acr_nom_crit : { a_asm_viol_ex=1 and (acr_past_pers_flag=1 or acr_past_singular_flag=1) =>1},{=>0};
+        
+        #doc(,{
                 txt : "Apply KDIGO 2012 staging",
                 cite: "ckd_ref1, ckd_ref2"
-            }
-        );
+        });
         
             
         [[rb_id]]: {acr_l_val<3 => 1},
@@ -1209,29 +1229,23 @@ BEGIN
        
        hd_131_n => rout_rrt.hd_131_n.val.bind();
        
-       #doc(,
-            {
+       #doc(,{
                 txt : "Gather egfr metrics "
-            }
-        );
+        });
         
         egfr_l_val => rout_ckd_egfr_metrics.egfr_l_val.val.bind();
         egfr_l_dt => rout_ckd_egfr_metrics.egfr_l_dt.val.bind();
         
         egfr_outdated => rout_ckd_egfr_metrics.egfr_outdated.val.bind();
-        /*
-        egfr_single => rout_ckd_egfr_metrics.egfr_single.val.bind();
-        */
+        
         egfr_decline => rout_ckd_egfr_metrics.egfr_decline.val.bind();
         egfr_rapid_decline => rout_ckd_egfr_metrics.egfr_rapid_decline.val.bind();
         egfr_slope2 => rout_ckd_egfr_metrics.egfr_slope2.val.bind();
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Check for egfr and uacr assumption violation exclusion "
-            }
-        );
+        });
         
         
         g_asm_viol_ex => rout_ckd_egfr_metrics.g_asm_viol_ex.val.bind();
@@ -1240,24 +1254,29 @@ BEGIN
         
         asm_viol_ex : { g_asm_viol_ex=1 and a_asm_viol_ex=1 =>1},{=>0};
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Gather uacr metrics"
-            }
-        );
+        });
         
        
         acr_l_dt => rout_ckd_uacr_metrics.acr_l_dt.val.bind();
         
         acr_l_val => rout_ckd_uacr_metrics.acr_l_val.val.bind();
         
-        acr_outdated : {sysdate-acr_l_dt > 730 =>1},{=>0};
         
-        #doc(,
-            {
+        acr_outdated => rout_ckd_uacr_metrics.acr_outdated.val.bind();
+        
+        acr_past_pers_flag => rout_ckd_uacr_metrics.acr_past_pers_flag.val.bind();
+        
+        acr_past_singular_flag => rout_ckd_uacr_metrics.acr_past_singular_flag.val.bind();
+        
+        acr_decline_flag => rout_ckd_uacr_metrics.acr_decline_flag.val.bind();
+        
+        acr_nom_crit => rout_ckd_uacr_metrics.acr_nom_crit.val.bind();
+        
+        #doc(,{
                 txt : "check for eGFR and uACR persistence based on KDIGO persistence definition "
-            }
-        );
+        });
         
         g_pers => rout_ckd_egfr_metrics.g_pers.val.bind();
         
@@ -1265,11 +1284,9 @@ BEGIN
         
         pers : {greatest(g_pers,a_pers)>0 => 1},{=>0};
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Evidence of renal injury satisfying ckd without G and A"
-            }
-        );
+        });
         
         c_gn => rout_ckd_c_gn.ckd_c_gn.val.bind();
         
@@ -1279,12 +1296,10 @@ BEGIN
         
         c_crit : { greatest(c_gn,c_tid,c_rnm)>0 =>1},{=>0};
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "Apply KDIGO 2012 staging",
                 cite: "ckd_ref1, ckd_ref2"
-            }
-        );
+        });
         
         
         
@@ -1315,28 +1330,28 @@ BEGIN
                 {acr_l_val<300 AND acr_l_val>=30 => 3},
                 {acr_l_val>300 => 4},{=>0};
         
-        #doc(,
-            {
+        #doc(,{
                 txt : "KDIGO 2012 string composite attribute"
-            }
-        );
+        });
         
-        ckd_stage :{cga_g_val=1 and (cga_a_val>1 or c_crit=1) => `1`},
-                {cga_g_val=2 and (cga_a_val>1 or c_crit=1) => `2`},
-                {cga_g_val=3 => `3A`},
-                {cga_g_val=4 => `3B`},
-                {cga_g_val=5 => `4`},
-                {cga_g_val=6 => `5`},
-                {=> null};
+        
         
                 
-        ckd_stage_val :{cga_g_val=1 and (cga_a_val>1 or c_crit=1) => 1},
-                {cga_g_val=2 and (cga_a_val>1 or c_crit=1) => 2},
+        ckd_stage_val :{cga_g_val=1 and (cga_a_val>1 or c_crit=1 or acr_nom_crit=1) => 1},
+                {cga_g_val=2 and (cga_a_val>1 or c_crit=1 or acr_nom_crit=1) => 2},
                 {cga_g_val=3 => 3},
                 {cga_g_val=4 => 4},
                 {cga_g_val=5 => 5},
                 {cga_g_val=6 => 6},
                 {=> 0};
+            
+        ckd_stage :{ ckd_stage_val=1 => `1`},
+                {ckd_stage_val=2 => `2`},
+                {ckd_stage_val=3 => `3A`},
+                {ckd_stage_val=4 => `3B`},
+                {ckd_stage_val=5 => `4`},
+                {ckd_stage_val=6 => `5`},
+                {ckd_stage_val=0=> null};
             
         #doc(,
             {
@@ -1350,7 +1365,7 @@ BEGIN
         
         egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
         
-        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100};
+        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100 + acr_nom_crit * 10};
         
         mm2 : {assert_level<111100=>1},{=>0};
         
