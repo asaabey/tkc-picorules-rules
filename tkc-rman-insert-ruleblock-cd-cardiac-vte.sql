@@ -46,22 +46,23 @@ BEGIN
             
             pe_multi : { pe_ld - pe_fd > 90 =>1},{=>0};
             
+            dvt_fd => eadv.[icd_i82_2,icd_i82_3,icd_82_9].dt.min();
             
+            svt_fd => eadv.[icd_i82_8].dt.min();
             
-            #doc(,
-                {
+            budd_chiari_fd =>eadv.[icd_i82_0].dt.min();
+            
+                        
+            #doc(,{
                     txt:" anticoagulation"
-                }
-            ); 
+            }); 
             
-            rxn_anticoag_dt => rout_cd_cardiac_rx.rxn_anticoag.val.bind();
+            rxn_anticoag_dt => eadv.[rxnc_b01aa,rxnc_b01af,rxnc_b01ae,rxnc_b01ab].dt.min().where(val=1);
         
             rxn_anticoag : { rxn_anticoag_dt!? => 1},{=>0};     
             
             
-            
-            
-            [[rb_id]] : { pe_fd!? =>1},{=>0};
+            [[rb_id]] : { coalesce(pe_fd,dvt_fd,budd_chiari_fd,svt_fd)!? =>1},{=>0};
             
             
             #define_attribute(

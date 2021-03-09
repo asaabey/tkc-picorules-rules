@@ -1647,6 +1647,20 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ul>
     </ul>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_vte','cd_cardiac_vte','
+    <br />
+    <ul>
+    <li><b>Venous thrombo-embolism</b></li>
+        <ul>
+            <<pe_multi>><li>Multiple PE <<pe_fd />>-<<pe_ld />></li><</pe_multi>>
+            <<pe_ld>><li>PE <<pe_ld />></li><</pe_ld>>
+            <<dvt_fd>><li>Deep vein thrombosis <<dvt_fd />></li><</dvt_fd>>
+            <<svt_fd>><li>Superficial vein thrombosis <<svt_fd />></li><</svt_fd>>
+            <<budd_chiari_fd>><li>Budd-Chiari Syndrome <<budd_chiari_fd />></li><</budd_chiari_fd>>
+            <<rxn_anticoag_dt>><li>Anticoagulated <<rxn_anticoag_dt />></li><</rxn_anticoag_dt>>
+        </ul>
+    </ul>
+    ');
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_block','ckd_labs','
     <hr />
