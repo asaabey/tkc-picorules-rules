@@ -15,6 +15,7 @@
 @"tkc-rman-insert-ruleblock-cd-cardiac-cad.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-vhd.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-chf.sql";
+@"tkc-rman-insert-ruleblock-cd-cardiac-vte.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-misc.sql";
 
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
