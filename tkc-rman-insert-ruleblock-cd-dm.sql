@@ -60,17 +60,17 @@ BEGIN
         
         dm1_icd_fd => eadv.icd_e10%.dt.min();
         
-        dm1_icpc_fd => eadv.icpc_t89%.dt.min();
+        dm1_icpc_fd => eadv.icpc_t89002.dt.min();
         
         dm1_fd : {.=> least_date(dm1_icd_fd,dm1_icpc_fd) };
         
         dm2_icd_fd => eadv.[icd_e08%,icd_e11%,icd_e14%].dt.min();
         
-        dm2_icpc_fd => eadv.icpc_t90%.dt.min();
+        dm2_icpc_fd => eadv.[icpc_t90%,icpc_t89001].dt.min();
         
         dm2_fd : {.=> least_date(dm2_icd_fd,dm2_icpc_fd) };
         
-        dm3_icd_fd => eadv.icd_e09%.dt.min();
+        dm3_icd_fd => eadv.[icd_e09%,icpc_t89003,icpc_t89008].dt.min();
                
         dm3_fd : {.=> dm3_icd_fd };
         
@@ -99,8 +99,7 @@ BEGIN
         dm_code_fd : { . => least_date(dm_icd_fd,dm_icpc_fd) };
         
         
-        
-        dm_type_1 : { dm1_icpc_fd!? => 1},{ dm2_icpc_fd? and dm1_icd_fd!? =>1},{=>0}; 
+        dm_type_1 : { dm1_icpc_fd!? and dm2_icpc_fd? and dm2_icd_fd?=> 1},{ dm2_icpc_fd? and dm1_icd_fd!? =>1},{=>0}; 
         
         
         
