@@ -309,65 +309,58 @@ BEGIN
        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
         
         
-        #doc(,
-            {
+        #doc(,{
                 section: "Complications"
-            }
-        );
+        });
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Determine diabetic complications including retinopathy neuropathy dm foot",
                 cite:"dm_dmcare_2014"
-            }
-        );
+        });
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Non-proliferative diabetic retinopathy ICD codes"
                 
-            }
-        );
+        });
         
+        ndr_icd_e31 => eadv.[icd_e10_31,icd_e11_31,icd_e13_31].dt.min();
                 
-        ndr_icd_e32 => eadv.[icd_e10_32%,icd_e11_32%,icd_e13_32%].dt.min();
+        ndr_icd_e32 => eadv.[icd_e10_32,icd_e11_32,icd_e13_32].dt.min();
         
-        ndr_icd_e33 => eadv.[icd_e10_33%,icd_e11_33%,icd_e13_33%].dt.min();
+        ndr_icd_e33 => eadv.[icd_e10_33,icd_e11_33,icd_e13_33].dt.min();
         
-        ndr_icd_e34 => eadv.[icd_e10_34%,icd_e11_34%,icd_e13_34%].dt.min();
+        ndr_icd_e34 => eadv.[icd_e10_34,icd_e11_34,icd_e13_34].dt.min();
         
-        ndr_icd : {coalesce(ndr_icd_e32,ndr_icd_e33,ndr_icd_e34)!? =>1},{=>0};
+        ndr_icd : {coalesce(ndr_icd_e31, ndr_icd_e32,ndr_icd_e33,ndr_icd_e34)!? =>1},{=>0};
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Proliferative diabetic retinopathy ICD codes"
                 
-            }
-        );
+        });
         
         pdr_icd_e35 => eadv.[icd_e11_35%,icd_e11_35%,icd_e13_35%].dt.min();
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Diabetic retinopathy ICPC codes"
-                
-            }
-        );
+        });
         
         dr_icpc_f83 => eadv.icpc_f83002.dt.min();
         
         dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1};
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Diabetic neuropathy ICD codes"
-                
-            }
-        );
+        });
 
         dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.min();
         
-        dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? => 1},{=>0};
+        #doc(,{
+                txt:"Diabetic foot ulcer"
+        });
+        
+        dm_foot_ulc => eadv.icd_e11_73.dt.min();
+        
+        dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? or dm_foot_ulc!?=> 1},{=>0};
         
         [[rb_id]] : { greatest(dm_micvas)>0 and dm=1 =>1},{=>0};
         
@@ -553,8 +546,11 @@ BEGIN
         
         cp_dm_ld : {cp_dm>0 => cp_ld};
         
+        rv_pod_ld => eadv.mbs_10962.dt.max();
         
-        cd_dm_mx : {dm=1 and cp_dm>0 => 1},{=>0};
+        rv_edu_ld => eadv.mbs_10951.dt.max();
+        
+        cd_dm_mx : {dm=1 and (cp_dm>0 or coalesce(rv_pod_ld, rv_edu_ld)!?) => 1},{=>0};
         
         #define_attribute(
             [[rb_id]],
