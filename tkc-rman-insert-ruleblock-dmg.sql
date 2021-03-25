@@ -374,7 +374,16 @@ BEGIN
                 is_reportable:1
             }
         );
-       
+        
+
+        #define_attribute(
+            loc_def,
+            {
+                label:"Default locality",
+                type:1002,
+                is_reportable:1
+            }
+        );
        
                 
     ';

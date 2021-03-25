@@ -3,21 +3,19 @@ SET SERVEROUTPUT ON;
 SET FEEDBACK ON;
 
 DECLARE
-    rb          RMAN_RULEBLOCKS%ROWTYPE;
+    rb RMAN_RULEBLOCKS%ROWTYPE;
 
-
-    
 
 BEGIN
-     
-    
+
+
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='rx_desc';
+    rb.blockid := 'rx_desc';
 
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
+    DELETE FROM rman_ruleblocks WHERE blockid = rb.blockid;
+
+    rb.picoruleblock := '
     
         /* Algorithm to assess Medication  */
         
@@ -41,16 +39,14 @@ BEGIN
             [[rb_id]] : {rx_n>0 =>1},{=>0};
             
     ';
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid, picoruleblock) VALUES (rb.blockid, rb.picoruleblock);
+
     COMMIT;
     -- END OF RULEBLOCK --
-    
-    
-    
-   
+
+
 END;
 
 
