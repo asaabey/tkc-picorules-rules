@@ -341,12 +341,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<dm_micvas_retino>>
                         <li>Diabetic retinopathy</li><</dm_micvas_retino>> 
                             <ul>
+                                <<ndr_icd_e31>><li>Background retinopathy <<ndr_icd_e31 />></li><</ndr_icd_e31>>
                                 <<ndr_icd_e32>><li>Mild non-proliferative retinopathy <<ndr_icd_e32 />></li><</ndr_icd_e32>>
                                 <<ndr_icd_e33>><li>Moderate non-proliferative retinopathy <<ndr_icd_e33 />></li><</ndr_icd_e33>>
                                 <<ndr_icd_e34>><li>Severe non-proliferative retinopathy <<ndr_icd_e34 />></li><</ndr_icd_e34>>
                                 <<pdr_icd_e35>><li>Severe non-proliferative retinopathy <<pdr_icd_e35 />></li><</pdr_icd_e35>>
                             </ul>
                     <<dm_micvas_neuro>><li>Diabetic neuropathy (<<dm_micvas_neuro />>)</li><</dm_micvas_neuro>>
+                    <<dm_foot_ulc>><li>Diabetic foot ulcer (<<dm_foot_ulc />>)</li><</dm_foot_ulc>>
                 </ul>
             </li>
         </ul></ul>
@@ -397,6 +399,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
     </ul></ul>
     <</cp_dm>>
+    <<rv_edu_ld>><ul><ul><li>Last Diabetic educator review <<rv_edu_ld />></li></ul></ul><</rv_edu_ld>>
+    <<rv_pod_ld>><ul><ul><li>Last Podiatry review <<rv_pod_ld />></li></ul></ul><</rv_pod_ld>>
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_obesity','cd_obesity','
@@ -1576,6 +1580,19 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     
     ');
 
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ipa_icu','ipa_icu','
+    <br />
+    <ul>
+    <li><b>Admission to Intensive care</b></li>
+        <ul>
+            <<icu_los_dt>><li>ICU bed days <<icu_los_val />>(<<icu_los_dt />>)</li><</icu_los_dt>>
+            <<icu_vent_los_dt>><li>Ventilation days <<icu_vent_los_val/>>(<<icu_vent_los_dt />>)</li><</icu_vent_los_dt>>
+        </ul>
+    </ul>
+    
+    ');
+
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_ra','cd_rheum_ra','
     <br />
     <ul>
@@ -1631,6 +1648,39 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 </ul>
                 
             <</hepb_imm>>
+        </ul>
+    </ul>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_uti','id_uti','
+    <br />
+    <ul>
+    <li><b>Recurrent UTI</b></li>
+        <ul>
+            <<uti_ld>><li>Last UTI <<uti_ld/ >></li><</uti_ld>>
+        </ul>
+    </ul>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_tb','id_tb','
+    <br />
+    <ul>
+    <li><b>Tuberculosis</b></li>
+        <ul>
+            <<tb_code>><li>TB first diagnosed <<tb_code />></li><</tb_code>>
+            <<ltb_code>><li>Latent TB first diagnosed <<ltb_code />></li><</ltb_code>>
+        </ul>
+    </ul>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_vte','cd_cardiac_vte','
+    <br />
+    <ul>
+    <li><b>Venous thrombo-embolism</b></li>
+        <ul>
+            <<pe_multi>><li>Multiple PE <<pe_fd />>-<<pe_ld />></li><</pe_multi>>
+            <<pe_ld>><li>PE <<pe_ld />></li><</pe_ld>>
+            <<dvt_fd>><li>Deep vein thrombosis <<dvt_fd />></li><</dvt_fd>>
+            <<svt_fd>><li>Superficial vein thrombosis <<svt_fd />></li><</svt_fd>>
+            <<budd_chiari_fd>><li>Budd-Chiari Syndrome <<budd_chiari_fd />></li><</budd_chiari_fd>>
+            <<rxn_anticoag_dt>><li>Anticoagulated <<rxn_anticoag_dt />></li><</rxn_anticoag_dt>>
         </ul>
     </ul>
     ');

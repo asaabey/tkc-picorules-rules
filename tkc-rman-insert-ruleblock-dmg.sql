@@ -531,7 +531,56 @@ BEGIN
     
     -- END OF RULEBLOCK 
     
+                 -- BEGINNING OF RULEBLOCK --
 
+    rb.blockid:='ipa_icu';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess Inpatient activity for ICU admissions */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Inpatient activity for ICU admissions",
+                is_active:2
+                
+            }
+        );
+        
+        icu_vent_los => eadv.adm_icu_vent_los._.lastdv(); 
+        
+        icu_los => eadv.adm_icu._.lastdv(); 
+        
+        icu_vent_max_los => eadv.adm_icu_vent_los._.maxldv(); 
+        
+        icu_max_los => eadv.adm_icu._.maxldv(); 
+        
+        dt_diff : { icu_los_val<icu_max_los_val=>1},{=>0};
+        
+        [[rb_id]] : { coalesce(icu_vent_los_dt,icu_los_dt)!? => 1 },{=>0};    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Inpatient activity for ICU admissions",
+                type:2,
+                is_reportable:0
+            }
+        );
+        
+        
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
 END;
 
 

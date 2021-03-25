@@ -15,6 +15,7 @@
 @"tkc-rman-insert-ruleblock-cd-cardiac-cad.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-vhd.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-chf.sql";
+@"tkc-rman-insert-ruleblock-cd-cardiac-vte.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-misc.sql";
 
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
@@ -28,7 +29,10 @@
 @"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
 @"tkc-rman-insert-ruleblock-cd-liver.sql";
 @"tkc-rman-insert-ruleblock-cd-hep-b.sql";
+
 @"tkc-rman-insert-ruleblock-id.sql";
+@"tkc-rman-insert-ruleblock-id-uti.sql";
+@"tkc-rman-insert-ruleblock-id-tb.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
