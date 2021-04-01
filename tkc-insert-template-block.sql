@@ -73,6 +73,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
       </div>
     </div>
     ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_tkcuser_interact','dmg_tkcuser_interact','
+    <blockquote class="blockquote">
+        <<corr_ld>>Last correspondence sent on <<corr_ld />><</corr_ld>>
+        <<tag_sys_pr_dt>>This record has been flagged as <span class="badge badge-pill badge-danger">Partial</span> by user <<tag_sys_pr_val$user_id_name />> on <<tag_sys_pr_dt />><</tag_sys_pr_val>>
+    </blockquote>
+    <hr>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_eid_alt','dmg_eid_alt','
     <div class="alert alert-warning" role="alert">
       
