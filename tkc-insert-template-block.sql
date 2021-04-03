@@ -689,6 +689,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </div>
 
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rx_syn_2','rx_desc_ptr','
+    <hr/> 
+    <br />
+    <div class="syn_synopsis_box">
+    <h3>Medications v2</h3>
+    <ol>
+        <<rx_name_obj$rx_name_obj2 />>
+    </ol>
+    </div>
+
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('graph_egfr2','egfr_graph2','
     <hr />
     <div class="syn_synopsis_box">
@@ -1664,7 +1675,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <ul>
     <li><b>Recurrent UTI</b></li>
         <ul>
-            <<uti_ld>><li>Last UTI <<uti_ld/ >></li><</uti_ld>>
+            <<uti_ld>><li>Last UTI <<uti_ld />></li><</uti_ld>>
         </ul>
     </ul>
     ');
