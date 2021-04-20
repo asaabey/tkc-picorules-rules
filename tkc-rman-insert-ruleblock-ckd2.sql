@@ -1365,7 +1365,7 @@ BEGIN
         
         egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
         
-        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100 + acr_nom_crit * 10};
+        assert_level : {. => 100000 + pers*10000 + g_asm_viol_ex*1000 + egfr_current * 100 + acr_nom_crit * 10};
         
         mm2 : {assert_level<111100=>1},{=>0};
         
