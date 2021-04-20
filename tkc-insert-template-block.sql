@@ -426,21 +426,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <li><b>Hypertension</b>
         <ul>
             <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_from_obs>> from observations <</htn_from_obs>> <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
-            <<mu_1>><li>Average systolic BP during last year was <<mu_1 />> mmHg</li><</mu_1>>
             <<sbp_outdated=1>><li>No readings within last two years</li><</sbp_outdated=1>>
-            <<sbp_outdated=0>>
-            <li>
-                
-                <<bp_trend=0>>No comment on the trend<</bp_trend=0>>
-                <<bp_trend=1>>Hypertension control appears to have improved compared to last year<</bp_trend=1>>
-                <<bp_trend=2>>Hypertension control appears to have worsened compared to last year<</bp_trend=2>>        
-
-            </li>
-            <<bp_control=3>><li>BP control appears to be adequate</li><</bp_control=3>>
-            <<bp_control=2>><li>BP control can be optimised</li><</bp_control=2>>
-            <<bp_control=1>><li>BP control appears to sub-optimal</li><</bp_control=1>>
-            <<bp_control=0>><li>could not be determined</li><</bp_control=0>>
-            <</sbp_outdated=0>>
             <li><<htn_rxn>>Current antihypertensive classes<</htn_rxn>>
             <ul>
                 <<htn_rxn_arb>><li>Angiotensin receptor blocker (ARB)</li><</htn_rxn_arb>>
@@ -454,6 +440,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ul>
         </li>
     </ul>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_htn_bp_control','cd_htn_bp_control','
+    <ul><ul>
+        <li>BP control
+        <ul>
+            <li>Recommended target <<sbp_target_max />>/<<dbp_target_max />> mmHg or less</li>
+            <li>Average BP <<sbp_mu_1 />>/<<dbp_mu_1 />> (<<sbp_min />>-<<sbp_max />>) mmHg </li>
+            <li>Time in range <<sbp_tir_1y />>%</li>
+        </ul>
+        </li>
+    </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_cad_syn','cd_cardiac_cad','
         <br />
