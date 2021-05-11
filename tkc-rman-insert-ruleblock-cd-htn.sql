@@ -145,52 +145,6 @@ BEGIN
                 section: "Management"
             }
         );
-        #doc(,
-            {
-                txt:"BP control : Assessing BP control in past 2 years: time  Proportion? outside of target range SBP >140",
-                cite:"htn_plos_2018"
-            }
-        );
-        
-        
-        sigma_2 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-730 and dt<sysdate-365); 
-        mu_2 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-730 and dt<sysdate-365);
-        slice140_2_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
-        slice140_2_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
-        
-        sigma_1 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-365); 
-        mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
-        slice140_1_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-365);
-        slice140_1_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-365);
-        
-        avg_bp_1y : { .=> round(mu_1,1)};
-        sbp_outdated : {nvl(greatest(sigma_2,sigma_1),0)=0 => 1},{=>0};
-        
-        #doc(,
-            {
-                txt:"BP control: Time in therapeutic range"
-            }
-        );
-        
-        sbp_max_2y => eadv.obs_bp_systolic.val.max().where(dt>=sysdate-730);
-        
-        sbp_min_2y => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-730);
-        
-        sbp_max => eadv.obs_bp_systolic.val.max();
-        
-        sbp_min => eadv.obs_bp_systolic.val.min();
-        
-        sbp_target_max : {1=1 => 140};
-        
-        sbp_target_min : {1=1 => 100};
-        
-        n_qt_1 : {sigma_1>0 => 1-round(slice140_1_n/sigma_1,1)};
-        
-        mu_qt : {slice140_2_mu>0 =>round(slice140_1_mu/slice140_2_mu,2)};
-        
-        bp_trend : { mu_qt <0.9 => 1 },{ mu_qt > 1.1 => 2},{=>0};
-        
-        bp_control : { n_qt_1 >=0.75 => 3},{ n_qt_1<0.75 and n_qt_1>=0.25 => 2 },{ n_qt_1<0.25 => 1},{=>0};
         
         
         
@@ -362,6 +316,50 @@ BEGIN
                 
             }
         );
+        
+        #doc(,
+            {
+                txt:"BP control : Assessing BP control in past 2 years: time  Proportion? outside of target range SBP >140",
+                cite:"htn_plos_2018"
+            }
+        );
+        
+        age => rout_cvra.age.val.bind();
+        
+        cvra_cat => rout_cvra.cvra_cat.val.bind();
+        
+        
+        sbp_target_max : {age>=75 or cvra_cat=3 => 120},{=>140};
+        
+        dbp_target_max : {age>=75 or cvra_cat=3 => 80},{=>90};
+        
+        sbp_target_min : {1=1 => 100};
+                
+        
+                     
+        sbp_mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
+        
+        dbp_mu_1 => eadv.obs_bp_diastolic.val.avg().where(dt>=sysdate-365); 
+        
+        n_1 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-365); 
+        
+        opt_1_n => eadv.obs_bp_systolic.val.count().where(val<sbp_target_max and val>=sbp_target_min and dt>=sysdate-365);
+        
+        
+        
+        #doc(,
+            {
+                txt:"BP control: Time in therapeutic range"
+            }
+        );
+        
+        sbp_max => eadv.obs_bp_systolic.val.max().where(dt>=sysdate-365);
+        
+        sbp_min => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-365);
+        
+        sbp_tir_1y : {coalesce(n_1,0)>0 => round(coalesce(opt_1_n,0)/n_1,2)*100 };
+        
+        [[rb_id]] : {coalesce(n_1,0)>0 =>1},{=>0};
         
        
 

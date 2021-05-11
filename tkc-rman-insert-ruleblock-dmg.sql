@@ -374,7 +374,16 @@ BEGIN
                 is_reportable:1
             }
         );
-       
+        
+
+        #define_attribute(
+            loc_def,
+            {
+                label:"Default locality",
+                type:1002,
+                is_reportable:1
+            }
+        );
        
                 
     ';
@@ -477,9 +486,9 @@ BEGIN
     
     -- END OF RULEBLOCK 
     
-        -- END OF RULEBLOCK 
+   -- END OF RULEBLOCK 
     
-              -- BEGINNING OF RULEBLOCK --
+   -- BEGINNING OF RULEBLOCK --
 
     rb.blockid:='dmg_hrn';
 
@@ -512,6 +521,48 @@ BEGIN
         
         
                 
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
+                  -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='dmg_tkcuser_interact';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess TKC user interaction */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess TKC user interaction",
+                is_active:2                
+            }
+        );
+         
+        corr_ld => eadv.tkc_corresp.dt.max();
+        
+        tag_sys_pr => eadv.[sys_record_partial]._.lastdv();
+        
+        [[rb_id]] : { coalesce(corr_ld,tag_sys_pr_dt)!? => 1 },{=>0};    
+        
+        #define_attribute(
+            tag_sys_pr_dt,
+            {
+                label:"Sys flag raised",
+                type:2,
+                is_reportable:0
+            }
+        );
+              
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     

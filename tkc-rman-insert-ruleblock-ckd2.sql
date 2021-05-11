@@ -1087,11 +1087,11 @@ BEGIN
                 txt : " Encounters with specialist services"
         });
         
-        enc_n => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.count();
-        enc_ld => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max();
-        enc_fd => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.min();
+        enc_n => eadv.[enc_op_ren%,enc_op_rdu%].dt.count();
+        enc_ld => eadv.[enc_op_ren%,enc_op_rdu%].dt.max();
+        enc_fd => eadv.[enc_op_ren%,enc_op_rdu%].dt.min();
         
-        enc_ld_1y => eadv.[enc_op_renal,enc_op_rdu,enc_op_ren,enc_op_renal_edu].dt.max().where(dt>sysdate-365);
+        enc_ld_1y => eadv.[enc_op_ren%,enc_op_rdu%].dt.max().where(dt>sysdate-365);
         
         enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
         
@@ -1364,7 +1364,7 @@ BEGIN
         
         egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
         
-        assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100 + acr_nom_crit * 10};
+        assert_level : {. => 100000 + pers*10000 + g_asm_viol_ex*1000 + egfr_current * 100 + acr_nom_crit * 10};
         
         mm2 : {assert_level<111100=>1},{=>0};
         

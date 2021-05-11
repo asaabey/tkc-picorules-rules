@@ -34,16 +34,16 @@ BEGIN
             
             rrt => rout_rrt.rrt.val.bind();
             
-            egfr_n => eadv.lab_bld_egfr_c.val.count(0);
+            egfr_n => eadv.lab_bld_egfr_c.val.count(0).where(dt > sysdate - 3650);
             
-            egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
+            egfr_f => eadv.lab_bld_egfr_c.val.firstdv().where(dt > sysdate - 3650);
             
-            egfr_l => eadv.lab_bld_egfr_c.val.lastdv();
+            egfr_l => eadv.lab_bld_egfr_c.val.lastdv().where(dt > sysdate - 3650);
             
             
-            egfr_max => eadv.lab_bld_egfr_c.val.maxldv();
+            egfr_max => eadv.lab_bld_egfr_c.val.maxldv().where(dt > sysdate - 3650);
             
-            egfr_min => eadv.lab_bld_egfr_c.val.minldv();
+            egfr_min => eadv.lab_bld_egfr_c.val.minldv().where(dt > sysdate - 3650);
             
             
             egfr60_last => eadv.lab_bld_egfr_c.val.lastdv().where(val>60);
@@ -54,7 +54,7 @@ BEGIN
             
             yspan : { . => round((dspan/365.25),1)};
 
-            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt);
+            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt).where(dt > sysdate - 3650);
 
             
             egfr_graph_canvas_x : {1=1 => 600};
