@@ -48,6 +48,7 @@ BEGIN
         
         
         ckd => rout_ckd.ckd.val.bind();
+        esrd_risk => rout_ckd.esrd_risk.val.bind();
         dm => rout_cd_dm_dx.dm.val.bind();
         cp_hicvr => rout_cd_careplan.cp_hicvr.val.bind();
         

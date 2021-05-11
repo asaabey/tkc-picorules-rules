@@ -1360,7 +1360,6 @@ BEGIN
         );
         
         
-        
         [[rb_id]] : {. => ckd_stage_val};
         
         egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
@@ -1368,6 +1367,11 @@ BEGIN
         assert_level : {. => 100000 + pers*10000 + asm_viol_ex*1000 + egfr_current * 100 + acr_nom_crit * 10};
         
         mm2 : {assert_level<111100=>1},{=>0};
+        
+        esrd_risk : { cga_g_val = 6 or (cga_g_val=5 and cga_a_val >= 3) => 4},
+                    { cga_g_val = 5 or (cga_g_val=4 and cga_a_val >= 2) => 3},
+                    { (cga_g_val = 4) or (cga_g_val=3 and cga_a_val=2) or (cga_g_val>=1 and cga_a_val=3) => 2},
+                    { ckd>=1 => 1};
         
         #doc(,
             {
