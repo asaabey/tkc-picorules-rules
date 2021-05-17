@@ -56,6 +56,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <hr />
     ');
 
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('tkc_drop_zone','dmg_source','
+    <tkc_drop_zone><div class="card">
+        <div class="card-body">
+    .
+        </div></div></tkc_drop_zone>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_feedback','dmg_source','
     <div class="card">
       <div class="card-body">
@@ -517,14 +524,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_banner_1','cvra','
     <div class="card">
       <div class="card-body">
-        <<cvra_cat=2>><span class="badge badge-warning">Mod CVR</span><</cvra_cat=2>>
-        <<cvra_cat=3>><span class="badge badge-danger">High CVR</span><</cvra_cat=3>>
+        <<cvra_cat=2>><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
+        <<cvra_cat=3>><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
         
-        <<dm=1>><span class="badge badge-warning">DM</span><</dm=1>>
-        <<esrd_risk=1>><span class="badge badge-success">ESRD Risk 1</span><</esrd_risk=1>>
-        <<esrd_risk=2>><span class="badge badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
-        <<esrd_risk=3>><span class="badge badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
-        <<esrd_risk=4>><span class="badge badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
+        <<dm=1>><span class="badge badge-pill badge-warning">DM</span><</dm=1>>
+        <<esrd_risk=1>><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
+        <<esrd_risk=2>><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
+        <<esrd_risk=3>><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
+        <<esrd_risk=4>><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
    
       </div>
     </div>
