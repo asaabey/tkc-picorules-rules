@@ -17,11 +17,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_source','
     <style>        
     </style>
+    
     ');
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_source','   
             <div class="card">
                 <div class="card-body">
+                <div class="d-none d-print-block">EID(<<eid />>)</div>
                     <<dmg_source=999>><h4>No primary care</h4><</dmg_source=999>>                
                             <<phc_0>><span>Primary health care network:</span><</phc_0>>
                             <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
@@ -60,7 +62,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('tkc_drop_zone','dmg_source','
     <tkc_drop_zone><div class="card">
         <div class="card-body">
-    .
+            ..<br /><br/>..
         </div></div></tkc_drop_zone>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_feedback','dmg_source','
@@ -581,6 +583,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <br />
         <ul>
             <<chf>><li><b>Congestive heart failure</b>
+            <<dcm>><ul><li>Dilated cardiomyopathy <<dcm />></li></ul><</dcm>>
+            <<hocm>><ul><li>Hypertrophic obstructive cardiomyopathy <<hocm />></li></ul><</hocm>>
+            <<rcm>><ul><li>Restrictive cardiomyopathy <<rcm />></li></ul><</rcm>>
+            <<ethocm>><ul><li>Alcohol related cardiomyopathy <<ethocm />></li></ul><</ethocm>>
+            <<noscm>><ul><li>Cardiomyopathy NOS <<noscm />></li></ul><</noscm>>
             <</chf>>
         </ul>   
     ');

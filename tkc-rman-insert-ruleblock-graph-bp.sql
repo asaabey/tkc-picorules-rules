@@ -40,19 +40,19 @@ BEGIN
             
             htn => rout_cd_htn.cd_htn.val.bind();
             
-            avg_bp_1y => rout_cd_htn.avg_bp_1y.val.bind();
+            /*avg_bp_1y => rout_cd_htn.avg_bp_1y.val.bind();*/
             
-            sigma_1 => rout_cd_htn.sigma_1.val.bind();
+            /*sigma_1 => rout_cd_htn.sigma_1.val.bind();*/
             
-            sbp_max => rout_cd_htn.sbp_max.val.bind();
+            sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind();
             
-            sbp_min => rout_cd_htn.sbp_min.val.bind();
+            sbp_min => rout_cd_htn_bp_control.sbp_min.val.bind();
             
-            sbp_target_max => rout_cd_htn.sbp_target_max.val.bind();
+            sbp_target_max => rout_cd_htn_bp_control.sbp_target_max.val.bind();
             
-            sbp_target_min => rout_cd_htn.sbp_target_min.val.bind();
+            sbp_target_min => rout_cd_htn_bp_control.sbp_target_min.val.bind();
             
-            tir => rout_cd_htn.n_qt_1.val.bind();
+            tir => rout_cd_htn_bp_control.sbp_tir_1y.val.bind();
             
             sbp_graph => eadv.obs_bp_systolic.val.serializedv2(round(val,0)~dt).where(dt>sysdate-1825);    
             

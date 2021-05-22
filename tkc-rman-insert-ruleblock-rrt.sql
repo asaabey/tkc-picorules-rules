@@ -495,8 +495,6 @@ BEGIN
         
         
         
-        
-        
         rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
         
         rx_l04aa => eadv.rxnc_l04aa.dt.last().where(val=1);
@@ -506,6 +504,9 @@ BEGIN
         rx_h02ab => eadv.rxnc_l04aa.dt.last().where(val=1);
         
         rxn : { coalesce(rx_l04ad,rx_l04aa,rx_l04ax,rx_h02ab)!? => 1},{=>0};
+        
+        tac_c0 => eadv.lab_bld_tdm_tacrolimus._.lastdv();
+        
         
         [[rb_id]] : { cr_min_val!? and rxn>0 =>1},{=>0};
         

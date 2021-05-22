@@ -24,7 +24,7 @@ BEGIN
                 {
                     description: "Algorithm to serialize active medications",
                     
-                    is_active:2
+                    is_active:0
                     
                 }
             );

@@ -214,7 +214,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess hypertension pharmacology recommendations",                
-                is_active:2
+                is_active:0
                 
                 
             }
@@ -311,7 +311,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess blood pressure control ",                
-                is_active:0
+                is_active:2
                 
                 
             }
