@@ -443,7 +443,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<htn_rxn_ccb>><li>Calcium channel blocker (CCB)</li><</htn_rxn_ccb>>
                 <<htn_rxn_bb>><li>Beta blocker</li><</htn_rxn_bb>>
                 <<htn_rxn_diuretic_thiazide>><li>Thiazide diuretic</li><</htn_rxn_diuretic_thiazide>>
-                <<htn_rxn_diuretic_loop>><li>Thiazide diuretic</li><</htn_rxn_diuretic_loop>>
+                <<htn_rxn_diuretic_loop>><li>Loop diuretic</li><</htn_rxn_diuretic_loop>>
             </ul>
             </li>
         </ul>
@@ -451,6 +451,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_htn_bp_control','cd_htn_bp_control','
+    <<htn=0>><br /><ul><li><b>Blood pressure control</b></ul><</htn=0>>
     <ul><ul>
         <li>BP control
         <ul>
@@ -1679,6 +1680,22 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<rxnc_m04aa_ld>><li>Urate lowering therapy <<rxnc_m04aa_ld />></li><</rxnc_m04aa_ld>>
             </ul>
             <<op_enc_ld>><li>Last specialist clinic <<op_enc_ld />></li><</op_enc_ld>>
+        </ul>
+    </ul>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_imm_vasculitis','cd_imm_vasculitis','
+    <br />
+    <ul>
+    <li><b>Systemic vasculitis</b></li>
+        <ul>
+            <<gpa_fd>><li>Granulomatosis with polyangiitis (Wegeners granulomatosis) <<gpa_fd />></li><</gpa_fd>>
+            <<gca_fd>><li>Giant cell arteritis/Polymaglia rheumatica <<gca_fd />></li><</gca_fd>>
+            <<mpo_fd>><li>Microscopic polyaniitis <<mpo_fd />></li><</mpo_fd>>
+            <<tak_fd>><li>Takayasu arteritis <<tak_fd />></li><</tak_fd>>
+            <ul>
+                <<rxn_l01xc>><li>Monoclonal antibody therapy <<rxn_l01xc />></li><</rxn_l01xc>>
+                <<rxn_h02ab>><li>Corticosteroid therapy <<rxn_h02ab />></li><</rxn_h02ab>>
+            </ul>
         </ul>
     </ul>
     ');

@@ -25,6 +25,7 @@
 @"tkc-rman-insert-ruleblock-cd-cns.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm.sql";
 @"tkc-rman-insert-ruleblock-cd-rheum.sql";
+@"tkc-rman-insert-ruleblock-cd-imm.sql";
 @"tkc-rman-insert-ruleblock-ca.sql";
 @"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
 @"tkc-rman-insert-ruleblock-cd-liver.sql";

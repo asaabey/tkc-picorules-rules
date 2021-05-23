@@ -328,6 +328,7 @@ BEGIN
         
         cvra_cat => rout_cvra.cvra_cat.val.bind();
         
+        htn => rout_cd_htn.cd_htn.val.bind();
         
         sbp_target_max : {age>=75 or cvra_cat=3 => 120},{=>140};
         
