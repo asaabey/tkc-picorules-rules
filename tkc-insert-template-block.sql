@@ -22,7 +22,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_source','   
             <div class="card">
                 <div class="card-body">
-                    <<dmg_source=999>><h4>No primary care</h4><</dmg_source=999>>                
+                    <<dmg_source=999>><h4>No recent primary care episodes</h4><</dmg_source=999>>                
                             <<phc_0>><span>Primary health care network:</span><</phc_0>>
                             <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
                             <<dmg_source=22>><span class="badge badge-info">NTG EACS</span><</dmg_source=22>>
@@ -95,12 +95,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <<dmg_source=999>>
         <div class="alert alert-warning" role="alert">
             <h5> 
-            <p>Record may be incomplete ! No primary care records found</p>
+            <p>Record may be incomplete ! No recent primary care episodes found</p>
             </h5>
             <p>This is most likely due to</p>
             <ol>
                 <li>Interstate client</li>
                 <li>Client of non-participating PHC</li>
+                <li>Client has not attended clinic in 3 years</li>
                 <li>Linking failure</li>
             </ol>
         </div>
