@@ -214,7 +214,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess hypertension pharmacology recommendations",                
-                is_active:2
+                is_active:0
                 
                 
             }
@@ -311,7 +311,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess blood pressure control ",                
-                is_active:0
+                is_active:2
                 
                 
             }
@@ -328,6 +328,7 @@ BEGIN
         
         cvra_cat => rout_cvra.cvra_cat.val.bind();
         
+        htn => rout_cd_htn.cd_htn.val.bind();
         
         sbp_target_max : {age>=75 or cvra_cat=3 => 120},{=>140};
         

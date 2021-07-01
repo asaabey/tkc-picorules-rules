@@ -495,8 +495,6 @@ BEGIN
         
         
         
-        
-        
         rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
         
         rx_l04aa => eadv.rxnc_l04aa.dt.last().where(val=1);
@@ -506,6 +504,9 @@ BEGIN
         rx_h02ab => eadv.rxnc_l04aa.dt.last().where(val=1);
         
         rxn : { coalesce(rx_l04ad,rx_l04aa,rx_l04ax,rx_h02ab)!? => 1},{=>0};
+        
+        tac_c0 => eadv.lab_bld_tdm_tacrolimus._.lastdv();
+        
         
         [[rb_id]] : { cr_min_val!? and rxn>0 =>1},{=>0};
         
@@ -557,17 +558,17 @@ BEGIN
         
         avf_dt => rout_ckd_access.avf_dt.val.bind();
         
-        avf_us_ld => eadv.ris_code_usavfist.dt.last();
+        avf_us_ld => eadv.ris_img_usavfist.dt.last();
         
-        av_gram_ld => eadv.ris_code_dshfist.dt.last();
+        av_gram_ld => eadv.ris_img_dshfist.dt.last();
         
-        av_plasty_ld => eadv.ris_code_dshplas1.dt.last();
+        av_plasty_ld => eadv.ris_img_dshplas1.dt.last();
         
-        av_plasty_1_ld => eadv.ris_code_dshplas1.dt.last(1);
+        av_plasty_1_ld => eadv.ris_img_dshplas1.dt.last(1);
         
-        av_plasty_fd => eadv.ris_code_dshplas1.dt.first();
+        av_plasty_fd => eadv.ris_img_dshplas1.dt.first();
         
-        av_plasty_n => eadv.ris_code_dshplas1.dt.count();
+        av_plasty_n => eadv.ris_img_dshplas1.dt.count();
         
         av_surv_ld : {.=> greatest(avf_us_ld,av_gram_ld,av_plasty_ld)};
         

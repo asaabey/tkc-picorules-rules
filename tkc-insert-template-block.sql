@@ -17,12 +17,18 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_source','
     <style>        
     </style>
+    
     ');
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_source','   
             <div class="card">
                 <div class="card-body">
+
                     <<dmg_source=999>><h4>No recent primary care episodes</h4><</dmg_source=999>>                
+
+                <div class="d-none d-print-block">EID(<<eid />>)</div>
+                    <<dmg_source=999>><h4>No primary care</h4><</dmg_source=999>>                
+
                             <<phc_0>><span>Primary health care network:</span><</phc_0>>
                             <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
                             <<dmg_source=22>><span class="badge badge-info">NTG EACS</span><</dmg_source=22>>
@@ -56,6 +62,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <hr />
     ');
 
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('tkc_drop_zone','dmg_source','
+    <tkc_drop_zone><div class="card">
+        <div class="card-body">
+            ..<br /><br/>..
+        </div></div></tkc_drop_zone>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_feedback','dmg_source','
     <div class="card">
       <div class="card-body">
@@ -215,7 +228,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<avf_dt>><li><b>AVF</b> date <<avf_dt />></li><</avf_dt>>
             <<av_us_ld>><li>Last US fistulogram <<av_us_ld />></li><</av_us_ld>>
             <<av_gram_ld>><li>Last DSA fistulogram <<av_gram_ld />></li><</av_gram_ld>>
-            <<av_plasty_ld>><li>DSA fistuloplasty [<<av_plasty_ld />>-<<av_plasty_1_ld />>][<<av_plasty_n />>]</li><</av_plasty_ld>>
+            <<av_plasty_ld>><li>DSA fistuloplasty [<<av_plasty_ld />>-<<av_plasty_fd />>][<<av_plasty_n />>]</li><</av_plasty_ld>>
             <<av_plasty_ld>><li>
                 <<iv_periodicity=99>>Periodicity cannot be determined<</iv_periodicity=99>>
                 <<iv_periodicity=3>>Periodicity 3 monthly<</iv_periodicity=3>>
@@ -435,7 +448,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<htn_rxn_ccb>><li>Calcium channel blocker (CCB)</li><</htn_rxn_ccb>>
                 <<htn_rxn_bb>><li>Beta blocker</li><</htn_rxn_bb>>
                 <<htn_rxn_diuretic_thiazide>><li>Thiazide diuretic</li><</htn_rxn_diuretic_thiazide>>
-                <<htn_rxn_diuretic_loop>><li>Thiazide diuretic</li><</htn_rxn_diuretic_loop>>
+                <<htn_rxn_diuretic_loop>><li>Loop diuretic</li><</htn_rxn_diuretic_loop>>
             </ul>
             </li>
         </ul>
@@ -443,6 +456,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_htn_bp_control','cd_htn_bp_control','
+    <<htn=0>><br /><ul><li><b>Blood pressure control</b></ul><</htn=0>>
     <ul><ul>
         <li>BP control
         <ul>
@@ -515,6 +529,23 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ul>
     </ul>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_banner_1','cvra','
+    <div class="card">
+      <div class="card-body">
+        <<cvra_cat=2>><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
+        <<cvra_cat=3>><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
+        
+        <<dm=1>><span class="badge badge-pill badge-warning">DM</span><</dm=1>>
+        <<esrd_risk=1>><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
+        <<esrd_risk=2>><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
+        <<esrd_risk=3>><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
+        <<esrd_risk=4>><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
+   
+      </div>
+    </div>
+    
+    
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_vhd_syn','cd_cardiac_vhd','
         <br />
         <ul>
@@ -558,6 +589,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <br />
         <ul>
             <<chf>><li><b>Congestive heart failure</b>
+            <<dcm>><ul><li>Dilated cardiomyopathy <<dcm />></li></ul><</dcm>>
+            <<hocm>><ul><li>Hypertrophic obstructive cardiomyopathy <<hocm />></li></ul><</hocm>>
+            <<rcm>><ul><li>Restrictive cardiomyopathy <<rcm />></li></ul><</rcm>>
+            <<ethocm>><ul><li>Alcohol related cardiomyopathy <<ethocm />></li></ul><</ethocm>>
+            <<noscm>><ul><li>Cardiomyopathy NOS <<noscm />></li></ul><</noscm>>
             <</chf>>
         </ul>   
     ');
@@ -1591,7 +1627,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<cap_strep_ld>><li>Streptococcal pneumonia <<cap_strep_ld />></li><</cap_strep_ld>>
             <<cap_hi_ld>><li>Haemophilus pneumonia <<cap_hi_ld />></li><</cap_hi_ld>>
             <<cap_mel_ld>><li>Melioidosis <<cap_mel_ld />></li><</cap_mel_ld>>
-            <<cap_nos_ld>><li>Melioidosis <<cap_nos_ld />></li><</cap_nos_ld>>
+            <<cap_nos_ld>><li>Community acquired pneumonia NOS <<cap_nos_ld />></li><</cap_nos_ld>>
         </ul>
     </ul>
     
@@ -1649,6 +1685,22 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<rxnc_m04aa_ld>><li>Urate lowering therapy <<rxnc_m04aa_ld />></li><</rxnc_m04aa_ld>>
             </ul>
             <<op_enc_ld>><li>Last specialist clinic <<op_enc_ld />></li><</op_enc_ld>>
+        </ul>
+    </ul>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_imm_vasculitis','cd_imm_vasculitis','
+    <br />
+    <ul>
+    <li><b>Systemic vasculitis</b></li>
+        <ul>
+            <<gpa_fd>><li>Granulomatosis with polyangiitis (Wegeners granulomatosis) <<gpa_fd />></li><</gpa_fd>>
+            <<gca_fd>><li>Giant cell arteritis/Polymaglia rheumatica <<gca_fd />></li><</gca_fd>>
+            <<mpo_fd>><li>Microscopic polyaniitis <<mpo_fd />></li><</mpo_fd>>
+            <<tak_fd>><li>Takayasu arteritis <<tak_fd />></li><</tak_fd>>
+            <ul>
+                <<rxn_l01xc>><li>Monoclonal antibody therapy <<rxn_l01xc />></li><</rxn_l01xc>>
+                <<rxn_h02ab>><li>Corticosteroid therapy <<rxn_h02ab />></li><</rxn_h02ab>>
+            </ul>
         </ul>
     </ul>
     ');
