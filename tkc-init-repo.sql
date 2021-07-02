@@ -38,6 +38,7 @@
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
 @"tkc-rman-insert-ruleblock-rrt.sql";
+@"tkc-rman-insert-ruleblock-rrt-hd.sql";
 @"tkc-rman-insert-ruleblock-kfre.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
 @"tkc-rman-insert-ruleblock-trigger2.sql";

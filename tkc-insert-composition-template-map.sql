@@ -56,6 +56,8 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_2_syn'),601002);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_3_syn'),601003);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_4_syn'),601004);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_hd_adequacy'),601005);
+
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_3_metric'),601031);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='cd_ckd_syn_1'),601100);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='cd_ckd_cause_syn_1'),601101);

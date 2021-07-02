@@ -221,7 +221,7 @@ BEGIN
         
         canddt_bx : {canddt=1 =>1},{=>0};
         
-        [[rb_id]] : {greatest(canddt_gn_wu,canddt_bx)>0 => 1},{=>0};
+        [[rb_id]] : {greatest(canddt_gn_wu,canddt_bx)>0 and ckd>0 => 1},{=>0};
         
         #define_attribute(
             bxk,

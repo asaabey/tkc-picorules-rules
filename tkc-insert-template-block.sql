@@ -377,9 +377,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_3','cd_dm_glyc_cntrl','
        <ul><ul>
+        <li>Glycaemic control</li>
+        <ul>
             <<hba1c_n_tot>><li>Last recorded HbA1c (NGSP) is <<hba1c_n0_val />> % (<<hba1c_n0_dt />>)</li><</hba1c_n_tot>>
             <<hba1c_max_val>><li>Maximum HbA1c (NGSP) is <<hba1c_max_val />> % (<<hba1c_max_dt />>)</li><</hba1c_max_val>>
             <<n_opt_qt>><li>Time in range <<n_opt_qt />> % in the last 2 years </li><</n_opt_qt>>
+        </ul>
        </ul></ul>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_4','cd_dm_dx','
@@ -1326,9 +1329,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_1_metrics','rrt_1_metrics','
     <<rrt=1>>
     <ul><ul>
-        <<tspan_y>><li>Dialysis vintage <<tspan_y />> years</li><</tspan_y>>
-        <li>Regularity <<hd_sl />>% </li>
-        <li>Thrice weekly target achievement <<hd_oe />>% </li>
+        <li>Dialysis attendance metrics</li>
+        <ul>
+            <<loc_fixed>><li><<loc_def$loc_sublocality />> (sessions=<<loc_1_n />>)</li><</loc_fixed>>
+            <<tspan_y>><li>Dialysis vintage <<tspan_y />> years</li><</tspan_y>>
+            <li>Regularity <<hd_sl />>% </li>
+            <li>Thrice weekly target achievement <<hd_oe />>% </li>
+        </ul>    
     </ul></ul>
     <</rrt=1>>
     ');
@@ -1375,7 +1382,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_hd_param','rrt_hd_param','
     <ul><ul>
-    <li>Haemodialysis prescription <<mode_dt />></li>
+    <li>Haemodialysis prescription</li>
         <ul>
             <<mode_val=10>><li>High Flux haemodialysis</li><</mode_val=10>>
             <<mode_val=20>><li>Haemodialfitration (post dilutional)</li><</mode_val=20>>
@@ -1776,6 +1783,18 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         
 
     ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_hd_adequacy','rrt_hd_adequacy','
+    <ul><ul>
+    <li>Solute clearance adequacy</li>
+        <ul>
+            <<urr>><li>URR <<urr />> spKT/V <<spktv />> (<<post_u_dt />>) <<err_urr_flag>>Sampling error ?<</err_urr_flag>></li><</urr>>
+            <<low_urr_flag>><li><b>Persistently low adequacy target</b></li><</low_urr_flag>>
+            
+        </ul>
+    </ul></ul>
+');
+
 
 @"tkc-insert-composition-template-map.sql"
 -- Compile rman_tmplts
