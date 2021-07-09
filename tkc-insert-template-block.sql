@@ -1327,7 +1327,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_1_metrics','rrt_1_metrics','
-    <<rrt=1>>
+    <<canddt=1>>
     <ul><ul>
         <li>Dialysis attendance metrics</li>
         <ul>
@@ -1337,7 +1337,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <li>Thrice weekly target achievement <<hd_oe />>% </li>
         </ul>    
     </ul></ul>
-    <</rrt=1>>
+    <</canddt=1>>
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('at_risk','at_risk','

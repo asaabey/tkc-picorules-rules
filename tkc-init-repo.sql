@@ -8,6 +8,8 @@
 
 @"tkc-rman-insert-ruleblock-ckd-c.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
+@"tkc-rman-insert-ruleblock-ckd-shpt.sql";
+@"tkc-rman-insert-ruleblock-ckd-anaemia.sql";
 @"tkc-rman-insert-ruleblock-labs.sql";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
@@ -39,6 +41,7 @@
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
 @"tkc-rman-insert-ruleblock-rrt.sql";
 @"tkc-rman-insert-ruleblock-rrt-hd.sql";
+@"tkc-rman-insert-ruleblock-rrt-tx.sql";
 @"tkc-rman-insert-ruleblock-kfre.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
 @"tkc-rman-insert-ruleblock-trigger2.sql";

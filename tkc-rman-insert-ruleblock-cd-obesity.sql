@@ -31,27 +31,39 @@ BEGIN
             }
         );
         
+        #doc(,{
+                    txt: "Height in cm"
+        });
             
         ht => eadv.obs_height.val.lastdv();
         
+        ht_err : { coalesce(ht_val, 0)<50 or coalesce(ht_val, 0)>300 =>1},{=>0};
+        
+        #doc(,{
+                    txt: "Weight in kg"
+        });
+        
         wt => eadv.obs_weight.val.lastdv();
         
-        bmi : { nvl(ht_val,0)>0 and nvl(wt_val,0)>0 => round(wt_val/power(ht_val/100,2),1) };
+        wt_err : { coalesce(wt_val, 0)<10 or coalesce(wt_val, 0)>300 =>1},{=>0};
+
+        bmi_err : {ht_err=1 or wt_err=1 =>1},{=>0};
+        
+        bmi : { ht_err=0 and wt_err=0 => round(wt_val/power(ht_val/100,2),1) };
+    
         
         obs_icd => eadv.[icd_e66%].dt.count(0);
         
         obs_icpc => eadv.[icpc_t82%].dt.count(0);
         
-        #doc(,
-                {
+        #doc(,{
                     txt: "Obesity classification",
                     cite: "cd_obesity_ref2"
-                }
-            );
+        });
         
-        bmi_class : { bmi between 30 and 34.9 => 1},
-                    { bmi between 35 and 39.9 => 2},
-                    { bmi >= 40 =>3},
+        bmi_class : { bmi_err=0 and bmi between 30 and 34.9 => 1},
+                    { bmi_err=0 and bmi between 35 and 39.9 => 2},
+                    { bmi_err=0 and bmi >= 40 =>3},
                     {=>0};
         
         

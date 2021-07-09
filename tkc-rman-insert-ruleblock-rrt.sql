@@ -126,7 +126,7 @@ BEGIN
                 txt : "Home-haemodialysis ICPC2p coding"
         });
         
-        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_rdu_xwd,mbs_13105].dt.max();
+        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_rdu_xwd,mbs_13105].dt.min();
         
         
         ren_enc => eadv.[enc_op%].dt.max();
@@ -178,11 +178,15 @@ BEGIN
                     {rrt=0 and hd_icpc_dt!? =>1 },
                     {=>0};
         ;
-        #doc(,
-            {
+        #doc(,{
+                txt:"Satellite Hd recency"
+        });
+        
+        hd_recent_flag : {mbs_13105_dt_max> sysdate-30 or hd_dt> sysdate-30 =>1},{=>0};
+        
+        #doc(,{
                 txt:"Return to hd post tx or pd failures"
-            }
-        );
+        });
         
         
         ret_hd_post_tx => eadv.icd_z49_1.dt.min().where(dt > tx_dt + 90);
@@ -192,11 +196,9 @@ BEGIN
         
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Current transplant patient based on 2y encounter activity"
-            }
-        );
+        });
         
         
         
@@ -387,56 +389,7 @@ BEGIN
         
         hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
         
-        
-        
-        [[rb_id]] : {. =>1};
-        
-        #define_attribute(
-            rrt_hhd,
-            {
-                label:"RRT Home haemodialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-    ';
-    
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    -- END OF RULEBLOCK --
-    
-    
-      -- BEGINNING OF RULEBLOCK --
-    
-        
-    rb.blockid:='rrt_causality';
-
-    
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Rule block to determine RRT causality*/
-        
-        #define_ruleblock([[rb_id]],
-            {
-                description: "Rule block to determine RRT causality",
-                is_active:0
-                
-            }
-        );
-
-        #doc(,
-            {
-                txt : "rrt session regularity"
-            }
-        );
-        
-        rrt => rout_rrt.rrt.val.bind();
-        
-        
+        hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ksc,enc_op_ren_gpd,enc_op_ren_rsr].dt.max();
         
         
         [[rb_id]] : {. =>1};
@@ -459,72 +412,8 @@ BEGIN
     
     
     
-      -- BEGINNING OF RULEBLOCK --
     
-        
-    rb.blockid:='rrt_tx';
-
     
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Rule block to determine Tx metrics*/
-        
-        #define_ruleblock([[rb_id]],
-            {
-                description: "Rule block to determine Tx metrics",
-                is_active:2,
-                filter: "SELECT eid FROM rout_rrt WHERE rrt=3"
-                
-            }
-        );
-
-        #doc(,
-            {
-                txt : "Transplant graft status"
-            }
-        );
-        
-        tx_dt => rout_rrt.tx_dt.val.bind();
-        
-        
-        cr_min => eadv.lab_bld_creatinine._.minfdv().where(dt > tx_dt);
-        
-        cr_last => eadv.lab_bld_creatinine._.lastdv().where(dt > tx_dt);
-        
-        
-        
-        rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
-        
-        rx_l04aa => eadv.rxnc_l04aa.dt.last().where(val=1);
-        
-        rx_l04ax => eadv.rxnc_l04aa.dt.last().where(val=1);
-        
-        rx_h02ab => eadv.rxnc_l04aa.dt.last().where(val=1);
-        
-        rxn : { coalesce(rx_l04ad,rx_l04aa,rx_l04ax,rx_h02ab)!? => 1},{=>0};
-        
-        tac_c0 => eadv.lab_bld_tdm_tacrolimus._.lastdv();
-        
-        
-        [[rb_id]] : { cr_min_val!? and rxn>0 =>1},{=>0};
-        
-        #define_attribute(
-            [[rb_id]] ,
-            {
-                label:"Graft function known and therapy",
-                is_reportable:1,
-                type:2
-            }
-        );
-    ';
-    
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    -- END OF RULEBLOCK --
     
   
 END;
