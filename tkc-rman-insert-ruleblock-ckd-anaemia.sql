@@ -42,6 +42,8 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         
+        esrd : {rrt in (1,2,4)=>1},{=>0};
+        
         #doc(,
             {
                 txt:"Haematenics"
@@ -50,6 +52,23 @@ BEGIN
         
         
         hb => eadv.lab_bld_hb._.lastdv().where(dt>sysdate-60);
+        
+        hb2 => eadv.lab_bld_hb._.lastdv().where(dt<hb_dt and dt>sysdate-90);
+        
+        hb3 => eadv.lab_bld_hb._.lastdv().where(dt<hb2_dt-21 and dt>sysdate-120);
+        
+        
+        hb2_1_qt : { coalesce(hb2_val,0)>0 => round((hb_val-hb2_val)/hb2_val,2)};
+        
+        hb3_2_qt : { coalesce(hb3_val,0)>0 => round((hb2_val-hb3_val)/hb3_val,2)};
+        
+        hb_cum_qt : { hb2_1_qt > 0.2 and (hb3_2_qt + hb2_1_qt) >0.3 => 1},
+                    { hb2_1_qt > 0.1 and (hb3_2_qt + hb2_1_qt) >0.2 => 2},
+                    { hb2_1_qt < (-0.1) and (hb3_2_qt + hb2_1_qt) < (-0.2) => 3},
+                    { hb2_1_qt < (-0.2) and (hb3_2_qt + hb2_1_qt) < (-0.3) => 4},
+                    {=>0};
+        
+        hb_non_ss : {hb_dt - hb2_dt <7 and abs(hb2_1_qt)>0.2 =>1},{=>0};
         
         
         
@@ -70,7 +89,7 @@ BEGIN
         
         fer => eadv.lab_bld_ferritin._.lastdv().where(dt>sysdate-120);
         
-        
+        crp => eadv.lab_bld_crp._.lastdv().where(dt>sysdate-120);
         
         tsat1 => eadv.lab_bld_tsat._.lastdv().where(dt>sysdate-120);
         
@@ -79,17 +98,25 @@ BEGIN
         });
         
         
-        hb_state : { nvl(hb_val,0)>0 and nvl(hb_val,0)<100 =>1},
-                    { nvl(hb_val,0)>=100 and nvl(hb_val,0)<180 =>2},
-                    { nvl(hb_val,0)>180 =>3},
+        hb_state : { coalesce(hb_val,0)>0 and coalesce(hb_val,0)<60 =>1},
+                    { coalesce(hb_val,0)>=60 and coalesce(hb_val,0)<80 =>2},
+                    { coalesce(hb_val,0)>=80 and coalesce(hb_val,0)<100 =>3},
+                    { coalesce(hb_val,0)>=100 and coalesce(hb_val,0)<125 =>4},
+                    { coalesce(hb_val,0)>=125 and coalesce(hb_val,0)<140 =>5},
+                    { coalesce(hb_val,0)>=140 and coalesce(hb_val,0)<180 =>6},
+                    { coalesce(hb_val,0)>180 =>7},
                     {=>0};
                     
-        mcv_state : { hb_state=1 and nvl(rbc_mcv_val,0)>0 and nvl(rbc_mcv_val,0)<70 => 11 },
-                    { hb_state=1 and nvl(rbc_mcv_val,0)>=70 and nvl(rbc_mcv_val,0)<80 => 12 },
-                    { hb_state=1 and nvl(rbc_mcv_val,0)>=80 and nvl(rbc_mcv_val,0)<=100 => 20 },
-                    { hb_state=1 and nvl(rbc_mcv_val,0)>=100 => 31 },{ =>0};
+        mcv_state : { hb_state=1 and coalesce(rbc_mcv_val,0)>0 and coalesce(rbc_mcv_val,0)<70 => 11 },
+                    { hb_state=1 and coalesce(rbc_mcv_val,0)>=70 and coalesce(rbc_mcv_val,0)<80 => 12 },
+                    { hb_state=1 and coalesce(rbc_mcv_val,0)>=80 and coalesce(rbc_mcv_val,0)<=100 => 20 },
+                    { hb_state=1 and coalesce(rbc_mcv_val,0)>=100 => 31 },{ =>0};
                     
-        iron_low : { hb_state=1 and nvl(fer_val,0)>0 and nvl(fer_val,0)<250 => 1},{=>0};
+        fe_status_null : { fer_val? and tsat1_val? =>1},{=>0};
+        
+        fe_low : { fer_val<250 or tsat1_val<0.25=> 1},{=>0};
+        
+        hyper_ferr : { fer_val>1000 => 1},{=>0};
         
         thal_sig : {mcv_state=11 =>1 },{=>0};
         

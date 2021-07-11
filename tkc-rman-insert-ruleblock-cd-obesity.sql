@@ -37,7 +37,7 @@ BEGIN
             
         ht => eadv.obs_height.val.lastdv();
         
-        ht_err : { coalesce(ht_val, 0)<50 or coalesce(ht_val, 0)>300 =>1},{=>0};
+        ht_err : { ht_val<50 or ht_val>300 =>1},{=>0};
         
         #doc(,{
                     txt: "Weight in kg"
@@ -45,7 +45,7 @@ BEGIN
         
         wt => eadv.obs_weight.val.lastdv();
         
-        wt_err : { coalesce(wt_val, 0)<10 or coalesce(wt_val, 0)>300 =>1},{=>0};
+        wt_err : { wt_val<10 or wt_val>300 =>1},{=>0};
 
         bmi_err : {ht_err=1 or wt_err=1 =>1},{=>0};
         

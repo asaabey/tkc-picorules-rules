@@ -461,6 +461,8 @@ BEGIN
      
      c_z90_5 => rout_ckd_c_rnm.c_z90_5.val.bind();
      
+     esrd : {rrt in (1,2,3,4) =>1},{=>0};
+     
      aet_rnm : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 };
      
      #doc(,
