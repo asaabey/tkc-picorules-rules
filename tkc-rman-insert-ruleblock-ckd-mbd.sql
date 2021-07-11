@@ -34,6 +34,9 @@ BEGIN
        ckd => rout_ckd.ckd_stage_val.val.bind();
        
        rrt => rout_rrt.rrt.val.bind();
+       
+       esrd : {rrt in (1,2,4)=>1},{=>0};
+        
 
        calcium1 => eadv.lab_bld_calcium_corrected._.lastdv().where(dt>sysdate-60);
        calcium2 => eadv.lab_bld_calcium_corrected._.lastdv(1).where(dt>sysdate-60);
@@ -63,41 +66,7 @@ BEGIN
       
        [[rb_id]] : { (rrt in(1,2,4) or ckd>4) and pth1_val!? => 1 },{=>0};
        
-       #define_attribute(calcium1_val,{
-                label:"Dialysis panel Labs calcium",
-                is_reportable:1,
-                type:2
-        });
-        #define_attribute(magnesium1_val,{
-                label:"Dialysis panel Labs magnesium",
-                is_reportable:1,
-                type:2
-        });
-        #define_attribute(phos1_val,{
-                label:"Dialysis panel Labs phosphate",
-                is_reportable:1,
-                type:2
-        });
-        #define_attribute(pth1_val,{
-                label:"Dialysis panel Labs pth",
-                is_reportable:1,
-                type:2
-        });
-        #define_attribute(cinacalcet_ld,{
-                label:"Dialysis panel Meds cinacalcet",
-                is_reportable:1,
-                type:2
-        });
-        #define_attribute(calcitriol_ld,{
-                label:"Dialysis panel Meds calcitriol",
-                is_reportable:1,
-                type:2
-        });
-        #define_attribute(phos_bind_ld,{
-                label:"Dialysis panel Meds phos_bind_ld",
-                is_reportable:1,
-                type:2
-        });
+      
      
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

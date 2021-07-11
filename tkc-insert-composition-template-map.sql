@@ -44,6 +44,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_3_metric'),601031);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_cause_syn_1'),601040);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_anaemia'),601050);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_shpt'),601045);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_x_syn_end'),601099);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='cd_ckd_syn_1'),601100);

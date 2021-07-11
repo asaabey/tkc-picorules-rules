@@ -426,14 +426,31 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     </ol>
                 </li><</hb_val>>
                 <<fe_status_null=1>><li>Iron status unknown</li><</fe_status_null=1>>
-                <<fe_status_null=0>><li>Iron stores
-                    <ol>
+                <<fe_status_null=0>><li>Iron stores<</fe_status_null=0>>
+                    <<fe_status_null=0>><ol><</fe_status_null=0>>
                         <<fe_status_null=0>><li><<fer_val>>Ferritin <<fer_val />> (<<fer_dt />>)<</fer_val>><<tsat1_val>>TSAT <<tsat1_val />>% (<<tsat1_dt />>)<</tsat1_val>></li><</fe_status_null=0>>
                         <<fe_low=1>><li><b>Low iron stores</b></li><</fe_low=1>>
                         <<hyper_ferr=1>><li>Hyperferritinaemia</li><</hyper_ferr=1>>
                         <<hyper_ferr=1>><<crp_val>><li>CRP <<crp_val />></li><</crp_val>><</hyper_ferr=1>>
-                    </ol>
-                </li><</fe_status_null=0>>
+                    <<fe_status_null=0>></ol><</fe_status_null=0>>
+                <<fe_status_null=0>></li><</fe_status_null=0>>
+                <<esa_state=0>><li>No ESA use</li><</esa_state=0>>
+                <<esa_state=1>><li>Current ESA use</li><</esa_state=1>>
+                <<esa_state=2>><li>Past ESA use but not current</li><</esa_state=2>>
+            </ol>
+        </li>
+    <</esrd=1>>
+');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_shpt','ckd_shpt','
+    <<esrd=1>>
+        <li>Bone mineral disease management
+            <ol>
+                <li>PTH <<pth1_val />> (<<pth1_dt />>)</li>
+                <<calcium1_val>><li>Calcium <<calcium1_val />> mmol/l (<<calcium1_dt />>)</li><</calcium1_val>>
+                <<phos1_val>><li>Phosphate <<phos1_val />> mmol/l (<<phos1_dt />>)</li><</phos1_val>>
+                <<cinacalcet_ld>><li>Cinacalcet last scripted <<cinacalcet_ld />></li><</cinacalcet_ld>>
+                <<calcitriol_ld>><li>Calcitriol last scripted <<calcitriol_ld />></li><</calcitriol_ld>>
             </ol>
         </li>
     <</esrd=1>>
