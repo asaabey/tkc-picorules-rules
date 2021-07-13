@@ -58,10 +58,14 @@ BEGIN
                 {iq_uacr>=2 and iq_alb>1 => 1},
                 {=>0};
         
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
         
+        csu_act => eadv.csu_action_tg4410._.lastdv();
         
-        
-        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+               
         rrt => rout_rrt.rrt.val.bind();
         dm => rout_cd_dm_dx.dm.val.bind();
         ckd => rout_ckd.ckd.val.bind();
@@ -82,15 +86,13 @@ BEGIN
         enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
                 
-        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? or ckd>4 => 1},{=>0};
+        ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
 
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Inclusions for nephrotic syndrome",
                 cite: "tg4410_ref1, tg4410_ref2"
-            }
-        );
+        });
         
         uacr_n => eadv.lab_ua_acr.dt.count(0).where(val>300 and dt>sysdate-365);
         
@@ -98,19 +100,15 @@ BEGIN
         
         uacr2 => eadv.lab_ua_acr.val.last(1).where(dt>sysdate-365);
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Use delta of log transformed uacr" 
-            }
-        );
+        });
        
         uacr_log_delta : {uacr1>0 and uacr2>0 => round(log(10,uacr1)-log(10,uacr2),1)};
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Nephrotic associations of albumin and cholesterol"
-            }
-        );
+        });
         
         
         alb1 => eadv.lab_bld_albumin.val.last().where(dt>sysdate-365);
@@ -176,6 +174,14 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-365);
         iq_egfr => eadv.lab_bld_egfr.val.count(0).where(dt>sysdate-365);
         iq_urbc => eadv.lab_ua_rbc.val.count(0).where(dt>sysdate-365);
@@ -218,7 +224,7 @@ BEGIN
         enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
                 
-        ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 or dod!? => 1},{=>0};
+        ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 or dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
         
         #doc(,
             {
@@ -303,7 +309,16 @@ BEGIN
           
           ckd => rout_ckd.ckd.val.bind();
           
-          
+          #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+
+
         
           cr_n => eadv.lab_bld_creatinine.dt.count(); 
           cr_fd => eadv.lab_bld_creatinine.dt.min(); 
@@ -411,7 +426,7 @@ BEGIN
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
           
-          ex_flag : {dod!? or rrt=1 or ckd>4 => 1},{=>0};
+          ex_flag : {dod!? or rrt=1 or ckd>4 => 1 or csu_act_dt!? or dmg_source=999},{=>0};
           
           
           [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
@@ -466,7 +481,18 @@ BEGIN
         
         aki_icd => eadv.[icd_n17%].dt.count(0).where(dt>sysdate-180);
         
-        ex_flag : {dod!? => 1},{=>0};
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+
+
+        
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
           
         [[rb_id]] : {aki_icd>0 and ex_flag=0 => 1},{=>0};
           
@@ -522,6 +548,14 @@ BEGIN
         dod => rout_dmg.dod.val.bind();
         
         ckd => rout_ckd.ckd.val.bind();
+        
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
         
         ckd_stage => rout_ckd.ckd_stage.val.bind();
         
@@ -587,7 +621,7 @@ BEGIN
                 txt:"sensitivity adjustment with inclusion of a3 albuminuria"
             }
         );
-        ex_flag : {dod!? or enc_ren=1 or ref_ren=1  or dmg_source=0 or age>69 => 1},{=>0};
+        ex_flag : {dod!? or enc_ren=1 or ref_ren=1  or dmg_source=0 or age>69 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
           
         [[rb_id]] : {
                         ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh 
@@ -661,6 +695,14 @@ BEGIN
         
         enc_ren_1y => rout_engmnt_renal.enc_renal_1y.val.bind();
           
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         #doc(,
             {
                 txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc"
@@ -668,7 +710,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? or enc_ren_1y=1 or age>69 or assert_level<111100 => 1},{=>0};
+        ex_flag : {dod!? or enc_ren_1y=1 or age>69 or assert_level<111100 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
           
         [[rb_id]] : {ckd=6  and avf=0 and ex_flag=0 => 1},{=>0};
         
@@ -711,6 +753,14 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         hd_dt_min => eadv.icd_z49_1.dt.min();
         hd_n => eadv.icd_z49_1.dt.count(0);
         hd_dt_max => eadv.icd_z49_1.dt.max();
@@ -728,7 +778,7 @@ BEGIN
         
         ex_flag : {dod!? => 1},{=>0};
           
-        [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
         
         #define_attribute(
                 [[rb_id]],
@@ -768,6 +818,14 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         hd_dt_min => eadv.icd_z49_1.dt.min();
         hd_n => eadv.icd_z49_1.dt.count(0);
         hd_dt_max => eadv.icd_z49_1.dt.max();
@@ -783,7 +841,7 @@ BEGIN
         
         rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
         
-        ex_flag : {dod!? => 1},{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
           
         [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
         
@@ -829,15 +887,13 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
-        #doc(,
-            {
-                txt:"Exclude if previous cse action"
-            }
-        );
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
         
+        csu_act => eadv.csu_action_tg4410._.lastdv();
         
-        
-        csu_act => eadv.csu_action_tg4660_tg4660.val.lastdv();
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
         
         #doc(,
             {
@@ -859,7 +915,7 @@ BEGIN
             }
         );
         
-        ex_flag : {dod!? => 1},{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
           
         [[rb_id]] : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
         
@@ -902,6 +958,14 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         dm => rout_cd_dm_dx.dm.val.bind();
         
         dm_rxn => rout_cd_dm_dx.dm_rxn.val.bind();
@@ -941,7 +1005,7 @@ BEGIN
         
         dm_untreat : {dm=1 and nvl(dm_rxn,0)=0 and nvl(hba1c_n0_val,0)>8 => 1},{=>0};
         
-        ex_flag : {dod!? => 1},{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
 
         #doc(,
             {
@@ -993,13 +1057,21 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });  
+        
+        csu_act => eadv.csu_action_tg4410._.lastdv();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         esa_dt => eadv.rxnc_b03xa.dt.max().where(val=1);
         
         hb_i => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-180);
         
         hb_i1 => eadv.lab_bld_hb.val.lastdv(1);
         
-        ex_flag : {dod!? => 1},{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
 
         #doc(,
             {
