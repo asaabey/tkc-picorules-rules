@@ -368,7 +368,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine RRT 1 metrics",
-                is_active:0
+                is_active:2
                 
             }
         );

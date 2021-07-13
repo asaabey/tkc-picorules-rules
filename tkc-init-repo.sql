@@ -42,6 +42,9 @@
 @"tkc-rman-insert-ruleblock-rrt.sql";
 @"tkc-rman-insert-ruleblock-rrt-hd.sql";
 @"tkc-rman-insert-ruleblock-rrt-tx.sql";
+@"tkc-rman-insert-ruleblock-rrt-labs.sql";
+@"tkc-rman-insert-ruleblock-rrt-viewmodels.sql";
+
 @"tkc-rman-insert-ruleblock-kfre.sql";
 @"tkc-rman-insert-ruleblock-cvra2.sql";
 @"tkc-rman-insert-ruleblock-trigger2.sql";
@@ -58,7 +61,7 @@
 -- Init templates
 
 @"tkc-insert-compositions.sql"
-@"tkc-insert-template-block.sql"
+@"tkc-insert-template-block2.sql"
 -- called by template-block
 --@"tkc-insert-composition-template-map.sql"
 
