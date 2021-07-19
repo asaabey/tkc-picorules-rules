@@ -426,7 +426,7 @@ BEGIN
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
           
-          ex_flag : {dod!? or rrt=1 or ckd>4 => 1 or csu_act_dt!? or dmg_source=999},{=>0};
+          ex_flag : {dod!? or rrt=1 or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
           
           
           [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
