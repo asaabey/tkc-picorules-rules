@@ -57,6 +57,9 @@
 @"tkc-rman-insert-ruleblock-cube-accel.sql";
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
 
+-- added by patty for KPI's
+@"tkc-rman-insert-ruleblock-kpis.sql";
+
 
 -- Init templates
 
