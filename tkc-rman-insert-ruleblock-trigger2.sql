@@ -541,7 +541,7 @@ BEGIN
                 txt:"Get CKD stage"
         });
         
-        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
         
         age => rout_dmg.age.val.bind();
         

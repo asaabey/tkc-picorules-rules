@@ -975,9 +975,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <br />
     <div class="syn_synopsis_box">
     <h3>Medications</h3>
-    <ol>
+    <ul>
         <<rx_name_obj$rx_name_obj />>
-    </ol>
+    </ul>
     </div>
 
     ');
@@ -986,9 +986,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <br />
     <div class="syn_synopsis_box">
     <h3>Medications v2</h3>
-    <ol>
+    <ul>
         <<rx_name_obj$rx_name_obj2 />>
-    </ol>
+    </ul>
     </div>
 
     ');
