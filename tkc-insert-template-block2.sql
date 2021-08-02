@@ -642,7 +642,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_2','cd_dm_comp','
-            <li>Non-renal microvascular complications present
+            <li>Diabetic complications 
                 <ol>
                     <<dm_micvas_retino>>
                         <li>Diabetic retinopathy</li><</dm_micvas_retino>> 
@@ -655,8 +655,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                             </ol>
                     <<dm_micvas_neuro>><li>Diabetic neuropathy (<<dm_micvas_neuro />>)</li><</dm_micvas_neuro>>
                     <<dm_foot_ulc>><li>Diabetic foot ulcer (<<dm_foot_ulc />>)</li><</dm_foot_ulc>>
+                    
                 </ol>
+                <ol>
+                    <<dm_dka>><li>Diabetic ketoacidosis <<dka_ld />></li><</dm_dka>>
+                </ol>
+                
             </li>
+
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_3','cd_dm_glyc_cntrl','
         <li>Glycaemic control

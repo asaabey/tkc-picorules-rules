@@ -178,7 +178,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4420._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -313,7 +313,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4100._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
 
@@ -485,7 +485,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4110._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
 
@@ -553,7 +553,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4610._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -699,7 +699,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4620._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -757,7 +757,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4720._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -822,7 +822,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4722._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -891,7 +891,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4660._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -962,7 +962,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg2610._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -1061,7 +1061,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4410._.lastdv();
+        csu_act => eadv.csu_action_tg4810._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         

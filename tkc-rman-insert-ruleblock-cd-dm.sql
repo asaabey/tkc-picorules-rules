@@ -360,9 +360,24 @@ BEGIN
         
         dm_foot_ulc => eadv.icd_e11_73.dt.min();
         
-        dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? or dm_foot_ulc!?=> 1},{=>0};
+        dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? or dm_foot_ulc!?=> 1};
         
-        [[rb_id]] : { greatest(dm_micvas)>0 and dm=1 =>1},{=>0};
+        #doc(,{
+                txt:"Diabetic ketoacidosis"
+        });
+        
+        dka_icd_ld => eadv.icd_e11_11.dt.max();
+        
+        dka_icd_fd => eadv.icd_e11_11.dt.min();
+        
+        dka_icpc_ld => eadv.icpc_t99077.dt.max();
+        
+        dka_ld : { .=> greatest(dka_icd_ld,dka_icpc_ld)};
+        
+        dm_dka : { dka_ld!? => 1};
+        
+        
+        [[rb_id]] : { coalesce(dm_micvas,dm_dka)>0 and dm=1 =>1},{=>0};
         
         
         #define_attribute(
