@@ -322,7 +322,102 @@ BEGIN
         
         [[rb_id]] : { phc_1 > 0 => phc_1 },{=>999};    
         
-        #define_attribute(
+        
+       
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
+    
+            -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='dmg_vm';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess demographic view model */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to assess demographic view model",
+                is_active:2
+                
+            }
+        );
+                
+        
+                
+        loc_def => rout_dmg_loc.loc_def.val.bind();
+        
+        loc_mode_n => rout_dmg_loc.loc_mode_n.val.bind();
+        
+        loc_n => rout_dmg_loc.loc_n.val.bind();
+        
+        mode_pct => rout_dmg_loc.mode_pct.val.bind();
+        
+        hrn => rout_dmg_hrn.hrn_last.val.bind();
+        
+
+        pcis_n => rout_dmg_source.pcis_n.val.bind();
+        
+        pcis_ld => rout_dmg_source.pcis_ld.val.bind();
+        
+        eacs_n => rout_dmg_source.eacs_n.val.bind();
+        
+        eacs_ld => rout_dmg_source.eacs_ld.val.bind();
+        
+        laynhapuy_n => rout_dmg_source.laynhapuy_n.val.bind();
+        
+        laynhapuy_ld => rout_dmg_source.laynhapuy_ld.val.bind();
+        
+        miwatj_n => rout_dmg_source.miwatj_n.val.bind();
+        
+        miwatj_ld => rout_dmg_source.miwatj_ld.val.bind();
+        
+        anyinginyi_n => rout_dmg_source.anyinginyi_n.val.bind();
+        
+        anyinginyi_ld => rout_dmg_source.anyinginyi_ld.val.bind();
+        
+        congress_n => rout_dmg_source.congress_n.val.bind();
+        
+        congress_ld => rout_dmg_source.congress_ld.val.bind();
+        
+        wurli_n => rout_dmg_source.wurli_n.val.bind();
+        
+        wurli_ld => rout_dmg_source.wurli_ld.val.bind();
+        
+        kwhb_n => rout_dmg_source.kwhb_n.val.bind();
+        
+        kwhb_ld => rout_dmg_source.kwhb_ld.val.bind();
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+        
+        tkc_provider => rout_dmg_source.tkc_provider.val.bind();
+        
+        ipa_sep_ld => rout_ipa_sep.icd_ld.val.bind();
+        
+        ipa_sep_fd => rout_ipa_sep.icd_fd.val.bind();
+        
+        ipa_sep_n => rout_ipa_sep.icd_n.val.bind();
+        
+        opa_sep_ld => rout_opa_sep.op_ld.val.bind();
+        
+        opa_sep_fd => rout_opa_sep.op_fd.val.bind();
+        
+        opa_sep_n => rout_opa_sep.op_n.val.bind();
+        
+        [[rb_id]] : { .=> dmg_source};    
+        
+       #define_attribute(
             [[rb_id]],
             {
                 label:"Demographic phc source",
@@ -386,7 +481,6 @@ BEGIN
                 is_reportable:1
             }
         );
-       
                 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -609,6 +703,105 @@ BEGIN
             [[rb_id]],
             {
                 label:"Inpatient activity for ICU admissions",
+                type:2,
+                is_reportable:0
+            }
+        );
+        
+        
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
+            -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='ipa_sep';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess Inpatient activity*/
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Inpatient activity with exclusions",
+                is_active:2
+                
+            }
+        );
+        
+        
+        
+        icd_ld => eadv.[icd_%].dt.last().where(att not in(`icd_z49_1`));
+        
+        icd_n => eadv.[icd_%].dt.distinct_count().where(att not in(`icd_z49_1`));
+        
+        icd_fd => eadv.[icd_%].dt.first().where(att not in(`icd_z49_1`));
+        
+        [[rb_id]] : { icd_ld!? => 1 },{=>0};    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Inpatient activity",
+                type:2,
+                is_reportable:0
+            }
+        );
+        
+        
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
+             -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='opa_sep';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Algorithm to assess Outpatient activity*/
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Outpatient activity with exclusions",
+                is_active:2
+            }
+        );
+        
+        
+        
+        op_ld => eadv.[enc_op_%].dt.last();
+        
+        op_n => eadv.[enc_op_%].dt.distinct_count();
+        
+        op_fd => eadv.[enc_op_%].dt.first();
+        
+        op_att => eadv.[enc_op_%].att.last();
+        
+        [[rb_id]] : { op_ld!? => 1 },{=>0};    
+        
+        #define_attribute(
+            [[rb_id]],
+            {
+                label:"Inpatient activity",
                 type:2,
                 is_reportable:0
             }

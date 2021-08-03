@@ -5,7 +5,7 @@ SET DEFINE OFF;
 TRUNCATE TABLE RMAN_RPT_TEMPLATE_BLOCKS;
 
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__masked__','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__masked__','dmg_vm','
  _      ____  ____  _  __ _____ ____ 
 / \__/|/  _ \/ ___\/ |/ //  __//  _ \
 | |\/||| / \||    \|   / |  \  | | \|
@@ -14,9 +14,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                                      
     ');
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_vm','
         <head>
-         <style>  
+         <style> 
+            .badge-purple {
+                background-color: #5032a8;
+                color: #ffffff;
+            }
             ol {
               list-style-type: none;
               counter-reset: item;
@@ -48,17 +52,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </head>
     ');
     
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_begin__','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_begin__','dmg_vm','
     <ol>
     
     ');
     
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_end__','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_end__','dmg_vm','
     </ol>
     
     ');
     
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_source','   
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_vm','   
             <div class="card">
                 <div class="card-body">
 
@@ -68,46 +72,50 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<dmg_source=999>><h4>No primary care</h4><</dmg_source=999>>                
 
                             <<phc_0>><span>Primary health care network:</span><</phc_0>>
-                            <<dmg_source=21>><span class="badge badge-info">NTG PCIS</span><</dmg_source=21>> 
-                            <<dmg_source=22>><span class="badge badge-info">NTG EACS</span><</dmg_source=22>>
-                            <<dmg_source=33>><span class="badge badge-warning">LAYNHAPUY</span><</dmg_source=33>>
-                            <<dmg_source=31>><span class="badge badge-warning">MIWATJ</span><</dmg_source=31>>
-                            <<dmg_source=32>><span class="badge badge-warning">ANYINGINYI</span><</dmg_source=32>>
-                            <<dmg_source=37>><span class="badge badge-warning">CONGRESS</span><</dmg_source=37>>
-                            <<dmg_source=38>><span class="badge badge-warning">CONGRESS</span><</dmg_source=38>>
-                            <<dmg_source=39>><span class="badge badge-warning">CONGRESS</span><</dmg_source=39>>
-                            <<dmg_source=41>><span class="badge badge-warning">CONGRESS</span><</dmg_source=41>>
-                            <<dmg_source=42>><span class="badge badge-warning">CONGRESS</span><</dmg_source=42>>
-                            <<dmg_source=36>><span class="badge badge-warning">WURLI</span><</dmg_source=36>>
-                            <<dmg_source=35>><span class="badge badge-warning">KWHB</span><</dmg_source=35>>
+                            <h4>
+                            <<dmg_source=21>><span class="badge badge-pill badge-info">NTG PCIS</span><</dmg_source=21>> 
+                            <<dmg_source=22>><span class="badge badge-pill badge-info">NTG EACS</span><</dmg_source=22>>
+                            <<dmg_source=33>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</dmg_source=33>>
+                            <<dmg_source=31>><span class="badge badge-pill badge-warning">MIWATJ</span><</dmg_source=31>>
+                            <<dmg_source=32>><span class="badge badge-pill badge-warning">ANYINGINYI</span><</dmg_source=32>>
+                            <<dmg_source=37>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=37>>
+                            <<dmg_source=38>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=38>>
+                            <<dmg_source=39>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=39>>
+                            <<dmg_source=41>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=41>>
+                            <<dmg_source=42>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=42>>
+                            <<dmg_source=36>><span class="badge badge-pill badge-warning">WURLI</span><</dmg_source=36>>
+                            <<dmg_source=35>><span class="badge badge-pill badge-warning">KWHB</span><</dmg_source=35>>
+                            </h4>
                             <br />
-                            <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS</span><</pcis_n>> 
-                            <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS</span><</eacs_n>>
-                            <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</laynhapuy_n>>
-                            <<miwatj_n>><span class="badge badge-pill badge-warning">MIWATJ</span><</miwatj_n>>
-                            <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS</span><</congress_n>>
-                            <<wurli_n>><span class="badge badge-pill badge-warning">WURLI</span><</wurli_n>>
-                            <<pcis_n>><i>PCIS encounters (N=<<pcis_n />>, last=<<pcis_ld />>)</i><</pcis_n>> 
-                            <<eacs_n>><i>EACS encounters (N=<<eacs_n />>, last=<<eacs_ld />>)</i><</eacs_n>>
-                            <<miwatj_n>><i>MIWATJ encounters (N=<<miwatj_n />>, last=<<miwatj_ld />>)</i><</miwatj_n>>
-                            <<laynhapuy_n>><i>LAYNHAPUY encounters (N=<<laynhapuy_n />>, last=<<laynhapuy_ld />>)</i><</laynhapuy_n>>
-                            <<anyinginyi_n>><i>ANYINGINYI encounters (N=<<anyinginyi_n />>, last=<<anyinginyi_ld  />>)</i><</anyinginyi_n>>
-                            <<congress_n>><i>CONGRESS encounters (N=<<congress_n />>, last=<<congress_ld />>)</i><</congress_n>>
-                            <<wurli_n>><i>WURLI encounters (N=<<wurli_n />>, last=<<wurli_ld />>)</i><</wurli_n>>
-                            <<loc_def>>Visited <b><<loc_def$loc_sublocality />></b>   (<<loc_mode_n />>/<<loc_n />>) which is <<mode_pct />>%<</loc_def>>
-                </div>            
+                            <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS+<<pcis_n />>[<<pcis_ld />>]</span><</pcis_n>> 
+                            <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS+<<eacs_n />>[<<eacs_ld />>]</span><</eacs_n>>
+                            <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY+<<laynhapuy_n />>[<<laynhapuy_ld />>]</span><</laynhapuy_n>>
+                            <<anyinginyi_n>><span class="badge badge-pill badge-warning">ANYINGINYI+<<anyinginyi_n />>[<<anyinginyi_ld />>]</span><</anyinginyi_n>>
+                            <<miwatj_n>><span class="badge badge-pill badge-warning">MIWATJ+<<miwatj_n />>[<<miwatj_ld />>]</span><</miwatj_n>>
+                            <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS+<<congress_n />>[<<congress_ld />>]</span><</congress_n>>
+                            <<kwhb_n>><span class="badge badge-pill badge-warning">KWHB+<<kwhb_n />>[<<kwhb_ld />>]</span><</kwhb_n>>
+                            <<wurli_n>><span class="badge badge-pill badge-warning">WURLI+<<wurli_n />>[<<wurli_n />>]</span><</wurli_n>>
+
+                            <p><<loc_def>><span class="badge badge-pill badge-secondary"><<loc_def$loc_sublocality />>(<<loc_mode_n />>/<<loc_n />>)<<mode_pct />>%</span><</loc_def>></p>
+                            <p>
+                                <<ipa_sep_ld>><span class="badge badge-pill badge-purple">Hosp+<<ipa_sep_n />>[<<ipa_sep_ld />>]</span><</ipa_sep_ld>>
+                                <<opa_sep_ld>><span class="badge badge-pill badge-purple">OP+<<opa_sep_n />>[<<opa_sep_ld />>]</span><</opa_sep_ld>>
+                            </p>
+                            
+                </div>  
+  
         </div>
         <hr />
     ');
 
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('tkc_drop_zone','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('tkc_drop_zone','dmg_vm','
     <tkc_drop_zone><div class="card">
         <div class="card-body">
             ..<br /><br/>..
         </div></div></tkc_drop_zone>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_feedback','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_feedback','dmg_vm','
     <div class="card">
       <div class="card-body">
          <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renal.csu@nt.gov.au&subject=TKC Feedback EID: <<eid />> HRN: <<hrn />>" class="btn btn-primary btn-sm">TKC Feedback</a>
@@ -142,7 +150,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
       
     </div>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_phc_null','dmg_source','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_phc_null','dmg_vm','
     <<dmg_source=999>>
         <div class="alert alert-warning" role="alert">
             <h5> 
