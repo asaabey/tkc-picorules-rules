@@ -21,6 +21,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 background-color: #5032a8;
                 color: #ffffff;
             }
+
+            
             ol {
               list-style-type: none;
               counter-reset: item;
@@ -72,7 +74,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<dmg_source=999>><h4>No primary care</h4><</dmg_source=999>>                
 
                             <<phc_0>><span>Primary health care network:</span><</phc_0>>
-                            <h4>
+                            
                             <<dmg_source=21>><span class="badge badge-pill badge-info">NTG PCIS</span><</dmg_source=21>> 
                             <<dmg_source=22>><span class="badge badge-pill badge-info">NTG EACS</span><</dmg_source=22>>
                             <<dmg_source=33>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</dmg_source=33>>
@@ -85,8 +87,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                             <<dmg_source=42>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=42>>
                             <<dmg_source=36>><span class="badge badge-pill badge-warning">WURLI</span><</dmg_source=36>>
                             <<dmg_source=35>><span class="badge badge-pill badge-warning">KWHB</span><</dmg_source=35>>
-                            </h4>
-                            <br />
+                            <span class="badge badge-pill badge-light">~~</span>
+                            
                             <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS+<<pcis_n />>[<<pcis_ld />>]</span><</pcis_n>> 
                             <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS+<<eacs_n />>[<<eacs_ld />>]</span><</eacs_n>>
                             <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY+<<laynhapuy_n />>[<<laynhapuy_ld />>]</span><</laynhapuy_n>>
@@ -95,12 +97,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                             <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS+<<congress_n />>[<<congress_ld />>]</span><</congress_n>>
                             <<kwhb_n>><span class="badge badge-pill badge-warning">KWHB+<<kwhb_n />>[<<kwhb_ld />>]</span><</kwhb_n>>
                             <<wurli_n>><span class="badge badge-pill badge-warning">WURLI+<<wurli_n />>[<<wurli_n />>]</span><</wurli_n>>
-
-                            <p><<loc_def>><span class="badge badge-pill badge-secondary"><<loc_def$loc_sublocality />>(<<loc_mode_n />>/<<loc_n />>)<<mode_pct />>%</span><</loc_def>></p>
-                            <p>
-                                <<ipa_sep_ld>><span class="badge badge-pill badge-purple">Hosp+<<ipa_sep_n />>[<<ipa_sep_ld />>]</span><</ipa_sep_ld>>
-                                <<opa_sep_ld>><span class="badge badge-pill badge-purple">OP+<<opa_sep_n />>[<<opa_sep_ld />>]</span><</opa_sep_ld>>
-                            </p>
+                            <span class="badge badge-pill badge-light">~</span>
+                            <<loc_def>><span class="badge badge-pill badge-secondary"><<loc_def$loc_sublocality />>(<<loc_mode_n />>/<<loc_n />>)<<mode_pct />>%</span><</loc_def>>                            
+                            
+                            <<ipa_sep_ld>><span class="badge badge-pill badge-light">~~</span><span class="badge badge-pill badge-purple">Hosp+<<ipa_sep_n />>[<<ipa_sep_ld />>]</span><</ipa_sep_ld>>
+                            <<opa_sep_ld>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-purple">OP+<<opa_sep_n />>[<<opa_sep_ld />>]</span><</opa_sep_ld>>
+                            
                             
                 </div>  
   
@@ -337,12 +339,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<tx_multi_current=1>><li>Functioning allograft, since <<tx_multi_fd />></li><</tx_multi_current=1>>
             <<tx_multi_current=1>><li>First graft <<tx_dt />></li><</tx_multi_current=1>>
             <<rrt_past=1>>
-                <li>Past renal replacement therapies</li>
+                <li>Past renal replacement therapies
                     <ol>
                         <<pd_dt>><li>Past peritoneal dialysis <<pd_dt />></li><</pd_dt>>
                         <<hd_dt>><li>Past haemo dialysis <<hd_dt />></li><</hd_dt>>
                         <<homedx_dt>><li>Home haemo dialysis <<homedx_dt />></li><</homedx_dt>>
                     </ol>
+                </li>
             <</rrt_past=1>>
     <</rrt=3>>
     ');
@@ -364,11 +367,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_3_metric','rrt_tx','
             <<cr_min_dt>><li>Best graft function creatinine <<cr_min_val />> on <<cr_min_dt />></li><</cr_min_dt>> 
             <<cr_last_dt>><li>Last recorded creatinine <<cr_last_val />> on <<cr_last_dt />></li><</cr_last_dt>>
+            <<enc_op_ld>><li>Last transplant clinic <<enc_op_ld />></li><</enc_op_ld>>
             <<rxn>>
             <li>Immunosuppressant regimen
                 <ol>
                     <<rx_h02ab>><li>Corticosteroid <<rx_h02ab />></li><</rx_h02ab>>
-                    <<rx_l04ad>><li>Calcineurin inhibitor <<rx_l04ad />></li><</rx_l04ad>>
+                    <<rx_l04ad>>
+                        <li>Calcineurin inhibitor <<rx_l04ad />>
+                        <ol>
+                            <<tac>><li>Tacrolimus C0 <<tdm_tac_val />>(<<tdm_tac_dt />>)</li><</tac>>
+                        </ol>
+                    </li><</rx_l04ad>>
                     <<rx_l04aa>><li>Antimetabolite or MTOR class agent <<rx_l04aa />></li><</rx_l04aa>>
                     <<rx_l04ax>><li>L04AX class agent <<rx_l04ax />></li><</rx_l04ax>>
                 </ol>
@@ -398,10 +407,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<c_n26_n26>><li>Unspecified contracted kidney <<c_n26_n27 />></li><</c_n26_n27>>
                     <<c_n30_n39>><li>Other diseases of the urinary system including bladder dysfunction<<c_n30_n39 />></li><</c_n30_n39>>
                     <<c_n40>><li>Benign prostatic hyperplasia <<c_n40 />></li><</c_n40>>
-                    <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_c_q60>>
-                    <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_c_q61>>
-                    <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_c_q62>>
-                    <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_c_q63>>
+                    <<c_q60>><li>Renal agenesis and other reduction defects of kidney <<c_q60 />></li><</c_q60>>
+                    <<c_q61>><li>Cystic kidney disease <<c_q61 />></li><</c_q61>>
+                    <<c_q62>><li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter <<c_q62 />></li><</c_q62>>
+                    <<c_q63>><li>Other congenital malformations of kidney<<c_q63 />></li><</c_q63>>
                     <<c_q64>><li>Other congenital malformations of urinary system<<c_q64 />></li><</c_q64>>
                     <<c_c64>><li>Renal cell carcinoma<<c_c64 />></li><</c_c64>>
                 </ol></li>
@@ -824,11 +833,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<cvra_cat=2>><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
         <<cvra_cat=3>><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
         
-        <<dm=1>><span class="badge badge-pill badge-warning">DM</span><</dm=1>>
-        <<esrd_risk=1>><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
-        <<esrd_risk=2>><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
-        <<esrd_risk=3>><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
-        <<esrd_risk=4>><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
+        <<dm=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">DM</span><</dm=1>>
+        <<esrd_risk=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
+        <<esrd_risk=2>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
+        <<esrd_risk=3>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
+        <<esrd_risk=4>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
    
       </div>
     </div>
@@ -1513,6 +1522,44 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <hr />
     <div class="syn_synopsis_box">
     <h5>LDL profile for the last <<dspan_y />> years</h5>
+
+    <div class="syn_container">
+
+
+    <svg height=<<g_graph_canvas_y />> width=<<g_graph_canvas_x />>>
+            <defs>
+                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="5" markerHeight="5">
+                  <circle cx="5" cy="5" r="10" fill="blue" />
+                </marker>
+                <linearGradient id="grad12" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:0.3" />
+                </linearGradient>
+            </defs>
+        <polyline points="<<xy_coords />>" 
+          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+          <line x1="0" x2="<<g_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+          <line x1="0" x2="<<g_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+          <rect x="0" y="<<line_target_upper_y />>"  width="<<g_graph_canvas_x />>" height="40" fill="url(#grad12)" />
+
+          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<g_graph_y_max />></text>
+          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<g_graph_y_min />></text>
+    </svg>
+    <br />
+
+    
+    </div>
+    </div>
+
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('graph_tac','graph_tac','
+    <hr />
+    <div class="syn_synopsis_box">
+    <h5>Tac profile </h5>
 
     <div class="syn_container">
 

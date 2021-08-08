@@ -56,6 +56,8 @@
 @"tkc-rman-insert-ruleblock-metrics";
 @"tkc-rman-insert-ruleblock-cube-accel.sql";
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
+@"tkc-rman-insert-ruleblock-cmidx-charlson.sql"
+
 
 -- added by patty for KPI's
 @"tkc-rman-insert-ruleblock-kpis.sql";

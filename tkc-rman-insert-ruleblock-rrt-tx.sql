@@ -47,15 +47,24 @@ BEGIN
         
         cr_last => eadv.lab_bld_creatinine._.lastdv().where(dt > tx_dt);
         
-        
+        enc_op_ld => eadv.enc_op_ren_rnt.dt.last();
         
         rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
         
+        tdm_tac => eadv.lab_bld_tdm_tacrolimus._.lastdv().where(dt > sysdate-365);
+        
         rx_l04aa => eadv.rxnc_l04aa.dt.last().where(val=1);
         
-        rx_l04ax => eadv.rxnc_l04aa.dt.last().where(val=1);
+        tdm_evl => eadv.lab_bld_tdm_everolimus._.lastdv().where(dt > sysdate-365);
         
-        rx_h02ab => eadv.rxnc_l04aa.dt.last().where(val=1);
+        rx_l04ax => eadv.rxnc_l04ax.dt.last().where(val=1);
+        
+        
+        rx_h02ab => eadv.rxnc_l04ab.dt.last().where(val=1);
+        
+        tac : { rx_l04ad!? and tdm_tac_val>2 =>1},{=>0};
+        
+        evl : { rx_l04aa!? and tdm_evl_val>2 =>1},{=>0};
         
         rxn : { coalesce(rx_l04ad,rx_l04aa,rx_l04ax,rx_h02ab)!? => 1},{=>0};
         

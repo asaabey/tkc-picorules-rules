@@ -303,11 +303,11 @@ BEGIN
                 txt:"External bindings"
         });
         
-          dod => rout_dmg.dod.val.bind();
+        dod => rout_dmg.dod.val.bind();
           
-          rrt => rout_rrt.rrt.val.bind(); 
+        rrt => rout_rrt.rrt.val.bind(); 
           
-          ckd => rout_ckd.ckd.val.bind();
+        ckd => rout_ckd.ckd.val.bind();
           
           #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
@@ -426,7 +426,7 @@ BEGIN
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
                         {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
           
-          ex_flag : {dod!? or rrt=1 or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
+          ex_flag : {dod!? or rrt>0 or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
           
           
           [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
