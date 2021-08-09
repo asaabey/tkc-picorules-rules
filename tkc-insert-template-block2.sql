@@ -1129,11 +1129,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_tbl1','ckd_labs','
-    <hr />
-    <div class="syn_synopsis_box">
-    <h5>Lab data panel</h5>
-    <table class="table table-striped">
-        <tbody>
+
         <tr>
             <td><strong>Lab</strong></td>
             <td></td>
@@ -1228,10 +1224,70 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <td><<uacr3_val>><strong><<uacr3_val />></strong> (<<uacr3_dt />>)<</uacr3_val>></td>
 
         </tr>
-        </tbody>
-    </table>
-    </div>
+
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_tbl4','ckd_labs_haem','
+        <tr>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>Hb (g/l)</td>
+            <td><<hb1_val>><strong><<hb1_val />></strong>(<<hb1_dt />>) <</hb1_val>></td>
+            <td><<hb2_val>><strong><<hb2_val />></strong>(<<hb2_dt />>) <</hb2_val>></td>
+            <td><<hb3_val>><strong><<hb3_val />></strong>(<<hb3_val />>) <</hb3_val>></td>
+        </tr>
+          <tr>
+            <td>Ferritin (ug/l)</td>
+            <td><<fer1_val>><strong><<fer1_val />></strong>(<<fer1_dt />>) <</fer1_val>></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>TSAT </td>
+            <td><<tsat1_val>><strong><<tsat1_val />></strong>(<<tsat1_dt />>) <</tsat1_val>></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>Platelets </td>
+            <td><<plt1_val>><strong><<plt1_val />></strong>(<<plt1_val />>) <</plt1_val>></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Neutrophils </td>
+            <td><<wcc_neut1_val>><strong><<wcc_neut1_val />></strong>(<<wcc_neut1_dt />>) <</wcc_neut1_val>></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Eosinophils </td>
+            <td><<wcc_eos1_val>><strong><<wcc_eos1_val />></strong>(<<wcc_eos1_dt />>) <</wcc_eos1_val>></td>
+            <td></td>
+            <td></td>
+        </tr>
+        
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__labs_panel_begin__','dmg','
+    <div class="syn_synopsis_box">
+    <h5>Lab data panel</h5>
+    <table class="table table-sm table-striped">
+        <tbody>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__labs_panel_end__','dmg','
+        </tbody></table></div>
+    ');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('frame_recm_begin','dmg','
     <hr />
     <div class="syn_recm_box">

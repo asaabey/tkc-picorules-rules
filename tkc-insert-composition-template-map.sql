@@ -36,8 +36,10 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='alert_tg4660'),304660);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='alert_tg2610'),302610);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cvra_banner_1'),310101);
+
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__synth_begin__'),600010);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__synth_end__'),699990);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='at_risk'),600910);
+
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='rrt_1_syn'),601001);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='rrt_2_syn'),601002);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='rrt_3_syn'),601003);
@@ -86,14 +88,13 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_haem'),606100);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cva_syn'),604110);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__synth_end__'),699990);
 
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='tkc_drop_zone'),609990);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='tkc_drop_zone'),609995);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='rx_syn_2'),651011);
 
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cvra_rec_1'),704100);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cvra_footnote_1'),804100);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_ckd_journey_1'),601105);
+
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='graph_egfr2'),651101);
 --Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='graph_tac'),653105);
@@ -103,17 +104,26 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='hba1c_graph'),652110);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='graph_bp'),653110);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='egfr_metrics'),651110);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl1'),661100);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl2'),661101);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_recm_begin'),700001);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_recm_end'),799999);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_notes_begin'),800001);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_notes_end'),899999);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl3'),661102);
---Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='dmg_source_summary'),tmplts_placement_order_seq.nextval);
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_ga'),661105);
 
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='at_risk'),600910);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__labs_panel_begin__'),661100);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl1'),661110);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl2'),661112);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl3'),661114);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl4'),661116);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__labs_panel_end__'),661199);
+
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_recm_begin'),700001);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cvra_rec_1'),704100);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_recm_end'),799999);
+
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_ckd_journey_1'),601105);
+
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_notes_begin'),800001);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cvra_footnote_1'),804100);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='frame_notes_end'),899999);
+
+
+
 
 
 --Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values (1,(select id from rman_rpt_template_blocks where template_name='rrt_cause_syn_1'),601007);

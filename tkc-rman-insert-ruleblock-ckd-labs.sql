@@ -191,7 +191,7 @@ BEGIN
       -- BEGINNING OF RULEBLOCK --
     
         
-    rb.blockid:='ckd_labs_cmp';
+    rb.blockid:='ckd_labs_haem';
    
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
@@ -207,21 +207,24 @@ BEGIN
             }
         );
 
-       calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
-       calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
-       calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
-       
-       phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
-       phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
-       phos3 => eadv.lab_bld_phosphate.val.lastdv(2).where(dt>sysdate-730);
+       hb1 => eadv.lab_bld_hb._.lastdv().where(dt>sysdate-730);
+       hb2 => eadv.lab_bld_hb._.lastdv(1).where(dt>sysdate-730);
+       hb3 => eadv.lab_bld_hb._.lastdv(2).where(dt>sysdate-730);
 
-       pth1 => eadv.lab_bld_pth.val.lastdv().where(dt>sysdate-730);
-       pth2 => eadv.lab_bld_pth.val.lastdv(1).where(dt>sysdate-730);
-       pth3 => eadv.lab_bld_pth.val.lastdv(2).where(dt>sysdate-730);
+       plt1 => eadv.lab_bld_platelets._.lastdv().where(dt>sysdate-730);
+        
+       wcc_neut1 => eadv.lab_bld_wcc_neutrophils._.lastdv().where(dt>sysdate-730);
+        
+       wcc_eos1 => eadv.lab_bld_wcc_eosinophils._.lastdv().where(dt>sysdate-730);
        
+       fer1 => eadv.lab_bld_ferritin._.lastdv().where(dt>sysdate-730);
+        
+       crp1 => eadv.lab_bld_crp._.lastdv().where(dt>sysdate-730);
+        
+       tsat1 => eadv.lab_bld_tsat._.lastdv().where(dt>sysdate-730);
        
-      
-       [[rb_id]] : {coalesce(calcium1_val,0)>0 and coalesce(calcium2_val,0)>0 => 1 },{=>0};
+             
+       [[rb_id]] : {coalesce(hb1_val,0)>0 => 1 },{=>0};
        
        
      
