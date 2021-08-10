@@ -1368,9 +1368,10 @@ BEGIN
         
         mm2 : {assert_level<111100=>1},{=>0};
         
-        esrd_risk : { cga_g_val = 6 or (cga_g_val=5 and cga_a_val >= 3) => 4},
-                    { cga_g_val = 5 or (cga_g_val=4 and cga_a_val >= 2) => 3},
-                    { (cga_g_val = 4) or (cga_g_val=3 and cga_a_val=2) or (cga_g_val>=1 and cga_a_val=3) => 2},
+        
+        esrd_risk : { cga_g_val >= 5 or (cga_g_val >=4 and cga_a_val >= 2)  or (cga_g_val >=3 and cga_a_val >=3 ) => 4},
+                    { cga_g_val >= 4 or (cga_g_val >=3 and cga_a_val >= 2)  or (cga_g_val >=1 and cga_a_val >=3 ) => 3},
+                    { (cga_g_val = 3) or (cga_g_val>=1 and cga_a_val=2)  => 2},
                     { ckd>=1 => 1};
         
         #doc(,

@@ -54,16 +54,32 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </head>
     ');
     
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_begin__','dmg_vm','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_left_begin__','dmg_vm','
+    <div id="column1" style="min-width: 300px; max-width: 450px;">
     <ol>
-    
     ');
     
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_end__','dmg_vm','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_left_end__','dmg_vm','
     </ol>
-    
+    </div>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_right_begin__','dmg_vm','
+    <div id="column2" style="min-width: 300px; max-width: 450px;">
+    <br />
+    <ol>
     ');
     
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__synth_right_end__','dmg_vm','
+    </ol>
+    </div>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__frame_begin__','dmg_vm','
+    <div id="outerflex" style="display:flex; flex-wrap: wrap; justify-content: flex-start;">
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__frame_end__','dmg_vm','
+    </div>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_source_summary','dmg_vm','   
             <div class="card">
                 <div class="card-body">

@@ -92,7 +92,7 @@ BEGIN
             
             txt_upper_y : { 1=1 => line_max_y -5};
             
-            txt_lower_y : { 1=1 => line1_y2 - 5};
+            txt_lower_y : { 1=1 => line1_y2 - 15};
             
             
             txt_slope1_x : {1=1 => round((line1_x1 + ((egfr_l_dt-egfr60_last_dt)/2))*x_scale,0)};
