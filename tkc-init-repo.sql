@@ -7,6 +7,7 @@
 @"tkc-rman-insert-ruleblock-dmg.sql";
 @"tkc-rman-insert-ruleblock-ipa.sql";
 @"tkc-rman-insert-ruleblock-opa.sql";
+@"tkc-rman-insert-ruleblock-pregnancy.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-c.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
