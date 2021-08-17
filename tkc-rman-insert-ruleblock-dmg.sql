@@ -415,6 +415,10 @@ BEGIN
         
         opa_sep_n => rout_opa_sep.op_n.val.bind();
         
+        icu_fd => rout_ipa_icu.icu_fd.val.bind();
+        
+        icu_ld => rout_ipa_icu.icu_ld.val.bind();
+        
         [[rb_id]] : { .=> dmg_source};    
         
        #define_attribute(
@@ -695,9 +699,17 @@ BEGIN
         
         icu_max_los => eadv.adm_icu._.maxldv(); 
         
+        cvvhf_ld => eadv.[caresys_1310004,caresys_1310002].dt.last();
+        
+        cvvhf_fd => eadv.[caresys_1310004,caresys_1310002].dt.first();
+        
         dt_diff : { icu_los_val<icu_max_los_val=>1},{=>0};
         
-        [[rb_id]] : { coalesce(icu_vent_los_dt,icu_los_dt)!? => 1 },{=>0};    
+        icu_ld : {.=> least_date(cvvhf_ld)};
+        
+        icu_fd : {.=> least_date(cvvhf_fd)};
+        
+        [[rb_id]] : { coalesce(icu_vent_los_dt,icu_los_dt,cvvhf_ld)!? => 1 },{=>0};    
         
         #define_attribute(
             [[rb_id]],

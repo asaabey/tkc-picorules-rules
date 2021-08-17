@@ -210,6 +210,16 @@ BEGIN
            
             rxn : {coalesce(rxn_ap,rxn_anticoag,rxn_bb,rxn_raas,rxn_statin,rxn_c10_ax)!? =>1};
             
+            #doc(,
+                {
+                    txt: "Investigations"
+                }
+            ); 
+            
+            echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
+            
+            cardang_ld => rout_cd_cardiac_ix.cardang_ld.val.bind();
+            
             [[rb_id]] : {cad=1 =>1},{=>0};
             
             #define_attribute(

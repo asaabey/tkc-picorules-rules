@@ -5,6 +5,8 @@
 --Init rules
 @"tkc-rman-insert-ruleblock-core.sql";
 @"tkc-rman-insert-ruleblock-dmg.sql";
+@"tkc-rman-insert-ruleblock-ipa.sql";
+@"tkc-rman-insert-ruleblock-opa.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-c.sql";
 @"tkc-rman-insert-ruleblock-ckd2.sql";
@@ -14,6 +16,7 @@
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
 
+@"tkc-rman-insert-ruleblock-cd-cardiac-cad.ix";
 @"tkc-rman-insert-ruleblock-cd-cardiac-cad.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-vhd.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-chf.sql";

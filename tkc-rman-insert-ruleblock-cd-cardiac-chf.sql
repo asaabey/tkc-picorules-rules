@@ -47,6 +47,7 @@ BEGIN
         
         noscm => eadv.[icd_i42_8,icd_42_9].dt.min();
         
+        echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
             
         chf : {coalesce(chf_code,dcm,hocm,rcm,ethocm,noscm)!? =>1},{=>0};
         

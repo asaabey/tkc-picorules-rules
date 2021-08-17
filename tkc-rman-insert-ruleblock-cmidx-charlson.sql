@@ -136,6 +136,8 @@ BEGIN
                     
         [[rb_id]] : { . => dmc_w + plg_w + ren_w + ca_w + sld_w + met_w + hiv_w + mi_w + 
                         chf_w + pvd_w + cva_w + dem_w + cpd_w +pud_w + rhe_w + mld_w + dmu_w },{=>0};
+                        
+        cci_cat : {cmidx_charlson >=4 =>3 },{cmidx_charlson >=2 => 2},{=>1};
         
         #define_attribute([[rb_id]],
             { 

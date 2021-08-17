@@ -99,9 +99,8 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Rule block to determine Tx metrics",
-                is_active:2,
-                filter: "SELECT eid FROM rout_rrt WHERE rrt IN (1,4)"
+                description: "Rule block to determine Fistula intervention",
+                is_active:2            
                 
             }
         );
@@ -113,6 +112,12 @@ BEGIN
         );
         
         rrt => rout_rrt.rrt.val.bind();
+        
+        acc_side => eadv.hd_access_side._.lastdv();
+        
+        acc_type => eadv.hd_access_type._.lastdv();
+        
+        acc_detail : {coalesce(acc_side_val,acc_type_val)!? => 1},{=>0};
         
         avf_dt => rout_ckd_access.avf_dt.val.bind();
         
@@ -139,7 +144,7 @@ BEGIN
                         
         av_iv : {av_plasty_ld!? => 1},{=>0};
         
-        [[rb_id]] : { rrt in (1,4) and (av_surv_ld!? or avf_dt!?)=>1},{=>0};
+        [[rb_id]] : { rrt in (1,4) and (av_surv_ld!? or avf_dt!? or acc_detail=1)=>1},{=>0};
         
         #define_attribute(
             [[rb_id]] ,
@@ -376,90 +381,6 @@ BEGIN
     
     -- END OF RULEBLOCK --
 
- -- BEGINNING OF RULEBLOCK --
-    
-        
-    rb.blockid:='rrt_hd_location';
-
-    
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
-    
-    rb.picoruleblock:='
-    
-        /* Rule block to determine Haemodialysis location or facility*/
-        
-        #define_ruleblock([[rb_id]],
-            {
-                description: "Rule block to determine Haemodialysis",
-                is_active:2
-                
-            }
-        );
-
-        
-        
-        rrt => rout_rrt.rrt.val.bind();
-        
-        #doc(,{
-                txt : "Determine localtion from icd z49 or mbs 13105"
-        });
-        
-        hd_code_1_dt => eadv.[icd_z49_1,mbs_13105].dt.last().where(dt > sysdate-60);
-        
-        loc_1 => eadv.dmg_location.val.last().where(dt = hd_code_1_dt);
-        
-        loc_1s : {.=>substr(loc_1,4)};
-        
-        
-        hd_code_2_dt => eadv.[icd_z49_1,mbs_13105].dt.last(1).where(dt > sysdate-60);
-        
-        loc_2 => eadv.dmg_location.val.last().where(dt = hd_code_2_dt);
-        
-        loc_2s : {.=>substr(loc_2,4)};
-        
-        hd_code_3_dt => eadv.[icd_z49_1,mbs_13105].dt.last(2).where(dt > sysdate-60);
-        
-        loc_3 => eadv.dmg_location.val.last().where(dt = hd_code_3_dt);
-        
-        loc_3s : {.=>substr(loc_3,4)};
-        
-        loc_fixed : {loc_1s=loc_2s and loc_1s=loc_3s=>1},{=>0};
-        
-        loc_1_fd => eadv.dmg_location.dt.first(where val=loc_1);
-        
-        loc_1_n => eadv.dmg_location.dt.count(where val=loc_1);
-        
-        loc_hd_tehs_nru : { loc_1s = 720600013032  => 1},{=>0};
-        
-        loc_hd_tehs_7ad : { loc_1s = 720600015062  => 1},{=>0};
-        
-        
-        [[rb_id]] : {loc_1!? =>1},{=>0};
-        
-       
-        #define_attribute(
-            loc_hd_tehs_nru,
-            {
-                label:"Prevalent Nightcliff satellite dialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-        #define_attribute(
-            loc_hd_tehs_7ad,
-            {
-                label:"Prevalent 7A satellite dialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-    ';
-    
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    -- END OF RULEBLOCK --
 
 
 END;

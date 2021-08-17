@@ -57,9 +57,9 @@ BEGIN
             egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt).where(dt > sysdate - 3650);
 
             
-            egfr_graph_canvas_x : {1=1 => 600};
+            egfr_graph_canvas_x : {1=1 => 450};
             
-            egfr_graph_canvas_y : {1=1 => 400};
+            egfr_graph_canvas_y : {1=1 => 300};
             
             egfr_graph_y_max : {1=1 => egfr_max_val + 10 };
             

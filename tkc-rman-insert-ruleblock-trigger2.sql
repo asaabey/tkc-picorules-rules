@@ -776,9 +776,9 @@ BEGIN
         
         rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
         
-        ex_flag : {dod!? => 1},{=>0};
+        ex_flag : {dod!? or dmg_source=999 => 1},{=>0};
           
-        [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
+        [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 or csu_act_dt!? => 1},{=>0};
         
         #define_attribute(
                 [[rb_id]],

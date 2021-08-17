@@ -68,6 +68,8 @@ BEGIN
         
         dob => eadv.dmg_dob.dt.max();
         
+        cci_cat => rout_cmidx_charlson.cci_cat.val.bind();
+        
         male => eadv.dmg_gender.val.max();
         
         cabg => eadv.[icd_z95_1%,icpc_k54007].dt.count(0);

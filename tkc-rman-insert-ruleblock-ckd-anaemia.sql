@@ -82,7 +82,7 @@ BEGIN
         
         rbc_mcv => eadv.lab_bld_rbc_mcv._.lastdv().where(dt>sysdate-60);
         
-        esa => eadv.rxnc_b03xa._.lastdv().where(dt>sysdate-365);
+        esa => eadv.rxnc_b03xa._.lastdv().where( val=1);
         
         b05_ld => eadv.[rxnc_b05cb,rxnc_b05xa].dt.max().where(val=1);
         
