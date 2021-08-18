@@ -58,9 +58,10 @@
 @"tkc-rman-insert-ruleblock-graph-bp.sql";
 @"tkc-rman-insert-ruleblock-graph-hba1c.sql";
 @"tkc-rman-insert-ruleblock-metrics";
-@"tkc-rman-insert-ruleblock-cube-accel.sql";
+--@"tkc-rman-insert-ruleblock-cube-accel.sql";
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
 @"tkc-rman-insert-ruleblock-cmidx-charlson.sql"
+@"tkc-rman-insert-ruleblock-cm-viewmodel.sql"
 
 
 -- added by patty for KPI's

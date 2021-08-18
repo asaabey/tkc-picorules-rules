@@ -126,7 +126,9 @@ BEGIN
                 txt : "Home-haemodialysis ICPC2p coding"
         });
         
-        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_rdu_xwd,mbs_13105].dt.min();
+        homedx_icpc_dt => eadv.[icpc_u59j99].dt.min();
+        
+        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp].dt.min();
         
         
         ren_enc => eadv.[enc_op%].dt.max();
@@ -137,13 +139,14 @@ BEGIN
             }
         );
         
-        [[rb_id]]:{hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 and tx_active=0 => 1},
+        /* adjusted switch order to catpure home haemo 18-08-21*/
+        [[rb_id]]:{homedx_dt > nvl(greatest_date(hd_icpc_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
+            {hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 and tx_active=0 => 1},
             {hd_icpc_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and coalesce(hd_dt,mbs_13105_dt_max)>sysdate-90 =>1},
             {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_ex_dt? and tx_multi_current=0 => 2},
             {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
             {tx_dt!? and tx_multi_current=1 => 3},
             {tx_active=1 => 3},
-            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
             {=>0};
         #doc(,
             {

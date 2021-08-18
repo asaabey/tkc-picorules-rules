@@ -833,53 +833,26 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<cardang_ld>><ol><li>Cardiac angiogram <<cardang_ld />></li></ol><</cardang_ld>>
             </li>
     ');
---Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_syn_1','cvra','
---    <br />
---    <ol>
---        <li><b>Cardiovascular risk (CVR)</b></li>
---        <ol>
---        <<risk_high_ovr=0>>
---           <li>CVR status was calculated using FRE [4.1]</li>
---            <<risk_5>><li>Composite 5 year CVD risk is <<risk_5 />>%</li><</risk_5>>
---        <</risk_high_ovr=0>>
---        <<cvra_cat=3>><li>The composite 5 year CVD risk is high</li><</cvra_cat=3>>
---        <<cvra_cat=2>><li>The composite 5 year CVD risk is moderate</li><</cvra_cat=2>>
---        <<cvra_cat=1>><li>The composite 5 year CVD risk is low</li><</cvra_cat=1>> 
---        <<risk_high_ovr>><li>The patient meets criteria for high CVR without calculation
---        <ol>
---            <<cvd_prev>><li>Previously documented CVD event</li><</cvd_prev>>
---            <<dm60>><li>Diabetes and age more than 60</li><</dm60>>
---            <<dmckd1>><li>Diabetes and albuminuria</li><</dmckd1>>
---            <<ckd3>><li>CKD 3b or above</li><</ckd3>>
---            <<tc7>><li>Total cholesterol more than 7.5</li><</tc7>>
---            <<sbp180>><li>Systolic bp more than 180mmHg</li><</sbp180>>
---            <<age74>><li>Age more than 74 and ATSI</li><</age74>>
---        </ol></li><</risk_high_ovr>>
---        <<dmg_source=1>>
---            <<cp_hicvr=0>><li>There is no PCIS CVR careplan</li><</cp_hicvr=0>>
---            <<cp_hicvr=1>><li>A PCIS high CVR careplan is already in place</li><</cp_hicvr=1>>
---        <</dmg_source=1>>
---        </ol>
---    </ol>
---    ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_banner_1','cvra','
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_banner_1','cm_vm','
     <div class="card">
       <div class="card-body">
-        <<cvra_cat=2>><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
-        <<cvra_cat=3>><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
+        <<cmcat_charlson=1>><span class="badge badge-pill badge-success">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=1>>
+        <<cmcat_charlson=2>><span class="badge badge-pill badge-warning">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=2>>
+        <<cmcat_charlson=3>><span class="badge badge-pill badge-danger">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=3>>
         
-        <<dm=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">DM</span><</dm=1>>
+        <<cvra_cat=2>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
+        <<cvra_cat=3>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
+        
+        <<dm=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">DM</span><</dm=1>>
         <<esrd_risk=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
         <<esrd_risk=2>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
         <<esrd_risk=3>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
         <<esrd_risk=4>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
-        
-        
-   
+        <<cad>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">CAD</span><</cad>>
+        <<rrt_flag>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD~RRT</span><</rrt_flag>>
       </div>
     </div>
-    
-    
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_vhd_syn','cd_cardiac_vhd','
            <br />
