@@ -17,11 +17,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__header__','dmg_vm','
         <head>
          <style> 
-            .badge-purple {
-                background-color: #5032a8;
-                color: #ffffff;
-            }
-
+            .badge-purple {color: #5032a8; background-color: #ffffff ;border: 2px solid;}
+            
+            .badge-danger {color: #c90202; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+            
+            .badge-warning {color: #2596be; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+            
+            .badge-success {color: #32a852; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+            
+            .badge-teal {color: #08768c; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+            
             
             ol {
               list-style-type: none;
@@ -101,8 +106,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                           
                             <<phc_0>><span>Primary health care network:</span><</phc_0>>
                             
-                            <<dmg_source=21>><span class="badge badge-pill badge-info">NTG PCIS</span><</dmg_source=21>> 
-                            <<dmg_source=22>><span class="badge badge-pill badge-info">NTG EACS</span><</dmg_source=22>>
+                            <<dmg_source=21>><span class="badge badge-pill badge-teal">NTG PCIS</span><</dmg_source=21>> 
+                            <<dmg_source=22>><span class="badge badge-pill badge-teal">NTG EACS</span><</dmg_source=22>>
                             <<dmg_source=33>><span class="badge badge-pill badge-warning">LAYNHAPUY</span><</dmg_source=33>>
                             <<dmg_source=31>><span class="badge badge-pill badge-warning">MIWATJ</span><</dmg_source=31>>
                             <<dmg_source=32>><span class="badge badge-pill badge-warning">ANYINGINYI</span><</dmg_source=32>>
@@ -113,28 +118,27 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                             <<dmg_source=42>><span class="badge badge-pill badge-warning">CONGRESS</span><</dmg_source=42>>
                             <<dmg_source=36>><span class="badge badge-pill badge-warning">WURLI</span><</dmg_source=36>>
                             <<dmg_source=35>><span class="badge badge-pill badge-warning">KWHB</span><</dmg_source=35>>
-                            <span class="badge badge-pill badge-light">~~</span>
-                            
+                            <span>~~</span>
                           
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_loc_summary','dmg_vm','   
-                            <<pcis_n>><span class="badge badge-pill badge-info">NTG PCIS+<<pcis_n />>[<<pcis_ld />>]</span><</pcis_n>> 
-                            <<eacs_n>><span class="badge badge-pill badge-info">NTG EACS+<<eacs_n />>[<<eacs_ld />>]</span><</eacs_n>>
+                            <<pcis_n>><span class="badge badge-pill badge-teal">NTG PCIS+<<pcis_n />>[<<pcis_ld />>]</span><</pcis_n>> 
+                            <<eacs_n>><span class="badge badge-pill badge-teal">NTG EACS+<<eacs_n />>[<<eacs_ld />>]</span><</eacs_n>>
                             <<laynhapuy_n>><span class="badge badge-pill badge-warning">LAYNHAPUY+<<laynhapuy_n />>[<<laynhapuy_ld />>]</span><</laynhapuy_n>>
                             <<anyinginyi_n>><span class="badge badge-pill badge-warning">ANYINGINYI+<<anyinginyi_n />>[<<anyinginyi_ld />>]</span><</anyinginyi_n>>
                             <<miwatj_n>><span class="badge badge-pill badge-warning">MIWATJ+<<miwatj_n />>[<<miwatj_ld />>]</span><</miwatj_n>>
                             <<congress_n>><span class="badge badge-pill badge-warning">CONGRESS+<<congress_n />>[<<congress_ld />>]</span><</congress_n>>
                             <<kwhb_n>><span class="badge badge-pill badge-warning">KWHB+<<kwhb_n />>[<<kwhb_ld />>]</span><</kwhb_n>>
                             <<wurli_n>><span class="badge badge-pill badge-warning">WURLI+<<wurli_n />>[<<wurli_n />>]</span><</wurli_n>>
-                            <span class="badge badge-pill badge-light">~</span>
-                            <<loc_def>><span class="badge badge-pill badge-secondary"><<loc_def$loc_sublocality />>(<<loc_mode_n />>/<<loc_n />>)<<mode_pct />>%</span><</loc_def>>                                                        
+                            <span>~</span>
+                            <<loc_def>><span class="badge badge-pill badge-warning"><<loc_def$loc_sublocality />>(<<loc_mode_n />>/<<loc_n />>)<<mode_pct />>%</span><</loc_def>>                                                        
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('dmg_hosp_summary','dmg_vm','   
                           
-                            <<ipa_sep_ld>><span class="badge badge-pill badge-light">~~</span><span class="badge badge-pill badge-purple">Hosp+<<ipa_sep_n />>[<<ipa_sep_ld />>]</span><</ipa_sep_ld>>
-                            <<icu_ld>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ICU +[<<icu_ld />>]</span><</icu_ld>>
-                            <<opa_sep_ld>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-purple">OP+<<opa_sep_n />>[<<opa_sep_ld />>]</span><</opa_sep_ld>>
-                            <<preg_1y_f>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-info">Pregnancy+[<<preg_ld />>]</span><</preg_1y_f>>
+                            <<ipa_sep_ld>><span>~~</span><span class="badge badge-pill badge-purple">Hosp+<<ipa_sep_n />>[<<ipa_sep_ld />>]</span><</ipa_sep_ld>>
+                            <<icu_ld>><span>~</span><span class="badge badge-pill badge-danger">ICU +[<<icu_ld />>]</span><</icu_ld>>
+                            <<opa_sep_ld>><span>~</span><span class="badge badge-pill badge-purple">OP+<<opa_sep_n />>[<<opa_sep_ld />>]</span><</opa_sep_ld>>
+                            <<preg_1y_f>><span>~</span><span class="badge badge-pill badge-info">Pregnancy+[<<preg_ld />>]</span><</preg_1y_f>>
     ');
 
 
@@ -841,16 +845,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<cmcat_charlson=2>><span class="badge badge-pill badge-warning">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=2>>
         <<cmcat_charlson=3>><span class="badge badge-pill badge-danger">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=3>>
         
-        <<cvra_cat=2>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
-        <<cvra_cat=3>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
+        <<cvra_cat=2>><span>~</span><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
+        <<cvra_cat=3>><span>~</span><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
         
-        <<dm=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">DM</span><</dm=1>>
-        <<esrd_risk=1>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
-        <<esrd_risk=2>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
-        <<esrd_risk=3>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
-        <<esrd_risk=4>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
-        <<cad>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">CAD</span><</cad>>
-        <<rrt_flag>><span class="badge badge-pill badge-light">~</span><span class="badge badge-pill badge-danger">ESRD~RRT</span><</rrt_flag>>
+        <<dm=1>><span>~</span><span class="badge badge-pill badge-danger">DM</span><</dm=1>>
+        <<esrd_risk=1>><span>~</span><span class="badge badge-pill badge-success">ESRD Risk 1</span><</esrd_risk=1>>
+        <<esrd_risk=2>><span>~</span><span class="badge badge-pill badge-warning">ESRD Risk 2</span><</esrd_risk=2>>
+        <<esrd_risk=3>><span>~</span><span class="badge badge-pill badge-danger">ESRD Risk 3</span><</esrd_risk=3>>
+        <<esrd_risk=4>><span>~</span><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
+        <<cad>><span>~</span><span class="badge badge-pill badge-danger">CAD</span><</cad>>
+        <<rrt_flag>><span>~</span><span class="badge badge-pill badge-danger">ESRD~RRT</span><</rrt_flag>>
       </div>
     </div>
     ');
@@ -1810,15 +1814,15 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </li>
     ');
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ipa_icu','ipa_icu','
-    <br />
-    <li><b>Admission to Intensive care</b>
-        <ol>
-            <<icu_los_dt>><li>ICU bed days <<icu_los_val />>(<<icu_los_dt />>)</li><</icu_los_dt>>
-            <<icu_vent_los_dt>><li>Ventilation days <<icu_vent_los_val/>>(<<icu_vent_los_dt />>)</li><</icu_vent_los_dt>>
-        </ol>
-    </li>
-    ');
+--Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ipa_icu','ipa_icu','
+--    <br />
+--    <li><b>Admission to Intensive care</b>
+--        <ol>
+--            <<icu_los_dt>><li>ICU bed days <<icu_los_val />>(<<icu_los_dt />>)</li><</icu_los_dt>>
+--            <<icu_vent_los_dt>><li>Ventilation days <<icu_vent_los_val/>>(<<icu_vent_los_dt />>)</li><</icu_vent_los_dt>>
+--        </ol>
+--    </li>
+--    ');
 
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_ra','cd_rheum_ra','

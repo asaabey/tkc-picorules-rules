@@ -139,7 +139,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl4'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__labs_panel_end__'),tmplts_placement_order_seq.nextval);
 
-Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ipa_icu'),tmplts_placement_order_seq.nextval);
+--Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ipa_icu'),tmplts_placement_order_seq.nextval);
 
 
 
