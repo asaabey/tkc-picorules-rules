@@ -70,7 +70,7 @@ BEGIN
         #define_attribute(
             gender,
             {
-                label:"Gender [male=1 female=2]",
+                label:"Gender [male=1 female=0]",
                 type:12,
                 is_reportable:1
             }

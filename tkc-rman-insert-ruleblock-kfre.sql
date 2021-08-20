@@ -51,13 +51,17 @@ BEGIN
         );
        
         
-        dob => eadv.dmg_dob.dt.max();
         
-        male => eadv.dmg_gender.val.max();
         
-        egfr => eadv.lab_bld_egfr_c.val.lastdv();
+        dob => rout_dmg.dob.val.bind();
         
-        uacr => eadv.lab_ua_acr.val.lastdv();
+        male => rout_dmg.gender.val.bind();
+        
+        
+        
+        egfr => eadv.lab_bld_egfr_c._.lastdv().where(dt > sysdate-365);
+        
+        uacr => eadv.lab_ua_acr._.lastdv().where(dt > sysdate-365);
         
 
         
@@ -68,32 +72,28 @@ BEGIN
             
         );
         
-        kfre4v_ap : { least(dob,egfr_dt,uacr_dt) is not null and male is not null and ckd>=3 and ckd<5 => 1},{=>0};
-        
-        egfr_1 : { 1=1 => egfr_val};
         
         
-        ln_uacr_1 : { nvl(uacr_val,0)>0  => ln(uacr_val * 8.84)};
+        kfre4v_ap : { coalesce(egfr_val,0)>0 and coalesce(uacr_val,0)>1 and male!? and ckd>=3 and ckd<5 => 1},{=>0};
         
         
-        age : { 1=1 => round(((egfr_dt-dob)/365.25),0)};
         
-        #doc(,
-            {
+        
+        age : { . => round(((egfr_dt-dob)/365.25),0)};
+        
+        #doc(,{
                 txt:"Apply KFRE 4 variable equation. Note: KFRE is not validated in Indigenous populations.",
                 cite: "kfre_ref1, kfre_ref2"
-            }
-            
-        );
+        });
         
         
-        kfre4v_exp : { kfre4v_ap =1 => exp((-0.5567*(egfr_1/5-7.222))+(0.2467*(male - 0.5642))+(0.451*(ln_uacr_1-5.137))-(0.2201*(age/10-7.036)))},{=>0};
+        kfre4v_exp : { kfre4v_ap =1 => exp((-0.5567*(egfr_val/5-7.222))+(0.2467*(male - 0.5642))+(0.451*(ln(uacr_val * 8.84)-5.137))-(0.2201*(age/10-7.036)))},{=>0};
         
         kfre4v_2yr : { kfre4v_ap =1 => round(1-power(0.9832,kfre4v_exp) ,2)};
         
         kfre4v_5yr : { kfre4v_ap =1 => round(1-power(0.9365,kfre4v_exp) ,2)};
         
-        [[rb_id]] : { 1=1 => kfre4v_ap};
+        [[rb_id]] : { . => kfre4v_ap};
         
                   
     ';
