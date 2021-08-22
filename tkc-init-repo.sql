@@ -17,7 +17,7 @@
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
 
-@"tkc-rman-insert-ruleblock-cd-cardiac-cad.ix";
+@"tkc-rman-insert-ruleblock-cd-cardiac-ix.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-cad.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-vhd.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-chf.sql";
@@ -57,8 +57,8 @@
 @"tkc-rman-insert-ruleblock-graph.sql";
 @"tkc-rman-insert-ruleblock-graph-bp.sql";
 @"tkc-rman-insert-ruleblock-graph-hba1c.sql";
-@"tkc-rman-insert-ruleblock-metrics";
---@"tkc-rman-insert-ruleblock-cube-accel.sql";
+@"tkc-rman-insert-ruleblock-metrics.sql";
+@"tkc-rman-insert-ruleblock-cube-accel.sql";
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
 @"tkc-rman-insert-ruleblock-cmidx-charlson.sql"
 @"tkc-rman-insert-ruleblock-cm-viewmodel.sql"
