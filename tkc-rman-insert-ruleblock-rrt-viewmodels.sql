@@ -138,7 +138,7 @@ BEGIN
                 is_reportable:1,
                 type:2
         });
-       #define_attribute(phos1_val,{
+       #define_attribute(phosphate1_val,{
                 label:"Dialysis panel Labs phosphate",
                 is_reportable:1,
                 type:2
@@ -173,7 +173,7 @@ BEGIN
                 is_reportable:1,
                 type:2
        });
-       #define_attribute(fer_val,{
+       #define_attribute(fer1_val,{
                 label:"Dialysis panel Labs ferritin",
                 is_reportable:1,
                 type:2
