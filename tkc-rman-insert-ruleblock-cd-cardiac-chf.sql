@@ -35,7 +35,7 @@ BEGIN
                 }
             );
             
-        chf_code => eadv.[icd_i50_%],icpc_k77%].dt.min();
+        chf_code => eadv.[icd_i50_%,icpc_k77%].dt.min();
         
         dcm => eadv.[icd_i42_0].dt.min();
         
