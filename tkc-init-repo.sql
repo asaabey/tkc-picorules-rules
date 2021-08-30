@@ -23,6 +23,7 @@
 @"tkc-rman-insert-ruleblock-cd-cardiac-chf.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-vte.sql";
 @"tkc-rman-insert-ruleblock-cd-cardiac-misc.sql";
+@"tkc-rman-insert-ruleblock-cd-cardiac-device.sql";
 
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
 @"tkc-rman-insert-ruleblock-cd-dyslip.sql";

@@ -45,7 +45,7 @@ BEGIN
         
         ethocm => eadv.[icd_i42_6].dt.min();
         
-        noscm => eadv.[icd_i42_8,icd_42_9].dt.min();
+        noscm => eadv.[icd_i42_8,icd_42_9,icpc_k84041].dt.min();
         
         echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
             
