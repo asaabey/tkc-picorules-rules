@@ -209,22 +209,25 @@ BEGIN
             {
                 description: "Rule block to gather lab tests",
                 is_active:2,
-                
             }
         );
 
-       egfr1 => eadv.lab_bld_egfr_c.val.lastdv().where(dt>sysdate-730);
-       egfr2 => eadv.lab_bld_egfr_c.val.lastdv(1).where(dt>sysdate-730);
-       egfr3 => eadv.lab_bld_egfr_c.val.lastdv(2).where(dt>sysdate-730);
+        rrt => rout_rrt.rrt.val.bind();
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        egfr1 => eadv.lab_bld_egfr_c._.lastdv().where(dt>sysdate-730);
+        egfr2 => eadv.lab_bld_egfr_c._.lastdv(1).where(dt>sysdate-730);
+        egfr3 => eadv.lab_bld_egfr_c._.lastdv(2).where(dt>sysdate-730);
        
       
-       uacr1 => eadv.lab_ua_acr.val.lastdv().where(dt>sysdate-730);
-       uacr2 => eadv.lab_ua_acr.val.lastdv(1).where(dt>sysdate-730);
-       uacr3 => eadv.lab_ua_acr.val.lastdv(2).where(dt>sysdate-730);
+        uacr1 => eadv.lab_ua_acr._.lastdv().where(dt>sysdate-730);
+        uacr2 => eadv.lab_ua_acr._.lastdv(1).where(dt>sysdate-730);
+        uacr3 => eadv.lab_ua_acr._.lastdv(2).where(dt>sysdate-730);
        
-       
+       ex_flag : { ckd=0 and rrt>0 => 1},{=>0};
       
-       [[rb_id]] : {coalesce(egfr1_val,0)>0 and coalesce(egfr2_val,0)>0 => 1 },{=>0};
+       [[rb_id]] : {coalesce(egfr1_val,0)>0 and ex_flag=0 => 1 },{=>0};
        
        
      

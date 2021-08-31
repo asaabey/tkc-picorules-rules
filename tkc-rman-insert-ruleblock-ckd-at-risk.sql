@@ -38,8 +38,10 @@ BEGIN
                 }
             ); 
         
+        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
         
-        is_active => rout_core_info_entropy.is_active.val.bind();
+        is_active : { ld > sysdate-730 =>1 },{=>0};
+
         
         ckd => rout_ckd.ckd.val.bind();
         

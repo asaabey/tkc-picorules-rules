@@ -13,7 +13,7 @@
 @"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-ckd-mbd.sql";
 @"tkc-rman-insert-ruleblock-ckd-anaemia.sql";
-@"tkc-rman-insert-ruleblock-labs.sql";
+--@"tkc-rman-insert-ruleblock-labs.sql";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
 

@@ -24,7 +24,7 @@ BEGIN
             {
                 description: "Ruleblock to assess core information entropy",
                 
-                is_active:2
+                is_active:0
                 
             }
         );

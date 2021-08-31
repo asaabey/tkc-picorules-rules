@@ -86,6 +86,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_chf_syn'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_af'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_rhd'),tmplts_placement_order_seq.nextval);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_device'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_vte'),tmplts_placement_order_seq.nextval);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_dyslip'),tmplts_placement_order_seq.nextval);
@@ -122,7 +123,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__frame_end__'),tmplts_placement_order_seq.nextval);
 
-
+--Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__graph_sec_begin__'),tmplts_placement_order_seq.nextval);
 --Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='graph_tac'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='acr_graph_acr'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='hb_graph'),tmplts_placement_order_seq.nextval);
@@ -131,6 +132,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='graph_bp'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ldl_graph'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='egfr_metrics'),tmplts_placement_order_seq.nextval);
+--Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__graph_sec_end__'),tmplts_placement_order_seq.nextval);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='__labs_panel_begin__'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_tbl1'),tmplts_placement_order_seq.nextval);
@@ -175,7 +177,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='cse_corres_html'),(select id from rman_rpt_template_blocks where template_name='alert_tg4610'),tmplts_placement_order_seq.nextval);
 
 
---cardiology
+--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology--cardiology
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='__header__'), tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='dmg_source_summary'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='dmg_phc_null'),tmplts_placement_order_seq.nextval);
@@ -192,6 +194,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_chf_syn'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_af'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_rhd'),tmplts_placement_order_seq.nextval);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_device'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_cardiac_vte'),tmplts_placement_order_seq.nextval);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_dyslip'),tmplts_placement_order_seq.nextval);

@@ -1,4 +1,4 @@
-
+TRUNCATE TABLE rman_ruleblocks_citation;
 
 INSERT INTO rman_ruleblocks_citation VALUES (
 'rrt_hd_icd',

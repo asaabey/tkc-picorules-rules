@@ -924,6 +924,15 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ol>
         </li>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_device','cd_cardiac_device','
+    <br />
+        <b><li>Implanted cardiac device</b>
+        <ol>
+            <<ppm_fd>><li>Pacemaker <<ppm_fd />></li><</ppm_fd>>
+            <<defib_fd>><li>Defibrilator <<defib_fd />></li><</defib_fd>>
+        </ol>
+        </li>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dyslip','cd_dyslip','
     <br />
     <b><li>Dyslipidaemia</b>
@@ -1032,6 +1041,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </div>
 
     ');
+    
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('graph_egfr2','egfr_graph2','
     <hr />
     <div class="syn_synopsis_box">
@@ -1084,63 +1095,96 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </div>
 
     ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__graph_sec_begin__','dmg_vm','
+    <div id="outerflex" style="display:flex; flex-wrap: wrap; justify-content: flex-start;">
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__graph_sec_end__','dmg_vm','
+    </div>
+    ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('hb_graph','hb_graph','
     <hr />
     <div class="syn_synopsis_box">
-    <h5>Hb profile for the last 2 years</h5>
-
-    <div class="syn_container">
-
-
-    <svg height=<<hb_graph_canvas_y />> width=<<hb_graph_canvas_x />>>
-            <defs>
-                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-                    markerWidth="5" markerHeight="5">
-                  <circle cx="5" cy="5" r="10" fill="blue" />
-                </marker>
-            </defs>
-        <polyline points="<<xy_coords />>" 
-          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-          <line x1="0" x2="<<hb_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <line x1="0" x2="<<hb_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <rect x="0" y="<<line_target_upper_y />>"  width="<<hb_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
-
-          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hb_graph_y_max />></text>
-          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hb_graph_y_min />></text>
-    </svg>
-    </div>
+    
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            Hb profile for the last 2 years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <svg height=<<hb_graph_canvas_y />> width=<<hb_graph_canvas_x />>>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                                    markerWidth="5" markerHeight="5">
+                                  <circle cx="5" cy="5" r="15" fill="gray" />
+                                </marker>
+                            </defs>
+                        <polyline points="<<xy_coords />>" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="<<hb_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                
+                          <line x1="0" x2="<<hb_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                
+                          <rect x="0" y="<<line_target_upper_y />>"  width="<<hb_graph_canvas_x />>" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+                
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<hb_graph_y_max />></text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<hb_graph_y_min />></text>
+                    </svg>
+            </div>
+            <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small>Max <<hb_max_val />> (<<hb_max_dt />>)</small></li>
+                        <li class="list-group-item"><small>Min <<hb_min_val />> (<<hb_min_dt />>)</small></li>                        
+                        </ul>
+                </div>
+        </div>        
+    </div>    
     </div>
 
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('phos_graph','phos_graph','
     <hr />
     <div class="syn_synopsis_box">
-    <h5>Phosphate profile for the last 2 years</h5>
+    
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            Phosphate profile for the last 2 years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
 
-    <div class="syn_container">
 
-
-    <svg height=<<phos_graph_canvas_y />> width=<<phos_graph_canvas_x />>>
-            <defs>
-                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
-                    markerWidth="5" markerHeight="5">
-                  <circle cx="5" cy="5" r="10" fill="blue" />
-                </marker>
-            </defs>
-        <polyline points="<<xy_coords />>" 
-          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-          <line x1="0" x2="<<phos_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <line x1="0" x2="<<phos_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-
-          <rect x="0" y="<<line_target_upper_y />>"  width="<<phos_graph_canvas_x />>" height="<<line_target_lower_y />>" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
-
-          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<phos_graph_y_max />></text>
-          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<phos_graph_y_min />></text>
-    </svg>
+                    <svg height=<<phos_graph_canvas_y />> width=<<phos_graph_canvas_x />>>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                                    markerWidth="5" markerHeight="5">
+                                  <circle cx="5" cy="5" r="10" fill="blue" />
+                                </marker>
+                            </defs>
+                        <polyline points="<<xy_coords />>" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="<<phos_graph_canvas_x />>" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                
+                          <line x1="0" x2="<<phos_graph_canvas_x />>" y1="<<line_lower_y />>" y2="<<line_lower_y />>" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                
+                          <rect x="0" y="<<line_target_upper_y />>"  width="<<phos_graph_canvas_x />>" height="<<line_target_lower_y />>" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+                
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;"><<phos_graph_y_max />></text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;"><<phos_graph_y_min />></text>
+                    </svg>
+                    
+                 </div>
+                 <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small>Max <<phos_max_val />> (<<phos_max_dt />>)</small></li>
+                        <li class="list-group-item"><small>Min <<phos_min_val />> (<<phos_min_dt />>)</small></li>                        
+                        </ul>
+                </div>
+    </div>
     </div>
     </div>
 
@@ -1162,13 +1206,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
             <td></td>
         </tr>
+        <<rrt=0>>
         <tr>
+        
             <td>eGFR (ml/min/1.72m)</td>
             <td><<egfr1_val>><strong><<egfr1_val />></strong>(<<egfr1_dt />>) <</egfr1_val>></td>
             <td><<egfr2_val>><strong><<egfr2_val />></strong>(<<egfr2_dt />>) <</egfr2_val>></td>
             <td><<egfr3_val>><strong><<egfr3_val />></strong>(<<egfr3_dt />>) <</egfr3_val>></td>
 
         </tr>
+        <</rrt=0>>
 
 
     ');
@@ -1204,36 +1251,32 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <td><<bicarb3_val>><strong><<bicarb3_val />></strong>(<<bicarb3_dt />>) <</bicarb3_val>></td>
 
         </tr>
-        <tr>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-
-        </tr>
-        <tr>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-            <td> </td>
-
-        </tr>
+        <tr><td> </td><td> </td><td> </td><td> </td></tr>
         <tr>
             <td>Calcium (mmol/l)</td>
             <td><<calcium1_val>><strong><<calcium1_val />></strong>(<<calcium1_dt />>) <</calcium1_val>></td>
             <td><<calcium2_val>><strong><<calcium2_val />></strong>(<<calcium2_dt />>) <</calcium2_val>></td>
             <td><<calcium3_val>><strong><<calcium3_val />></strong>(<<calcium3_dt />>) <</calcium3_val>></td>
-
         </tr>
         <tr>
             <td>Phosphate (mmol/l)</td>
             <td><<phos1_val>><strong><<phos1_val />></strong> (<<phos1_dt />>) <</phos1_val>></td>
             <td><<phos2_val>><strong><<phos2_val />></strong> (<<phos2_dt />>)<</phos2_val>></td>
             <td><<phos3_val>><strong><<phos3_val />></strong> (<<phos3_dt />>)<</phos3_val>></td>
-
-
-
         </tr>
+        <tr>
+            <td>Magnesium (mmol/l)</td>
+            <td><<magnesium1_val>><strong><<magnesium1_val />></strong> (<<magnesium1_dt />>) <</magnesium1_val>></td>
+            <td><<magnesium2_val>><strong><<magnesium2_val />></strong> (<<magnesium2_dt />>)<</magnesium2_val>></td>
+            <td><<magnesium3_val>><strong><<magnesium3_val />></strong> (<<magnesium3_dt />>)<</magnesium3_val>></td>
+        </tr>
+        <tr>
+            <td>PTH (pmol/l)</td>
+            <td><<pth1_val>><strong><<pth1_val />></strong> (<<pth1_dt />>) <</pth1_val>></td>
+            <td><<pth2_val>><strong><<pth2_val />></strong> (<<pth2_dt />>)<</pth2_val>></td>
+            <td><<pth3_val>><strong><<pth3_val />></strong> (<<pth3_dt />>)<</pth3_val>></td>
+        </tr>
+        <<rrt=0>>
         <tr>
             <td>uACR (mg/mmol)</td>
             <td><<uacr1_val>><strong><<uacr1_val />></strong> (<<uacr1_dt />>)<</uacr1_val>></td>
@@ -1241,9 +1284,10 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <td><<uacr3_val>><strong><<uacr3_val />></strong> (<<uacr3_dt />>)<</uacr3_val>></td>
 
         </tr>
+        <</rrt=0>>
 
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_tbl4','ckd_labs_haem','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_tbl4','ckd_labs','
         <tr>
             <td> </td>
             <td> </td>
@@ -1254,7 +1298,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <td>Hb (g/l)</td>
             <td><<hb1_val>><strong><<hb1_val />></strong>(<<hb1_dt />>) <</hb1_val>></td>
             <td><<hb2_val>><strong><<hb2_val />></strong>(<<hb2_dt />>) <</hb2_val>></td>
-            <td><<hb3_val>><strong><<hb3_val />></strong>(<<hb3_val />>) <</hb3_val>></td>
+            <td><<hb3_val>><strong><<hb3_val />></strong>(<<hb3_dt />>) <</hb3_val>></td>
         </tr>
           <tr>
             <td>Ferritin (ug/l)</td>
@@ -1276,13 +1320,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </tr>
         <tr>
             <td>Platelets </td>
-            <td><<plt1_val>><strong><<plt1_val />></strong>(<<plt1_val />>) <</plt1_val>></td>
+            <td><<plt1_val>><strong><<plt1_val />></strong>(<<plt1_dt />>) <</plt1_val>></td>
             <td></td>
             <td></td>
         </tr>
         <tr>
             <td>Neutrophils </td>
-            <td><<wcc_neut1_val>><strong><<wcc_neut1_val />></strong>(<<wcc_neut1_dt />>) <</wcc_neut1_val>></td>
+            <td><<wcc_n1_val>><strong><<wcc_n1_val />></strong>(<<wcc_n1_dt />>) <</wcc_n1_val>></td>
             <td></td>
             <td></td>
         </tr>
@@ -1299,6 +1343,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <div class="syn_synopsis_box">
     <h3>Lab data panel</h3>
     <table class="table table-sm table-striped">
+    <colgroup>
+          <col class="col-md-1">
+          <col class="col-md-1">
+          <col class="col-md-1">
+          <col class="col-md-1">
+    </colgroup>
         <tbody>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__labs_panel_end__','dmg','
@@ -1503,11 +1553,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 </div>
                 <div class="col-md-4">
                     <ul class="list-group list-group-flush">
-                        <<tir_pct>><li class="list-group-item"><small>Time in range <<tir_pct />>%</small></li><</tir_pct>>
+                        <<tir>><li class="list-group-item"><small>Time in range <<tir />>%</small></li><</tir>>
                         <li class="list-group-item"><small>Maximum <<sbp_max />> mmHg</small></li>
                         <li class="list-group-item"><small>Minimum <<sbp_min />> mmHg</small></li>
                         <<avg_bp_1y>><li class="list-group-item"><small>Average (1y) <<avg_bp_1y />> mmHg</small></li><</avg_bp_1y>>
-                    </ol>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -1944,20 +1994,22 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <hr />
     <h3>Lab data panel</h3>
     <p>
-    <<creat1_val>>Creatinine <strong><<creat1_val />></strong>(<<creat1_dt />>) <</creat1_val>>
-    <<egfr1_val>>eGFR <strong><<egfr1_val />></strong>(<<egfr1_dt />>) <</egfr1_val>>
-    <<uacr1_val>>uACR <strong><<uacr1_val />></strong>(<<uacr1_dt />>) <</uacr1_val>>
-    <<sodium1_val>>Sodium <strong><<sodium1_val />></strong>(<<sodium1_dt />>) <</sodium1_val>>
-    <<potassium1_val>>Potassium <strong><<potassium1_val />></strong>(<<potassium1_dt />>) <</potassium1_val>>
-    <<biacrb1_val>>Bicarbonate <strong><<biacrb1_val />></strong>(<<biacrb1_dt />>) <</biacrb1_val>>
+        [<<creat1_dt />>]<<creat1_val>> Creatinine <strong><<creat1_val />></strong> umol/l <</creat1_val>>
+        <<rrt=0>><<egfr1_val>>[<<egfr1_dt />>] eGFR <strong><<egfr1_val />></strong>ml/min/1.72m2 <</egfr1_val>><<uacr1_val>>[<<uacr1_dt />>] uACR <strong><<uacr1_val />></strong> mg/mmol <</uacr1_val>><</rrt=0>>
+        
+        <<sodium1_val>> Sodium <strong><<sodium1_val />></strong> mmol/l<</sodium1_val>>
+        <<potassium1_val>> Potassium <strong><<potassium1_val />></strong> mmol/l<</potassium1_val>>
+        <<bicarb1_val>> Bicarbonate <strong><<bicarb1_val />></strong> mmol/l<</bicarb1_val>>
     </p>
     <p>
-    <<calcium1_val>>Calcium <strong><<calcium1_val />></strong>(<<calcium1_dt />>) <</calcium1_val>>
-    <<phos1_val>>Phosphate <strong><<phos1_val />></strong>(<<phos1_dt />>) <</phos1_val>>
+        <<calcium1_val>>[<<calcium1_dt />>] Calcium <strong><<calcium1_val />></strong><</calcium1_val>>
+        <<phos1_val>> [<<phos1_dt />>] Phosphate <strong><<phos1_val />></strong><</phos1_val>>
+        <<magnesium1_val>> [<<magnesium1_dt />>] Magnesium <strong><<magnesium1_val />></strong><</magnesium1_val>>
+        <<pth1_val>> [<<pth1_dt />>] PTH <strong><<pth1_val />></strong> pg/ml<</pth1_val>>
     </p>
     <p>
-    <<hb1_val>>Haemoglobin <strong><<hb1_val />></strong>(<<hb1_dt />>) <</hb1_val>>
-    <<ferritin1_val>>Ferritin <strong><<ferritin1_val />></strong>(<<ferritin1_dt />>) <</ferritin1_val>>
+        <<hb1_val>>[<<hb1_dt />>] Haemoglobin <strong><<hb1_val />></strong> <</hb1_val>>
+        <<ferritin1_val>>[<<ferritin1_dt />>] Ferritin <strong><<ferritin1_val />></strong> <</ferritin1_val>>
     </p>
         
 
