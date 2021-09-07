@@ -155,7 +155,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
          <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renal.csu@nt.gov.au&subject=TKC Feedback EID: <<eid />> HRN: <<hrn />>" class="btn btn-primary btn-sm">TKC Feedback</a>
          <<tkc_provider=1>><a href="mailto:pratish.george@nt.gov.au?subject=TKC Enquiry EID: <<eid />> HRN: <<hrn />>" class="btn btn-warning btn-sm">Contact Specialist (Dr George)</a> <</tkc_provider=1>>
          <<tkc_provider=2>><a href="mailto:asanga.abeyaratne@nt.gov.au?subject=TKC Enquiry EID: <<eid />> HRN: <<hrn />>" class="btn btn-warning btn-sm">Contact Specialist (Dr Abeyaratne)</a> <</tkc_provider=2>>
-         <a href="mailto:RenalAdminOutreach.DOH@nt.gov.au?subject=Clinic rebooking for HRN: <<hrn />>&body=Please book this patient in 0 months" class="btn btn-info btn-sm">Renal Admin for booking</a>
+         <a href="mailto:RenalAdminOutreach.DOH@nt.gov.au?subject=Clinic rebooking for HRN: <<hrn />>&body=Please book this patient in 0 months.%0D%0Ahttp://territorykidneycare/#/patient-detail/<<eid />>" class="btn btn-info btn-sm">Renal Admin for booking</a>
 
       </div>
     </div>
@@ -192,13 +192,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <h5> 
             <p>Record may be incomplete ! No recent primary care episodes found</p>
             </h5>
-            <p>This is most likely due to</p>
-            <ol>
-                <li>Interstate client</li>
-                <li>Client of non-participating PHC</li>
-                <li>Client has not attended clinic in 3 years</li>
-                <li>Linking failure</li>
-            </ol>
+            <p>Possible Interstate client,Client of non-participating PHC, Client has not attended clinic in 3 years or Linking failure </p>
         </div>
     <</dmg_source=999>>
     ');
@@ -1398,7 +1392,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <<egfr_outdated>><div>Note [1.2.1] Last eGFR on <<egfr_l_dt />></div><</egfr_outdated>>
     <<acr_outdated>><div>Note [1.2.2] Last uACR on <<acr_l_dt />></div><</acr_outdated>>
     <<asm_viol_3m>><div>Note [1.2.3] Assumption violation present. +/- 20% fluctuation in last 30 days </div><</asm_viol_3m>>
-    <<egfr_decline>><div>Note [1.3] Maximum eGFR of <<egfr_max_val />> ml/min/1.73m2 on <<egfr_max_dt />> with the most recent value being <<egfr_l_val />></div><</egfr_decline>>
+    <<egfr_decline>><div>Note [1.3] Most recent value being <<egfr_l_val />></div><</egfr_decline>>
     <<iq_tier=4>><div>Note [1.0] This was based on the presence of at least one ICPC2+ code and more than two eGFR and uACR values (Tier 4).</div><</iq_tier=4>>
     <<iq_tier=3>><div>Note [1.0] This was based on at least two eGFR and uACR values (Tier 3). </div><</iq_tier=3>>
     <<iq_tier=2>><div>Note [1.0] This was based on at least one eGFR and uACR value (Tier 3).</div> <</iq_tier=2>>
@@ -1991,7 +1985,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_block','ckd_labs','
-    <hr />
+    <br />
     <h3>Lab data panel</h3>
     <p>
         [<<creat1_dt />>]<<creat1_val>> Creatinine <strong><<creat1_val />></strong> umol/l <</creat1_val>>
@@ -2000,22 +1994,42 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<sodium1_val>> Sodium <strong><<sodium1_val />></strong> mmol/l<</sodium1_val>>
         <<potassium1_val>> Potassium <strong><<potassium1_val />></strong> mmol/l<</potassium1_val>>
         <<bicarb1_val>> Bicarbonate <strong><<bicarb1_val />></strong> mmol/l<</bicarb1_val>>
-    </p>
-    <p>
         <<calcium1_val>>[<<calcium1_dt />>] Calcium <strong><<calcium1_val />></strong><</calcium1_val>>
         <<phos1_val>> [<<phos1_dt />>] Phosphate <strong><<phos1_val />></strong><</phos1_val>>
         <<magnesium1_val>> [<<magnesium1_dt />>] Magnesium <strong><<magnesium1_val />></strong><</magnesium1_val>>
         <<pth1_val>> [<<pth1_dt />>] PTH <strong><<pth1_val />></strong> pg/ml<</pth1_val>>
-    </p>
-    <p>
         <<hb1_val>>[<<hb1_dt />>] Haemoglobin <strong><<hb1_val />></strong> <</hb1_val>>
         <<ferritin1_val>>[<<ferritin1_dt />>] Ferritin <strong><<ferritin1_val />></strong> <</ferritin1_val>>
     </p>
-        
-
-    ');
+        ');
     
-
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_prog_vm','ckd_prog_vm','
+    <br />
+    <p>
+    <<rrt=0>>
+    Case conference :
+    <<gender=0>>She <</gender=0>><<gender=1>>He <</gender=1>> is a <<age />> year old patient with CKD stage <<ckd_stage />>.<<enc_ld>>Previous review was on the <<enc_ld />><</enc_ld>> 
+    <<ipa_sep_ld>>The last hospital admission was on the <<ipa_sep_ld />><</ipa_sep_ld>>.
+    The last Creatinine is <<creat1_val />> umol/l with a corresponding eGFR of <<egfr1_val />>(<<egfr1_dt />>)ml/min/1.72m2. <<uacr1_val>>uACR <<uacr1_val />> mg/mmol (<<uacr1_dt />>) .<</uacr1_val>>
+    The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
+    </p>
+    <p>
+    <h3>Plan</h3>
+    <ul>
+        <li>Suggested medication changes :  </li>
+        <li>Blood test interval : <<review_int />> months </li>
+        <li>Blood pressure target : <<sbp_target_max />>/<<dbp_target_max />> mmHg</li>
+        <li>Referral : </li>
+        <li>Review by renal in : <<review_int />> months </li>
+    </ul>
+    </p>
+    <</rrt=0>>
+    <p>
+    <br />
+    <<tkc_provider=2>>Dr Asanga Abeyaratne, Nephrologist, Royal Darwin Hospital<</tkc_provider=2>>
+    <br />
+    </p>
+    ');
 
 
 @"tkc-insert-composition-template-map.sql"

@@ -499,4 +499,52 @@ BEGIN
 
     COMMIT;
     -- END OF RULEBLOCK -- 
+    
+         
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid := 'ca_endometrial';
+    DELETE FROM rman_ruleblocks
+    WHERE
+        blockid = rb.blockid;
+
+    rb.picoruleblock := '
+    
+        /*  This is a algorithm to identify thyroid carcinoma  */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a algorithm to identify thyroid carcinoma",
+                is_active:2
+                
+            }
+        );
+        
+        icd_fd => eadv.[icd_c54_1].dt.first();                
+        
+        code_fd : { . => least_date(icd_fd)};
+      
+        [[rb_id]] : { code_fd!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of endometrial carcinoma",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks (
+        blockid,
+        picoruleblock
+    ) VALUES (
+        rb.blockid,
+        rb.picoruleblock
+    );
+
+    COMMIT;
 END;

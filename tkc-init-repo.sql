@@ -5,6 +5,8 @@
 --Init rules
 @"tkc-rman-insert-ruleblock-core.sql";
 @"tkc-rman-insert-ruleblock-dmg.sql";
+@"tkc-rman-insert-ruleblock-dmg-viewmodels.sql";
+
 @"tkc-rman-insert-ruleblock-ipa.sql";
 @"tkc-rman-insert-ruleblock-opa.sql";
 @"tkc-rman-insert-ruleblock-pregnancy.sql";
@@ -13,6 +15,7 @@
 @"tkc-rman-insert-ruleblock-ckd2.sql";
 @"tkc-rman-insert-ruleblock-ckd-mbd.sql";
 @"tkc-rman-insert-ruleblock-ckd-anaemia.sql";
+@"tkc-rman-insert-ruleblock-ckd-progress-viewmodels.sql";
 --@"tkc-rman-insert-ruleblock-labs.sql";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";

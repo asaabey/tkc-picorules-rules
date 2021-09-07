@@ -7,3 +7,4 @@ Insert into RMAN_RPT_COMPOSITIONS (ID,COMPOSITION_NAME,COMPOSITION_DESC) values 
 Insert into RMAN_RPT_COMPOSITIONS (ID,COMPOSITION_NAME,COMPOSITION_DESC) values (3,'ckdedu001_html','CKD Nurse educational composition');
 Insert into RMAN_RPT_COMPOSITIONS (ID,COMPOSITION_NAME,COMPOSITION_DESC) values (4,'masked001_html','Masked blank composition');
 Insert into RMAN_RPT_COMPOSITIONS (ID,COMPOSITION_NAME,COMPOSITION_DESC) values (5,'cse_corres_html','CSE correspondence');
+Insert into RMAN_RPT_COMPOSITIONS (ID,COMPOSITION_NAME,COMPOSITION_DESC) values (6,'neph004_rtf','Nephrologists RTF compatible composition');
