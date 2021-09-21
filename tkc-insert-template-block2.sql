@@ -155,8 +155,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
          <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renal.csu@nt.gov.au&subject=TKC Feedback EID: <<eid />> HRN: <<hrn />>" class="btn btn-primary btn-sm">TKC Feedback</a>
          <<tkc_provider=1>><a href="mailto:pratish.george@nt.gov.au?subject=TKC Enquiry EID: <<eid />> HRN: <<hrn />>" class="btn btn-warning btn-sm">Contact Specialist (Dr George)</a> <</tkc_provider=1>>
          <<tkc_provider=2>><a href="mailto:asanga.abeyaratne@nt.gov.au?subject=TKC Enquiry EID: <<eid />> HRN: <<hrn />>" class="btn btn-warning btn-sm">Contact Specialist (Dr Abeyaratne)</a> <</tkc_provider=2>>
-         <a href="mailto:RenalAdminOutreach.DOH@nt.gov.au?subject=Clinic rebooking for HRN: <<hrn />>&body=Please book this patient in 0 months.%0D%0Ahttp://territorykidneycare/#/patient-detail/<<eid />>" class="btn btn-info btn-sm">Renal Admin for booking</a>
-
+         <a href="mailto:RenalAdminOutreach.DOH@nt.gov.au?subject=Clinic rebooking for HRN: <<hrn />>--<<eid$client_name_dob />>&body=Please book this patient in 0 months.%0D%0Ahttp://territorykidneycare/#/patient-detail/<<eid />>" class="btn btn-info btn-sm">Renal Admin for booking</a>
       </div>
     </div>
     ');
