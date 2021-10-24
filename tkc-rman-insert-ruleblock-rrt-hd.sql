@@ -123,15 +123,15 @@ BEGIN
         
         avf_us_ld => eadv.ris_img_usavfist.dt.last();
         
-        av_gram_ld => eadv.ris_img_dshfist.dt.last();
+        av_gram_ld => eadv.[ris_img_dshfist,ris_img_dsarenal].dt.last();
         
-        av_plasty_ld => eadv.ris_img_dshplas1.dt.last();
+        av_plasty_ld => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.last();
         
-        av_plasty_1_ld => eadv.ris_img_dshplas1.dt.last(1);
+        av_plasty_1_ld => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.last(1);
         
-        av_plasty_fd => eadv.ris_img_dshplas1.dt.first();
+        av_plasty_fd => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.first();
         
-        av_plasty_n => eadv.ris_img_dshplas1.dt.count();
+        av_plasty_n => eadv.[ris_img_dshplas1%, ris_img_angplas%,ris_img_dsarenal].dt.count();
         
         av_surv_ld : {.=> greatest(avf_us_ld,av_gram_ld,av_plasty_ld)};
         
@@ -193,7 +193,11 @@ BEGIN
         
         hours => eadv.hd_param_hours._.lastdv();
         
-        ibw => eadv.[psi_hd_param_ibw]._.lastdv();
+        ibw => eadv.obs_dry_weight._.lastdv().where(dt > sysdate-90);
+        
+        bw => eadv.obs_weight._.lastdv().where(dt > sysdate-90);
+        
+        ex_wt : {bw_dt > ibw_dt => bw_val - ibw_val};
         
         dx => eadv.[psi_hd_param_dx]._.lastdv();        
         

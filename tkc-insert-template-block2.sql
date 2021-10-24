@@ -494,6 +494,26 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <</esrd=1>>
 ');
 
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_anaemia_narrative','ckd_anaemia','
+    <<esrd=1>>
+        <p>Haemoglobin is <<hb_val />> g/L (<<hb_dt />>) which is 
+        <<hb_state=2>>consistent with severe anaemia.<</hb_state=2>>
+        <<hb_state=3>>consistent with moderate anaemia.<</hb_state=3>>
+        <<hb_state=4>>in the acceptable range.<</hb_state=4>>
+        <<hb_cum_qt=0>>The Hb has been steady over the last 60 days.<</hb_cum_qt=0>>
+        <<hb_cum_qt=1>>a sustained increase more than 20%.<</hb_cum_qt=1>>
+        <<hb_cum_qt=2>>a sustained increase more than 10%.<</hb_cum_qt=2>>
+        <<hb_cum_qt=3>>a sustained decrease more than 10%.<</hb_cum_qt=3>>
+        <<hb_cum_qt=4>>a sustained decrease more than 20%.<</hb_cum_qt=4>>
+        <<fe_status_null=1>>Iron status unknown.<</fe_status_null=1>>
+        <<fe_status_null=0>>Iron studies show <</fe_status_null=0>>            
+        <<fe_status_null=0>><<fer_val>>a Ferritin of <<fer_val />> (<<fer_dt />>)<</fer_val>><<tsat1_val>>and a TSAT of <<tsat1_val />>% (<<tsat1_dt />>)<</tsat1_val>><</fe_status_null=0>>
+        <<fe_low=1>><b> indicative of low iron stores.</b><</fe_low=1>>
+        <<hyper_ferr=1>> indicative of hyperferritinaemia<</hyper_ferr=1>>
+        <<hyper_ferr=1>><<crp_val>> CRP is <<crp_val />><</crp_val>>.<</hyper_ferr=1>>
+    <</esrd=1>>
+');
+
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_shpt','ckd_shpt','
     <<esrd=1>>
         <li>Bone mineral disease management
@@ -505,6 +525,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <<calcitriol_ld>><li>Calcitriol last scripted <<calcitriol_ld />></li><</calcitriol_ld>>
             </ol>
         </li>
+    <</esrd=1>>
+');
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_shpt_narrative','ckd_shpt','
+    <<esrd=1>>
+        <<calcium1_val>>Serum calcium is <<calcium1_val />> mmol/l (<<calcium1_dt />>)</li><</calcium1_val>>
+        <<phos1_val>>, phosphate is <<phos1_val />> mmol/l (<<phos1_dt />>)<</phos1_val>>
+        <<pth1_val>>and PTH is <<pth1_val />> pg/ml (<<pth1_dt />>).<</pth1_val>>
+        <<cinacalcet_ld>>Cinacalcet last scripted <<cinacalcet_ld />><</cinacalcet_ld>>
+        <<calcitriol_ld>>Calcitriol last scripted <<calcitriol_ld />><</calcitriol_ld>>
+        </p>
     <</esrd=1>>
 ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_x_syn_end','rrt','
@@ -1972,7 +2003,15 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ol>
     </li>
     ');
-    
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_hcv','id_hcv','
+    <br />
+    <li><b>Chronic Hepatitis C</b>
+        <ol>
+            <<icpc_code>><li>Diagnosed <<icpc_code />></li><</icpc_code>>
+        </ol>
+    </li>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('sx_abdo','sx_abdo','
     <br />
         <<exp_lap_fd>><li><b>Exploratory Laparotomy </b>(<<exp_lap_fd />>)</li><</exp_lap_fd>>
@@ -1985,7 +2024,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ckd_labs_block','ckd_labs','
     <br />
-    <h3>Lab data panel</h3>
     <p>
         [<<creat1_dt />>]<<creat1_val>> Creatinine <strong><<creat1_val />></strong> umol/l <</creat1_val>>
         <<rrt=0>><<egfr1_val>>[<<egfr1_dt />>] eGFR <strong><<egfr1_val />></strong>ml/min/1.72m2 <</egfr1_val>><<uacr1_val>>[<<uacr1_dt />>] uACR <strong><<uacr1_val />></strong> mg/mmol <</uacr1_val>><</rrt=0>>
@@ -1998,7 +2036,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<magnesium1_val>> [<<magnesium1_dt />>] Magnesium <strong><<magnesium1_val />></strong><</magnesium1_val>>
         <<pth1_val>> [<<pth1_dt />>] PTH <strong><<pth1_val />></strong> pg/ml<</pth1_val>>
         <<hb1_val>>[<<hb1_dt />>] Haemoglobin <strong><<hb1_val />></strong> <</hb1_val>>
+        <<hb_delta>><strong>(<<hb_delta />>%)</strong><</hb_delta>>
         <<ferritin1_val>>[<<ferritin1_dt />>] Ferritin <strong><<ferritin1_val />></strong> <</ferritin1_val>>
+        <<tsat1_val>>[<<tsat1_dt />>] Transferrin saturation ratio <strong><<tsat1_val />></strong> <</tsat1_val>>
     </p>
         ');
     
@@ -2030,6 +2070,33 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </p>
     ');
 
+
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_intro_narrative','rrt_hd_prog_vm','
+    <br />
+    <p>
+    <<gender=0>>She <</gender=0>><<gender=1>>He <</gender=1>> is a <<age />> year old patient reviewed today at the Dialysis clinic.<<enc_ld>> Previous review was on the <<enc_ld />><</enc_ld>> 
+    <<ipa_sep_ld>>The last hospital admission was on the <<ipa_sep_ld />><</ipa_sep_ld>>.
+    </p><p>
+    <<ibw_val>>The IBW is <<ibw_val>> set on <<ibw_dt>>.<</ibw_val>>The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
+    <<spktv>>Single pool Kt/V is <<spktv />><</spktv>><<hours>> and dialysis durations is <<hours />> hrs.<</hours>>
+    </p>
+    ');
+    
+    Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_plan_narrative','rrt_hd_prog_vm','
+    <br />
+    <h3>Plan</h3>
+    <ul>
+        <li>Medication changes : None </li>
+        <li>IBW changed:</li>
+        <li>Review by renal in : 3 months </li>
+    </ul>
+    </p>
+    <p>
+    <br />
+    <<tkc_provider=2>>Dr Asanga Abeyaratne, Nephrologist, Royal Darwin Hospital<</tkc_provider=2>>
+    <br />
+    </p>
+    ');
 
 @"tkc-insert-composition-template-map.sql"
 -- Compile rman_tmplts

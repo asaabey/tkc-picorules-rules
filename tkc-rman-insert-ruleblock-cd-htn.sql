@@ -340,7 +340,26 @@ BEGIN
                      
         sbp_mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
         
+        sbp_med_1 => eadv.obs_bp_systolic.val.median().where(dt>=sysdate-365); 
+        
+        
+        
+        sbp_max_1 => eadv.obs_bp_systolic.val.max().where(dt>=sysdate-365); 
+        
+        sbp_min_1 => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-365); 
+        
+        
         dbp_mu_1 => eadv.obs_bp_diastolic.val.avg().where(dt>=sysdate-365); 
+        
+        dbp_med_1 => eadv.obs_bp_diastolic.val.median().where(dt>=sysdate-365); 
+        
+        
+        
+        dbp_max_1 => eadv.obs_bp_diastolic.val.max().where(dt>=sysdate-365); 
+        
+        dbp_min_1 => eadv.obs_bp_diastolic.val.min().where(dt>=sysdate-365); 
+        
+        
         
         n_1 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-365); 
         

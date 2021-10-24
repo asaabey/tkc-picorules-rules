@@ -90,7 +90,7 @@ BEGIN
        /*  mode => rout_rrt_hd_param.mode_val.val.bind();*/
        
        
-       urr => rout_rrt_hd_adequacy.urr_1.val.bind();
+       urr => rout_rrt_hd_adequacy.urr.val.bind();
        
        spktv => rout_rrt_hd_adequacy.spktv.val.bind();
        
@@ -225,6 +225,73 @@ BEGIN
     
     COMMIT;
     -- END OF RULEBLOCK --
+    
+       
+    
+            -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='rrt_hd_prog_vm';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Assemble hd progress view model */
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Assemble hd progress view model",
+                is_active:2
+                
+            }
+        );
+                
+        age => rout_dmg.age.val.bind();
+        
+        gender => rout_dmg.gender.val.bind();
+        
+        tkc_provider => rout_dmg_source.tkc_provider.val.bind();
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        enc_ld => rout_engmnt_renal.enc_ld.val.bind();      
+                
+        ipa_sep_ld => rout_ipa_sep.icd_ld.val.bind();
+        
+        opa_sep_ld => rout_opa_sep.op_ld.val.bind();
+        
+        ibw_val  => rout_rrt_hd_param.ibw_val.val.bind();
+        
+        ibw_dt  => rout_rrt_hd_param.ibw_dt.val.bind();
+        
+        sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind(); 
+        
+        dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind();
+        
+        sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind(); 
+        
+        spktv => rout_rrt_hd_adequacy.spktv.val.bind();
+        
+        hours => rout_rrt_hd_param.hours_val.val.bind(); 
+        
+            
+        
+
+        
+        [[rb_id]] : { rrt in (1,3) => 1};    
+        
+       
+                
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+    
         
      
 END;
