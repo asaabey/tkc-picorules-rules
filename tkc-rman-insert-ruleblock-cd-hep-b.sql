@@ -44,6 +44,22 @@ BEGIN
         
         hepb_nos => eadv.[icpc_d72j92,icpc_d72j94,icpc_d72j95,icpc_d72003,icpc_d72010].dt.max();
         
+        /* Hep B Surface antibody */
+        hbs_ab_level => eadv.[lab_bld_hbs_ab_level].dt.max();
+
+        /* Hep B e antibody */
+        hbe_ab => eadv.[lab_bld_hbe_ab].dt.max();
+
+        /* Hep B e antigen */
+        hbe_ag => eadv.[lab_bld_hbe_ag].dt.max();
+
+        /* Hep B Viral Load */
+        hbv_viral_load => eadv.[lab_bld_hbv_viral_load].dt.max();
+
+        /* Liver Function AST  - correct code from EADV table when known */
+        ast_level => eadv.[lab_bld_ast].dt.max();
+
+        
         hepb : { coalesce(hepb_nonimm,hepb_nos)!? or hepb_imm=1 => 1},{=>0};
         
         [[rb_id]] : { hepb=1 =>1},{=>0};

@@ -50,6 +50,7 @@
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
 @"tkc-rman-insert-ruleblock-rrt.sql";
 @"tkc-rman-insert-ruleblock-rrt-hd.sql";
+@"tkc-rman-insert-ruleblock-rrt-hd-loc.sql";
 @"tkc-rman-insert-ruleblock-rrt-tx.sql";
 @"tkc-rman-insert-ruleblock-rrt-labs.sql";
 @"tkc-rman-insert-ruleblock-rrt-viewmodels.sql";

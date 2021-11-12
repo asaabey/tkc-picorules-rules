@@ -98,6 +98,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_imm_vasculitis'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_aps'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_gout'),tmplts_placement_order_seq.nextval);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_ra'),tmplts_placement_order_seq.nextval);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ca_solid'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph002_html'),(select id from rman_rpt_template_blocks where template_name='ca_breast'),tmplts_placement_order_seq.nextval);
@@ -254,6 +255,9 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_imm_vasculitis'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_aps'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_gout'),tmplts_placement_order_seq.nextval);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_ra'),tmplts_placement_order_seq.nextval);
+
+
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='card001_html'),(select id from rman_rpt_template_blocks where template_name='ckd_labs_block'),tmplts_placement_order_seq.nextval);
 
@@ -345,6 +349,7 @@ Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) valu
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph004_rtf'),(select id from rman_rpt_template_blocks where template_name='cd_imm_vasculitis'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph004_rtf'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_aps'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph004_rtf'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_gout'),tmplts_placement_order_seq.nextval);
+Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph004_rtf'),(select id from rman_rpt_template_blocks where template_name='cd_rheum_ra'),tmplts_placement_order_seq.nextval);
 
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph004_rtf'),(select id from rman_rpt_template_blocks where template_name='ca_solid'),tmplts_placement_order_seq.nextval);
 Insert into RMAN_RPT_COMP_TEMP (COMPOSITION_ID,TEMPLATE_ID,PLACEMENT_ORDER) values ((select id from RMAN_RPT_COMPOSITIONS WHERE composition_name='neph004_rtf'),(select id from rman_rpt_template_blocks where template_name='ca_breast'),tmplts_placement_order_seq.nextval);
