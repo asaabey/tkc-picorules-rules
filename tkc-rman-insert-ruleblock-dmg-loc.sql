@@ -44,6 +44,9 @@ BEGIN
         
         */
         
+        #doc(,{
+                    txt:"most primary care frequent location in 2 years and full timeline using mbs code"
+        });  
         
         mode_24_ => eadv.[mbs%].loc.stats_mode().where(dt > sysdate - 730 and substr(loc,-1)=1);
         
@@ -51,16 +54,30 @@ BEGIN
         
         mode_full_ => eadv.[mbs%].loc.stats_mode().where(substr(loc,-1)=1);
         
-        
+        #doc(,{
+                    txt:"location code after stripping parity and source for 2y and full timeline"
+        });  
         
         
         loc_mode_24 : {.=> to_number(substr(mode_24_,4))};
         
         loc_mode : {.=> to_number(substr(mode_full_,4))};
         
+        #doc(,{
+                    txt:"location active considered if non null"
+        });  
+        
         loc_active : {loc_mode_24!? => 1},{=>0};
         
+        #doc(,{
+                    txt:"default location using either 2 y or full"
+        });  
+        
         loc_mode_def : {loc_mode_24!? => loc_mode_24},{loc_mode!? => loc_mode};
+        
+        #doc(,{
+                    txt:"last and penultimate primary care location and date based on MBS"
+        });  
         
         last_val => eadv.[mbs%].loc.last().where(substr(loc,-1)=1);
         
