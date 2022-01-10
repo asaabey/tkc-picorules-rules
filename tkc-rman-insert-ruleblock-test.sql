@@ -301,6 +301,41 @@ BEGIN
 
     COMMIT;
     -- END OF RULEBLOCK --
+    
+         -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='test7';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        
+        #define_ruleblock([[rb_id]],{
+                description: "This is a test algorithm to check att comprehension",
+                is_active:0
+        });
+        
+        hd_icd_ld => eadv.icd::`extracorporeal dialysis`.dt.last();
+        
+        hd_ld => eadv.(~)icd::`extracorporeal dialysis`.dt.last();
+        
+        hd_ld2 => eadv.[icd_z49_1,(~)icpc::`Haemodialysis`].dt.last();
+        
+        ex_flag : {hd_icd_ld!? =>1},{=>0};
+        
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 
