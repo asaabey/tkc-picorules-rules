@@ -114,11 +114,16 @@ BEGIN
             }
         );
         
+        
         egfr_ld => eadv.lab_bld_egfr.dt.max().where(dt > sysdate-365);
         
         acr_ld => eadv.lab_ua_acr.dt.max().where(dt > sysdate-365);
         
         bp_ld => eadv.obs_bp_systolic.dt.max().where(dt > sysdate-365);
+        last_bp_val => eadv.obs_bp_systolic.val.last().where(dt > sysdate-365);
+        
+        hba1c_ld => eadv.lab_bld_hba1c_ngsp.dt.max().where(dt > sysdate-365);
+        last_hba1c_val => eadv.lab_bld_hba1c_ngsp.val.last().where(dt > sysdate-365);
         
         screen_egfr : { egfr_ld!? =>1},{=>0};
         
@@ -126,7 +131,11 @@ BEGIN
         
         screen_bp : { bp_ld!? =>1},{=>0};
         
+        screen_hba1c : { hba1c_ld!? =>1},{=>0};
+        
         screen_3 : { . => screen_egfr + screen_acr + screen_bp};
+        
+        screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
         
         #define_attribute(
             [[rb_id]],
@@ -192,6 +201,15 @@ BEGIN
             screen_bp,
                 {
                     label:"screened by blood pressure within last 1y",
+                    is_reportable:1,
+                    type:2
+                }
+        );
+        
+        #define_attribute(
+            screen_hba1c,
+                {
+                    label:"screened by HbA1c within last 1y",
                     is_reportable:1,
                     type:2
                 }
