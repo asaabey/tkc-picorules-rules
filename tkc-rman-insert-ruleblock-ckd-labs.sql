@@ -130,7 +130,7 @@ BEGIN
        bicarb2 => eadv.lab_bld_bicarbonate.val.lastdv(1).where(dt>sysdate-730);
        bicarb3 => eadv.lab_bld_bicarbonate.val.lastdv(2).where(dt>sysdate-730);
        
-       [[rb_id]] : {nvl(egfr1_val,0)>0 and nvl(egfr2_val,0)>0 => 1 },{=>0};
+       [[rb_id]] : {nvl(creat1_val,0)>0 and nvl(creat2_val,0)>0 => 1 },{=>0};
        
        
      
