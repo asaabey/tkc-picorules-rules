@@ -41,7 +41,6 @@ BEGIN
         ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
         
         is_active : { ld > sysdate-730 =>1 },{=>0};
-
         
         ckd => rout_ckd.ckd.val.bind();
         

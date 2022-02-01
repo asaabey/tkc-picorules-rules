@@ -91,6 +91,8 @@ BEGIN
         sigma : { . => icpc + icd + lab  + rxnc + obs + mbs};
         
         is_active : { sigma>0 and ld > sysdate-730 =>1 },{=>0};
+        is_active_3y : { sigma>0 and ld > sysdate-1095 =>1 },{=>0};
+        is_active_5y : { sigma>0 and ld > sysdate-1825 =>1 },{=>0};
         
         is_study_cand1 : { lab_n>2 and obs_n>2 and is_active=1 =>1},{=>0};
         
