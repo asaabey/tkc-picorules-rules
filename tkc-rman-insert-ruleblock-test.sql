@@ -336,6 +336,38 @@ BEGIN
 
     COMMIT;
     -- END OF RULEBLOCK --
+    
+    
+         -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='test8';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        
+        #define_ruleblock([[rb_id]],{
+                description: "This is a test algorithm",
+                is_active:0
+        });
+        
+        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
+        
+        is_active : { ld > sysdate-730 =>1 },{=>0}
+        
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+    COMMIT;
+    -- END OF RULEBLOCK --
 END;
 
 

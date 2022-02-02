@@ -867,9 +867,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cvra_banner_1','cm_vm','
     <div class="card">
       <div class="card-body">
-        <<cmcat_charlson=1>><span class="badge badge-pill badge-success">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=1>>
-        <<cmcat_charlson=2>><span class="badge badge-pill badge-warning">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=2>>
-        <<cmcat_charlson=3>><span class="badge badge-pill badge-danger">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=3>>
+      
+        <<vax_max_dt>><span><img src="https://www.durham.ca/en/health-and-wellness/resources/Images/Eligibility-Icon.png" alt="COVID vax" width="60" height="60"></span><</vax_max_dt>>
+        <<vax_pf>><span>---~</span><span class="badge badge-pill badge-success">Pfizer</span><</vax_pf>>
+        <<vax_az>><span>---~</span><span class="badge badge-pill badge-success">Aztrazenaca</span><</vax_az>>
+        <<vax_md>><span>---~</span><span class="badge badge-pill badge-success">Moderna</span><</vax_md>>
+        <<vax_max_dt>><span>~</span><span class="badge badge-pill badge-success"><<vax_max_dt />></span><</vax_max_dt>>
+        <<vax_max_val>><span>~</span><span class="badge badge-pill badge-success"><<vax_max_val />></span><</vax_max_val>>
+        
+        <<cmcat_charlson=1>><span>~~</span><span class="badge badge-pill badge-success">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=1>>
+        <<cmcat_charlson=2>><span>~~</span><span class="badge badge-pill badge-warning">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=2>>
+        <<cmcat_charlson=3>><span>~~</span><span class="badge badge-pill badge-danger">Charlson cmi ~ <<cmidx_charlson />> </span><</cmcat_charlson=3>>
         
         <<cvra_cat=2>><span>~</span><span class="badge badge-pill badge-warning">Mod CVR</span><</cvra_cat=2>>
         <<cvra_cat=3>><span>~</span><span class="badge badge-pill badge-danger">High CVR</span><</cvra_cat=3>>
@@ -881,6 +889,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <<esrd_risk=4>><span>~</span><span class="badge badge-pill badge-danger">ESRD Risk 4</span><</esrd_risk=4>>
         <<cad>><span>~</span><span class="badge badge-pill badge-danger">CAD</span><</cad>>
         <<rrt_flag>><span>~</span><span class="badge badge-pill badge-danger">ESRD~RRT</span><</rrt_flag>>
+        
+        
+        
       </div>
     </div>
     ');

@@ -31,6 +31,16 @@ BEGIN
                 txt:"disease entities"
         });
         
+        vax_pf => rout_vacc_covid.vax_pf_dt.val.bind();
+        
+        vax_az => rout_vacc_covid.vax_az_dt.val.bind();
+        
+        vax_md => rout_vacc_covid.vax_md_dt.val.bind();
+        
+        vax_max_dt => rout_vacc_covid.vax_val.val.bind();
+        
+        vax_max_val => rout_vacc_covid.vax_dt.val.bind();
+        
         cmidx_charlson => rout_cmidx_charlson.cmidx_charlson.val.bind();
         
         cmcat_charlson => rout_cmidx_charlson.cci_cat.val.bind();

@@ -13,58 +13,41 @@ BEGIN
     
                  -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='sx_abdo';
+    rb.blockid:='vacc_covid';
 
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
     
-        /* Algorithm to assess abdominal colorectal surgical procedures */
+        /* Algorithm to assess covid 19 vaccination  */
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Algorithm to assess abdominal colorectal surgical procedures",
+                description: "Algorithm to assess covid 19 vaccination ",
                 is_active:2
                 
             }
         );
         
-        exp_lap_fd => eadv.[caresys_3037300].dt.first();
+       
+        vax_pf => eadv.vacc_covid_comirnaty._.lastdv();
         
-        r_hemi_fd => eadv.[caresys_32000%,caresys_32003%,caresys_32004%,caresys_32005%].dt.first();
+        vax_az => eadv.vacc_covid_astrazeneca._.lastdv();
         
-        l_hemi_fd => eadv.[caresys_32006%].dt.first();
+        vax_md => eadv.vacc_covid_moderna._.lastdv();
         
-        hemi : {coalesce(r_hemi_fd, l_hemi_fd)!? =>1},{=>0};
+        vax => eadv.[vacc_covid_moderna,vacc_covid_astrazeneca,vacc_covid_comirnaty]._.maxldv();
         
-        h_ar_fd => eadv.[caresys_3202400].dt.first();
+        [[rb_id]] : { coalesce(vax_pf_dt, vax_az_dt, vax_md_dt)!? => 1},{=>0};
         
-        l_ar_fd => eadv.[caresys_3202500,caresys_3202600,caresys_3202800].dt.first();
-        
-        ar : {coalesce(h_ar_fd,l_ar_fd)!? =>1},{=>0};
-        
-        hartmann_fd => eadv.[caresys_32051%].dt.first();
-        
-        [[rb_id]] : { coalesce(exp_lap_fd, r_hemi_fd, l_hemi_fd, h_ar_fd,l_ar_fd,hartmann_fd)!? => 1},{=>0};
-        
+                
         #define_attribute(
             [[rb_id]],{
                 label:"Major abdominal colorectal surgery",
                 type:2,
                 is_reportable:0
         });
-        #define_attribute(
-            hemi,{
-                label:"Left or Right Hemicolectomy",
-                type:2,
-                is_reportable:1
-        });
-        #define_attribute(
-            ar,{
-                label:"Anterior Resection",
-                type:2,
-                is_reportable:1
-        });
+       
         
         
                 
