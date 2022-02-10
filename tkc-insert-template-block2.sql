@@ -2466,7 +2466,7 @@ values
     <<gender=0>>She <</gender=0>><<gender=1>>He <</gender=1>> is a <<age />> year old patient reviewed today at the Dialysis clinic.<<enc_ld>> Previous review was on the <<enc_ld />><</enc_ld>> 
     <<ipa_sep_ld>>The last hospital admission was on the <<ipa_sep_ld />><</ipa_sep_ld>>.
     </p><p>
-    <<ibw_val>>The IBW is <<ibw_val>> set on <<ibw_dt>>.<</ibw_val>>The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
+    <<ibw_val>>The IBW is <<ibw_val />> set on <<ibw_dt />>.<</ibw_val>>The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
     <<spktv>>Single pool Kt/V is <<spktv />><</spktv>><<hours>> and dialysis durations is <<hours />> hrs.<</hours>>
     </p>
     ');
