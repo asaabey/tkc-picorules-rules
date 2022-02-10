@@ -1133,11 +1133,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS
 values
     ('cd_cardiac_rhd', 'cd_cardiac_rhd', '
         <br />
-        <<rhd_dt>><li><b>Rheumatic heart disease</b>
+        <<rhd_dt>>
+        <li><b>Rheumatic heart disease</b>
             <ol>
-                <li>Diagnosed <<rhd_dt />>
-            </ol></li>
-            <</rhd_dt>>   
+                <li>Diagnosed <<rhd_dt />></li>
+            </ol>
+        </li>
+        <</rhd_dt>>   
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS
     (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML)
