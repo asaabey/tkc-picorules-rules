@@ -82,7 +82,7 @@ BEGIN
         
         w_pulm : { pulm=1 =>3},{=>0};
         
-        w_renal : { rrt=1 or ckd>2 => 1=>1},{=>0};
+        w_renal : { rrt=1 or ckd>2 => 1},{=>0};
         
         w_steroids : {rx_gs_dt!? => 1},{=>0};
         
