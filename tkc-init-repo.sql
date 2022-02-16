@@ -70,6 +70,7 @@
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
 @"tkc-rman-insert-ruleblock-cmidx-charlson.sql"
 @"tkc-rman-insert-ruleblock-cm-viewmodel.sql"
+@"tkc-rman-insert-ruleblock-vacc-covid19.sql"
 
 
 -- added by patty for KPI's
@@ -78,8 +79,8 @@
 
 -- Init templates
 
-@"tkc-insert-compositions.sql"
-@"tkc-insert-template-block2.sql"
+--@"tkc-insert-compositions.sql"
+--@"tkc-insert-template-block2.sql"
 -- called by template-block
 --@"tkc-insert-composition-template-map.sql"
 
