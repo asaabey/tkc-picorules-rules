@@ -48,11 +48,11 @@ BEGIN
                     txt:"most primary care frequent location in 2 years and full timeline using mbs code"
         });  
         
-        mode_24_ => eadv.[mbs%].loc.stats_mode().where(dt > sysdate - 730 and substr(loc,-1)=1);
+        mode_24_ => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate - 730 and substr(loc,-1)=1);
         
         
         
-        mode_full_ => eadv.[mbs%].loc.stats_mode().where(substr(loc,-1)=1);
+        mode_full_ => eadv.[mbs_%].loc.stats_mode().where(substr(loc,-1)=1);
         
         #doc(,{
                     txt:"location code after stripping parity and source for 2y and full timeline"
@@ -79,27 +79,27 @@ BEGIN
                     txt:"last and penultimate primary care location and date based on MBS"
         });  
         
-        last_val => eadv.[mbs%].loc.last().where(substr(loc,-1)=1);
+        last_val => eadv.[mbs_%].loc.last().where(substr(loc,-1)=1);
         
-        last_dt => eadv.[mbs%].dt.last().where(substr(loc,-1)=1);
+        last_dt => eadv.[mbs_%].dt.last().where(substr(loc,-1)=1);
         
-        last_t_val => eadv.[mbs%].loc.last().where(substr(loc,-1)<>1);
+        last_t_val => eadv.[mbs_%].loc.last().where(substr(loc,-1)<>1);
         
         loc_last_val : {.=> to_number(substr(last_val,4))};       
         
         loc_last_t_val : {.=> to_number(substr(last_t_val,4))};  
         
-        last_1_val => eadv.[mbs%].loc.last(1).where(substr(loc,-1)=1);
+        last_1_val => eadv.[mbs_%].loc.last(1).where(substr(loc,-1)=1);
         
-        last_1_dt => eadv.[mbs%].dt.last(1).where(substr(loc,-1)=1);
+        last_1_dt => eadv.[mbs_%].dt.last(1).where(substr(loc,-1)=1);
         
         loc_last_1_val : {.=> to_number(substr(last_1_val,4))};       
         
-        loc_n => eadv.[mbs%].loc.count().where(substr(loc,-1)=1);
+        loc_n => eadv.[mbs_%].loc.count().where(substr(loc,-1)=1);
         
-        loc_mode_n => eadv.[mbs%].loc.count().where(substr(loc,4)=loc_mode_def);
+        loc_mode_n => eadv.[mbs_%].loc.count().where(substr(loc,4)=loc_mode_def);
         
-        loc_last_n => eadv.[mbs%].loc.count().where(substr(loc,4)=loc_last_val);
+        loc_last_n => eadv.[mbs_%].loc.count().where(substr(loc,4)=loc_last_val);
 
         loc_def : {loc_last_val=loc_last_1_val and last_dt-last_1_dt>90 => loc_last_val},{=> loc_mode_def};
 
@@ -107,7 +107,7 @@ BEGIN
         
         loc_null : {coalesce(loc_def,loc_def_alt)?=>1},{=>0};
         
-        loc_def_fd => eadv.[mbs%].dt.min().where(substr(loc,4)=loc_last_val);
+        loc_def_fd => eadv.[mbs_%].dt.min().where(substr(loc,4)=loc_last_val);
         
         loc_region : {loc_def!? => to_number(substr(loc_def,2,1))};
         

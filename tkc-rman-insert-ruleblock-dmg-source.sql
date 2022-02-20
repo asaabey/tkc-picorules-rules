@@ -49,52 +49,52 @@ BEGIN
         
         loc_region => rout_dmg_loc.loc_region.val.bind();
         
-        tc_caresys_n => eadv.[icd%].loc.count().where(substr(loc,2,2)=11);
+        tc_caresys_n => eadv.[icd_%].loc.count().where(substr(loc,2,2)=11);
         
-        tc_caresys_ld => eadv.[icd%].dt.max().where(substr(loc,2,2)=11);
+        tc_caresys_ld => eadv.[icd_%].dt.max().where(substr(loc,2,2)=11);
         
-        tc_labtrak_n => eadv.[lab%].dt.count().where(substr(loc,2,2)=12);
+        tc_labtrak_n => eadv.[lab_%].dt.count().where(substr(loc,2,2)=12);
         
-        tc_labtrak_ld => eadv.[lab%].dt.max().where(substr(loc,2,2)=12);
+        tc_labtrak_ld => eadv.[lab_%].dt.max().where(substr(loc,2,2)=12);
         
-        pcis_n => eadv.[mbs%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=21);
+        pcis_n => eadv.[mbs_%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=21);
         
-        pcis_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=21);
+        pcis_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=21);
         
-        eacs_n => eadv.[mbs%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=22);
+        eacs_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=22);
         
-        eacs_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=22);
+        eacs_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=22);
         
-        laynhapuy_n => eadv.[mbs%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=33);
+        laynhapuy_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=33);
         
-        laynhapuy_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=33);
+        laynhapuy_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=33);
         
-        miwatj_n => eadv.[mbs%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=34);
+        miwatj_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=34);
         
-        miwatj_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=34);
+        miwatj_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=34);
         
-        anyinginyi_n => eadv.[mbs%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=32);
+        anyinginyi_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=32);
         
-        anyinginyi_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=32);
+        anyinginyi_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=32);
         
-        congress_n => eadv.[mbs%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2) in(37,38,39,41,42));
+        congress_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2) in(37,38,39,41,42));
         
-        congress_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2) in(37,38,39,41,42));
+        congress_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2) in(37,38,39,41,42));
         
-        wurli_n => eadv.[mbs%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=36);
+        wurli_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=36);
         
-        wurli_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=36);
+        wurli_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=36);
         
-        kwhb_n => eadv.[mbs%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=35);
+        kwhb_n => eadv.[mbs_%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=35);
         
-        kwhb_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=35);
+        kwhb_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=35);
         
-        ampila_n => eadv.[mbs%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=51);
+        ampila_n => eadv.[mbs_%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=51);
         
-        ampila_ld => eadv.[mbs%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=51);
+        ampila_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=51);
         
         
-        phc_0 => eadv.[mbs%].loc.stats_mode().where(dt > sysdate-1000 and substr(loc,2,2) between 20 and 50);
+        phc_0 => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate-1000 and substr(loc,2,2) between 20 and 50);
         
         phc_1 : { phc_0!? => to_number(substr(phc_0,2,2))},{=>0};
         
