@@ -47,6 +47,7 @@
 @"tkc-rman-insert-ruleblock-id-uti.sql";
 @"tkc-rman-insert-ruleblock-id-tb.sql";
 @"tkc-rman-insert-ruleblock-id-hcv.sql";
+@"tkc-rman-insert-ruleblock-id-covid19.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";
@@ -74,7 +75,7 @@
 
 
 -- added by patty for KPI's
-@"tkc-rman-insert-ruleblock-kpis.sql";
+--@"tkc-rman-insert-ruleblock-kpis.sql";
 
 
 -- Init templates
