@@ -78,8 +78,8 @@ BEGIN
                     {loc_mode_1m = 111721600017012  => `TEHS-TIW`},
                     {substr(loc_mode_1m,1,5)=`11171` =>`CA-OTHER`},
                     {substr(loc_mode_1m,1,5)=`11172`=>`TEHS-OTHER`},
-                    {substr(loc_mode_1m,1,5)=`11571`=>`TEHS-OTHER`},
-                    {substr(loc_mode_1m,1,5)=`13472`=>`TEHS-OTHER`},
+                    {substr(loc_mode_1m,1,5)=`11571`=>`PURPLE_HOUSE`},
+                    {substr(loc_mode_1m,1,5)=`13472`=>`MIWATJ`},
                     {loc_all_1m_n > 0=>`UNDETERMINED`}
                     ;
 
