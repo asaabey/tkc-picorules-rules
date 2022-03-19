@@ -34,20 +34,7 @@ BEGIN
 
        rrt => rout_rrt.rrt.val.bind();
        
-       loc_1s => rout_rrt_hd_location.loc_1s.val.bind();
-       
-       loc_1s_txt : {loc_1s = 710100010132 => `CA-GAP`}, 
-                    {loc_1s = 720600013032 => `TEHS-NRU`},
-                    {loc_1s = 710100010122 => `CA-FD`},
-                    {loc_1s = 710500012022 => `CA-TCH`},
-                    {loc_1s = 720600015062 => `TEHS-7AD`},
-                    {loc_1s = 720900016042  or loc_1s = 720900016052 => `TEHS-KDH`},
-                    {loc_1s = 720600005012 => `TEHS-PDU`},
-                    {loc_1s = 721200017012 => `TEHS-TIW`},
-                    {loc_1s in (710111460001,710111460051,710410202051)=>`CA-OTHER`},
-                    {loc_1s in (720600014022,720600013012)=>`TEHS-OTHER`},
-                    {=>`UNDETERMINED`}
-                    ;
+       loc_1s_txt => rout_rrt_hd_loc.loc_mode_1m_txt.val.bind();
        
        hd_recent_flag => rout_rrt.hd_recent_flag.val.bind();
              

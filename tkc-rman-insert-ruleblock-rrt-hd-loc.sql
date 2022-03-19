@@ -64,6 +64,24 @@ BEGIN
                                             
         loc_all_1m_n => eadv.[caresys_1310000,caresys_1310004,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.distinct_count()
                                 .where(dt >= sysdate-30);
+        
+        loc_mode_1m => eadv.[caresys_1310000,caresys_1310004,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].loc.stats_mode()
+                                .where(dt >= sysdate-90);
+                                
+        loc_mode_1m_txt : {loc_mode_1m = 111711800010132  => `CA-GAP`}, 
+                    {loc_mode_1m = 111721600013032   => `TEHS-NRU`},
+                    {loc_mode_1m = 111711800010122   => `CA-FD`},
+                    {loc_mode_1m  = 111711800010122  => `CA-TCH`},
+                    {loc_mode_1m in(111721600015062,111721600006002) => `TEHS-7AD`},
+                    {loc_mode_1m in (111721500016042, 111721500008032) => `TEHS-KDH`},
+                    {loc_mode_1m = 111721600014022 => `TEHS-PDU`},
+                    {loc_mode_1m = 111721600017012  => `TEHS-TIW`},
+                    {substr(loc_mode_1m,1,5)=`11171` =>`CA-OTHER`},
+                    {substr(loc_mode_1m,1,5)=`11172`=>`TEHS-OTHER`},
+                    {substr(loc_mode_1m,1,5)=`11571`=>`TEHS-OTHER`},
+                    {substr(loc_mode_1m,1,5)=`13472`=>`TEHS-OTHER`},
+                    {loc_all_1m_n > 0=>`UNDETERMINED`}
+                    ;
 
         [[rb_id]] => eadv.[caresys_1310000,caresys_1310004, icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].loc.last();
 
