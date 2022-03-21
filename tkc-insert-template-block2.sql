@@ -1900,6 +1900,15 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ol>
     </li>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ortho_fractures','ortho_fractures','
+    <br />
+    <li><b>Fractures</b>
+        <ol>
+            <<pelvic_frac>><li>Pelvic fracture <<pelvic_frac_ld />></li><</pelvic_frac>>
+        </ol>
+    </li>
+    ');
+
 
 --Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ipa_icu','ipa_icu','
 --    <br />
