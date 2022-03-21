@@ -70,17 +70,71 @@ BEGIN
         
         tac_c0 => eadv.lab_bld_tdm_tacrolimus._.lastdv();
         
+        enc_d90 : { enc_op_ld > sysdate -90 => 1},{=>0};
+        
         
         [[rb_id]] : { cr_min_val!? and rxn>0 =>1},{=>0};
         
         #define_attribute(
-            [[rb_id]] ,
-            {
+            [[rb_id]],{
                 label:"Graft function known and therapy",
                 is_reportable:1,
                 type:2
-            }
-        );
+        });
+        #define_attribute(
+            cr_last_val,{
+                label:"transplant_panel:last creatinine value",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(
+            cr_last_dt,{
+                label:"transplant_panel:last creatinine date",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(
+            tdm_tac_val,{
+                label:"transplant_panel:last tacrolimus val",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(
+            tdm_tac_dt,{
+                label:"transplant_panel:last tacrolimus date",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(
+            tdm_evl_val,{
+                label:"transplant_panel:last everolimus val",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(
+            tdm_evl_dt,{
+                label:"transplant_panel:last everolimus date",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(
+            tx_dt,{
+                label:"transplant_panel:transplant date",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(
+            enc_op_ld,{
+                label:"transplant_panel:last clinic date",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(
+            enc_d90,{
+                label:"transplant_panel:active follow up within 90 days",
+                is_reportable:1,
+                type:2
+        });
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
