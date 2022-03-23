@@ -38,7 +38,7 @@ BEGIN
                 }
             ); 
         
-        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
+        ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
         
         is_active : { ld > sysdate-730 =>1 },{=>0};
         
@@ -85,7 +85,7 @@ BEGIN
        
         
         
-        /* obs_ld => eadv.[obs%].dt.max().where(dt > sysdate-730);*/
+        /* obs_ld => eadv.[obs_%].dt.max().where(dt > sysdate-730);*/
         
         is_active_2y : {is_active=1 and dod? => 1},{=>0};
               
