@@ -349,9 +349,9 @@ BEGIN
         
         loc_fixed : {loc_1s=loc_2s and loc_1s=loc_3s=>1},{=>0};
         
-        loc_1_fd => eadv.dmg_location.dt.first(where val=loc_1);
+        loc_1_fd => eadv.dmg_location.dt.first().where(val=loc_1);
         
-        loc_1_n => eadv.dmg_location.dt.count(where val=loc_1);
+        loc_1_n => eadv.dmg_location.dt.count().where(val=loc_1);
         
         loc_hd_tehs_nru : { loc_1s = 720600013032  => 1},{=>0};
         
