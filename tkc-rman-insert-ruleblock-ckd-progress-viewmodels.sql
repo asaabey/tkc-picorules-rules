@@ -77,6 +77,14 @@ BEGIN
         
         dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind(); 
         
+        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+        
+        hba1c_lv => rout_cd_dm_glyc_cntrl.hba1c_n0_val.val.bind();
+        
+        hba1c_ld => rout_cd_dm_glyc_cntrl.hba1c_n0_dt.val.bind();
+        
+        hba1c_stmt => rout_cd_dm_glyc_cntrl.hba1c_stmt.val.bind();
+        
         review_int  : {rrt>0 =>3},{ ckd_stage_val>4 => 3},{ckd_stage_val>2 =>6},{=>12};
         
         

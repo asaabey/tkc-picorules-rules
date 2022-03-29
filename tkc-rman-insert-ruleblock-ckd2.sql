@@ -171,7 +171,7 @@ BEGIN
         asot => eadv.[lab_code_s2136]._.lastdv();
         
         
-        ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney,usk,icpc_u41010].dt.max();
+        ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney,usk,icpc_u41010,enc_ris_uskidney].dt.max();
         ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney,bxk].dt.max();
         
         

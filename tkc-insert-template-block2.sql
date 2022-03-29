@@ -850,17 +850,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     
                     <<nstemi_fd>><li>First NSTEMI <<nstemi_fd />></li><</nstemi_fd>>
                     <<nstemi_ld>><li>Most recent NSTEMI <<nstemi_ld />></li><</nstemi_ld>>
-                    <<rxn>><li>relevant medication <</rxn>>
-                                <ol>
+                    <<rxn>><li>relevant medication<</rxn>> 
+                                <<rxn>><ol><</rxn>>
                                     <<rxn_ap>><li>Anti-platelet agent(s) <<rxn_ap />> </li><</rxn_ap>>
                                     <<rxn_bb>><li>Betablocker <<rxn_bb />> </li><</rxn_bb>>
                                     <<rxn_raas>><li>ACEi or ARB <<rxn_raas />> </li><</rxn_raas>>
                                     <<rxn_statin>><li>Statin <<rxn_statin />> </li><</rxn_statin>>
-                                </ol>
-                            </li>
+                                <<rxn>></ol><</rxn>>
+                    <<rxn>></li><</rxn>>
+                    <<echo_ld>><li>Last Echocardiogram <<echo_ld />></li><</echo_ld>>
+                    <<cardang_ld>><li>Cardiac angiogram <<cardang_ld />></li><</cardang_ld>>
                     </ol>
-                    <<echo_ld>><ol><li>Last Echocardiogram <<echo_ld />></li></ol><</echo_ld>>
-                    <<cardang_ld>><ol><li>Cardiac angiogram <<cardang_ld />></li></ol><</cardang_ld>>
             </li>
     ');
 
@@ -923,6 +923,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<tv_r>><li>Tricuspid replacement <<tv_r_dt />></li><</tv_r>>
                 </ol></li><</tv>>
                 <<rxn_anticoag>><li>On anticoagulation </li><</rxn_anticoag>>
+                <<echo_ld>><li>Last Echocardiogram <<echo_ld />></li><</echo_ld>>
             </ol>
             <</vhd>>
     ');
@@ -940,11 +941,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_rhd','cd_cardiac_rhd','
         <br />
-        <<rhd_dt>><li><b>Rheumatic heart disease</b>
+        <li><b>Rheumatic heart disease</b>
             <ol>
-                <li>Diagnosed <<rhd_dt />>
-            </ol></li>
-            <</rhd_dt>>   
+                <li>Diagnosed <<rhd_dt />></li>
+                <<echo_ld>><li>Last Echocardiogram <<echo_ld />></li><</echo_ld>>
+            </ol>
+        </li>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_af','cd_cardiac_af','
     <br />
@@ -956,6 +958,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<cha2ds2vasc>><li>CHA2DS2VASC score  : <<cha2ds2vasc />></li><</cha2ds2vasc>>
             <<rxn_anticoag>><li>Anticoagulation <<rxn_anticoag_dt />></li><</rxn_anticoag>>
             <<rxn_anticoag=0>><li>Not on anticoagulation </li><</rxn_anticoag=0>>
+            <<echo_ld>><li>Last Echocardiogram <<echo_ld />></li><</echo_ld>>
         </ol>
         </li>
     ');
@@ -1658,17 +1661,15 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_rheum_sle','cd_rheum_sle','
     <br />
-    <ol>
+    
         <li><b>Systemic Lupus Erythematosus</b>
             <ol>
                 <li>Diagnosed <<sle_fd />> </li>
-                <ol>
-                    <<rxn_l04ax>><li>Thiopurine <<rxn_l04ax />></li><</rxn_l04ax>>
-                    <<rxn_p01ba>><li>Hydroxychloroquine <<rxn_p01ba />></li><</rxn_p01ba>>
-                </ol>
+                <<rxn_l04ax>><li>Thiopurine <<rxn_l04ax />></li><</rxn_l04ax>>
+                <<rxn_p01ba>><li>Hydroxychloroquine <<rxn_p01ba />></li><</rxn_p01ba>>
             </ol>
         </li>
-    </ol>
+    
     
     ');
 
@@ -1777,6 +1778,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                 <li>Thyroid carcinoma <<ca_thyroid_fd />></li> 
             </ol>
             <</ca_thyroid_fd>>
+            <<ca_ovarian_fd>>
+            <ol>
+                <li>Ovarian carcinoma <<ca_ovarian_fd />></li> 
+            </ol>
+            <</ca_ovarian_fd>>
+            <<ca_endometrial_fd>>
+            <ol>
+                <li>Endometrial carcinoma <<ca_endometrial_fd />></li> 
+            </ol>
+            <</ca_endometrial_fd>>
             <ol>
                 <<op_enc_ld>><li>Last oncology clinic visit <<op_enc_ld />></li><</op_enc_ld>>
             </ol>
@@ -1978,7 +1989,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ol>
     </li>
     ');
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_hepb_coded','cd_hepb_coded','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_hepb','cd_hepb','
     <br />
     <li><b>Chronic Hepatitis B</b>
         <ol>
@@ -2079,7 +2090,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <<ipa_sep_ld>>The last hospital admission was on the <<ipa_sep_ld />><</ipa_sep_ld>>.
     The last Creatinine is <<creat1_val />> umol/l with a corresponding eGFR of <<egfr1_val />>(<<egfr1_dt />>)ml/min/1.72m2. <<uacr1_val>>uACR <<uacr1_val />> mg/mmol (<<uacr1_dt />>) .<</uacr1_val>>
     The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
+    <<dm>><<hba1c_lv>>The Last HbA1c is <<hba1c_lv />>(<<hba1c_ld />>).<</hba1c_lv>>
+    <<hba1c_stmt=11>>The glycaemic control is sub-optimal.<</hba1c_stmt=11>>
+    <<hba1c_stmt=12>>The glycaemic control is optimal.<</hba1c_stmt=12>>
+    <<hba1c_stmt=22>>The glycaemic control is optimal and stable.<</hba1c_stmt=22>>
+    <<hba1c_stmt=23>>The glycaemic control is optimal but worsening.<</hba1c_stmt=23>>
+    <<hba1c_stmt=31>>The glycaemic control is sub-optimal but improving.<</hba1c_stmt=31>>
+    <<hba1c_stmt=32>>The glycaemic control is sub-optimal with no imporovement.<</hba1c_stmt=32>>
+    <<hba1c_stmt=33>>The glycaemic control is sub-optimal and continues to worsen.<</hba1c_stmt=33>>
+    <</dm>>
     </p>
+    
     <p>
     <h3>Plan</h3>
     <ul>

@@ -146,6 +146,8 @@ BEGIN
 
             vhd : { greatest(mv,av,tv)>0 =>1},{=>0};
             
+            echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
+            
             
             
             [[rb_id]] : {.=>vhd};
@@ -321,6 +323,8 @@ BEGIN
         
         cha2ds2vasc : { nv_af=1 => age_score + gender_score + chf_hx_score + cva_score +cvd_score + dm_score},{=>0};
         
+        echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
+        
            
         
         
@@ -387,6 +391,8 @@ BEGIN
             rhd_dt => eadv.[icd_i05%,icd_i06%,icd_i07%,icd_i08%,icd_i09%,icpc_k71%].dt.min();
             
             rhd_aet : {rhd_dt!? => 1},{=>0};
+            
+            echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
            
             [[rb_id]] : {. => rhd_aet};
             

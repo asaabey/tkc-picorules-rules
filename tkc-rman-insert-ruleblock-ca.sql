@@ -19,7 +19,7 @@ BEGIN
 
     rb.picoruleblock := '
     
-        /*  This is a algorithm to identify cancer careplan  */
+        /*  Algorithm to identify cancer careplan  */
         
         #define_ruleblock([[rb_id]],
             {
@@ -132,11 +132,11 @@ BEGIN
 
     rb.picoruleblock := '
     
-        /*  This is a algorithm to identify solid organ carcinoma  */
+        /*  Algorithm to identify solid organ carcinoma  */
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(ca_solid,
             {
-                description: "This is a algorithm to identify solid organ carcinoma",
+                description: "Algorithm to identify solid organ carcinoma",
                 is_active:2
                 
             }
@@ -157,13 +157,17 @@ BEGIN
         
         ca_thyroid_fd => rout_ca_thyroid.code_fd.val.bind();
         
-        any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd,ca_thyroid_fd)!? => 1},{=>0};
+        ca_endometrial_fd => rout_ca_endometrial.code_fd.val.bind();
+        
+        ca_ovarian_fd => rout_ca_ovarian.code_fd.val.bind();
+        
+        any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd,ca_thyroid_fd, ca_ovarian_fd, ca_endometrial_fd)!? => 1},{=>0};
         
         op_enc_ld => rout_ca_careplan.op_enc_ld.val.bind();
         
-        [[rb_id]] : { any_ca=1 or ca_mets=1 => 1},{=>0};
+        ca_solid : { any_ca=1 or ca_mets=1 => 1},{=>0};
         
-        #define_attribute([[rb_id]],
+        #define_attribute(ca_solid,
             { 
                 label: "Presence of solid organ carcinoma",
                 is_reportable:1,
@@ -510,11 +514,11 @@ BEGIN
 
     rb.picoruleblock := '
     
-        /*  This is a algorithm to identify thyroid carcinoma  */
+        /*  This is a algorithm to identify endometrial carcinoma  */
         
         #define_ruleblock([[rb_id]],
             {
-                description: "This is a algorithm to identify thyroid carcinoma",
+                description: "This is a algorithm to identify endometrial carcinoma",
                 is_active:2
                 
             }
@@ -547,4 +551,57 @@ BEGIN
     );
 
     COMMIT;
+    
+    -- END OF RULEBLOCK -- 
+    
+     -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid := 'ca_ovarian';
+    DELETE FROM rman_ruleblocks
+    WHERE
+        blockid = rb.blockid;
+
+    rb.picoruleblock := '
+    
+        /*  Algorithm to identify ovarian carcinoma  */
+        
+        #define_ruleblock(ca_ovarian,
+            {
+                description: "Algorithm to identify ovarian carcinoma",
+                is_active:2
+                
+            }
+        );
+        
+        icd_fd => eadv.[icd_c56%].dt.first();  
+        
+        icpc_fd => eadv.[icpc_x77006].dt.first();
+        
+        code_fd : { . => least_date(icd_fd,icpc_fd)};
+      
+        ca_ovarian : { code_fd!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of ovarian carcinoma",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks (
+        blockid,
+        picoruleblock
+    ) VALUES (
+        rb.blockid,
+        rb.picoruleblock
+    );
+
+    COMMIT;
+    
+    -- END OF RULEBLOCK -- 
 END;

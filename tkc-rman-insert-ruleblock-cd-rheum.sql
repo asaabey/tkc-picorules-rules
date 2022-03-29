@@ -40,6 +40,9 @@ BEGIN
         
         rxn_p01ba => eadv.[rxnc_p01ba].dt.min().where(val=1);
         
+        c3 => eadv.[lab_bld_complement_c3]._.lastdv().where(dt > sysdate -365);
+        c4 => eadv.[lab_bld_complement_c4]._.lastdv().where(dt > sysdate -365);
+        
         sle_fd : { .=> least_date(icd_fd,icpc_fd)};
         
         [[rb_id]] : { sle_fd!? =>1},{=>0};
