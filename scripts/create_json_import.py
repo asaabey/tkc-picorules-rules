@@ -21,15 +21,16 @@ def read_sql_file(file_path: str):
 
 
 def extract_prb_from_sql(sql_text: str) -> List[PicoRuleBlock]:
-    prb_name_pattern = r"rb\.blockid:='([\w]*)';"
-    prb_text_pattern = r"rb\.picoruleblock:='([\w\W]+?)';"
-    prb_names: List[str] = re.findall(prb_name_pattern, sql_text)
-    prb_texts: List[str] = re.findall(prb_text_pattern, sql_text)
+    prb_name_pattern = r"^(?:[ \t]*)rb\.blockid(?:\W*):=(?:\W*)'([\w]*)';"
+    prb_text_pattern = r"^(?:[ \t]*)rb\.picoruleblock(?:\W*):=(?:\W*)'([\w\W]+?)';"
+    prb_names: List[str] = re.findall(prb_name_pattern, sql_text, flags=re.M)
+    prb_texts: List[str] = re.findall(prb_text_pattern, sql_text, flags=re.M)
     # fail if it didnt find an equal amount of prb names and contents
     assert len(prb_names) == len(prb_texts)
     return [
         PicoRuleBlock(name.strip(), text.strip(), True)
         for name, text in zip(prb_names, prb_texts)
+        if "test" not in name
     ]
 
 

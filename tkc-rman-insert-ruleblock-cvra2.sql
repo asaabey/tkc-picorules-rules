@@ -93,7 +93,7 @@ BEGIN
         
         smoke : {smoke0>=29 =>1},{0};
         
-        lvh => const(0);
+        lvh : { . => 0};
         
         
         #doc(,
