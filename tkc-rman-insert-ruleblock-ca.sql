@@ -604,4 +604,53 @@ BEGIN
     COMMIT;
     
     -- END OF RULEBLOCK -- 
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid := 'ca_misc';
+    DELETE FROM rman_ruleblocks
+    WHERE
+        blockid = rb.blockid;
+
+    rb.picoruleblock := '
+    
+        /*  Algorithm to identify misc carcinoma  */
+        
+        #define_ruleblock(ca_misc,
+            {
+                description: "Algorithm to identify misc carcinoma",
+                is_active:2
+                
+            }
+        );
+        
+        ca_att => eadv.[icd_c%].att.first();
+        
+        ca_fd => eadv.[icd_c%].dt.first().where(att=ca_att);
+        
+        ca_misc : { ca_att!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of misc carcinoma",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks (
+        blockid,
+        picoruleblock
+    ) VALUES (
+        rb.blockid,
+        rb.picoruleblock
+    );
+
+    COMMIT;
+    
+    -- END OF RULEBLOCK -- 
 END;
