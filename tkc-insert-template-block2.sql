@@ -630,7 +630,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </ol>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_dx_1','ckd_diagnostics','
-    <ol>
+    
         <li>Diagnostic workup
         <<canddt_gn_wu=1>>
         <ol>
@@ -659,11 +659,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<cryo_dt>><li>Cryoglobulin : <<cryo_dt />></li><</cryo_dt>>
             <<usk_null=1>><li>Renal imaging not found</li><</usk_null=1>>
             <<ris_usk_ld>><li>Most recent ultrasound kidney on <<ris_usk_ld />></li><</ris_usk_ld>>
+            <<ris_ctab_ld>><li>Most recent CT Abdomen on <<ris_ctab_ld />></li><</ris_ctab_ld>>
             <<ris_bxk_ld>><li>Kidney biopsy on <<ris_bxk_ld />></li><</ris_bxk_ld>>
         </ol>
         </li>
         <</canddt_gn_wu=1>>
-    </ol>
+    
     ');
 
 
@@ -725,7 +726,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <li>Diabetic complications 
                 <ol>
                     <<dm_micvas_retino>>
-                        <li>Diabetic retinopathy</li><</dm_micvas_retino>> 
+                        <li>Diabetic retinopathy 
                             <ol>
                                 <<ndr_icd_e31>><li>Background retinopathy <<ndr_icd_e31 />></li><</ndr_icd_e31>>
                                 <<ndr_icd_e32>><li>Mild non-proliferative retinopathy <<ndr_icd_e32 />></li><</ndr_icd_e32>>
@@ -733,14 +734,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                                 <<ndr_icd_e34>><li>Severe non-proliferative retinopathy <<ndr_icd_e34 />></li><</ndr_icd_e34>>
                                 <<pdr_icd_e35>><li>Severe non-proliferative retinopathy <<pdr_icd_e35 />></li><</pdr_icd_e35>>
                             </ol>
+                        </li>
+                    <</dm_micvas_retino>>
                     <<dm_micvas_neuro>><li>Diabetic neuropathy (<<dm_micvas_neuro />>)</li><</dm_micvas_neuro>>
                     <<dm_foot_ulc>><li>Diabetic foot ulcer (<<dm_foot_ulc />>)</li><</dm_foot_ulc>>
-                    
-                </ol>
-                <ol>
                     <<dm_dka>><li>Diabetic ketoacidosis <<dka_ld />></li><</dm_dka>>
-                </ol>
-                
+                </ol>                
             </li>
 
     ');
@@ -779,14 +778,11 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_5','cd_dm_mx','
     <<cp_dm=0>>
-    <ol>
                 <li>PCIS diabetes careplan was not detected [2.4]</li>
-    </ol>
     <</cp_dm=0>>
     <<cp_dm>>
-    <ol>
+
                 <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
-    </ol>
     <</cp_dm>>
     <<rv_edu_ld>><ol><ol><li>Last Diabetic educator review <<rv_edu_ld />></li></ol></ol><</rv_edu_ld>>
     <<rv_pod_ld>><ol><ol><li>Last Podiatry review <<rv_pod_ld />></li></ol></ol><</rv_pod_ld>>
@@ -1795,17 +1791,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ca_breast','ca_breast','
-        <ol>
             <li>Breast carcinoma <<code_fd />> 
             <ol>
                 <<rxnc_l02bg>><li>Aromatase inhibitor <<rxnc_l02bg />></li><</rxnc_l02bg>>
                 <<rxnc_l02ba>><li>Anti-oestrogren therapy <<rxnc_l02ba />></li><</rxnc_l02ba>>
             </ol>
             </li>
-        </ol>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ca_mets','ca_mets','
-    <ol>
     <li><b>Metastatic disease</b></li>
         <<bone_met_fd>>
         <ol>
@@ -1848,7 +1841,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ol>
         <</nos_met_fd>>
     
-    </ol>
     
     ');
 
@@ -2026,6 +2018,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <li><b>Covid19 infection</b>
         <ol>
             <<covid19_icpc>><li>Last infection or date of close contact <<covid19_icpc />></li><</covid19_icpc>>
+        </ol>
+    </li>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('pregnancy','pregnancy','
+    <br />
+    <li><b>Obstetric history</b>
+        <ol>
+            <<partum_n>><li>GxP<<partum_n />></li><</partum_n>>
+            <<partum_ld>><li>Last Partum <<partum_ld />></li><</partum_ld>>
+            <<partum_lscs_ld>><li>Last C-section <<partum_lscs_ld />></li><</partum_lscs_ld>>
+            <<gdm_code_fd>><li>Gestational diabetes <<gdm_code_fd />></li><</gdm_code_fd>>
         </ol>
     </li>
     ');
