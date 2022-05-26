@@ -23,7 +23,7 @@ BEGIN
     
         /* Algorithm to assess cardiac disease  */
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(cd_cardiac_cad,
             {
                 description: "Algorithm to assess cardiac disease",
                 is_active:2
@@ -220,10 +220,13 @@ BEGIN
             
             cardang_ld => rout_cd_cardiac_ix.cardang_ld.val.bind();
             
-            [[rb_id]] : {cad=1 =>1},{=>0};
+             /* NT cardiac report hot linking*/
+            cardang_l => eadv.[ntc_rep_cangio]._.lastdv();
+            
+            cd_cardiac_cad : {cad=1 =>1},{=>0};
             
             #define_attribute(
-            [[rb_id]],
+            cd_cardiac_cad,
                 {
                     label:"Coronary artery disease",
                     desc:"Presence of Coronary artery disease",

@@ -605,6 +605,57 @@ BEGIN
     
     -- END OF RULEBLOCK -- 
     
+         -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid := 'ca_skin_melanoma';
+    DELETE FROM rman_ruleblocks
+    WHERE
+        blockid = rb.blockid;
+
+    rb.picoruleblock := '
+    
+        /*  Algorithm to identify melanoma  */
+        
+        #define_ruleblock(ca_skin_melanoma,
+            {
+                description: "Algorithm to identify melanoma",
+                is_active:2
+                
+            }
+        );
+        
+        
+        icd_fd => eadv.[icd_c43%].dt.first();  
+        
+        icpc_fd => eadv.[icpc_s77003].dt.first();
+        
+        code_fd : { . => least_date(icd_fd,icpc_fd)};
+      
+        ca_skin_melanoma : { code_fd!? =>1},{=>0};
+        
+        #define_attribute([[rb_id]],
+            { 
+                label: "Presence of melanoma",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
+    rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks (
+        blockid,
+        picoruleblock
+    ) VALUES (
+        rb.blockid,
+        rb.picoruleblock
+    );
+
+    COMMIT;
+    
+    -- END OF RULEBLOCK -- 
     -- BEGINNING OF RULEBLOCK --
 
     rb.blockid := 'ca_misc';

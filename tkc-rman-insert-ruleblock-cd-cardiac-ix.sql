@@ -21,7 +21,7 @@ BEGIN
     
         /*  cardiac investigations  */
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(cd_cardiac_ix,
             {
                 description: "assess cardiac investigations",
                 is_active:2
@@ -33,23 +33,24 @@ BEGIN
                     section:"Echocardiogram"
         });
 
-        echo_ld => eadv.[ris_img_echo%].dt.last();
+        echo_ld => eadv.[enc_ris_echo%].dt.last();
         
-        echo_2_ld => eadv.[ris_img_echo%].dt.last(1);
+        /* NT cardiac report hot linking*/
+        echo_rep => eadv.[ntc_rep_tte]._.lastdv();
         
-        echo_n => eadv.[ris_img_echo%].dt.count();
+        echo_2_ld => eadv.[enc_ris_echo%].dt.last(1);
         
-        cardang_ld => eadv.[ris_img_cardan%].dt.last();
+        echo_n => eadv.[enc_ris_echo%].dt.count();
         
-        cardang_2_ld => eadv.[ris_img_cardan%].dt.last(1);
+        cardang_ld => eadv.[enc_ris_cardang%].dt.last();
         
         
         
-        [[rb_id]] : {coalesce(echo_ld,cardang_ld)!? =>1},{=>0};
+        cd_cardiac_ix : {coalesce(echo_ld,cardang_ld)!? =>1},{=>0};
         
-        #define_attribute([[rb_id]],
+        #define_attribute(cd_cardiac_ix,
             { 
-                label: "presence of CHF",
+                label: "presence of cardiac investigations",
                 type : 2,
                 is_reportable:1
             }

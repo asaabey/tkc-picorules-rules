@@ -725,17 +725,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_2','cd_dm_comp','
             <li>Diabetic complications 
                 <ol>
-                    <<dm_micvas_retino>>
-                        <li>Diabetic retinopathy 
-                            <ol>
-                                <<ndr_icd_e31>><li>Background retinopathy <<ndr_icd_e31 />></li><</ndr_icd_e31>>
+                    
+                        <<ndr_icd_e31>><li>Background retinopathy <<ndr_icd_e31 />></li><</ndr_icd_e31>>
                                 <<ndr_icd_e32>><li>Mild non-proliferative retinopathy <<ndr_icd_e32 />></li><</ndr_icd_e32>>
                                 <<ndr_icd_e33>><li>Moderate non-proliferative retinopathy <<ndr_icd_e33 />></li><</ndr_icd_e33>>
                                 <<ndr_icd_e34>><li>Severe non-proliferative retinopathy <<ndr_icd_e34 />></li><</ndr_icd_e34>>
                                 <<pdr_icd_e35>><li>Severe non-proliferative retinopathy <<pdr_icd_e35 />></li><</pdr_icd_e35>>
-                            </ol>
-                        </li>
-                    <</dm_micvas_retino>>
+                    
                     <<dm_micvas_neuro>><li>Diabetic neuropathy (<<dm_micvas_neuro />>)</li><</dm_micvas_neuro>>
                     <<dm_foot_ulc>><li>Diabetic foot ulcer (<<dm_foot_ulc />>)</li><</dm_foot_ulc>>
                     <<dm_dka>><li>Diabetic ketoacidosis <<dka_ld />></li><</dm_dka>>
@@ -754,12 +750,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_4','cd_dm_dx','
     <<dm_rxn=0>>
-        <ol>
                 <li>No medications recorded</li>
-        </ol>
     <</dm_rxn=0>>
     <<dm_rxn>>
-    <ol>   
                 <li>Current medication classes
                 <ol>
                     <<dm_rxn_su>><li>sulphonylurea (<<dm_rxn_su />>)</li><</dm_rxn_su>>
@@ -773,19 +766,18 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<dm_rxn_sglt2>><li>SGLT2 inhibitor (<<dm_rxn_sglt2 />>)</li><</dm_rxn_sglt2>>
                 </ol>
                 </li>
-    </ol>
     <</dm_rxn>>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_5','cd_dm_mx','
     <<cp_dm=0>>
-                <li>PCIS diabetes careplan was not detected [2.4]</li>
+              <li>PCIS diabetes careplan was not detected [2.4]</li>
     <</cp_dm=0>>
     <<cp_dm>>
 
-                <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
+            <li>PCIS diabetes careplan was updated on <<cp_dm_ld />></li>
     <</cp_dm>>
-    <<rv_edu_ld>><ol><ol><li>Last Diabetic educator review <<rv_edu_ld />></li></ol></ol><</rv_edu_ld>>
-    <<rv_pod_ld>><ol><ol><li>Last Podiatry review <<rv_pod_ld />></li></ol></ol><</rv_pod_ld>>
+    <<rv_edu_ld>><li>Last Diabetic educator review <<rv_edu_ld />></li><</rv_edu_ld>>
+    <<rv_pod_ld>><li>Last Podiatry review <<rv_pod_ld />></li><</rv_pod_ld>>
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_obesity','cd_obesity','
@@ -856,6 +848,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
                     <<rxn>></li><</rxn>>
                     <<echo_ld>><li>Last Echocardiogram <<echo_ld />></li><</echo_ld>>
                     <<cardang_ld>><li>Cardiac angiogram <<cardang_ld />></li><</cardang_ld>>
+                    <<cardang_l_val>><li>Cardiac angiogram <a href="https://www.ntcardiac.com/aura/patient/download_vip_file/letter/<<cardang_l_val />>">report </a><<cardang_l_dt />></li><</cardang_l_val>>
                     </ol>
             </li>
     ');
@@ -932,6 +925,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             <<ethocm>><ol><li>Alcohol related cardiomyopathy <<ethocm />></li></ol><</ethocm>>
             <<noscm>><ol><li>Cardiomyopathy NOS <<noscm />></li></ol><</noscm>>
             <<echo_ld>><ol><li>Last Echocardiogram <<echo_ld />></li></ol><</echo_ld>>
+            <<echo_rep_dt>><ol><li>Last Echo <a href="https://www.ntcardiac.com/aura/patient/download_vip_file/image/<<echo_rep_val />>">report </a><<echo_rep_dt />></li></ol><</echo_rep_dt>>
             </li>
         <</chf>>   
     ');
@@ -1798,6 +1792,9 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
             </ol>
             </li>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ca_skin_melanoma','ca_skin_melanoma','
+            <li><b>Melanoma <<code_fd />> </b></li>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ca_mets','ca_mets','
     <li><b>Metastatic disease</b></li>
         <<bone_met_fd>>
@@ -1908,6 +1905,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <li><b>Fractures</b>
         <ol>
             <<pelvic_frac>><li>Pelvic fracture <<pelvic_frac_ld />></li><</pelvic_frac>>
+        </ol>
+    </li>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ortho_amputation','ortho_amputation','
+    <br />
+    <li><b>Limb amputation</b>
+        <ol>
+            <<prost_clinic_fd>><li>First orthotic/prosthetic clinic <<prost_clinic_fd />></li><</prost_clinic_fd>>
         </ol>
     </li>
     ');
