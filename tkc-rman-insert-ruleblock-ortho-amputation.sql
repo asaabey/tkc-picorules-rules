@@ -32,7 +32,13 @@ BEGIN
         
         prost_clinic_fd => eadv.[enc_op__kpt,enc_op__prd, enc_op__pot].dt.first();
         
-        ortho_amputation: { prost_clinic_fd!? =>1},{=>0};
+        icd_fd => eadv.[icd_y83_5].dt.first();
+        
+        icpc_fd => eadv.[icpc_a87010].dt.first();
+        
+        amp_fd : {. =>least_date(prost_clinic_fd, icd_fd, icpc_fd)};
+        
+        ortho_amputation: { amp_fd!? => 1 },{=>0};
         
         #define_attribute(ortho_amputation,
             { 

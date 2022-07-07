@@ -38,9 +38,10 @@ BEGIN
                 }
             ); 
         
-        ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
+        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
         
         is_active : { ld > sysdate-730 =>1 },{=>0};
+
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -85,7 +86,7 @@ BEGIN
        
         
         
-        /* obs_ld => eadv.[obs_%].dt.max().where(dt > sysdate-730);*/
+        /* obs_ld => eadv.[obs%].dt.max().where(dt > sysdate-730);*/
         
         is_active_2y : {is_active=1 and dod? => 1},{=>0};
               
@@ -113,16 +114,11 @@ BEGIN
             }
         );
         
-        
         egfr_ld => eadv.lab_bld_egfr.dt.max().where(dt > sysdate-365);
         
         acr_ld => eadv.lab_ua_acr.dt.max().where(dt > sysdate-365);
         
         bp_ld => eadv.obs_bp_systolic.dt.max().where(dt > sysdate-365);
-        last_bp_val => eadv.obs_bp_systolic.val.last().where(dt > sysdate-365);
-        
-        hba1c_ld => eadv.lab_bld_hba1c_ngsp.dt.max().where(dt > sysdate-365);
-        last_hba1c_val => eadv.lab_bld_hba1c_ngsp.val.last().where(dt > sysdate-365);
         
         screen_egfr : { egfr_ld!? =>1},{=>0};
         
@@ -130,34 +126,73 @@ BEGIN
         
         screen_bp : { bp_ld!? =>1},{=>0};
         
-        screen_hba1c : { hba1c_ld!? =>1},{=>0};
-        
         screen_3 : { . => screen_egfr + screen_acr + screen_bp};
         
-        screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
-        
-        #define_attribute(
-            [[rb_id]],
-                {
+        #define_attribute(at_risk,{
                     label:"At risk for CKD",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
-                }
-        );
+        });
         
-        #define_attribute(
-            tkc_cohort,
-                {
+        #define_attribute(ckd,{
+                    label:"Presence of CKD",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        #define_attribute(rrt,{
+                    label:"Presence of RRT",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        #define_attribute(dm,{
+                    label:"Presence of Diabetes",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        
+        #define_attribute(htn,{
+                    label:"Presence of Hypertension",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        #define_attribute(cvd,{
+                    label:"Presence of Cardiovascular disease",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        
+        #define_attribute(obesity,{
+                    label:"Presence of Obesity",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        #define_attribute(aki,{
+                    label:"Presence of AKI",
+                    is_bi_obj:1,
+                    type:2
+        });
+        
+        
+        #define_attribute(tkc_cohort,{
                     label:"TKC cohort",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
-                }
-        );
+        });
+        
         #define_attribute(
             active,
                 {
                     label:"Is Active within last 2y",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
                 }
         );
@@ -166,6 +201,7 @@ BEGIN
                 {
                     label:"Prevalent smoker",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
                 }
         );
@@ -183,6 +219,7 @@ BEGIN
                 {
                     label:"screened by egfr within last 1y",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
                 }
         );
@@ -192,6 +229,7 @@ BEGIN
                 {
                     label:"screened by uACR within last 1y",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
                 }
         );
@@ -201,15 +239,7 @@ BEGIN
                 {
                     label:"screened by blood pressure within last 1y",
                     is_reportable:1,
-                    type:2
-                }
-        );
-        
-        #define_attribute(
-            screen_hba1c,
-                {
-                    label:"screened by HbA1c within last 1y",
-                    is_reportable:1,
+                    is_bi_obj:1,
                     type:2
                 }
         );
@@ -219,6 +249,7 @@ BEGIN
                 {
                     label:"screened by blood pressure uACR and eGFR within last 1y as per recommendations",
                     is_reportable:1,
+                    is_bi_obj:1,
                     type:2
                 }
         );
