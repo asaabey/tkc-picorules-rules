@@ -57,9 +57,9 @@ BEGIN
         
         tc_labtrak_ld => eadv.[lab_%].dt.max().where(substr(loc,2,2)=12);
         
-        pcis_n => eadv.[mbs_%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=21);
+        pcis_n => eadv.[mbs_%].dt.count().where(dt>sysdate-1000 and substr(loc,2,2)=90);
         
-        pcis_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=21);
+        pcis_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=90);
         
         eacs_n => eadv.[mbs_%].dt.count(0).where(dt>sysdate-1000 and substr(loc,2,2)=22);
         
@@ -94,11 +94,11 @@ BEGIN
         ampila_ld => eadv.[mbs_%].dt.max().where(dt>sysdate-1000 and substr(loc,2,2)=51);
         
         
-        phc_0 => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate-1000 and substr(loc,2,2) between 20 and 50);
+        phc_0 => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate-1000 and substr(loc,2,2) between 20 and 98);
         
         phc_1 : { phc_0!? => to_number(substr(phc_0,2,2))},{=>0};
         
-        phc_pcis : { phc_1=21 => 1 },{=>0};
+        phc_pcis : { phc_1=90 => 1 },{=>0};
         
         phc_miwatj : { phc_1=34 => 1 },{=>0};
         

@@ -48,11 +48,15 @@ BEGIN
                     txt:"most primary care frequent location in 2 years and full timeline using mbs code"
         });  
         
-        mode_24_ => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate - 730 and substr(loc,-1)=1);
+        mode_24_ => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate - 730);
         
         
         
-        mode_full_ => eadv.[mbs_%].loc.stats_mode().where(substr(loc,-1)=1);
+        mode_full_ => eadv.[mbs_%].loc.stats_mode();
+        
+        mode_715_full_ => eadv.[mbs_715].loc.stats_mode();
+        
+        first_715_fd => eadv.[mbs_715].dt.min();
         
         #doc(,{
                     txt:"location code after stripping parity and source for 2y and full timeline"
@@ -126,7 +130,25 @@ BEGIN
         
         loc_single : { mode_pct=1 =>1},{=>0}; 
         
-        [[rb_id]] : { coalesce(loc_def,0)>0 =>loc_def },{ coalesce(loc_def_alt,0)>0 => loc_def_alt},{=>0};    
+        dmg_loc : { coalesce(loc_def,0)>0 =>loc_def },{ coalesce(loc_def_alt,0)>0 => loc_def_alt},{=>0};    
+        
+        #define_attribute(
+            dmg_loc,
+            {
+                label:"Demographic location",
+                type:1002,
+                is_reportable:1
+            }
+        );
+        
+        #define_attribute(
+            loc_active,
+            {
+                label:"Is location active",
+                type:1001,
+                is_reportable:1
+            }
+        );
         
         
                 
