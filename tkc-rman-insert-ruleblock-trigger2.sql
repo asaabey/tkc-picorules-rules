@@ -984,11 +984,17 @@ BEGIN
         
         ckd_met : { cga_a >= 3 and cga_g >=1 and cga_g<4 and res_outdt=0 =>1},{=>0};
         
-        raas => eadv.[rxnc_c09%].val.lastdv();
+        
+        raas_aa => eadv.[rxnc_c09aa].val.lastdv();
+        
+        raas_ca => eadv.[rxnc_c09ca].val.lastdv();
+        
+        /*  raas => eadv.[rxnc_c09%].val.lastdv(); */
         
         
-        raas_cur : { nvl(raas_val,0)=1 =>1},{=>0};
-        raas_past : { raas_dt is not null and raas_val=0 =>1 },{=>0};
+        raas_cur : { coalesce(raas_aa_val,0)=1 or coalesce(raas_ca_val,0)=1 =>1},{=>0};
+        
+        raas_past : { (raas_aa_dt!? or raas_ca_dt!?) and raas_cur=0 =>1 },{=>0};
         
         
         
