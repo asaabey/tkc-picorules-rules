@@ -1,0 +1,47 @@
+ABO group
+{encoding : "value"}["O"="11","ON"="10","A"="20","AN"="21","B"="30","BN"="31","AB"="40","ABN"="41"]
+lab_bld_abo_group
+
+
+DX
+HAEMODIALYSIS PARAMETERS - DX 
+{encoding : "value"}["FX 60"="1060","FX 80"="1080","FX 100"="1100"]
+hd_param_dx
+
+HAEMODIALYSIS PARAMETERS - MODALITY 
+{encoding : "value"}["Haemodialysis Modality: : Haemodialysis (HD)"="10","Haemodialysis Modality: : Mixed HDF"="20","Haemodialysis Modality: : Haemofiltration (HDF)"="30"]
+hd_param_mode
+
+Hepatitis B Core Antibody
+{encoding : "attribute"}[ "N" = "0", "D"="1"]
+lab_bld_hbc_ab
+
+Hepatitis B Surface Antigen
+Hepatitis B Surface Antigen {encoding : "attribute"}[ "N" = "0", "D"="1"]
+lab_bld_hbs_ag
+
+Hepatitis B e-Antibody
+Hepatitis B e-Antibody {encoding : "attribute"}[ "N" = "0", "D"="1"]
+lab_bld_hbe_ab
+
+
+
+
+*HiCVR + CKD 1-3a Moderate-Severe Risk
+*HiCVR + CKD 3b-4 High-Severe Risk
+*HiCVR + CKD 5 Severe Risk
+*HiCVR + Diab + CKD 1-3a Moderate-Severe Risk
+*HiCVR + Diab + CKD 3b-4 High-Severe Risk
+*HiCVR + Diab + CKD 5 Severe Risk
+*HiCVR + Diab +/- CKD 1-3a Mild Risk
+*HiCVR +/- CKD 1-3a Mild Risk
+*HiCVR +/- CVD
+*HiCVR+ Diab +/- CVD
+*HiCVR+ Diab+ Renal3 +/-CVD
+*HiCVR+ Diab+ Renal4 +/-CVD
+*HiCVR+ Diab+ Renal5 +/-CVD
+*HiCVR+ Renal3 +/- CVD
+*HiCVR+ Renal4 +/- CVD
+*HiCVR+ Renal5 +/- CVD
+ANTENATAL/POSTNATAL Diabetes in Pregnancy (GDM) schedule of care
+ANTENATAL/POSTNATAL Diabetes in Pregnancy (T1/T2 DM)  schedule of care
