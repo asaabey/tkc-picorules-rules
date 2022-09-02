@@ -27,21 +27,94 @@ lab_bld_hbe_ab
 
 
 
-*HiCVR + CKD 1-3a Moderate-Severe Risk
-*HiCVR + CKD 3b-4 High-Severe Risk
-*HiCVR + CKD 5 Severe Risk
-*HiCVR + Diab + CKD 1-3a Moderate-Severe Risk
-*HiCVR + Diab + CKD 3b-4 High-Severe Risk
-*HiCVR + Diab + CKD 5 Severe Risk
-*HiCVR + Diab +/- CKD 1-3a Mild Risk
-*HiCVR +/- CKD 1-3a Mild Risk
-*HiCVR +/- CVD
-*HiCVR+ Diab +/- CVD
-*HiCVR+ Diab+ Renal3 +/-CVD
-*HiCVR+ Diab+ Renal4 +/-CVD
-*HiCVR+ Diab+ Renal5 +/-CVD
-*HiCVR+ Renal3 +/- CVD
-*HiCVR+ Renal4 +/- CVD
-*HiCVR+ Renal5 +/- CVD
-ANTENATAL/POSTNATAL Diabetes in Pregnancy (GDM) schedule of care
-ANTENATAL/POSTNATAL Diabetes in Pregnancy (T1/T2 DM)  schedule of care
+Care Plan	15	*HiCVR + CKD 3b-4 High-Severe Risk	1010040002	2023-01-04	681
+Care Plan	15	*HiCVR + CKD 5 Severe Risk	1010050002	2022-09-16	254
+Care Plan	15	*HiCVR + Diab + CKD 1-3a Moderate-Severe Risk	1010130003	3021-03-24	8284
+Care Plan	15	*HiCVR + Diab + CKD 3b-4 High-Severe Risk	1010140003	2109-12-02	1446
+Care Plan	15	*HiCVR + Diab + CKD 5 Severe Risk	1010150003	2022-09-03	605
+Care Plan	15	*HiCVR + Diab +/- CKD 1-3a Mild Risk	1010110003	5019-05-15	12418
+Care Plan	15	*HiCVR +/- CKD 1-3a Mild Risk	1010010002	3033-03-09	6756
+Care Plan	15	*HiCVR +/- CVD	1011000002	2022-11-21	5744
+Care Plan	15	*HiCVR+ Diab +/- CVD	1011100003	3017-03-20	12149
+Care Plan	15	*HiCVR+ Diab+ Renal3 +/-CVD	1011130004	2020-03-12	1993
+Care Plan	15	*HiCVR+ Diab+ Renal4 +/-CVD	1011140004	2018-05-24	626
+Care Plan	15	*HiCVR+ Diab+ Renal5 +/-CVD	1011150004	5015-09-28	435
+Care Plan	15	*HiCVR+ Renal3 +/- CVD	1011030003	2021-08-27	1139
+Care Plan	15	*HiCVR+ Renal4 +/- CVD	1011040003	2019-03-06	237
+Care Plan	15	*HiCVR+ Renal5 +/- CVD	1011050003	3014-02-08	176
+Care Plan	15	ANTENATAL/POSTNATAL Diabetes in Pregnancy (GDM) schedule of care	1000100001	2023-04-18	359
+Care Plan	15	ANTENATAL/POSTNATAL Diabetes in Pregnancy (T1/T2 DM)  schedule of care	1000100001	2023-04-26	313
+Care Plan	15	Diabetes	1000100001	2007-06-12	100
+Care Plan	15	Diabetes (management plan)	1000100001	2011-02-08	349
+Care Plan	15	Diabetes in Pregnancy (GDM) ANTENATAL/POSTNATAL schedule of care	1000100001	2017-09-02	1
+Care Plan	15	Glucose Intolerance/Past Gestational Diabetes	1000100001	2022-08-24	268
+Care Plan	15	Kidney Disease (Acr 3.5-34)	1000000000	2010-10-17	19
+Care Plan	15	Kidney Disease (Acr 35-100)	1000000000	2010-10-10	9
+Care Plan	15	Kidney Disease (Stage 1 & 2) And Diabetes	1000100001	2010-10-10	30
+Care Plan	15	Kidney Disease (Stage 1: Acr> 100)	1000000000	2010-11-01	20
+Care Plan	15	Kidney Disease (Stage 2)	1000000000	2010-11-01	15
+Care Plan	15	Kidney Disease (Stage 3)	1000000000	2010-08-27	20
+Care Plan	15	Kidney Disease (Stage 3) And Diabetes	1000100001	2010-10-10	7
+Care Plan	15	Kidney Disease (Stage 4)	1000000000	2010-07-05	8
+Care Plan	15	Kidney Disease (Stage 4) And Diabetes	1000100001	2010-10-01	5
+
+
+Cardiovascular Risk: 5 Year (Framingham)	11	CVR Status : High Risk	3	2022-08-26	25133
+Cardiovascular Risk: 5 Year (Framingham)	11	CVR Status : Low Risk	1	2022-08-26	32868
+Cardiovascular Risk: 5 Year (Framingham)	11	CVR Status : Mod Risk	2	2022-08-26	8333
+Cardiovascular Risk: 5 Year (Framingham)	11	High Risk: 16-19%	3	2018-06-08	2
+Cardiovascular Risk: 5 Year (Framingham)	11	High Risk: 20-24%	3	2017-05-03	2
+Cardiovascular Risk: 5 Year (Framingham)	11	High Risk: 25-29%	3	2019-01-19	2
+Cardiovascular Risk: 5 Year (Framingham)	11	High Risk: >15%	3	2021-06-08	21
+Cardiovascular Risk: 5 Year (Framingham)	11	High Risk: >=30%	3	2017-02-08	1
+Cardiovascular Risk: 5 Year (Framingham)	11	Low Risk: 5-9%	1	2022-08-19	11
+Cardiovascular Risk: 5 Year (Framingham)	11	Low Risk: <5%	1	2020-07-24	9
+Cardiovascular Risk: 5 Year (Framingham)	11	Moderate Risk: 10-15%	2	2022-03-03	16
+Cardiovascular Risk: 5 Year (Framingham)	11	Unknown Risk	0	2020-04-20	1
+
+
+Smoking Status	62	Current smoker - intends to quit later	30	2022-08-29	32306
+Smoking Status	62	Current smoker - no intention to quit	30	2022-08-26	15953
+Smoking Status	62	Current smoker - wants to quit now	30	2022-08-26	7491
+Smoking Status	62	Ex-smoker	20	2014-11-05	3371
+Smoking Status	62	Ex-smoker less than 12 months ago	0	2022-08-23	69
+Smoking Status	62	Ex-smoker more than 12 months	0	2022-08-18	121
+Smoking Status	62	Ex-smoker quit 12 months or more ago	20	2022-09-02	9454
+Smoking Status	62	Ex-smoker quit less than 12 months ago	29	2022-08-26	3914
+Smoking Status	62	Non-smoker (ever)	0	2022-08-24	426
+Smoking Status	62	Non-smoker (never smoked)	10	2022-08-30	40482
+Smoking Status	62	Smoker - tobacco	0	2022-08-24	629
+Smoking Status	62	Tobacco Smoking Status : Current (Less than 10 smokes a day)	30	2022-08-26	25414
+Smoking Status	62	Tobacco Smoking Status : Current (More than 10 smokes a day)	30	2022-08-26	22402
+Smoking Status	62	Tobacco Smoking Status : Ex-Smoker (Less than 1 year)	29	2022-08-25	6841
+Smoking Status	62	Tobacco Smoking Status : Ex-Smoker (More than 1 year)	20	2022-08-26	16037
+Smoking Status	62	Tobacco Smoking Status : Never Smoked	10	2022-08-26	32550
+
+
+Urinalysis: Blood	71	BLO : Large	0	2022-08-25	2944
+Urinalysis: Blood	71	BLO : Moderate	0	2022-08-23	3439
+Urinalysis: Blood	71	BLO : Negative	0	2022-08-26	9828
+Urinalysis: Blood	71	BLO : Small	0	2022-08-26	3175
+Urinalysis: Blood	71	BLO : Trace-Intact	0	2022-08-26	3631
+Urinalysis: Blood	71	BLO : Trace-Lysed	0	2022-08-26	2027
+Urinalysis: Blood	71	Blood : +	0	2022-08-26	10508
+Urinalysis: Blood	71	Blood : ++	0	2022-08-26	12371
+Urinalysis: Blood	71	Blood : +++	0	2022-08-26	11616
+Urinalysis: Blood	71	Blood : ++++	0	2022-08-26	13655
+Urinalysis: Blood	71	Blood : Negative	0	2022-08-26	64993
+Urinalysis: Blood	71	Blood : Trace	0	2022-08-26	23078
+Urinalysis: Blood	71	Large	40	2022-08-26	9674
+Urinalysis: Blood	71	Moderate	30	2022-08-26	8913
+Urinalysis: Blood	71	Moderate non-haemolyzed	30	2022-08-23	1529
+Urinalysis: Blood	71	Negative	0	2022-09-02	45119
+Urinalysis: Blood	71	Small	20	2022-08-26	8991
+Urinalysis: Blood	71	Trace haemolyzed	21	2022-08-27	5620
+Urinalysis: Blood	71	Trace intact	0	2022-08-26	338
+Urinalysis: Blood	71	Trace non-haemolyzed	22	2022-08-26	4212
+
+CKD Education	22	Advice/Education;Nutritional	61	2022-08-26	7835
+CKD Education	22	NT Renal Services - CKD Education	31	2022-08-26	2344
+CKD Education	22	NT Renal Services - CKD Education Review	32	2022-08-25	1093
+CKD Education	22	NT Renal Services - CKD Plan	35	2022-08-25	1002
+CKD Education	22	NT Renal Services - CKD Referrals	38	2022-08-25	1146
+CKD Education	22	Social Work Consult (Renal)	51	2022-08-11	1773
