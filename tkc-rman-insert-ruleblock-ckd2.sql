@@ -1487,6 +1487,54 @@ BEGIN
             }
         );
         
+        #define_attribute(
+            egfr_l_val,
+            {
+                label:"CKD panel eGFR last value",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            egfr_l_dt,
+            {
+                label:"CKD panel eGFR last date",
+                is_reportable:1,
+                type:12
+            }
+        );
+        
+        
+        #define_attribute(
+            acr_l_val,
+            {
+                label:"CKD panel uACR last value",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(
+            acr_l_dt,
+            {
+                label:"CKD panel uACR last date",
+                is_reportable:1,
+                type:12
+            }
+        );
+        
+        #define_attribute(
+            dx_ckd_stage,
+            {
+                label:"CKD panel coded CKD Stage",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        
+        
         mm1 : { ckd>3 and coalesce(hd_131_n,0)>0 =>1},{=>0};
         
         
