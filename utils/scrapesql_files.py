@@ -51,6 +51,10 @@ def processfiles():
                 
                 if file_bids_size == file_blockbodies_size:            
                     print(f'file :{path} | {len(fs)} | ids : {file_bids_size} | bodies {file_blockbodies_size}')
+                    
+                    for idx, file_bid in enumerate(file_bids):
+                        fb = file_blockbodies[idx]
+                        print(f'----> [{idx}]: {file_bid}' | fb[1..20])
             
 
 
