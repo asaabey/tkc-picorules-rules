@@ -1,0 +1,115 @@
+/* Rule block to determine diagnostics */
+        
+        #define_ruleblock(ckd_diagnostics,
+            {
+                description: "Rule block to determine diagnostics",
+                is_active:2
+            }
+        );
+             
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        #doc(,
+            {
+                txt:"Gather lab workup"
+            }
+        );
+        
+        
+        
+        acr => eadv.lab_ua_acr._.lastdv();
+        
+                
+        ua_rbc => eadv.[lab_ua_rbc,lab_ua_poc_rbc]._.lastdv();
+        
+                
+        ua_wcc => eadv.[lab_ua_leucocytes,lab_ua_poc_leucocytes]._.lastdv();
+                
+        sflc_kappa => eadv.[lab_bld_sflc_kappa,lab_code_c332x]._.lastdv();
+        sflc_lambda => eadv.[lab_bld_sflc_lambda,lab_code_c332x]._.lastdv();
+        
+        spep => eadv.[lab_bld_spep_paraprotein,lab_code_c331n]._.lastdv();
+        
+        pr3 => eadv.[lab_bld_anca_pr3,lab_code_c314v]._.lastdv();
+        mpo => eadv.[lab_bld_anca_mpo,lab_code_c314v]._.lastdv();
+        
+        anca => eadv.[lab_code_c314v]._.lastdv();
+        
+        ana => eadv.[lab_code_316b]._.lastdv();
+        dsdna => eadv.[lab_bld_dsdna,lab_code_c331b]._.lastdv();
+        
+        c3 => eadv.lab_bld_complement_c3._.lastdv();
+        c4 => eadv.lab_bld_complement_c4._.lastdv();
+        
+        b2gpa => eadv.[lab_code_c319x]._.lastdv();
+        aca => eadv.[lab_code_c323b]._.lastdv();
+        
+        cryo => eadv.[lab_code_c327t]._.lastdv();
+        
+        gbma => eadv.[lab_code_c333n]._.lastdv();
+        
+        asot => eadv.[lab_code_s2136]._.lastdv();
+        
+        ris_ctab_ld => eadv.[enc_ris_ctab%].dt.max();
+        ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney,usk,icpc_u41010,enc_ris_uskidney,enc_ris_usabkid].dt.max();
+        ris_bxk_ld => eadv.[enc_ris_bxk,lab_code_t141,ris_code_usbiokidney,bxk,enc_ris_usbiokidney].dt.max();
+        
+        
+        
+        c3_pos : { nvl(c3_val,0)<0.2 and nvl(c3_val,0)>0 => 1},{=>0};
+        c4_pos : { nvl(c4_val,0)<0.2 and nvl(c4_val,0)>0 => 1},{=>0};
+        
+         
+        
+        dsdna_pos : { nvl(dsdna_val,0)>6 => 1},{=>0};
+        sflc_ratio : { nvl(sflc_lambda_val,0)>0 => round(nvl(sflc_kappa_val,0)/sflc_lambda_val,2)},{=1};
+        
+        sflc_ratio_abn : {sflc_ratio<0.26 or sflc_ratio>1.65 =>1 },{=>0};
+        
+        ua_rbc_pos : {nvl(ua_rbc_val,0)>=30 =>1},{=>0};
+        ua_wcc_pos : {nvl(ua_wcc_val,0)>=30 =>1},{=>0};
+        ua_acr_pos : {nvl(acr_val,0)>30 =>1},{=>0};
+        
+          
+        
+        ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
+                { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
+                {=>0};
+        
+        #doc(,
+            {
+                txt:"Determine radiology (regional imaging) encounters"
+            }
+        );
+        
+        
+        usk_null : { ris_usk_ld is null =>1},{=>0};
+        
+        #doc(,
+            {
+                txt: "Determine renal biopsy status"
+            }
+        );
+        
+        bxk : { ris_bxk_ld!? =>1},{=>0};  
+        
+        bxk_null : { ris_bxk_ld?  =>1},{=>0};
+        
+        canddt : {coalesce(ua_rbc_dt,spep_dt,ana_dt,dsdna_dt,anca_dt,c3_dt,asot_dt,aca_dt,b2gpa_dt,cryo_dt,ris_usk_ld,ris_bxk_ld)!? =>1},{=>0};
+        
+        canddt_gn_wu : {canddt=1 =>1},{=>0};
+        
+        canddt_bx : {canddt=1 =>1},{=>0};
+        
+        ckd_diagnostics : {greatest(canddt_gn_wu,canddt_bx)>0 and ckd>0 => 1},{=>0};
+        
+        #define_attribute(
+            bxk,
+            {
+                label:"Native kidney biopsy",
+                desc:"Native kidney biopsy",
+                is_reportable:1,
+                type:2
+            }
+        );

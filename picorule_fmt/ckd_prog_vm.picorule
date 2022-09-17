@@ -1,0 +1,69 @@
+/* Assemble CKD progress view model */
+        
+        #define_ruleblock(ckd_prog_vm,
+            {
+                description: "Assemble CKD progress view model",
+                is_active:2
+                
+            }
+        );
+                
+        age => rout_dmg.age.val.bind();
+        
+        gender => rout_dmg.gender.val.bind();
+        
+        tkc_provider => rout_dmg_source.tkc_provider.val.bind();
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        ckd_stage => rout_ckd.ckd_stage.val.bind();
+        
+        ckd_stage_val => rout_ckd.ckd_stage_val.val.bind();
+        
+        enc_ld => rout_engmnt_renal.enc_ld.val.bind();
+        
+        
+                
+        ipa_sep_ld => rout_ipa_sep.icd_ld.val.bind();
+        
+        opa_sep_ld => rout_opa_sep.op_ld.val.bind();
+        
+        creat1_val => rout_ckd_labs.creat1_val.val.bind();
+        
+        egfr1_val => rout_ckd_labs.egfr1_val.val.bind();
+        
+        egfr1_dt => rout_ckd_labs.egfr1_dt.val.bind();
+        
+        uacr1_val => rout_ckd_labs.uacr1_val.val.bind();
+        
+        uacr1_dt => rout_ckd_labs.uacr1_dt.val.bind();
+        
+        htn_rxn_acei => rout_cd_htn.htn_rxn_acei.val.bind();
+        
+        htn_rxn_arb => rout_cd_htn.htn_rxn_arb.val.bind();
+        
+        sbp_target_max => rout_cd_htn_bp_control.sbp_target_max.val.bind();
+        
+        dbp_target_max => rout_cd_htn_bp_control.dbp_target_max.val.bind();
+        
+        sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind(); 
+        
+        sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind(); 
+        
+        dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind(); 
+        
+        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+        
+        hba1c_lv => rout_cd_dm_glyc_cntrl.hba1c_n0_val.val.bind();
+        
+        hba1c_ld => rout_cd_dm_glyc_cntrl.hba1c_n0_dt.val.bind();
+        
+        hba1c_stmt => rout_cd_dm_glyc_cntrl.hba1c_stmt.val.bind();
+        
+        review_int  : {rrt>0 =>3},{ ckd_stage_val>4 => 3},{ckd_stage_val>2 =>6},{=>12};
+        
+        
+        
+        ckd_prog_vm : { ckd>0 => 1};

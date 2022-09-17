@@ -1,0 +1,102 @@
+/* Ruleblock to assess diabetic glycaemic control*/
+        
+        #define_ruleblock(cd_dm_glyc_cntrl,
+            {
+                description: "Ruleblock to assess diabetic glycaemic control",                
+                is_active:2,
+                filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
+                
+            }
+        );
+        
+        
+        #doc(,
+            {
+                txt:"Calculate information entropy"
+            }
+        );
+        
+       
+        
+        iq_hba1c => eadv.lab_bld_hba1c_ngsp.val.count(0).where(dt>sysdate-730);
+        
+        iq_tier : {iq_hba1c>1 => 2},{iq_hba1c>0 => 1},{=>0};
+        
+        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+        
+        #doc(,
+            {
+                section: "Glycaemic Level"
+            }
+        );
+        
+        #doc(,
+            {
+                txt:"Diabetic glycaemic levels which includes short and long term levels",
+                cite:"dm_pcd_2019,dm_ada_2018"
+            }
+        );
+        
+        #doc(,
+            {
+                txt:"Australian guidelines set target glycaemic target as 7 but range from 6-8 in specific populations. However intensive glycaemic target 6pct has limited additional outcome benefits",
+                cite:"dm_bmj_2011,dm_nejm_2008,dm_ada_2016"
+            }
+        );
+        
+        
+        hba1c_n_tot => eadv.lab_bld_hba1c_ngsp.dt.count().where(dt > sysdate-730);
+        hba1c_n_opt => eadv.lab_bld_hba1c_ngsp.dt.count().where(val>=6 and val<8 and dt > sysdate-730);
+        
+        
+        
+        
+        hba1c_max => eadv.lab_bld_hba1c_ngsp._.maxldv();
+        
+        #doc(,
+            {
+                txt:"Calculate tir of HbA1c",
+                cite:"dm_dmtech_2019,dm_dmrr_2018"
+            }
+        );
+        
+        n_opt_qt :{coalesce(hba1c_n_tot,0)>0 => round((coalesce(hba1c_n_opt,0)/hba1c_n_tot),2)*100};
+        
+        hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
+        
+        last_hba1c : {hba1c_n0_val!? => hba1c_n0_val};
+        
+        #doc(,
+            {
+                txt:"Categories levels into 4 classes",
+                cite:"dm_aihwa_atsi_kpi_2018"
+            }
+        );
+        
+        
+        n0_st : { hba1c_n0_val <6 => 1},
+                            { hba1c_n0_val >=6 and hba1c_n0_val <8 => 2},
+                            { hba1c_n0_val >=8 and hba1c_n0_val <10 => 3},
+                            { hba1c_n0_val >=10 =>4},{=>0};
+        
+        cd_dm_glyc_cntrl : { dm=1 => n0_st};
+        
+        #define_attribute(
+            cd_dm_glyc_cntrl,
+            {
+                label:"Diabetic glycaemic control",
+                desc:"Diabetic glycaemic control class",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+         #define_attribute(
+            hba1c_n0_val,
+            {
+                label:"Last HbA1c ngsp",
+                desc:"Last HbA1c ngsp",
+                is_reportable:1,
+                type:2
+            }
+        );

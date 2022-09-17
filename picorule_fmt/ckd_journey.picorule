@@ -1,0 +1,79 @@
+/* Rule block to determine journey of CKD */
+        
+         #define_ruleblock(ckd_journey,
+            {
+                description: "Rule block to determine journey of CKD",
+                is_active:2
+                
+            }
+        );
+        
+        #doc(,
+            {
+                txt :"Get CKD status"
+            }
+        );
+        
+        
+        rrt => rout_rrt.rrt.val.bind();
+               
+        ckd => rout_ckd.ckd.val.bind();       
+        
+        #doc(,
+            {
+                txt : "Gather encounter procedure and careplan"
+            }
+        );
+          
+        enc_n => eadv.[enc_op_ren,enc_op_rdu].dt.count();
+        enc_ld => eadv.[enc_op_ren,enc_op_rdu].dt.max();
+        enc_fd => eadv.[enc_op_ren,enc_op_rdu].dt.min();
+        
+        avf => eadv.caresys_3450901.dt.max();
+        
+        cp_l => eadv.careplan_h9_v1.val.lastdv();
+        
+        #doc(,
+            {
+                txt : "Extract renal specific careplan"
+            }
+        );
+        
+       
+        cp_ckd : {cp_l_val is not null => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
+        
+        cp_ckd_ld : {cp_l_dt is not null => cp_l_dt};
+        
+        #doc(,
+            {
+                txt :"Gather Nursing and allied health encounters"
+            }
+        );
+        
+        
+        
+        
+        edu_init => eadv.enc_op_renal_edu.dt.min().where(val=31);
+        
+        edu_rv => eadv.enc_op_renal_edu.dt.max().where(val=32);
+        
+        edu_n => eadv.enc_op_renal_edu.dt.count().where(val=31 or val=32);
+        
+        
+        dietn => eadv.enc_op_renal_edu.dt.max().where(val=61);
+        
+        sw => eadv.enc_op_renal_edu.dt.max().where(val=51);
+        
+        enc_multi : { nvl(enc_n,0)>1 =>1},{=>0};
+        
+        ckd_journey : { coalesce(edu_init, edu_rv,enc_fd)!? and rrt=0 => 1},{=>0};
+        
+        #define_attribute(
+            ckd_journey,
+            {
+                label:"Renal services interaction",
+                desc:"Integer [0-1] if Renal services interaction found",
+                is_reportable:1,
+                type:2
+            }
+        );

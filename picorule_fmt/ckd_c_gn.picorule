@@ -1,0 +1,101 @@
+/* Rule block to determine coded glomerulonephritis */ 
+     
+     
+     #define_ruleblock(ckd_c_gn,
+            {
+                description: "Rule block to determine CKD by cause",
+                is_active:2
+                
+            }
+     );
+     
+     #doc(,{txt :"
+        Chronic glomerular injury or suggestive of
+     "});
+     
+     
+          
+     #doc(,{txt :"
+        N00  U88007 Acute nephritic syndrome
+        N01  Rapidly progressive nephritic syndrome
+        N02  Recurrent and persistent hematuria
+        N03  U88008 Chronic nephritic syndrome
+        N04  U88003 U88002  Nephrotic syndrome
+        N05  U88005	U88004  Unspecified nephritic syndrome
+        N06  Isolated proteinuria with specified morphological lesion
+        N07  Hereditary nephropathy not elsewhere classified
+        N08  U88001 Glomerular disorders in diseases classified elsewhere
+        M32_14  Lupus nephritis
+     "});
+     
+     c_n00 => eadv.[icd_n00%,icpc_u88007].dt.min();
+     
+     c_n01 => eadv.[icd_n01%].dt.min();
+     
+     c_n02 => eadv.[icd_n02%].dt.min();
+     
+     c_n03 => eadv.[icd_n03%,icpc_u88007].dt.min();
+     
+     c_n04 => eadv.[icd_n04%,icpc_u88003,icpc_u88002].dt.min();
+     
+     c_n05 => eadv.[icd_n05%,icpc_u88004,icpc_u88005].dt.min();
+     
+     c_n06 => eadv.[icd_n06%].dt.min();
+     
+     c_n07 => eadv.[icd_n07%].dt.min();
+     
+     c_n08 => eadv.[icd_n08%,icpc_u88001].dt.min();
+     
+     c_u88 => eadv.[icpc_u88005].dt.min();
+     
+     c_m3214 =>eadv.[icd_m32_14].dt.min(); 
+     
+     gn : { coalesce(c_n00,c_n01,c_n02,c_n03,c_n04,c_n05,c_n07,c_n08,c_u88,c_m3214)!? =>1},{=>0};
+     
+     gn_nephritic : { coalesce(c_n00,c_n01,c_n02,c_n03,c_n05,c_n07,c_u88,c_m3214)!? =>1},{=>0};
+     
+     gn_nephrotic : { coalesce(c_n04,c_n06)!? =>1},{=>0};
+     
+     gn_chronic : {coalesce(c_n01,c_n02,c_n03,c_n05,c_n06,c_n07,c_n08,c_u88,c_m3214)!? => 1},{=>0};
+     
+     
+     ckd_c_gn : { . => gn};
+     
+     
+     #define_attribute(
+            ckd_c_gn,
+            {
+                label:"Glomerulonephritis GN Acute or Chronic",
+                desc:"Integer [0-1] if found ",
+                is_reportable:1,
+                type:2
+            }
+     );
+     
+     #define_attribute(
+            gn_chronic,
+            {
+                label:"Glomerulonephritis GN Chronic",
+                desc:"Integer [0-1] if found ",
+                is_reportable:1,
+                type:2
+            }
+     );
+     #define_attribute(
+            gn_nephritic,
+            {
+                label:"Glomerulonephritis GN Nephritic",
+                desc:"Integer [0-1] if found ",
+                is_reportable:1,
+                type:2
+            }
+     );
+     #define_attribute(
+            gn_nephrotic,
+            {
+                label:"Glomerulonephritis GN Nephrotic",
+                desc:"Integer [0-1] if found ",
+                is_reportable:1,
+                type:2
+            }
+     );

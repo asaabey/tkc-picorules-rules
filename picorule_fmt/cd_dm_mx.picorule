@@ -1,0 +1,42 @@
+/* Ruleblock to assess diabetic management*/
+        
+        #define_ruleblock(cd_dm_mx,
+            {
+                description: "Ruleblock to assess diabetic management",
+                is_active:2,
+                filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
+                
+            }
+        );
+        
+        
+        #doc(,
+            {
+                txt:"Get careplan information"
+            }
+        );
+        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+        
+        cp_lv => eadv.careplan_h9_v1.val.last();
+        
+        cp_ld => eadv.careplan_h9_v1.dt.max();
+        
+        cp_dm : {cp_lv is not null => to_number(substr(to_char(cp_lv),-6,1))},{=>0};
+        
+        cp_dm_ld : {cp_dm>0 => cp_ld};
+        
+        rv_pod_ld => eadv.mbs_10962.dt.max();
+        
+        rv_edu_ld => eadv.mbs_10951.dt.max();
+        
+        cd_dm_mx : {dm=1 and (cp_dm>0 or coalesce(rv_pod_ld, rv_edu_ld)!?) => 1},{=>0};
+        
+        #define_attribute(
+            cd_dm_mx,
+            {
+                label:"Diabetic management",
+                desc:"Diabetic management",
+                is_reportable:1,
+                type:2
+            }
+        );

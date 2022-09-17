@@ -1,0 +1,19 @@
+/* Rule block to gather lab tests */
+        
+        #define_ruleblock(labs_iron,
+            {
+                description: "Rule block to gather lab tests",
+                is_active:2,
+                
+            }
+        );
+
+            
+       
+       ferritin1 => eadv.lab_bld_ferritin.val.lastdv().where(dt>sysdate-730);
+       ferritin2 => eadv.lab_bld_ferritin.val.lastdv(1).where(dt>sysdate-730);
+       ferritin3 => eadv.lab_bld_ferritin.val.lastdv(2).where(dt>sysdate-730);
+       
+       
+      
+       labs_iron : {coalesce(ferritin1_val,0)>0 => 1 },{=>0};

@@ -1,0 +1,84 @@
+/* Algorithm to plot egfr graph 2 */
+        
+            
+             #define_ruleblock(egfr_graph2,
+                {
+                    description: "Algorithm to plot egfr graph 2",
+                   
+                    is_active:2
+                    
+                }
+            );
+            
+            rrt => rout_rrt.rrt.val.bind();
+            
+            egfr_n => eadv.lab_bld_egfr_c.val.count(0).where(dt > sysdate - 3650);
+            
+            egfr_f => eadv.lab_bld_egfr_c.val.firstdv().where(dt > sysdate - 3650);
+            
+            egfr_l => eadv.lab_bld_egfr_c.val.lastdv().where(dt > sysdate - 3650);
+            
+            
+            egfr_max => eadv.lab_bld_egfr_c.val.maxldv().where(dt > sysdate - 3650);
+            
+            egfr_min => eadv.lab_bld_egfr_c.val.minldv().where(dt > sysdate - 3650);
+            
+            
+            egfr60_last => eadv.lab_bld_egfr_c.val.lastdv().where(val>60);
+            
+            
+            
+            dspan : { . => egfr_l_dt - egfr_f_dt };
+            
+            yspan : { . => round((dspan/365.25),1)};
+
+            egfr_graph => eadv.lab_bld_egfr_c.val.serializedv2(round(val,0)~dt).where(dt > sysdate - 3650);
+
+            
+            egfr_graph_canvas_x : {1=1 => 450};
+            
+            egfr_graph_canvas_y : {1=1 => 300};
+            
+            egfr_graph_y_max : {1=1 => egfr_max_val + 10 };
+            
+            egfr_graph_y_min : {1=1 => egfr_min_val };
+            
+            
+            
+            x_scale : { dspan >0 => round(egfr_graph_canvas_x / dspan,5)};
+            
+            
+            y_scale : {1=1 => round( egfr_graph_canvas_y /( egfr_graph_y_max - egfr_graph_y_min),5)};
+            
+            
+            line1_x1 : {1=1 => round(( egfr60_last_dt - egfr_f_dt )* x_scale,0) };
+            
+            line1_x2 : {1=1 => round(( egfr_l_dt - egfr_f_dt )* x_scale,0) };
+            
+            line1_y1 : {1=1 => round((egfr_graph_y_max-egfr60_last_val) * y_scale,0) };
+            
+            line1_y2 : {1=1 => round((egfr_graph_y_max-egfr_l_val) * y_scale,0) };
+            
+            line2_y1 : {1=1 => round((egfr_graph_y_max-egfr_f_val) * y_scale,0) };
+            
+            line_max_y : {1=1 => round((egfr_graph_y_max - egfr_max_val)*y_scale,0) };
+                
+            slope1 : { egfr_l_dt - egfr60_last_dt>0 =>round(((egfr_l_val - egfr60_last_val)/(egfr_l_dt - egfr60_last_dt))*365.25,2) },{=>0};
+            
+            show_slope1 : { slope1 <-5 => 1 },{=>0};
+            
+            
+            txt_upper_y : { 1=1 => line_max_y -5};
+            
+            txt_lower_y : { 1=1 => line1_y2 - 15};
+            
+            
+            txt_slope1_x : {1=1 => round((line1_x1 + ((egfr_l_dt-egfr60_last_dt)/2))*x_scale,0)};
+            
+            txt_slope1_y : {1=1 => round((150-50)* y_scale,0)};
+
+            mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
+            
+            
+            
+            egfr_graph2 : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};

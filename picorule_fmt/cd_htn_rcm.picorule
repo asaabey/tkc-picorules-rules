@@ -1,0 +1,77 @@
+/* Ruleblock to assess hypertension pharmacology recommendations */
+        
+        #define_ruleblock(cd_htn_rcm,
+            {
+                description: "Ruleblock to assess hypertension pharmacology recommendations",                
+                is_active:0
+                
+                
+            }
+        );
+        
+       
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        htn => rout_cd_htn.cd_htn.val.bind();
+        
+        bpc => rout_cd_htn.bp_control.val.bind();
+        
+        cad => rout_cd_cardiac_cad.cad.val.bind();
+        #doc(,
+            {
+                txt:"Gather existing medications",
+                cite:"htn_tga_2019,htn_jnc_2014"
+            }
+        );
+        
+        
+        
+
+        acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
+        arb => eadv.[rxnc_c09ca].dt.count(0).where(val=1);
+        bb => eadv.[rxnc_c07%].dt.count(0).where(val=1);
+        ccb => eadv.[rxnc_c08%].dt.count(0).where(val=1);
+        c02 => eadv.[rxnc_c02%].dt.count(0).where(val=1);
+        thiaz => eadv.[rxnc_c03aa].dt.count(0).where(val=1);
+        loop => eadv.[rxnc_c03c%].dt.count(0).where(val=1);
+        mrb  => eadv.[rxnc_c03da].dt.count(0).where(val=1);
+        
+        #doc(,
+            {
+                txt:"Determine potential complications (Needs more work)",
+                cite:"htn_rcm_compmethods_2000,htn_rcm_amia_2017"
+            }
+        );
+        
+        
+        k_val => eadv.lab_bld_potassium.val.last().where(dt>sysdate-730);
+        
+        k_state : {nvl(k_val,0)>5.2 =>3},{nvl(k_val,0)>4.0 =>2},{=>1};
+        
+        
+        
+        raas : { greatest(acei,arb)>0 =>1 },{=>0};
+        
+        rx_line : { greatest(acei,arb,ccb,bb,c02,thiaz,loop,mrb)=0 =>0},
+                    { raas=1 and greatest(ccb,bb,c02,thiaz,loop,mrb)=0 =>1},
+                    { raas=1 and ccb>0 and greatest(bb,c02,thiaz,loop,mrb)=0 =>2},
+                    { raas=1 and ccb>0 and thiaz>0 and greatest(bb,c02,loop,mrb)=0 =>3};
+                    
+        #doc(,
+            {
+                txt:"Treatment recommendation as a code",
+                cite:"htn_rcm_amh_2019"
+            }
+        );
+        
+        cd_htn_rcm :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
+                    { htn=1 and bpc>1 and raas=0 and k_state=3 and ccb=0 => 12 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=0 => 22 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=0 and k_state>1 => 33 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=0 and k_state=1 => 34 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and k_state<3 => 44 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and k_state=3 => 35 },
+                    { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=1 and mrb=1 => 55 },
+                    {htn=1 and bpc>1 =>99},
+                    {=>0};

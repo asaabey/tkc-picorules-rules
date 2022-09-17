@@ -1,0 +1,28 @@
+/* Algorithm to assess covid 19 vaccination  */
+        
+        #define_ruleblock(vacc_covid,
+            {
+                description: "Algorithm to assess covid 19 vaccination ",
+                is_active:2
+                
+            }
+        );
+        
+       
+        vax_pf => eadv.vacc_covid_comirnaty._.lastdv();
+        
+        vax_az => eadv.vacc_covid_astrazeneca._.lastdv();
+        
+        vax_md => eadv.vacc_covid_moderna._.lastdv();
+        
+        vax => eadv.[vacc_covid_moderna,vacc_covid_astrazeneca,vacc_covid_comirnaty]._.maxldv();
+        
+        vacc_covid : { coalesce(vax_pf_dt, vax_az_dt, vax_md_dt)!? => 1},{=>0};
+        
+                
+        #define_attribute(
+            vacc_covid,{
+                label:"Major abdominal colorectal surgery",
+                type:2,
+                is_reportable:0
+        });

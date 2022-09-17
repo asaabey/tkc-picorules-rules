@@ -4,8 +4,10 @@ import re
 
 BLOCKID_RGX = r'(?:rb\.blockid\s{0,}\:=\s{0,}\')(.*)(?:\')'
 BLOCKBODY_RGX = r'(?:rb\.picoruleblock\s{0,}\:=\s{0,}\')([^\']*)(?:\')'
+BLOCK_PH = '[[rb_id]]'
 
 PICORULE_FILE_PATH = 'picorule_fmt'
+PICORULE_FILE_EXT = 'picorule'
 
 wd = os.path.abspath(os.getcwd())
 file_list = []
@@ -32,8 +34,10 @@ def writefile(fname, body):
 def processfiles():
     blockid_list = []
     blockbody_list = []
+    files_created = 0
 
     for path in os.listdir(wd):
+
 
         if os.path.isfile(os.path.join(wd,path)):
             
@@ -53,10 +57,19 @@ def processfiles():
                     print(f'file :{path} | {len(fs)} | ids : {file_bids_size} | bodies {file_blockbodies_size}')
                     
                     for idx, file_bid in enumerate(file_bids):
-                        fb = file_blockbodies[idx]
-                        print(f'----> [{idx}]: {file_bid}' | fb[1..20])
+                        fb = file_blockbodies[idx].strip()
+                        fb = fb.replace(BLOCK_PH,file_bid)
+                        print(f'----> writing [{idx}]: {file_bid} ')
+                        try: 
+                            writefile(file_bid + '.' + PICORULE_FILE_EXT, fb)
+                            files_created += 1
+
+                        except:
+                            print("----> File write Exception!!")
+    print(f'Total files created : {files_created}')
             
 
 
 if __name__ == '__main__':
     processfiles()
+    # writefile('test2.picorule','test text')

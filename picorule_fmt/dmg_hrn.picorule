@@ -1,0 +1,22 @@
+/* Algorithm to assess HRN */
+        
+        #define_ruleblock(dmg_hrn,
+            {
+                description: "Algorithm to assess HRN",
+                is_active:2
+                
+            }
+        );
+         
+        hrn_last => eadv.dmg_hrn.val.last();
+
+        dmg_hrn : { hrn_last!? => 1 },{=>0};    
+        
+        #define_attribute(
+            dmg_hrn,
+            {
+                label:"Last HRN",
+                type:2,
+                is_reportable:0
+            }
+        );

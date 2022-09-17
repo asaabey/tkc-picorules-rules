@@ -1,0 +1,38 @@
+/*  This is a algorithm to identify metastatic carcinoma  */
+        
+        #define_ruleblock(ca_mets,
+            {
+                description: "This is a algorithm to identify metastatic carcinoma",
+                is_active:2
+                
+            }
+        );
+        
+        bone_met_fd => eadv.icd_c79_5.dt.first();
+        
+        cns_met_fd => eadv.icd_c79_3.dt.first();
+        
+        adr_met_fd => eadv.icd_c79_7.dt.first();
+        
+        liver_met_fd => eadv.icd_78_7.dt.first();
+        
+        lung_met_fd => eadv.icd_78_0.dt.first();
+        
+        perit_met_fd => eadv.icd_78_6.dt.first();
+        
+        nodal_met_fd => eadv.[icd_77%].dt.first();
+        
+        nos_met_fd => eadv.[icd_c79_%,icd_c78_%,icpc_a79009].dt.first();
+        
+        any_met_fd => eadv.[icd_c77_%,icd_c78_%,icd_c79_%,icpc_a79009].dt.first();
+        
+        
+        ca_mets : { any_met_fd!? =>1},{=>0};
+        
+        #define_attribute(ca_mets,
+            { 
+                label: "Presence of metastatic carcinoma",
+                is_reportable:1,
+                type:2
+            }
+        );

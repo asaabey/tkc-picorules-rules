@@ -1,0 +1,34 @@
+/* Ruleblock to assess for cva*/
+        
+        #define_ruleblock(cd_cva,
+            {
+                description: "Ruleblock to assess for cva",
+                is_active:2
+                
+            }
+        );
+        
+        
+        cva_infarct_dt => eadv.[icd_i63%,icd_i65%,icd_i66%,icd_i67%].dt.min();
+        
+        cva_hmrage_dt => eadv.[icd_i60%,icd_i61%,icd_i62%].dt.min();
+        
+        cva_nos_dt =>  eadv.icd_i64.dt.min();
+        
+        cva_icpc_dt => eadv.[icpc_k90%,icpc_k91%].dt.min();
+        
+        cva_dt : {.=> least_date(cva_infarct_dt,cva_nos_dt,cva_hmrage_dt,cva_icpc_dt)};
+        
+        
+        cd_cva :  {cva_dt!? => 1},{=>0};
+        
+        
+        #define_attribute(
+            cd_cva,
+            {
+                label:"Stroke",
+                desc:"Presence of haemorrhagic or thromboembolic stroke",
+                is_reportable:1,
+                type:2
+            }
+        );

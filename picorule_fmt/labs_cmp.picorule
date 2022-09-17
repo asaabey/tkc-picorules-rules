@@ -1,0 +1,25 @@
+/* Rule block to gather lab tests */
+        
+        #define_ruleblock(labs_cmp,
+            {
+                description: "Rule block to gather lab tests",
+                is_active:2,
+                
+            }
+        );
+
+       calcium1 => eadv.lab_bld_calcium.val.lastdv().where(dt>sysdate-730);
+       calcium2 => eadv.lab_bld_calcium.val.lastdv(1).where(dt>sysdate-730);
+       calcium3 => eadv.lab_bld_calcium.val.lastdv(2).where(dt>sysdate-730);
+       
+       phos1 => eadv.lab_bld_phosphate.val.lastdv().where(dt>sysdate-730);
+       phos2 => eadv.lab_bld_phosphate.val.lastdv(1).where(dt>sysdate-730);
+       phos3 => eadv.lab_bld_phosphate.val.lastdv(2).where(dt>sysdate-730);
+
+       pth1 => eadv.lab_bld_pth.val.lastdv().where(dt>sysdate-730);
+       pth2 => eadv.lab_bld_pth.val.lastdv(1).where(dt>sysdate-730);
+       pth3 => eadv.lab_bld_pth.val.lastdv(2).where(dt>sysdate-730);
+       
+       
+      
+       labs_cmp : {coalesce(calcium1_val,0)>0 => 1 },{=>0};

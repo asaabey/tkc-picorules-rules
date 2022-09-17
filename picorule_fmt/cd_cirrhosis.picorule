@@ -1,0 +1,26 @@
+/*  This is a algorithm to identify cirrhosis e-phenotype  */
+        
+        #define_ruleblock(cd_cirrhosis,
+            {
+                description: "This is a algorithm to identify cirrhosis e-phenotype",
+                is_active:2
+                
+            }
+        );
+        
+        icd_fd => eadv.[icd_k74_%].dt.min();
+        
+        icpc_fd => eadv.[icpc_d97005].dt.min();
+    
+        code_fd : {.=> least_date(icd_fd,icpc_fd)};    
+        
+        
+        cd_cirrhosis : { code_fd!? =>1},{=>0};
+        
+        #define_attribute(cd_cirrhosis,
+            { 
+                label: "Presence of Cirrhosis",
+                is_reportable:1,
+                type:2
+            }
+        );

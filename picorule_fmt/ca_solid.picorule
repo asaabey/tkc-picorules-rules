@@ -1,0 +1,42 @@
+/*  Algorithm to identify solid organ carcinoma  */
+        
+        #define_ruleblock(ca_solid,
+            {
+                description: "Algorithm to identify solid organ carcinoma",
+                is_active:2
+                
+            }
+        );
+        
+        ca_mets => rout_ca_mets.ca_mets.val.bind();
+        
+        
+        ca_breast_fd => rout_ca_breast.code_fd.val.bind();
+        
+        ca_prostate_fd => rout_ca_prostate.code_fd.val.bind();
+        
+        ca_rcc_fd => rout_ca_rcc.code_fd.val.bind();
+        
+        ca_crc_fd => rout_ca_crc.code_fd.val.bind();
+        
+        ca_lung_fd => rout_ca_lung.code_fd.val.bind();
+        
+        ca_thyroid_fd => rout_ca_thyroid.code_fd.val.bind();
+        
+        ca_endometrial_fd => rout_ca_endometrial.code_fd.val.bind();
+        
+        ca_ovarian_fd => rout_ca_ovarian.code_fd.val.bind();
+        
+        any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd,ca_thyroid_fd, ca_ovarian_fd, ca_endometrial_fd)!? => 1},{=>0};
+        
+        op_enc_ld => rout_ca_careplan.op_enc_ld.val.bind();
+        
+        ca_solid : { any_ca=1 or ca_mets=1 => 1},{=>0};
+        
+        #define_attribute(ca_solid,
+            { 
+                label: "Presence of solid organ carcinoma",
+                is_reportable:1,
+                type:2
+            }
+        );

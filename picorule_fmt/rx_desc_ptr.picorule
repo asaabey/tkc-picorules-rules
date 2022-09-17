@@ -1,0 +1,20 @@
+/* Algorithm to assess Medication  */
+        
+            
+             #define_ruleblock(rx_desc_ptr,
+                {
+                    description: "Algorithm to serialize active medications",
+                    
+                    is_active:2
+                    
+                }
+            );
+            
+            
+            
+            
+            rx_name_obj => eadv.rx_desc_ptr.val.serialize2();
+            
+            rx_n => eadv.rx_desc_ptr.val.count();
+            
+            rx_desc_ptr : {coalesce(rx_n,0)>0 =>1},{=>0};

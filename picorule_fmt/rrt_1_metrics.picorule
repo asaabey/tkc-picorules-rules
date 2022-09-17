@@ -1,0 +1,39 @@
+/* Rule block to determine RRT 1 metrics*/
+        
+        #define_ruleblock(rrt_1_metrics,
+            {
+                description: "Rule block to determine RRT 1 metrics",
+                is_active:2
+                
+            }
+        );
+
+        #doc(,
+            {
+                txt : "rrt session regularity"
+            }
+        );
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        hd_ld => eadv.icd_z49_1.dt.max();
+        
+        hd_fd => eadv.icd_z49_1.dt.min();
+        
+        hd_n => eadv.icd_z49_1.dt.count();
+        
+        hd0_2w_f : { (sysdate - hd_ld)<14 => 1},{=>0};
+        
+        tspan : { . => hd_ld-hd_fd };
+        
+        tspan_y : { .=> round(tspan/365,1) };
+        
+        hd_oe : { tspan > 1 => round(100*(hd_n /tspan)/0.427,0)},{=>0};
+        
+        hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
+        
+        hd_sl : { .=> round(hd_tr*100,0) };
+        
+        
+        
+        rrt_1_metrics : {rrt=1 =>1};

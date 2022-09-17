@@ -1,0 +1,29 @@
+/* Algorithm to assess Outpatient activity*/
+        
+        #define_ruleblock(opa_sep,
+            {
+                description: "Outpatient activity with exclusions",
+                is_active:2
+            }
+        );
+        
+        
+        
+        op_ld => eadv.[enc_op_%].dt.last();
+        
+        op_n => eadv.[enc_op_%].dt.distinct_count();
+        
+        op_fd => eadv.[enc_op_%].dt.first();
+        
+        op_att => eadv.[enc_op_%].att.last();
+        
+        opa_sep : { op_ld!? => 1 },{=>0};    
+        
+        #define_attribute(
+            opa_sep,
+            {
+                label:"Inpatient activity",
+                type:2,
+                is_reportable:0
+            }
+        );

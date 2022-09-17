@@ -1,0 +1,59 @@
+/* Rule block to determine Fistula intervention*/
+        
+        #define_ruleblock(rrt_hd_acc_iv,
+            {
+                description: "Rule block to determine Fistula intervention",
+                is_active:2            
+                
+            }
+        );
+
+        #doc(,
+            {
+                txt : "Intervntion codes from RIS episodes"
+            }
+        );
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        acc_side => eadv.hd_access_side._.lastdv();
+        
+        acc_type => eadv.hd_access_type._.lastdv();
+        
+        acc_detail : {coalesce(acc_side_val,acc_type_val)!? => 1},{=>0};
+        
+        avf_dt => rout_ckd_access.avf_dt.val.bind();
+        
+        avf_us_ld => eadv.ris_img_usavfist.dt.last();
+        
+        av_gram_ld => eadv.[ris_img_dshfist,ris_img_dsarenal].dt.last();
+        
+        av_plasty_ld => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.last();
+        
+        av_plasty_1_ld => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.last(1);
+        
+        av_plasty_fd => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.first();
+        
+        av_plasty_n => eadv.[ris_img_dshplas1%, ris_img_angplas%,ris_img_dsarenal].dt.count();
+        
+        av_surv_ld : {.=> greatest(avf_us_ld,av_gram_ld,av_plasty_ld)};
+        
+        plasty_gap : {.=> av_plasty_ld-av_plasty_1_ld};
+        
+        iv_periodicity : {plasty_gap between 0 and 100 => 3},
+                        {plasty_gap between 100 and 200 => 6},
+                        {plasty_gap between 200 and 600 => 12},
+                        {plasty_gap >400 or plasty_gap?=> 99};
+                        
+        av_iv : {av_plasty_ld!? => 1},{=>0};
+        
+        rrt_hd_acc_iv : { rrt in (1,4) and (av_surv_ld!? or avf_dt!? or acc_detail=1)=>1},{=>0};
+        
+        #define_attribute(
+            rrt_hd_acc_iv ,
+            {
+                label:"AV fistuloplasty",
+                is_reportable:1,
+                type:2
+            }
+        );

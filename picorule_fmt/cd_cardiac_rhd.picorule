@@ -1,0 +1,31 @@
+/* Algorithm to assess rheumatic heart disease  */
+        
+        #define_ruleblock(cd_cardiac_rhd,
+            {
+                description: "Algorithm to assess rheumatic heart disease",
+                is_active:2
+                
+            }
+        );
+        
+            #doc(,
+                {
+                    txt:"rheumatic heart disease based on coding"
+                }
+            );  
+            
+            rhd_dt => eadv.[icd_i05%,icd_i06%,icd_i07%,icd_i08%,icd_i09%,icpc_k71%].dt.min();
+            
+            rhd_aet : {rhd_dt!? => 1},{=>0};
+           
+            cd_cardiac_rhd : {. => rhd_aet};
+            
+            #define_attribute(
+            cd_cardiac_rhd,
+                {
+                    label:"rheumatic heart disease",
+                    desc:"Presence of rheumatic heart disease",
+                    is_reportable:1,
+                    type:2
+                }
+            );
