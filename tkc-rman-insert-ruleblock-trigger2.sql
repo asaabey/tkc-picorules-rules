@@ -770,9 +770,9 @@ BEGIN
         pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
-        hd_start : {hd_dt_min > sysdate-30 and hd_n>=10 => 1},{=>0};
+        hd_start : {hd_dt_min > sysdate-90 and hd_n>=10 => 1},{=>0};
           
-        pd_start : {pd_dt_min > sysdate-30 => 1},{=>0};
+        pd_start : {pd_dt_min > sysdate-90 => 1},{=>0};
         
         rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
         
@@ -783,7 +783,7 @@ BEGIN
         #define_attribute(
                 tg4720,
                 {
-                    label:"Alert:New commencement on Renal replacement therapy within last 1 months",
+                    label:"Alert:New commencement on Renal replacement therapy within last 3 months",
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:1,
                     is_trigger:1,
