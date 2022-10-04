@@ -56,9 +56,9 @@ BEGIN
         
         mbs_n => eadv.[mbs_%].dt.count();
         
-        fd => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.min();
+        fd => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.min();
         
-        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
+        ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
         
         ts : { .=> round((ld-fd)/365,2)};
         

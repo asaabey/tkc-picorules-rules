@@ -38,7 +38,8 @@ BEGIN
                 }
             ); 
         
-        ld => eadv.[icd%,icpc%,lab%,rxnc%,obs%,mbs%].dt.max();
+        
+        ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
         
         is_active : { ld > sysdate-730 =>1 },{=>0};
 
