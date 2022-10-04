@@ -1117,7 +1117,7 @@ BEGIN
     
         /*  CKD stage 4 has not been seen in 12 months (PHC or nephrology)   */
         
-         #define_ruleblock([[rb_id]],
+         #define_ruleblock([[tg4122]],
             {
                 description: "CKD stage 4 has not been seen in 12 months ",
                 
@@ -1141,10 +1141,10 @@ BEGIN
         ex_flag : {dod!? or csu!? =>1 },{=>0};
 
           
-        [[rb_id]] : {ckd > 4 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
+        [[tg4122]] : {ckd > 4 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
         
         #define_attribute(
-                [[rb_id]],
+                [[tg4122]],
                 {
                     label:"Alert:Unmanaged possible CKD stage 4",
                     desc:"Integer [0-1] if meets criteria ",
@@ -1170,7 +1170,7 @@ BEGIN
     
         /*  CKD 5 has not been seen in 6 months (PHC or nephrology)   */
         
-         #define_ruleblock([[rb_id]],
+         #define_ruleblock([[tg4123]],
             {
                 description: "CKD 5 has not been seen in 6 months ",
                 
@@ -1194,10 +1194,10 @@ BEGIN
         ex_flag : {dod!? or csu!? =>1 },{=>0};
 
           
-        [[rb_id]] : {ckd > 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
+        [[tg4123]] : {ckd > 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
         
         #define_attribute(
-                [[rb_id]],
+                [[tg4123]],
                 {
                     label:"Alert:Unmanaged possible CKD stage 5",
                     desc:"Integer [0-1] if meets criteria ",
