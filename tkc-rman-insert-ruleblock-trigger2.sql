@@ -770,9 +770,9 @@ BEGIN
         pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
-        hd_start : {hd_dt_min > sysdate-30 and hd_n>=10 => 1},{=>0};
+        hd_start : {hd_dt_min > sysdate-90 and hd_n>=10 => 1},{=>0};
           
-        pd_start : {pd_dt_min > sysdate-30 => 1},{=>0};
+        pd_start : {pd_dt_min > sysdate-90 => 1},{=>0};
         
         rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
         
@@ -783,7 +783,7 @@ BEGIN
         #define_attribute(
                 tg4720,
                 {
-                    label:"Alert:New commencement on Renal replacement therapy within last 1 months",
+                    label:"Alert:New commencement on Renal replacement therapy within last 3 months",
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:1,
                     is_trigger:1,
@@ -1106,6 +1106,113 @@ BEGIN
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);    
     COMMIT;
     -- END OF RULEBLOCK --
+    
+   -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg4122';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  CKD stage 4 has not been seen in 12 months (PHC or nephrology)   */
+        
+         #define_ruleblock([[tg4122]],
+            {
+                description: "CKD stage 4 has not been seen in 12 months ",
+                
+                is_active:2
+                
+            }
+        );
+        
+        age => rout_dmg.age.val.bind();
+        
+        dod => rout_dmg.dod.val.bind();
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        csu => eadv.csu_action_tg4122.dt.last();
+
+        ren_enc => rout_engmnt_renal.enc_renal.val.bind();
+
+        mbs => eadv.[mbs%].dt.last().where(dt > sysdate - 365);
+
+        ex_flag : {dod!? or csu!? =>1 },{=>0};
+
+          
+        [[tg4122]] : {ckd > 4 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
+        
+        #define_attribute(
+                [[tg4122]],
+                {
+                    label:"Alert:Unmanaged possible CKD stage 4",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:1,
+                    is_trigger:1,
+                    type:2,
+                    priority:1
+                }
+            ); 
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    -- END OF RULEBLOCK --
+    
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg4123';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /*  CKD 5 has not been seen in 6 months (PHC or nephrology)   */
+        
+         #define_ruleblock([[tg4123]],
+            {
+                description: "CKD 5 has not been seen in 6 months ",
+                
+                is_active:2
+                
+            }
+        );
+        
+        age => rout_dmg.age.val.bind();
+        
+        dod => rout_dmg.dod.val.bind();
+        
+        ckd => rout_ckd.ckd.val.bind();
+        
+        csu => eadv.csu_action_tg4123.dt.last();
+
+        ren_enc => rout_engmnt_renal.enc_renal.val.bind();
+
+        mbs => eadv.[mbs%].dt.last().where(dt > sysdate - 180);
+
+        ex_flag : {dod!? or csu!? =>1 },{=>0};
+
+          
+        [[tg4123]] : {ckd > 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
+        
+        #define_attribute(
+                [[tg4123]],
+                {
+                    label:"Alert:Unmanaged possible CKD stage 5",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:1,
+                    is_trigger:1,
+                    type:2,
+                    priority:1
+                }
+            ); 
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    -- END OF RULEBLOCK --
+    
 END;
 
 
