@@ -1134,11 +1134,11 @@ BEGIN
         
         csu => eadv.csu_action_tg4122.dt.last();
 
-        ren_ec => rout_engmnt_renal.enc_renal.val.bind();
+        ren_enc => rout_engmnt_renal.enc_renal.val.bind();
 
         mbs => eadv.[mbs%].dt.last().where(dt > sysdate - 365);
 
-        ex_flag : {dod!? or csu!? =>1 },{=>0}
+        ex_flag : {dod!? or csu!? =>1 },{=>0};
 
           
         [[rb_id]] : {ckd > 4 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
