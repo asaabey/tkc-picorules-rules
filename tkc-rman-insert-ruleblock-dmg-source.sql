@@ -23,7 +23,7 @@ BEGIN
     
         /* Algorithm to assess demographic source */
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(dmg_source,
             {
                 description: "Algorithm to assess demographic source",
                 is_active:2
@@ -32,7 +32,8 @@ BEGIN
         );
                 
         
-                
+        rrt => rout_rrt.rrt.val.bind();
+        
         loc_def => rout_dmg_loc.loc_def.val.bind();
         
         loc_def_alt => rout_dmg_loc.loc_def_alt.val.bind();
@@ -111,7 +112,9 @@ BEGIN
         
         tkc_provider : { coalesce(loc_region,0)=1 or phc_1 in(36,37,38,39,41,42) =>1},{=>2};
         
-        [[rb_id]] : { phc_1 > 0 => phc_1 },{=>999};    
+        /* fix201022 if on RRT phc will default to EDW */
+        
+        dmg_source : {rrt>0 => 90},{ phc_1 > 0 => phc_1 },{=>999};    
         
         
        
