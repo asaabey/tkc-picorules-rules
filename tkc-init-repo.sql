@@ -18,7 +18,7 @@
 @"tkc-rman-insert-ruleblock-ckd-mbd.sql";
 @"tkc-rman-insert-ruleblock-ckd-anaemia.sql";
 @"tkc-rman-insert-ruleblock-ckd-progress-viewmodels.sql";
-@"tkc-rman-insert-ruleblock-labs.sql";
+--@"tkc-rman-insert-ruleblock-labs.sql";
 @"tkc-rman-insert-ruleblock-cd-dm.sql";
 @"tkc-rman-insert-ruleblock-cd-htn.sql";
 
@@ -31,6 +31,7 @@
 @"tkc-rman-insert-ruleblock-cd-cardiac-device.sql";
 
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
+@"tkc-rman-insert-ruleblock-cd-cns-ch.sql";
 @"tkc-rman-insert-ruleblock-cd-dyslip.sql";
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";
 @"tkc-rman-insert-ruleblock-cd-haem.sql";
@@ -80,10 +81,10 @@
 
 -- Init templates
 
-@"tkc-insert-compositions.sql"
-@"tkc-insert-template-block2.sql"
+--@"tkc-insert-compositions.sql"
+--@"tkc-insert-template-block2.sql"
 -- called by template-block
-@"tkc-insert-composition-template-map.sql"
+--@"tkc-insert-composition-template-map.sql"
 
 
 

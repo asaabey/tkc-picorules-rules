@@ -308,7 +308,6 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         <ol>
             <<loc_fixed>><li><<loc_def$loc_sublocality />> (sessions=<<loc_1_n />>)</li><</loc_fixed>>
             <<tspan_y>><li>Dialysis vintage <<tspan_y />> years</li><</tspan_y>>
-            <li>Regularity <<hd_sl />>% </li>
             <li>Thrice weekly target achievement <<hd_oe />>% </li>
         </ol>
         </li>
@@ -367,7 +366,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('rrt_3_syn','rrt','
     <<rrt=3>>
-    <li><b>Renal transplant due to (ESRD)</b>
+    <li><b><div >Renal transplant due to (ESRD)</div></b>
         <ol>
             <<tx_multi_current>><li>Multiparity detected</li><</tx_multi_current>>
             <<tx_multi_current=0>><li>Functioning allograft, since <<tx_dt />></li><</tx_multi_current=0>>
@@ -546,7 +545,13 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_syn_end','ckd','</ol></li>');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_ckd_syn_1','ckd','
-        <li><b>CKD stage <<ckd_stage />></b><<mm1>>?<</mm1>><<mm2>>*<</mm2>>
+        <<ckd_stage_val=1>><li><b><div snomed-id="431855005">CKD stage 1</div></b><</ckd_stage_val=1>>
+        <<ckd_stage_val=2>><li><b><div snomed-id="431856006">CKD stage 2</div></b><</ckd_stage_val=2>>
+        <<ckd_stage_val=3>><li><b><div snomed-id="700378005">CKD stage 3a</div></b><</ckd_stage_val=3>>
+        <<ckd_stage_val=4>><li><b><div snomed-id="700379002">CKD stage 3b</div></b><</ckd_stage_val=4>>
+        <<ckd_stage_val=5>><li><b><div snomed-id="431857002">CKD stage 4</div></b><</ckd_stage_val=5>>
+        <<ckd_stage_val=6>><li><b><div snomed-id="433146000">CKD stage 5</div></b><</ckd_stage_val=6>>
+        <<mm1>>?<</mm1>><<mm2>>*<</mm2>>
         <ol>
             <<assert_level=101100>><li>Has not met persistent criteria</li><</assert_level=101100>>
             <<mm1>><li>Could be a dialysis patient with non-captured episodes</li><</mm1>>
@@ -708,8 +713,8 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_dm_syn_1','cd_dm_dx','
     <br />
-        <<dm_type=1>><li><b>Diabetes Mellitus Type 1</b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
-        <<dm_type=2>><li><b>Diabetes Mellitus Type 2</b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><<dm2_mm_3>> ? <</dm2_mm_3>><<dm2_mm_4>> ? <</dm2_mm_4>><</dm_type=2>>
+        <<dm_type=1>><li><b><div snomed-id="46635009">Diabetes Mellitus Type 1</div></b> <<dm1_mm>> ? <</dm1_mm>><</dm_type=1>>
+        <<dm_type=2>><li><b><div snomed-id="44054006">Diabetes Mellitus Type 2</div></b> <<dm2_mm_1>> ? <</dm2_mm_1>><<dm2_mm_2>> ? <</dm2_mm_2>><<dm2_mm_3>> ? <</dm2_mm_3>><<dm2_mm_4>> ? <</dm2_mm_4>><</dm_type=2>>
         <ol>
             <<dm2_mm_3>><li>Dm2 codes predate pre-diabetes</li> <</dm2_mm_3>>
             <<dm2_mm_4>><li>Codes suggestive of non type 1 or non-type 2</li> <</dm2_mm_4>>
@@ -792,7 +797,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_htn_syn_1','cd_htn','
     <br />
-        <li><b>Hypertension</b>
+        <li><b><div snomed-id="38341003">Hypertension</div></b>
         <ol>
             <li><<htn_icpc>>Diagnosed<</htn_icpc>> Hypertension <<htn_from_obs>> from observations <</htn_from_obs>> <<htn_fd_yr>> since <</htn_fd_yr>><<htn_fd_yr />></li>
             <<sbp_outdated=1>><li>No readings within last two years</li><</sbp_outdated=1>>
@@ -823,7 +828,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cardiac_cad_syn','cd_cardiac_cad','
             <br />
-            <li><b>Coronary artery disease</b>
+            <li><b><div snomed-id="53741008">Coronary artery disease</div></b>
                 <ol>
                     <<cabg>><li>Coronary artery bypass grafting <<cabg />></li><</cabg>>
                     <<ami_icd_null>><li>No recorded myocardial infarction in hospital</li><</ami_icd_null>>
@@ -2018,6 +2023,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
         </ol>
     </li>
     ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_melioid','id_melioid','
+    <br />
+    <li><b>Melioidosis</b>
+        <ol>
+            <<code>><li>Melioidosis first diagnosed <<code />></li><</code>>
+        </ol>
+    </li>
+    ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('id_covid19','id_covid19','
     <br />
     <li><b>Covid19 infection</b>
@@ -2056,6 +2069,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <li><b>Chronic Hepatitis C</b>
         <ol>
             <<icpc_code>><li>Diagnosed <<icpc_code />></li><</icpc_code>>
+        </ol>
+    </li>
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_cns_ch','cd_cns_ch','
+    <br />
+    <li><b>Cerebral Haemorrhage </b>
+        <ol>
+            <<code_sdh_fd>><li>Subdural Haemorrhage <<code_sdh_fd />></li><</code_sdh_fd>>
+            <<code_ich_fd>><li>Intracerebral Haemorrhage <<code_ich_fd />></li><</code_ich_fd>>
+            <<code_edh_fd>><li>Extradural Haemorrhage <<code_edh_fd />></li><</code_edh_fd>>
         </ol>
     </li>
     ');
@@ -2134,7 +2158,7 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <<gender=0>>She <</gender=0>><<gender=1>>He <</gender=1>> is a <<age />> year old patient reviewed today at the Dialysis clinic.<<enc_ld>> Previous review was on the <<enc_ld />><</enc_ld>> 
     <<ipa_sep_ld>>The last hospital admission was on the <<ipa_sep_ld />><</ipa_sep_ld>>.
     </p><p>
-    <<ibw_val>>The IBW is <<ibw_val>> set on <<ibw_dt>>.<</ibw_val>>The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
+    <<ibw_val>>The IBW is <<ibw_val />> kg set on <<ibw_dt />>.<</ibw_val>>The average blood pressure was <<sbp_mu_1 />>/<<dbp_mu_1 />> mmHg with a maximum of <<sbp_max />> mmHg. 
     <<spktv>>Single pool Kt/V is <<spktv />><</spktv>><<hours>> and dialysis durations is <<hours />> hrs.<</hours>>
     </p>
     ');
@@ -2211,6 +2235,16 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <br />
     <video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/599/16/ENGLISHfinal.mp4" controls />
    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__rtf_frame_begin__','dmg_vm','
+    <div id="outerflex" style="display:flex; flex-wrap: wrap; justify-content: flex-start;">
+    <!--OVR_ENUM_START-->
+    ');
+    
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('__rtf_frame_end__','dmg_vm','
+    <!--OVR_ENUM_STOP-->
+    </div>
+    ');
+
 @"tkc-insert-composition-template-map.sql"
 -- Compile rman_tmplts
 alter package rman_tmplts compile;
