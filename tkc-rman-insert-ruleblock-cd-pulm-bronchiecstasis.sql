@@ -14,7 +14,7 @@ BEGIN
     
     -- BEGINNING OF RULEBLOCK --
 
-    rb.blockid:='cd_pulm_copd';
+    rb.blockid:='cd_pulm';
     
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
@@ -22,7 +22,7 @@ BEGIN
     
         /*  Algorithm to identify pulmonary disease  */
         
-        #define_ruleblock(cd_pulm_copd,
+        #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to identify pulmonary disease",
                 is_active:2
@@ -36,9 +36,9 @@ BEGIN
         
         copd : {code_copd_dt!? or rx_r03_dt!?=> 1},{=>0};
         
-        cd_pulm_copd : { greatest(copd)>0 =>1},{=>0};
+        [[rb_id]] : { greatest(copd)>0 =>1},{=>0};
         
-        #define_attribute(cd_pulm_copd,
+        #define_attribute([[rb_id]],
             { 
                 label: "Presence of COPD"
             }

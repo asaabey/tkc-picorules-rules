@@ -1846,12 +1846,20 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     
     ');
 
-Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_pulm','cd_pulm','
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_pulm_copd','cd_pulm_copd','
     <br />
     <li><b>Chronic obstructive pulmonary disease</b>
         <ol>
             <<code_copd_dt>><li>Diagnosed <<code_copd_dt />></li><</code_copd_dt>>
             <<rx_r03_dt>><li>Bronchodilator therapy <<rx_r03_dt />></li><</rx_r03_dt>>
+        </ol>
+    </li>
+    ');
+Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('cd_pulm_bt','cd_pulm_bt','
+    <br />
+    <li><b>Bronchiectasis</b>
+        <ol>
+            <<bt_fd>><li>Diagnosed <<bt_fd />></li><</bt_fd>>
         </ol>
     </li>
     ');
@@ -1876,7 +1884,12 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     <br />
     <li><b>Cirrhosis of liver</b>
         <ol>
-            <<code_fd>><li>Diagnosed <<code_fd />></li><</code_fd>>    
+            <<code_fd>><li>Diagnosed <<code_fd />></li><</code_fd>> 
+            <<cirr_pbc_fd>><li>Primary biliary cirrhosis</li><</cirr_pbc_fd>>
+            <<cirr_nos_fd>><li>Cirrhosis Nos</li><</cirr_nos_fd>>
+            <<cps_abbr_class=3>><li>CTP class C</li><</cps_abbr_class=3>>
+            <<cps_abbr_class=2>><li>CTP class B</li><</cps_abbr_class=2>>
+            <<cps_abbr_class=1>><li>CTP class A</li><</cps_abbr_class=1>>
         </ol>
     </li>
     ');
