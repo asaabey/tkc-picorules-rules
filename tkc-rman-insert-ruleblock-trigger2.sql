@@ -85,7 +85,8 @@ BEGIN
         
         enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
-                
+
+    
         ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
 
         
@@ -1117,7 +1118,7 @@ BEGIN
     
         /*  CKD stage 4 has not been seen in 12 months (PHC or nephrology)   */
         
-         #define_ruleblock([[tg4122]],
+         #define_ruleblock(tg4122,
             {
                 description: "CKD stage 4 has not been seen in 12 months ",
                 
@@ -1136,15 +1137,17 @@ BEGIN
 
         ren_enc => rout_engmnt_renal.enc_renal.val.bind();
 
-        mbs => eadv.[mbs%].dt.last().where(dt > sysdate - 365);
+        mbs => eadv.[mbs_%].dt.last().where(dt > sysdate - 365);
+        
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
 
-        ex_flag : {dod!? or csu!? =>1 },{=>0};
+        ex_flag : {dod!? or csu!? or dmg_source=999 => 1  },{=>0};
 
           
-        [[tg4122]] : {ckd > 4 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
+        tg4122 : {ckd = 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
         
         #define_attribute(
-                [[tg4122]],
+                tg4122,
                 {
                     label:"Alert:Unmanaged possible CKD stage 4",
                     desc:"Integer [0-1] if meets criteria ",
@@ -1170,7 +1173,7 @@ BEGIN
     
         /*  CKD 5 has not been seen in 6 months (PHC or nephrology)   */
         
-         #define_ruleblock([[tg4123]],
+         #define_ruleblock(tg4123,
             {
                 description: "CKD 5 has not been seen in 6 months ",
                 
@@ -1189,15 +1192,19 @@ BEGIN
 
         ren_enc => rout_engmnt_renal.enc_renal.val.bind();
 
-        mbs => eadv.[mbs%].dt.last().where(dt > sysdate - 180);
+        mbs => eadv.[mbs_%].dt.last().where(dt > sysdate - 180);
+        
 
-        ex_flag : {dod!? or csu!? =>1 },{=>0};
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+        ex_flag : {dod!? or csu!? or dmg_source=999 => 1  },{=>0};
+
 
           
-        [[tg4123]] : {ckd > 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
+        tg4123 : {ckd > 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
         
         #define_attribute(
-                [[tg4123]],
+                tg4123,
                 {
                     label:"Alert:Unmanaged possible CKD stage 5",
                     desc:"Integer [0-1] if meets criteria ",
@@ -1208,13 +1215,12 @@ BEGIN
                 }
             ); 
     ';
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
     
 END;
-
 
 
 
