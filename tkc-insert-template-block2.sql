@@ -90,15 +90,14 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('_top_banner_begin','dmg_vm','
     <div class="card">
                 <div class="card-body">
-
-                    <<dmg_source=999>><h4>No recent primary care episodes</h4><</dmg_source=999>>                
-
+                <span>
+                    <<dmg_source=900>><h6>Nephrology clinic</h6><</dmg_source=900>>
+                    <<dmg_source=999>><h6>No recent primary care episodes</h6><</dmg_source=999>>                
                     <div class="d-none d-print-block">EID(<<eid />>)</div>
-                    <<dmg_source=999>><h4>No primary care</h4><</dmg_source=999>>     
     ');
 
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('_top_banner_end','dmg_vm','
-     </div></div><hr />     
+     </span></div></div><hr />     
     ');
 
 

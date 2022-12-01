@@ -25,7 +25,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess [[rb_id]]",                
+                description: "Ruleblock to assess at_risk",                
                 is_active:2
                 
             }
@@ -37,7 +37,6 @@ BEGIN
                     cite: "at_risk_ckd_ref1, at_risk_ckd_ref2, at_risk_ckd_ref3"
                 }
             ); 
-        
         
         ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
         
@@ -64,13 +63,17 @@ BEGIN
         
         obesity => rout_cd_obesity.cd_obesity.val.bind();
         
+        rhd => rout_cd_cardiac_rhd.cd_cardiac_rhd.val.bind();
         
+        hepb => rout_cd_hepb.cd_hepb.val.bind();
         
         
         aki_icd_ld => eadv.[icd_n17%].dt.max();
         
         
-        aki : {aki_icd_ld!? or aki_stage>1 =>1},{=>0};
+        
+        
+        aki : {aki_icd_ld!? or aki_stage>0 =>1},{=>0};
         
         aki_ld : { coalesce(aki_icd_ld, cr_max_ld)!? => least_date(aki_icd_ld, cr_max_ld)};
         
@@ -99,8 +102,9 @@ BEGIN
             }
         );
         
+        risk_sum : { . => dm + htn + cvd + obesity + aki + rhd + hepb  },{=>0};
             
-        [[rb_id]] : {ckd=0 and rrt=0 =>1},{=>0};
+        at_risk : {ckd=0 and rrt=0 and risk_sum>0 =>1},{=>0};
         
         active : {. => is_active_2y};
         
