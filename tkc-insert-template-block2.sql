@@ -1926,10 +1926,17 @@ Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) va
     </li>
     ');
 Insert into RMAN_RPT_TEMPLATE_BLOCKS (TEMPLATE_NAME,RULEBLOCKID,TEMPLATEHTML) values ('ortho_amputation','ortho_amputation','
-    <br />
+<br />
     <li><b>Limb amputation</b>
         <ol>
             <<prost_clinic_fd>><li>First orthotic/prosthetic clinic <<prost_clinic_fd />></li><</prost_clinic_fd>>
+            <<ta_ld>><li>Toe Amputation <<ta_ld />></li><</ta_ld>>
+            <<aa_ld>><li>Amputation at Ankle <<aa_ld />></li><</aa_ld>>
+            <<mta_ld>><li>Mid-Tarsal Amputation <<mta_ld />></li><</mta_ld>>
+            <<tma_ld>><li>Trans-Metatarsal Amputation <<tma_ld />></li><</tma_ld>>
+            <<aka_ld>><li>Above knee Amputation<<aka_ld />></li><</aka_ld>>
+            <<bka_ld>><li>Below knee Amputation <<bka_ld />></li><</bka_ld>>
+            <<ha_ld>><li>Amputation at Hip <<ha_ld />></li><</ha_ld>>
         </ol>
     </li>
     ');
