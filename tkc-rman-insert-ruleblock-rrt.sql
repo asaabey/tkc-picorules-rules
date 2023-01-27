@@ -53,9 +53,11 @@ BEGIN
         
         mbs_13105_dt_min => eadv.mbs_13105.dt.min(); 
         
-        hhd_op_enc_dt_min => eadv.enc_op_ren_hdp.dt.min();
+        /*
+        hhd_op_enc_dt_min => eadv.[enc_op_ren_hdp, enc_op_ren_rhd].dt.min();
         
-        hhd_op_enc_dt_max => eadv.enc_op_ren_hdp.dt.max();
+        hhd_op_enc_dt_max => eadv.[enc_op_ren_hdp, enc_op_ren_rhd].dt.max();
+        */
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
@@ -120,15 +122,18 @@ BEGIN
         
         tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
         
-        tx_active : { tx_dt_icd_last!? and coalesce(hd_tx2,0)=0 =>1 },{=>0};
+        tx_active : { tx_dt_icd_last!? and coalesce(hd_tx2,0)<10 =>1 },{=>0};
         
         #doc(,{
                 txt : "Home-haemodialysis ICPC2p coding"
         });
         
+        /*
         homedx_icpc_dt => eadv.[icpc_u59j99].dt.min();
+        */
         
-        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp].dt.min();
+        /* adjusted switch order to catpure home haemo 18-08-21*/
+        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();
         
         
         ren_enc => eadv.[enc_op%].dt.max();
