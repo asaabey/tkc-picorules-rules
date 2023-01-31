@@ -125,13 +125,21 @@ BEGIN
         
         bp_ld => eadv.obs_bp_systolic.dt.max().where(dt > sysdate-365);
         
+        hba1c_ld => eadv.lab_bld_hba1c_ngsp.dt.max().where(dt > sysdate-365);
+        
+        last_hba1c_val => eadv.lab_bld_hba1c_ngsp.val.last().where(dt > sysdate-365);
+        
         screen_egfr : { egfr_ld!? =>1},{=>0};
         
         screen_acr : { acr_ld!? =>1},{=>0};
         
         screen_bp : { bp_ld!? =>1},{=>0};
         
+        screen_hba1c : { hba1c_ld!? =>1},{=>0};
+        
         screen_3 : { . => screen_egfr + screen_acr + screen_bp};
+        
+        screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
         
         #define_attribute(at_risk,{
                     label:"At risk for CKD",
