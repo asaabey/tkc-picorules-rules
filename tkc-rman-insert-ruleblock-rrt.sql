@@ -61,7 +61,7 @@ BEGIN
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
-        hd_dt => eadv.icd_z49_1.dt.max(); 
+        hd_dt => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
         
         hd_dt_min => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.min();
         
