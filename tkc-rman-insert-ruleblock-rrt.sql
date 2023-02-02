@@ -61,7 +61,7 @@ BEGIN
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
-        hd_dt => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
+        hd_dt => eadv.icd_z49_1.dt.max(); 
         
         hd_dt_min => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.min();
         
@@ -132,8 +132,18 @@ BEGIN
         homedx_icpc_dt => eadv.[icpc_u59j99].dt.min();
         */
         
+        
+        
         /* adjusted switch order to catpure home haemo 18-08-21*/
-        homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();
+        homedx_icpc_ld => eadv.[icpc_u59j99].dt.max();
+        
+        homedx_enc_ld => eadv.[enc_op_ren_hdp,enc_op_ren_rhd].dt.max();
+        
+        /* adjusted date to account for delayed data entry 03-02-23 */
+        
+        homedx_dt : { homedx_icpc_ld!? => homedx_icpc_ld},{ homedx_enc_ld!? => homedx_enc_ld-30};
+        
+        /* homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();*/
         
         
         ren_enc => eadv.[enc_op%].dt.max();
