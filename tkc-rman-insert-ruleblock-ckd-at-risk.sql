@@ -23,7 +23,7 @@ BEGIN
     
         /* Ruleblock to assess at risk population for CKD */
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(at_risk,
             {
                 description: "Ruleblock to assess at_risk",                
                 is_active:2
@@ -96,11 +96,9 @@ BEGIN
               
         
         
-        #doc(,
-            {
+        #doc(,{
                 txt:"Determine at risk for CKD, and active cohort"
-            }
-        );
+        });
         
         risk_sum : { . => dm + htn + cvd + obesity + aki + rhd + hepb  },{=>0};
             
@@ -112,12 +110,17 @@ BEGIN
         
         tkc_cohort : { greatest(ckd,rrt,at_risk)>0 and active=1 =>1},{=>0};
         
+        #doc(,{
+                txt:"Determine tkc category"
+        });
         
-        #doc(,
-            {
+        
+        tkc_cat : { ckd>0 or rrt>0 => 1 },{ at_risk=1 => 2},{ => 3};
+        
+        
+        #doc(,{
                 txt:"Determine if renal screened"
-            }
-        );
+        });
         
         egfr_ld => eadv.lab_bld_egfr.dt.max().where(dt > sysdate-365);
         
@@ -125,10 +128,12 @@ BEGIN
         
         bp_ld => eadv.obs_bp_systolic.dt.max().where(dt > sysdate-365);
         
+        last_bp_val => eadv.obs_bp_systolic.val.last().where(dt > sysdate-365);
+        
         hba1c_ld => eadv.lab_bld_hba1c_ngsp.dt.max().where(dt > sysdate-365);
         
         last_hba1c_val => eadv.lab_bld_hba1c_ngsp.val.last().where(dt > sysdate-365);
-        
+ 
         screen_egfr : { egfr_ld!? =>1},{=>0};
         
         screen_acr : { acr_ld!? =>1},{=>0};
@@ -200,6 +205,13 @@ BEGIN
                     type:2
         });
         
+        #define_attribute(tkc_cat,{
+                    label:"TKC category",
+                    is_reportable:1,
+                    is_bi_obj:1,
+                    type:2
+        });
+        
         #define_attribute(
             active,
                 {
@@ -251,6 +263,16 @@ BEGIN
             screen_bp,
                 {
                     label:"screened by blood pressure within last 1y",
+                    is_reportable:1,
+                    is_bi_obj:1,
+                    type:2
+                }
+        );
+        
+        #define_attribute(
+            screen_hba1c,
+                {
+                    label:"screened by HbA1c within last 1y",
                     is_reportable:1,
                     is_bi_obj:1,
                     type:2
