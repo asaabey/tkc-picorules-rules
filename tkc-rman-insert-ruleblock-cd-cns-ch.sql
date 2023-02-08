@@ -24,7 +24,7 @@ BEGIN
         
         #define_ruleblock(cd_cns_ch,
             {
-                description: Algorithm to identify cerebral haemorrhage",
+                description: "Algorithm to identify cerebral haemorrhage",
                 is_active:2
 
                 

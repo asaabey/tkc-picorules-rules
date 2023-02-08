@@ -229,7 +229,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Inclusions for nephritic syndrome"
+                txt:"Inclusions for nephritic syndrome",
                 cite: "tg4420_ref1, tg4420_ref2, tg4420_ref3"
             }
         );
@@ -371,7 +371,7 @@ BEGIN
           
         #doc(,
             {
-                txt:"Calculate proportions
+                txt:"Calculate proportions"
             }
         );
           
@@ -389,7 +389,7 @@ BEGIN
         
         #doc(,
             {
-                txt:AKI Stage as per AKIN excluding stage 1",
+                txt:"AKI Stage as per AKIN excluding stage 1",
                 cite: "tg4100_ref1, tg4100_ref2"
             }
         );
@@ -706,7 +706,7 @@ BEGIN
         
         #doc(,
             {
-                txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc"
+                txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc",
                 cite: "tg4620_ref1, tg4620_ref2"
             }
         );

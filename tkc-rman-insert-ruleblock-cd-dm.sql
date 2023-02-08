@@ -383,7 +383,7 @@ BEGIN
         
         
         #define_attribute(
-            [[[rb_id]],
+            [[rb_id]],
             {
                 label:"Diabetic complications",
                 desc:"Presence of Diabetic complications",
