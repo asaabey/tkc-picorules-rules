@@ -22,11 +22,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /* Rule block to gather lab tests */
+        /* Rule block to generate rrt panel view model */
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(rrt_panel_vm,
             {
-                description: "Rule block to gather lab tests",
+                description: "Rule block to generate rrt panel view model",
                 is_active:2,
                 
             }
@@ -34,7 +34,7 @@ BEGIN
 
        rrt => rout_rrt.rrt.val.bind();
        
-       loc_1s_txt => rout_rrt_hd_loc.loc_mode_1m_txt.val.bind();
+       loc_1s_txt => rout_rrt_hd_location.loc_mode_1m_txt.val.bind();
        
        hd_recent_flag => rout_rrt.hd_recent_flag.val.bind();
              
@@ -81,12 +81,11 @@ BEGIN
        
        spktv => rout_rrt_hd_adequacy.spktv.val.bind();
        
-       hd_clinic_ld => rout_rrt_journey.hd_clinic_ld.val.bind();
+              
        
        
        
-       
-       [[rb_id]] : {rrt=1 => 1},{=>0};
+       rrt_panel_vm : {rrt in (1,4) => 1},{=>0};
        
        #define_attribute(loc_1s_txt,{
                 label:"Dialysis panel satellite facility location",

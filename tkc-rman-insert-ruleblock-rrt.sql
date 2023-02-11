@@ -61,7 +61,7 @@ BEGIN
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
         
-        hd_dt => eadv.icd_z49_1.dt.max(); 
+        hd_dt => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
         
         hd_dt_min => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.min();
         
@@ -153,10 +153,11 @@ BEGIN
             }
         );
         
-        /* adjusted switch order to catpure home haemo 18-08-21*/
-        [[rb_id]]:{homedx_dt > nvl(greatest_date(hd_icpc_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
+        /* adjusted mbs_13105 11-02-2023*/
+        rrt:{homedx_dt > nvl(greatest_date(hd_icpc_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
             {hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 and tx_active=0 => 1},
             {hd_icpc_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and coalesce(hd_dt,mbs_13105_dt_max)>sysdate-90 =>1},
+            {mbs_13105_dt_max!?=> 1},
             {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_dt>coalesce(pd_ex_dt,lower__bound__dt) and tx_multi_current=0 => 2},
             {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
             {tx_dt!? and tx_multi_current=1 => 3},
@@ -309,62 +310,10 @@ BEGIN
    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     
     -- END OF RULEBLOCK --
-     -- BEGINNING OF RULEBLOCK --
     
-        
-    rb.blockid:='rrt_journey';
 
     
-    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
-    rb.picoruleblock:='
-    
-        /* Rule block to determine RRT 1 metrics*/
-        
-        #define_ruleblock([[rb_id]],
-            {
-                description: "Rule block to determine RRT 1 metrics",
-                is_active:2
-                
-            }
-        );
-
-        #doc(,
-            {
-                txt : "rrt session regularity"
-            }
-        );
-        
-        rrt => rout_rrt.rrt.val.bind();
-        
-        hd_dt => eadv.icd_z49_1.dt.max();
-        
-        hd_dt_2w => eadv.icd_z49_1.dt.max().where(dt> sysdate-14);
-
-        hd0_2w_f : { hd_dt_2w!? => 1},{=>0};
-        
-        hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
-        
-        hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ksc,enc_op_ren_gpd,enc_op_ren_rsr].dt.max();
-        
-        
-        [[rb_id]] : {. =>1};
-        
-        #define_attribute(
-            rrt_hhd,
-            {
-                label:"RRT Home haemodialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
-    ';
-    
-    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
-    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
-    
-    -- END OF RULEBLOCK --
     
     
     
