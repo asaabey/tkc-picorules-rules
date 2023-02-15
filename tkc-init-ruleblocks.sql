@@ -31,15 +31,17 @@
 @"tkc-rman-insert-ruleblock-cd-cardiac-device.sql";
 
 @"tkc-rman-insert-ruleblock-cd-cva.sql";
+@"tkc-rman-insert-ruleblock-cd-cns-ch.sql";
 @"tkc-rman-insert-ruleblock-cd-dyslip.sql";
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";
 @"tkc-rman-insert-ruleblock-cd-haem.sql";
 @"tkc-rman-insert-ruleblock-cd-cns.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm.sql";
+@"tkc-rman-insert-ruleblock-cd-pulm-copd.sql";
+@"tkc-rman-insert-ruleblock-cd-pulm-bt.sql";
 @"tkc-rman-insert-ruleblock-cd-rheum.sql";
 @"tkc-rman-insert-ruleblock-cd-imm.sql";
 @"tkc-rman-insert-ruleblock-ca.sql";
-@"tkc-rman-insert-ruleblock-ca-rcc.sql"
 @"tkc-rman-insert-ruleblock-cd-endo-thyroid.sql";
 @"tkc-rman-insert-ruleblock-cd-liver.sql";
 @"tkc-rman-insert-ruleblock-cd-hep-b.sql";
@@ -48,6 +50,7 @@
 @"tkc-rman-insert-ruleblock-id-uti.sql";
 @"tkc-rman-insert-ruleblock-id-tb.sql";
 @"tkc-rman-insert-ruleblock-id-hcv.sql";
+@"tkc-rman-insert-ruleblock-id-covid19.sql";
 
 @"tkc-rman-insert-ruleblock-ckd-at-risk.sql";
 @"tkc-rman-insert-ruleblock-cd-careplan.sql";

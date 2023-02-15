@@ -36,6 +36,7 @@
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";
 @"tkc-rman-insert-ruleblock-cd-haem.sql";
 @"tkc-rman-insert-ruleblock-cd-cns.sql";
+@"tkc-rman-insert-ruleblock-cd-pulm.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm-copd.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm-bt.sql";
 @"tkc-rman-insert-ruleblock-cd-rheum.sql";
@@ -73,11 +74,16 @@
 @"tkc-rman-insert-ruleblock-periop-nsqip.sql";
 @"tkc-rman-insert-ruleblock-cmidx-charlson.sql"
 @"tkc-rman-insert-ruleblock-cm-viewmodel.sql"
+
+@"tkc-rman-insert-ruleblock-sx-abdo.sql";
+@"tkc-rman-insert-ruleblock-ortho-fractures.sql";
+@"tkc-rman-insert-ruleblock-ortho-amputation.sql";
+
+-- SARS-Cov-2
 @"tkc-rman-insert-ruleblock-vacc-covid19.sql"
 
-
 -- added by patty for KPI's
---@"tkc-rman-insert-ruleblock-kpis.sql";
+@"tkc-rman-insert-ruleblock-kpis.sql";
 
 
 -- Init templates
