@@ -40,16 +40,6 @@ BEGIN
         );
         
         rrt => rout_rrt.rrt.val.bind();
-        /*
-        loc_def => rout_rrt_hd_location.loc_1s.val.bind();
-        
-        loc_1_fd => rout_rrt_hd_location.loc_1_fd.val.bind();
-        
-        loc_fixed => rout_rrt_hd_location.loc_fixed.val.bind();
-        
-        loc_1_n => rout_rrt_hd_location.loc_1_n.val.bind();
-        */
-        
         
         hd_ld => eadv.[icd_z49_1,mbs_13105].dt.max();
         

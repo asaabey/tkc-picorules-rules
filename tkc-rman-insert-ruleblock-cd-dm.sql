@@ -477,7 +477,21 @@ BEGIN
         
         n_opt_qt :{coalesce(hba1c_n_tot,0)>0 => round((coalesce(hba1c_n_opt,0)/hba1c_n_tot),2)*100};
         
-        hba1c_n0 => eadv.lab_bld_hba1c_ngsp.val.lastdv();
+        hba1c_n0 => eadv.lab_bld_hba1c_ngsp._.lastdv().where(dt > sysdate - 360);
+        
+        hba1c_n1 => eadv.lab_bld_hba1c_ngsp._.lastdv(1).where(dt > sysdate - 720);
+        
+        hba1c_delta : { hba1c_n1_val!? => hba1c_n0_val - hba1c_n1_val};
+        
+        hba1c_stmt :
+            { hba1c_n0_val > 8 and hba1c_delta < -0.2 => 31},
+            { hba1c_n0_val > 8 and hba1c_delta > -0.2 and hba1c_delta <0.3 => 32},
+            { hba1c_n0_val > 8 and hba1c_delta > 0.3 => 33},
+            { hba1c_n0_val >6.5 and hba1c_delta > -0.2 and hba1c_delta <0.3 => 22},
+            { hba1c_n0_val >6.5 and hba1c_n0_val < 8.1 and hba1c_delta > 0.3 => 23},
+            { hba1c_n0_val > 8 => 11},
+            { hba1c_n0_val >6.5 and hba1c_n0_val < 8.1 => 12},
+            {=>0};
         
         last_hba1c : {hba1c_n0_val!? => hba1c_n0_val};
         

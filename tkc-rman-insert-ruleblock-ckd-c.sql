@@ -231,7 +231,7 @@ BEGIN
         "
      });
      
-     c_q60 => eadv.[icd_q60%].dt.min();
+     c_q60 => eadv.[icd_q60%,icd_n26%,icd_n27%].dt.min();
      
      c_q61 => eadv.[icd_q61%,icpc_u85008,icpc_u85001].dt.min();
      

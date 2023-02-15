@@ -27,7 +27,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to count RRT HD presentations",
-                is_active:2,
+                is_active:0,
                 
             }
         );
