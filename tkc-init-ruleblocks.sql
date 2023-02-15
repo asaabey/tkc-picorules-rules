@@ -35,6 +35,7 @@
 @"tkc-rman-insert-ruleblock-cd-dyslip.sql";
 @"tkc-rman-insert-ruleblock-cd-obesity.sql";
 @"tkc-rman-insert-ruleblock-cd-haem.sql";
+@"tkc-rman-insert-ruleblock-cd-hepb.sql";
 @"tkc-rman-insert-ruleblock-cd-cns.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm.sql";
 @"tkc-rman-insert-ruleblock-cd-pulm-copd.sql";
