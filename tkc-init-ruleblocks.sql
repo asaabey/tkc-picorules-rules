@@ -47,6 +47,8 @@
 @"tkc-rman-insert-ruleblock-cd-liver.sql";
 @"tkc-rman-insert-ruleblock-cd-hep-b.sql";
 
+@"tkc-rman-insert-ruleblock-global.sql";
+
 @"tkc-rman-insert-ruleblock-id.sql";
 @"tkc-rman-insert-ruleblock-id-uti.sql";
 @"tkc-rman-insert-ruleblock-id-tb.sql";
