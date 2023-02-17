@@ -848,9 +848,10 @@ BEGIN
         affects performance
         
         acr_1m_v30_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-90 and val>=30);
-        
-        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-90 and val>=300);
+        acr_1m_v300_n => eadv.lab_ua_acr.val.count().where(dt<acr_l_dt-30 and val>=300);
+        acr_1m_v300_flag : { acr_1m_v300_n >0 => 1},{=>0};
         */
+        
         a_pers : {coalesce(acr_1m_v3_n,0)>0 => 1},{=>0};
         
         #doc(,{
@@ -878,8 +879,8 @@ BEGIN
                 {acr_l_val<300 AND acr_l_val>=30 => 3},
                 {acr_l_val>300 => 4},{=>0};
                 
+        /* #define_attribute(acr_1m_v300_flag, { label: "Albuminuria : Macroalbuminuria (300)", is_reportable: 1, type: 2 } ); */
 
-            
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
