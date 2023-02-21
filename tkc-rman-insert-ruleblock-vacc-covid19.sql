@@ -43,7 +43,7 @@ BEGIN
                 
         #define_attribute(
             [[rb_id]],{
-                label:"Major abdominal colorectal surgery",
+                label:"Covid 19 Vaccination",
                 type:2,
                 is_reportable:0
         });
