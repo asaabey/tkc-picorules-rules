@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     import_dir = "./"
     file_filter = "insert-ruleblock"
-    output_path: str = "./prb_latest.json"
+    output_path: str = "./json/prb_latest.json"
 
     prb_collection: List[PicoRuleBlock] = []
     for file in os.listdir(import_dir):
