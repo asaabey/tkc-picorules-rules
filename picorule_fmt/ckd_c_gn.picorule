@@ -1,4 +1,4 @@
-/* Rule block to determine coded glomerulonephritis */ 
+        /* Rule block to determine coded glomerulonephritis */ 
      
      
      #define_ruleblock(ckd_c_gn,

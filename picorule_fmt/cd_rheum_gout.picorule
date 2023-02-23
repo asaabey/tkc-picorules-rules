@@ -1,4 +1,4 @@
-/*  Algorithm to identify Gout  */
+        /*  Algorithm to identify Gout  */
         
         #define_ruleblock(cd_rheum_gout,
             {

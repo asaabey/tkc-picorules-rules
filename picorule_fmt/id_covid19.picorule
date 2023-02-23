@@ -1,4 +1,4 @@
-/*  This is a algorithm to identify covid19  */
+        /*  This is a algorithm to identify covid19  */
         
         #define_ruleblock(id_covid19,
             {

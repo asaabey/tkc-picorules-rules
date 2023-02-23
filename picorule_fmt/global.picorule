@@ -1,0 +1,17 @@
+        #define_ruleblock(global,{
+                description: "Global TKC interface",
+                is_active:2
+        });
+        
+        tkc_cat => rout_at_risk.tkc_cat.val.bind();
+        
+        tkc_visible : {tkc_cat < 3 =>1},{=>0};
+        
+        global : { . => tkc_visible};
+        
+        #define_attribute(tkc_visible,{
+                    label:"Visible in TKC app",
+                    is_reportable:1,
+                    is_bi_obj:1,
+                    type:2
+        });

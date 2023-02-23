@@ -1,9 +1,9 @@
-/* Rule block to count RRT presentations */
+        /* Rule block to count RRT presentations */
         
         #define_ruleblock(rrt_hd_loc,
             {
                 description: "Rule block to count RRT HD presentations",
-                is_active:2,
+                is_active:0,
                 
             }
         );

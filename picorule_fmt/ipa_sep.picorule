@@ -1,4 +1,4 @@
-/* Algorithm to assess Inpatient activity*/
+        /* Algorithm to assess Inpatient activity*/
         
         #define_ruleblock(ipa_sep,
             {

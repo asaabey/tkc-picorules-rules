@@ -1,4 +1,4 @@
-/*  Algorithm to identify Rheumatoid Arthritis  */
+        /*  Algorithm to identify Rheumatoid Arthritis  */
         
         #define_ruleblock(cd_rheum_ra,
             {

@@ -1,4 +1,4 @@
-/* Algorithm to detect nephritic syndrome */
+        /* Algorithm to detect nephritic syndrome */
         
          #define_ruleblock(tg4420,
             {
@@ -73,7 +73,7 @@
         
         #doc(,
             {
-                txt:"Inclusions for nephritic syndrome"
+                txt:"Inclusions for nephritic syndrome",
                 cite: "tg4420_ref1, tg4420_ref2, tg4420_ref3"
             }
         );

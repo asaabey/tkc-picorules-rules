@@ -1,4 +1,4 @@
-/* Assemble CKD progress view model */
+        /* Assemble CKD progress view model */
         
         #define_ruleblock(ckd_prog_vm,
             {

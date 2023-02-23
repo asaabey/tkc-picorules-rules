@@ -1,4 +1,4 @@
-/* Algorithm to assess cardiac disease  */
+        /* Algorithm to assess cardiac disease  */
         
         #define_ruleblock(cd_cardiac_vhd,
             {
@@ -120,6 +120,8 @@
             rxn_anticoag : { rxn_anticoag_dt!? => 1},{=>0};
 
             vhd : { greatest(mv,av,tv)>0 =>1},{=>0};
+            
+            echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
             
             
             

@@ -1,4 +1,4 @@
-/* Algorithm to assess VTE  */
+        /* Algorithm to assess VTE  */
         
         #define_ruleblock(cd_cardiac_vte,
             {

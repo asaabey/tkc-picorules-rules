@@ -1,4 +1,4 @@
-/*  Algorithm to identify Antiphosphlipid syndrome  */
+        /*  Algorithm to identify Antiphosphlipid syndrome  */
         
         #define_ruleblock(cd_rheum_aps,
             {

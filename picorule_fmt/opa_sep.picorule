@@ -1,4 +1,4 @@
-/* Algorithm to assess Outpatient activity*/
+        /* Algorithm to assess Outpatient activity*/
         
         #define_ruleblock(opa_sep,
             {

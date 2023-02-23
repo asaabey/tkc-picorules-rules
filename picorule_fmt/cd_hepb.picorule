@@ -1,7 +1,7 @@
-        #define_ruleblock(cd_hepb_coded,
+        #define_ruleblock(cd_hepb,
             {
                 description: "Algorithm to detect Chronioc hepatitis B from coding",
-                is_active:0,
+                is_active: 2,
                 author: "richardh@iinet.net.au"
             }
         );
@@ -14,25 +14,30 @@
         hepb_imm_nos => eadv.[icpc_d72j99].dt.max();
         
         hepb_imm : { coalesce(hepb_imm_vac,hepb_imm_inf,hepb_imm_nos)!? =>1},{=>0};
-                
+        
         hepb_nonimm => eadv.[icpc_d72j93].dt.max();
         
         hepb_nos => eadv.[icpc_d72j92,icpc_d72j94,icpc_d72j95,icpc_d72003,icpc_d72010].dt.max();
         
         /* Hep B Surface antibody and antigen */
-        hb_s_ab => eadv.lab_bld_hbs_ab_level._.lastdv();
-        hb_s_ag => eadv.lab_bld_hbs_ag._.lastdv();
+        s_ab => eadv.lab_bld_hbs_ab_level._.lastdv();
+        s_ag => eadv.lab_bld_hbs_ag._.lastdv();
         
         /* Hep B Core antibody*/
-        hb_c_ab => eadv.lab_bld_hbc_ab._.lastdv();
         
+        c_ab => eadv.lab_bld_hbc_ab._.lastdv();
         
         /* Hep B e antibody and antigen */
-        hb_e_ab => eadv.[lab_bld_hbe_ab]._.lastdv();
-        hb_e_ag => eadv.[lab_bld_hbe_ag]._.lastdv();
+        
+        e_ab => eadv.[lab_bld_hbe_ab_level,lab_bld_hbe_ab]._.lastdv();
+        e_ag => eadv.[lab_bld_hbe_ag_level,lab_bld_hbe_ag]._.lastdv();
+        
+        e_ab : { e_ab_val >0 =>1},{=>0};
+        
+        e_ag : { e_ag_val >0 =>1},{=>0};
         
         /* Hep B Viral Load */
-        hb_vl => eadv.[lab_bld_hbv_viral_load]._.lastdv();
+        vl => eadv.[lab_bld_hbv_viral_load]._.lastdv();
         
         /* Liver Function AST */
         ast => eadv.[lab_bld_ast]._.lastdv();
@@ -47,14 +52,12 @@
         immune escape       7
         */
         
-        hbv_status : { hb_s_ag_val = 0 and hb_c_ab_val = 1 => 1},
-        { hb_s_ag_val = 0 and hb_s_ab_val = 1 => 2},
-        { hb_s_ag_val = 0 and hb_s_ab_val = 0 => 3},
-        { hb_s_ag_val = 1 and hb_e_ab_val = 0 and hb_e_ag_val = 1  and hb_vl_val > 2000 and ast_val<32 =>  4},
-        { hb_s_ag_val = 1 and hb_e_ab_val = 1 and hb_e_ag_val = 1  and hb_vl_val > 2000 =>  5},
-        { hb_s_ag_val = 1 and hb_e_ab_val = 1 and hb_vl_val < 2000 and ast_val <32 =>  6},
-        { hb_s_ag_val = 1 and hb_e_ab_val = 1 and hb_e_ag_val = 0 and hb_vl_val > 2000 and ast_val >32 =>  7},
-        {=>0};
+        hbv_status : { e_ag = 1 and vl_val > 20000  =>4},{=>0};
+        
+        /*without surface antigen*/
+        hbv_chronic : { coalesce(c_ab_val,e_ag,vl_val,0)>0 =>1},{=>0};
+        
+        hbv_immune : { s_ab_val > 10 =>1},{=>0};
         
         rcm_hbv_ic : {hbv_status = 1 =>1},{=>0};
         
@@ -68,10 +71,12 @@
         
         rcm_hbv_hepref : {hbv_status =5 => 1},{=>0};
         
-        cd_hepb_coded : { hbv_status>0 =>1},{=>0};
+        cd_hepb : { hbv_chronic>0 =>1},{=>0};
         
-        #define_attribute(cd_hepb_coded,
-            { 
-                label: "Chronic HepB"
+        #define_attribute(cd_hepb,
+            {
+                label: "Chronic Hepatitis B",
+                type: 2,
+                is_reportable: 1
             }
         );

@@ -1,4 +1,4 @@
-/* Algorithm to assess residential status */
+        /* Algorithm to assess residential status */
         
         #define_ruleblock(dmg_residency,
             {

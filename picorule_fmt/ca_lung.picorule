@@ -1,4 +1,4 @@
-/*  This is a algorithm to identify lung carcinoma  */
+        /*  This is a algorithm to identify lung carcinoma  */
         
         #define_ruleblock(ca_lung,
             {

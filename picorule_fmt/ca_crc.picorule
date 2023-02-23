@@ -1,4 +1,4 @@
-/*  This is a algorithm to identify colorectal carcinoma  */
+        /*  This is a algorithm to identify colorectal carcinoma  */
         
         #define_ruleblock(ca_crc,
             {

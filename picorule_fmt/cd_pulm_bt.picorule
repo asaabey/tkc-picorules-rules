@@ -1,0 +1,19 @@
+        /*  Algorithm to identify bronchiectasis  */
+        
+        #define_ruleblock(cd_pulm_bt,
+            {
+                description: "Algorithm to identify bronchiectasis",
+                is_active:2
+                
+            }
+        );
+        
+        bt_fd => eadv.[icd_j47, icpc_r99018].dt.min();
+        
+        cd_pulm_bt : { bt_fd!? =>1},{=>0};
+        
+        #define_attribute(cd_pulm_bt,
+            { 
+                label: "Presence of Bronchiectasis"
+            }
+        );

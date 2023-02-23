@@ -1,4 +1,4 @@
-/* Algorithm to detect nephrotic syndrome */
+        /* Algorithm to detect nephrotic syndrome */
         
          #define_ruleblock(tg4410,
             {
@@ -62,7 +62,8 @@
         
         enc_ren => rout_engmnt_renal.enc_renal.val.bind();
         
-                
+
+    
         ex_flag :{greatest(rrt,dm,enc_ren,dx_nephrotic)>0 or dod!? or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
 
         

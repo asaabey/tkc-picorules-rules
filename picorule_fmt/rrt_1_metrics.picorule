@@ -1,4 +1,4 @@
-/* Rule block to determine RRT 1 metrics*/
+        /* Rule block to determine RRT 1 metrics*/
         
         #define_ruleblock(rrt_1_metrics,
             {
@@ -16,11 +16,11 @@
         
         rrt => rout_rrt.rrt.val.bind();
         
-        hd_ld => eadv.icd_z49_1.dt.max();
+        hd_ld => eadv.[icd_z49_1,mbs_13105].dt.max();
         
-        hd_fd => eadv.icd_z49_1.dt.min();
+        hd_fd => eadv.[icd_z49_1,mbs_13105].dt.min();
         
-        hd_n => eadv.icd_z49_1.dt.count();
+        hd_n => eadv.[icd_z49_1,mbs_13105].dt.count();
         
         hd0_2w_f : { (sysdate - hd_ld)<14 => 1},{=>0};
         
@@ -34,6 +34,7 @@
         
         hd_sl : { .=> round(hd_tr*100,0) };
         
+        canddt : {rrt in(1,4) =>1},{=>0};
         
         
-        rrt_1_metrics : {rrt=1 =>1};
+        rrt_1_metrics : {rrt in(1,4) =>1};

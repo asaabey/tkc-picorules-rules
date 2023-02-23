@@ -1,4 +1,4 @@
-/* Algorithm to assess cardiac disease  */
+        /* Algorithm to assess cardiac disease  */
         
         #define_ruleblock(cd_cardiac_cad,
             {
@@ -25,7 +25,7 @@
             
             cabg => eadv.[icd_z95_1,icpc_k54007].dt.min();
             
-            /*cad_mi_icd => eadv.[icd_i21%,icd_i22%,icd_i23%].dt.min();*/
+            
             
             #doc(,
                 {
@@ -88,7 +88,13 @@
             
             cad_ihd_icpc => eadv.[icpc_k74%,icpc_k76%].dt.min();        
                 
-            cad_ex_ami :{ coalesce(cad_chronic_icd,cad_ihd_icpc)!? =>1},{=>0};    
+            cad_ex_ami :{ coalesce(cad_chronic_icd,cad_ihd_icpc)!? =>1},{=>0};   
+            
+            cad_fd : { . => least_date(cad_ihd_icpc,cad_chronic_icd)};
+            
+            cad_prev : { cad_fd!? => 1 },{=>0};
+        
+            cad_incd : { cad_fd > sysdate - 365 => 1},{=>0};
             
             cad : { greatest(ami,cad_ex_ami)>0 or cabg!? =>1 },{=>0};
             
@@ -114,6 +120,8 @@
             cva : { cva_dt!? =>1},{=>0};
            
             pvd : { pvd_dt!? =>1},{=>0};
+            
+            
             
             #doc(,
                 {
@@ -178,6 +186,19 @@
             rxn_c10_ax => eadv.rxnc_c10_ax.dt.min().where(val=1);
            
             rxn : {coalesce(rxn_ap,rxn_anticoag,rxn_bb,rxn_raas,rxn_statin,rxn_c10_ax)!? =>1};
+            
+            #doc(,
+                {
+                    txt: "Investigations"
+                }
+            ); 
+            
+            echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
+            
+            cardang_ld => rout_cd_cardiac_ix.cardang_ld.val.bind();
+            
+             /* NT cardiac report hot linking*/
+            cardang_l => eadv.[ntc_rep_cangio]._.lastdv();
             
             cd_cardiac_cad : {cad=1 =>1},{=>0};
             

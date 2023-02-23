@@ -1,4 +1,4 @@
-/*  Algorithm to detect detect untreated chronic disease   */
+        /*  Algorithm to detect detect untreated chronic disease   */
         
          #define_ruleblock(tg2610,
             {

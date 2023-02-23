@@ -1,4 +1,4 @@
-/*  This is a algorithm to identify hypothyroidism  */
+        /*  This is a algorithm to identify hypothyroidism  */
         
         #define_ruleblock(cd_endo_hypothyroid,
             {

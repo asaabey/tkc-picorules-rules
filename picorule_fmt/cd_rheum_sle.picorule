@@ -1,4 +1,4 @@
-/*  This is a algorithm to identify SLE e-phenotype  */
+        /*  This is a algorithm to identify SLE e-phenotype  */
         
         #define_ruleblock(cd_rheum_sle,
             {

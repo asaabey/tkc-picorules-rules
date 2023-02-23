@@ -1,4 +1,4 @@
-/* Rule block to assess encounters with renal */
+        /* Rule block to assess encounters with renal */
         
           #define_ruleblock(engmnt_renal,
             {

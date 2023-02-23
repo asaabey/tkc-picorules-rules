@@ -1,4 +1,4 @@
-/*  This is a algorithm to identify Tuberculosis  */
+        /*  This is a algorithm to identify Tuberculosis  */
         
         #define_ruleblock(id_tb,
             {

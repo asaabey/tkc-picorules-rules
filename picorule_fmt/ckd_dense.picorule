@@ -1,4 +1,4 @@
-/* Optimized Rule block for cube generation in CKD*/
+        /* Optimized Rule block for cube generation in CKD*/
         
         #define_ruleblock(ckd_dense,
             {

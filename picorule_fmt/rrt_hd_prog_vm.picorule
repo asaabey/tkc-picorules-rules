@@ -1,4 +1,4 @@
-/* Assemble hd progress view model */
+        /* Assemble hd progress view model */
         
         #define_ruleblock(rrt_hd_prog_vm,
             {

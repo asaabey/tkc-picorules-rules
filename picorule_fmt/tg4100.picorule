@@ -1,4 +1,4 @@
-/*  Algorithm to generate AKI trigger   */
+        /*  Algorithm to generate AKI trigger   */
         
          #define_ruleblock(rb_id,
             {
@@ -80,7 +80,7 @@
           
         #doc(,
             {
-                txt:"Calculate proportions
+                txt:"Calculate proportions"
             }
         );
           
@@ -98,7 +98,7 @@
         
         #doc(,
             {
-                txt:AKI Stage as per AKIN excluding stage 1",
+                txt:"AKI Stage as per AKIN excluding stage 1",
                 cite: "tg4100_ref1, tg4100_ref2"
             }
         );

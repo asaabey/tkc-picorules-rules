@@ -1,4 +1,4 @@
-/* Algorithm to assess covid 19 vaccination  */
+        /* Algorithm to assess covid 19 vaccination  */
         
         #define_ruleblock(vacc_covid,
             {
@@ -22,7 +22,7 @@
                 
         #define_attribute(
             vacc_covid,{
-                label:"Major abdominal colorectal surgery",
+                label:"Covid 19 Vaccination",
                 type:2,
                 is_reportable:0
         });

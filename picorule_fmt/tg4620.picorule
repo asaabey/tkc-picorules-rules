@@ -1,4 +1,4 @@
-/*  Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF   */
+        /*  Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF   */
         
         
          #define_ruleblock(tg4620,
@@ -45,7 +45,7 @@
         
         #doc(,
             {
-                txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc"
+                txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc",
                 cite: "tg4620_ref1, tg4620_ref2"
             }
         );

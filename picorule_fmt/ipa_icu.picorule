@@ -1,4 +1,4 @@
-/* Algorithm to assess Inpatient activity for ICU admissions */
+        /* Algorithm to assess Inpatient activity for ICU admissions */
         
         #define_ruleblock(ipa_icu,
             {
