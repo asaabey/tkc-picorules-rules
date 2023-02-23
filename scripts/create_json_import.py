@@ -28,7 +28,7 @@ def extract_prb_from_sql(sql_text: str) -> List[PicoRuleBlock]:
     # fail if it didnt find an equal amount of prb names and contents
     assert len(prb_names) == len(prb_texts)
     return [
-        PicoRuleBlock(name.strip(), text.strip(), True)
+        PicoRuleBlock(name.strip(), "        " + text.strip().replace("[[rb_id]]",name.strip()), True)
         for name, text in zip(prb_names, prb_texts)
         if "test" not in name
     ]

@@ -1,17 +1,21 @@
 from genericpath import isfile
 import os
 import re
-from dataclasses import dataclass
+import json
+from typing import Dict, List
+from dataclasses import dataclass, asdict
 from dataclasses_json import dataclass_json
 
 
 @dataclass_json
-@dataclass
+@dataclass(frozen=True)
 class PicoRuleDTO:
     name: str
     text: str
     is_active: bool
-
+    
+    def as_jsonable(self) -> Dict:
+        return asdict(self)
 
 BLOCKID_RGX = r"(?:rb\.blockid\s{0,}\:=\s{0,}\')(.*)(?:\')"
 BLOCKBODY_RGX = r"(?:rb\.picoruleblock\s{0,}\:=\s{0,}\')([^\']*)(?:\')"
@@ -60,6 +64,9 @@ def processfiles():
         if os.path.isfile(os.path.join(wd, path)):
 
             fs = readfile(path)
+            
+            # filter out lines that have been commented out of the PLSQL script
+            fs = "\n".join(filter(lambda line: re.match(r"^\s*--", line) == None, fs.splitlines()))
 
             file_bids = matchrgx(BLOCKID_RGX, fs)
             if file_bids:
@@ -78,9 +85,9 @@ def processfiles():
                     )
 
                     for idx, file_bid in enumerate(file_bids):
-                        fb = file_blockbodies[idx].strip()
+                        fb = "        " + file_blockbodies[idx].strip()
                         fb = fb.replace(BLOCK_PH, file_bid)
-                        fb = minifytxt(fb)
+                        #fb = minifytxt(fb)
                         # is_active = True if int(file_bmls[idx])>0 else False
                         active_flag = int(file_bmls[idx]) > 0
 
@@ -101,7 +108,8 @@ def processfiles():
                             print("----> File write Exception!!")
     print(f"Total files created : {files_created}")
 
-    json_body = PicoRuleDTO.schema().dumps(picoRuleDTO_list, many=True)
+    #json_body = PicoRuleDTO.schema().dumps(picoRuleDTO_list, many=True, indent=2, sort_keys=None)
+    json_body = json.dumps(picoRuleDTO_list, default=lambda o: o.as_jsonable(), indent=2)
 
     try:
         with open(
