@@ -28,6 +28,8 @@ PICORULE_FILE_EXT = "picorule"
 PICORULE_UNI_JSON_FILE_PATH = "json"
 PICORULE_UNI_JSON_FILE = "picorule_uni.json"
 
+include_inactive_ruleblocks = True
+
 wd = os.path.abspath(os.getcwd())
 file_list = []
 
@@ -95,7 +97,7 @@ def processfiles():
                             f"----> writing [{idx}]:active:[{file_bmls[idx]}] | {file_bid} : "
                         )
 
-                        if active_flag:
+                        if include_inactive_ruleblocks or active_flag:
                             picoRuleDTO_list.append(
                                 PicoRuleDTO(name=file_bid, text=fb, is_active=active_flag)
                             )
@@ -108,7 +110,10 @@ def processfiles():
                             print("----> File write Exception!!")
     print(f"Total files created : {files_created}")
 
+    #properties are serialized to json in a non deterministic order
     #json_body = PicoRuleDTO.schema().dumps(picoRuleDTO_list, many=True, indent=2, sort_keys=None)
+    
+    #properties seem to be serialized to json in a deterministic order (and in the order as defined in the PicoRuleDTO class)
     json_body = json.dumps(picoRuleDTO_list, default=lambda o: o.as_jsonable(), indent=2)
 
     try:
