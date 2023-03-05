@@ -42,7 +42,7 @@ BEGIN
         N02  Recurrent and persistent hematuria
         N03  U88008 Chronic nephritic syndrome
         N04  U88003 U88002  Nephrotic syndrome
-        N05  U88005	U88004  Unspecified nephritic syndrome
+        N05  U88005 U88004  Unspecified nephritic syndrome
         N06  Isolated proteinuria with specified morphological lesion
         N07  Hereditary nephropathy not elsewhere classified
         N08  U88001 Glomerular disorders in diseases classified elsewhere

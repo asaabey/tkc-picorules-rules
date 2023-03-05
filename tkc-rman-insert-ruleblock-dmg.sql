@@ -80,7 +80,7 @@ BEGIN
             alive,
             {
                 label:"Alive with absent DOD",
-                type:02,
+                type:2,
                 is_reportable:1
             }
         );
