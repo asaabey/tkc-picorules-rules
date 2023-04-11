@@ -633,7 +633,7 @@ BEGIN
         });
         
         
-        ins_long_0=> eadv.[rxnc_a10ae].dt.max().where(val=0);
+        ins_long_0 => eadv.[rxnc_a10ae].dt.max().where(val=0);
         ins_int_0 => eadv.[rxnc_a10ac].dt.max().where(val=0);
         ins_mix_0 => eadv.[rxnc_a10ad].dt.max().where(val=0);
         ins_short_0 => eadv.[rxnc_a10ab].dt.max().where(val=0);
