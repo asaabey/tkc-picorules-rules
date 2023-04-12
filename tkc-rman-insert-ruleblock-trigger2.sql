@@ -291,7 +291,7 @@ BEGIN
     
         /*  Algorithm to generate AKI trigger   */
         
-         #define_ruleblock(rb_id,
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to generate AKI trigger from labs",
                 

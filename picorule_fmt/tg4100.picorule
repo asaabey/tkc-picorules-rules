@@ -1,6 +1,6 @@
         /*  Algorithm to generate AKI trigger   */
         
-         #define_ruleblock(rb_id,
+         #define_ruleblock(tg4100,
             {
                 description: "Algorithm to generate AKI trigger from labs",
                 
