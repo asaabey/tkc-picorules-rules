@@ -26,8 +26,10 @@ BEGIN
         });
         
         tkc_cat => rout_at_risk.tkc_cat.val.bind();
+
+        opt_out_ld => eadv.dmg_opted_out.dt.last();
         
-        tkc_visible : {tkc_cat < 3 =>1},{=>0};
+        tkc_visible : {tkc_cat < 3 or opt_out_ld!? =>1},{=>0};
         
         global : { . => tkc_visible};
         
