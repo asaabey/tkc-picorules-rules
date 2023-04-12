@@ -37,9 +37,9 @@ BEGIN
         
         vax_md => rout_vacc_covid.vax_md_dt.val.bind();
         
-        vax_max_dt => rout_vacc_covid.vax_val.val.bind();
+        vax_max_dt => rout_vacc_covid.vax_dt.val.bind();
         
-        vax_max_val => rout_vacc_covid.vax_dt.val.bind();
+        vax_max_val => rout_vacc_covid.vax_val.val.bind();
         
         cmidx_charlson => rout_cmidx_charlson.cmidx_charlson.val.bind();
         

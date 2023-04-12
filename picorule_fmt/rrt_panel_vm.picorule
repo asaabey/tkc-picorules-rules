@@ -33,7 +33,7 @@
     
        pth1_val =>rout_ckd_shpt.pth1_val.val.bind();
        
-       pth1_dt =>rout_ckd_shpt.pth1_val.dt.bind();
+       pth1_dt =>rout_ckd_shpt.pth1_dt.val.bind();
        
        hb1_val => rout_ckd_anaemia.hb_val.val.bind();
        
