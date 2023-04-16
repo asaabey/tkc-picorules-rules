@@ -322,6 +322,62 @@ BEGIN
     
     -- END OF RULEBLOCK --
     
+     -- BEGINNING OF RULEBLOCK --
+    
+        
+    rb.blockid:='rrt_journey';
+
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+        /* Rule block to determine RRT 1 metrics*/
+        
+        #define_ruleblock([[rb_id]],
+            {
+                description: "Rule block to determine RRT 1 metrics",
+                is_active:2
+                
+            }
+        );
+
+        #doc(,
+            {
+                txt : "rrt session regularity"
+            }
+        );
+        
+        rrt => rout_rrt.rrt.val.bind();
+        
+        hd_dt => eadv.icd_z49_1.dt.max();
+        
+        hd_dt_2w => eadv.icd_z49_1.dt.max().where(dt> sysdate-14);
+
+        hd0_2w_f : { hd_dt_2w!? => 1},{=>0};
+        
+        hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
+        
+        hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ksc,enc_op_ren_gpd,enc_op_ren_rsr].dt.max();
+        
+        
+        [[rb_id]] : {. =>1};
+        
+        #define_attribute(
+            rrt_hhd,
+            {
+                label:"RRT Home haemodialysis",
+                is_reportable:1,
+                type:2
+            }
+        );
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+   INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    -- END OF RULEBLOCK --
 
     
     
