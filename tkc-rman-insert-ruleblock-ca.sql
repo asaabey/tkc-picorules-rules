@@ -19,7 +19,7 @@ BEGIN
 
     rb.picoruleblock := '
     
-        /*  Algorithm to identify cancer careplan  */
+        /*  This is a algorithm to identify cancer careplan  */
         
         #define_ruleblock([[rb_id]],
             {
@@ -670,7 +670,7 @@ BEGIN
         #define_ruleblock(ca_misc,
             {
                 description: "Algorithm to identify misc carcinoma",
-                is_active:2
+                is_active: 2
                 
             }
         );
@@ -684,8 +684,8 @@ BEGIN
         #define_attribute([[rb_id]],
             { 
                 label: "Presence of misc carcinoma",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 2
             }
         );
         

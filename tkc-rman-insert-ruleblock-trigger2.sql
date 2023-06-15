@@ -328,7 +328,7 @@ BEGIN
           egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<cr_ld-90 and dt>cr_ld-365);
           
           cr_span_days : {1=1 => cr_ld-cr_fd}; 
-          cr_tail_days : {1=1 => ROUND(SYSDATE-cr_ld,0)}; 
+          cr_tail_days : {1=1 => round(sysdate-cr_ld,0)}; 
         
         #doc(,{
                 txt:"Minima Maxima and last"

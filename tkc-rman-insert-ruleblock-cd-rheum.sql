@@ -20,11 +20,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  This is a algorithm to identify SLE e-phenotype  */
+        /*  Algorithm to identify SLE e-phenotype  */
         
         #define_ruleblock([[rb_id]],
             {
-                description: "This is a algorithm to identify SLE e-phenotype",
+                description: "Algorithm to identify SLE e-phenotype",
                 is_active:2
                 
             }

@@ -20,7 +20,7 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  This is a algorithm to identify covid19  */
+        /*  algorithm to identify covid19  */
         
         #define_ruleblock([[rb_id]],
             {

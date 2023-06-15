@@ -20,11 +20,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  Algorithm to identify pulmonary disease  */
+        /*  This is a algorithm to identify pulmonary disease  */
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Algorithm to identify pulmonary disease",
+                description: "This is a algorithm to identify pulmonary disease",
                 is_active:2
                 
             }
