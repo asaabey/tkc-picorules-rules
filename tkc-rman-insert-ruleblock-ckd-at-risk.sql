@@ -230,14 +230,6 @@ BEGIN
                     type:2
                 }
         );
-        #define_attribute(
-            aki,
-                {
-                    label:"Past AKI by hospital coding",
-                    is_reportable:1,
-                    type:2
-                }
-        );
         
         #define_attribute(
             screen_egfr,

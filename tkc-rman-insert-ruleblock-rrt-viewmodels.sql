@@ -59,9 +59,13 @@ BEGIN
        
        pth1_dt =>rout_ckd_shpt.pth1_dt.val.bind();
        
+       pth_qt =>rout_ckd_shpt.pth_qt.val.bind();
+       
        hb1_val => rout_ckd_anaemia.hb_val.val.bind();
        
        hb1_dt => rout_ckd_anaemia.hb_dt.val.bind();
+       
+       hb_qt => rout_ckd_anaemia.hb2_1_qt.val.bind();
        
        plt1_val => rout_ckd_anaemia.plt1_val.val.bind();
        
@@ -69,6 +73,7 @@ BEGIN
        
        tsat1_val => rout_ckd_anaemia.tsat1_val.val.bind();
        
+       acc_type => rout_rrt_hd_acc_iv.acc_type_val.val.bind();
        
        av_plasty_ld => rout_rrt_hd_acc_iv.av_plasty_ld.val.bind();
        
@@ -81,16 +86,30 @@ BEGIN
        
        spktv => rout_rrt_hd_adequacy.spktv.val.bind();
        
-              
+       hd_oe => rout_rrt_1_metrics.hd_oe.val.bind();
        
+       hd_years =>rout_rrt_1_metrics.tspan_y.val.bind();
        
+       hd_hours => rout_rrt_hd_param.hours_val.val.bind();
+       
+       hd_ibw => rout_rrt_hd_param.ibw_val.val.bind();
+       
+       enc_ld => rout_rrt_hd_prog_vm.enc_ld.val.bind();
+       
+       ipa_sep_ld => rout_rrt_hd_prog_vm.ipa_sep_ld.val.bind();
+       
+       sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind();
+       
+       sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind();
+       
+       dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind();
        
        rrt_panel_vm : {rrt in (1,4) => 1},{=>0};
        
        #define_attribute(loc_1s_txt,{
                 label:"Dialysis panel satellite facility location",
                 is_reportable:1,
-                type:3
+                type:1
         });
        #define_attribute(hd_recent_flag,{
                 label:"Dialysis panel Hd recency flag",
@@ -154,6 +173,11 @@ BEGIN
                 is_reportable:1,
                 type:2
        });
+       #define_attribute(hb_qt,{
+                label:"Dialysis panel Labs Haemoglobin change pct",
+                is_reportable:1,
+                type:2
+       });
        #define_attribute(plt1_val,{
                 label:"Dialysis panel Labs platelets",
                 is_reportable:1,
@@ -172,7 +196,7 @@ BEGIN
        #define_attribute(av_plasty_ld,{
                 label:"Dialysis panel AV plasty",
                 is_reportable:1,
-                type:2
+                type:12
         });
        
        #define_attribute(
@@ -203,7 +227,62 @@ BEGIN
                 is_reportable:1,
                 type:2
         });
-     
+        #define_attribute(hd_years,{
+                label:"Dialysis panel years on dialysis",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(hd_oe,{
+                label:"Dialysis panel attendence pct",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(hd_hours,{
+                label:"Dialysis panel prescription hours",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(hd_ibw,{
+                label:"Dialysis panel prescription IBW",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(enc_ld,{
+                label:"Dialysis panel last clinic",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(ipa_sep_ld,{
+                label:"Dialysis panel last hospitalization",
+                is_reportable:1,
+                type:12
+        });
+        #define_attribute(sbp_mu_1,{
+                label:"Dialysis panel systolic bp mean",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(sbp_max,{
+                label:"Dialysis panel systolic bp max",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(dbp_mu_1,{
+                label:"Dialysis panel diastolic bp mean",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(pth_qt,{
+                label:"Dialysis panel pth change pct",
+                is_reportable:1,
+                type:2
+        });
+        #define_attribute(acc_type,{
+                label:"Dialysis panel access type",
+                is_reportable:1,
+                type:2
+        });
+ 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

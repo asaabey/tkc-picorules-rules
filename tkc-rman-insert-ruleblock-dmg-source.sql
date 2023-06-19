@@ -98,6 +98,9 @@ BEGIN
         
         ampila_ld => eadv.[mbs_%].dt.max().where(substr(loc,2,2)=51);
         
+        shs_n => eadv.[mbs_%].dt.count().where(substr(loc,2,2)=60);
+        
+        shs_ld => eadv.[mbs_%].dt.max().where(substr(loc,2,2)=60);
         
         phc_0 => eadv.[mbs_%].loc.stats_mode().where(dt > sysdate-1825 and substr(loc,2,2) between 20 and 98);
         
@@ -120,6 +123,8 @@ BEGIN
         phc_kwhb : { phc_1=35 => 1 },{=>0};
         
         phc_ampila : { phc_1=51 => 1 },{=>0};
+        
+        phc_shs : { phc_1=60 => 1 },{=>0};
         
         tkc_provider : { coalesce(loc_region,0)=1 or phc_1 in(36,37,38,39,41,42) =>1},{=>2};
         

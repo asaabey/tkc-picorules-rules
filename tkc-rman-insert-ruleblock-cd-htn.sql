@@ -188,7 +188,14 @@ BEGIN
             }
         );
         
-        
+        #define_attribute(htn_rxn_acei,{label:"treated with ACEi",is_reportable:1,type:2});
+        #define_attribute(htn_rxn_arb,{label:"treated with ARB",is_reportable:1,type:2});
+        #define_attribute(htn_rxn_ccb,{label:"treated with Calcium channel blocker",is_reportable:1,type:2});
+        #define_attribute(htn_rxn_bb,{label:"treated with Beta-blocker",is_reportable:1,type:2});
+        #define_attribute(htn_rxn_c02,{label:"treated with Centrally acting agent",is_reportable:1,type:2});
+        #define_attribute(htn_rxn_diuretic_thiaz,{label:"treated with thiazide diuretic",is_reportable:1,type:2});
+        #define_attribute(htn_rxn_diuretic_loop,{label:"treated with loop diuretic",is_reportable:1,type:2});
+
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -381,7 +388,13 @@ BEGIN
         
         [[rb_id]] : {coalesce(n_1,0)>0 =>1},{=>0};
         
-       
+        #define_attribute(sbp_mu_1, 
+            {
+                label: "Mean systolic bp over 1 year",
+                is_reportable:1,
+                type:2
+            }
+        );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

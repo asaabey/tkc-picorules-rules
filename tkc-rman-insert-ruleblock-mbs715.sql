@@ -1,0 +1,80 @@
+CLEAR SCREEN;
+SET SERVEROUTPUT ON;
+SET FEEDBACK ON;
+
+DECLARE
+    rb          RMAN_RULEBLOCKS%ROWTYPE;
+
+
+    
+
+BEGIN
+    
+   
+       
+        -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='mbs715';
+
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+    
+    /*  mbs715  */
+    #define_ruleblock(
+        [[rb_id]],
+        {
+            description: "Annual health check mbs 715",
+            is_active : 0
+        }
+    );
+    
+    dob => rout_dmg.dob.val.bind();
+    
+    age => rout_dmg.age.val.bind();
+    
+    gender => rout_dmg.gender.val.bind();
+    
+    gender_lab : { gender = 1 => `M`},{gender = 0 => `F`},{=>`X`};
+    
+    rrt => rout_rrt.rrt.val.bind();
+    
+    ckd => rout_ckd.ckd.val.bind();
+    
+    dm => rout_cd_dm_dx.dm.val.bind();
+    
+    htn => rout_cd_htn.htn.val.bind();
+    
+    ami => rout_cd_cardiac_cad.ami.val.bind();
+    
+    cva => rout_cd_cva.cd_cva.val.bind();
+    
+    rhd => rout_cd_cardiac_rhd.cd_cardiac_rhd.val.bind();
+    
+    copd => rout_cd_pulm_copd.cd_pulm_copd.val.bind();
+    
+    ckd_flag : {ckd>0 or rrt>0 =>1 },{=>0};
+    
+    mbs_ld => eadv.mbs_715.dt.last();
+    
+    mbs_715_elig : { (sysdate - mbs_ld > 270) and (age > 25 and age <50) => 1},{=>0};
+    
+    ex_flag : { mbs_715_elig = 0 =>1 },{=> 0};
+    
+    [[rb_id]] : {ex_flag=0 and mbs_ld!?=> 1},{=>0};
+    ';
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    
+    
+    -- END OF RULEBLOCK 
+         
+END;
+
+
+
+
+

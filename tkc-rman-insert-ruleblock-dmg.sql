@@ -39,6 +39,8 @@ BEGIN
         
         alive : {dod? => 1},{=>0};
         
+        female : { gender=0 => 1},{=>0};
+        
         /* Constants */
         st_rman_ver : {.=> 1000};
         
@@ -48,11 +50,29 @@ BEGIN
         
         st_rman_rb_err : {. => 2014};
         [[rb_id]] : { 1=1 => 1},{=>0};  
+
+        #define_attribute(
+            age,
+            {
+                label:"Demography Age",
+                type:2,
+                is_reportable:1
+            }
+        );
+        
+        #define_attribute(
+            female,
+            {
+                label:"Demography Female Gender __b__",
+                is_reportable:1,
+                type:2
+            }
+        );
         
         #define_attribute(
             dob,
             {
-                label:"Date of birth [last recorded]",
+                label:"Demography Date of birth __t__",
                 type:12,
                 is_reportable:1
             }
@@ -61,7 +81,7 @@ BEGIN
         #define_attribute(
             dod,
             {
-                label:"Date of death [last recorded]",
+                label:"Demography Date of death",
                 type:12,
                 is_reportable:1
             }
@@ -71,7 +91,7 @@ BEGIN
             gender,
             {
                 label:"Gender [male=1 female=0]",
-                type:12,
+                type:2,
                 is_reportable:1
             }
         );
@@ -79,7 +99,7 @@ BEGIN
         #define_attribute(
             alive,
             {
-                label:"Alive with absent DOD",
+                label:"Demography Alive with absent DOD",
                 type:2,
                 is_reportable:1
             }
@@ -500,7 +520,7 @@ BEGIN
             tag_sys_pr_dt,
             {
                 label:"Sys flag raised",
-                type:2,
+                type:12,
                 is_reportable:0
             }
         );

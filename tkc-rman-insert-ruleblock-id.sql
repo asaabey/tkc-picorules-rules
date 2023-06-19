@@ -96,6 +96,10 @@ BEGIN
         
         cap_mel_ld => eadv.icpc_a78054.dt.max();
         
+        cap_crypt_ld => eadv.[icd_b45_0].dt.max();
+        
+        cap_crypt : { cap_crypt_ld!? =>1 },{=>0};
+        
         [[rb_id]] : { coalesce(cap_viral_ld, cap_strep_ld,cap_hi_ld,cap_nos_ld,cap_mel_ld)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
@@ -106,7 +110,13 @@ BEGIN
             }
         );
         
-        
+        #define_attribute(cap_crypt ,
+            { 
+                label: "Presence of cryptococcal infection",
+                is_reportable:1,
+                type:2
+            }
+        );
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

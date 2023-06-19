@@ -113,17 +113,17 @@ BEGIN
         
         avf_dt => rout_ckd_access.avf_dt.val.bind();
         
-        avf_us_ld => eadv.ris_img_usavfist.dt.last();
+        avf_us_ld => eadv.enc_ris_usavfist.dt.last();
         
-        av_gram_ld => eadv.[ris_img_dshfist,ris_img_dsarenal].dt.last();
+        av_gram_ld => eadv.[enc_ris_dshfist,enc_ris_dsarenal].dt.last();
         
-        av_plasty_ld => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.last();
+        av_plasty_ld => eadv.[enc_ris_dshplas%, enc_ris_angplas%,enc_ris_dsarenal].dt.last();
         
-        av_plasty_1_ld => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.last(1);
+        av_plasty_1_ld => eadv.[enc_ris_dshplas%, enc_ris_angplas%,enc_ris_dsarenal].dt.last(1);
         
-        av_plasty_fd => eadv.[ris_img_dshplas%, ris_img_angplas%,ris_img_dsarenal].dt.first();
+        av_plasty_fd => eadv.[enc_ris_dshplas%, enc_ris_angplas%,enc_ris_dsarenal].dt.first();
         
-        av_plasty_n => eadv.[ris_img_dshplas1%, ris_img_angplas%,ris_img_dsarenal].dt.count();
+        av_plasty_n => eadv.[enc_ris_dshplas1%, enc_ris_angplas%,enc_ris_dsarenal].dt.count();
         
         av_surv_ld : {.=> greatest(avf_us_ld,av_gram_ld,av_plasty_ld)};
         
@@ -500,7 +500,7 @@ BEGIN
         {hd_131000_pri_loc in (150721600017012,111721600017012 ) => `NTG-TEHS-TIW`},
         {hd_131000_pri_loc in (111721700007002) => `NTG-TEHS-GDH`},
         {hd_131000_pri_loc in (111710500004042,111710500012022 ) => `NTG-CAHS-TCH`},
-        {hd_131000_pri_loc in (111711800003062,111711800010122 ) => `NTG-CAHS-ASH`},
+        {hd_131000_pri_loc in (111711800003062,111711800010122,111711811460051 ) => `NTG-CAHS-ASH`},
         {hd_131000_pri_loc in (111711800010132 ) => `FM-CA-GAP`},
         {hd_131000_pri_loc in (111711800011112 ) => `PUR-PUR`},
         {hd_13105_loc in (115711810146051 ) => `PUR-CA-AMPILATWATJA `},
@@ -518,6 +518,8 @@ BEGIN
         {hd_13105_loc in (115711800011112 ) => `PUR-CA-NEWMAN`},
         {hd_13105_loc in (134721710053011 ) => `MIW-TE-ANGURUGU`},
         {hd_13105_loc in (134721710027001 ) => `MIW-TE-NGALKANBUY`},
+        {hd_13105_loc in (134721710539001 ) => `MIW-TE-YIRRKALA`},
+        {hd_13105_loc in (115711811460012 ) => `PUR-WA-WARBURTON`},
         {hd_131000_ld > sysdate - 14 => `UNKNOWN`} ;
         
         

@@ -294,8 +294,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess diabetes",
-                is_active:2,
-                filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
+                is_active:2
                 
             }
         );
@@ -348,19 +347,23 @@ BEGIN
         
         dr_icpc_f83 => eadv.icpc_f83002.dt.min();
         
-        dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1};
+        dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1},{=>0};
         
         #doc(,{
                 txt:"Diabetic neuropathy ICD codes"
         });
 
-        dm_micvas_neuro => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.min();
+        dm_micvas_neuro_fd => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.min();
+        
+        dm_micvas_neuro : { dm_micvas_neuro_fd!? =>1},{=>0};
         
         #doc(,{
                 txt:"Diabetic foot ulcer"
         });
         
-        dm_foot_ulc => eadv.icd_e11_73.dt.min();
+        dm_foot_ulc_fd => eadv.icd_e11_73.dt.min();
+        
+        dm_foot_ulc : {dm_foot_ulc_fd!? =>1},{=>0};
         
         dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? or dm_foot_ulc!?=> 1};
         
@@ -391,6 +394,31 @@ BEGIN
                 type:2
             }
         );
+        
+        #define_attribute(dm_foot_ulc,
+            {
+                label:"Diabetic foot ulcer __b__",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(dm_micvas_retino,
+            {
+                label:"Diabetic retinopathy __b__",
+                is_reportable:1,
+                type:2
+            }
+        );
+        
+        #define_attribute(dm_micvas_neuro,
+            {
+                label:"Diabetic neuropathy __b__",
+                is_reportable:1,
+                type:2
+            }
+        );
+
         
     ';
     
@@ -479,7 +507,7 @@ BEGIN
         
         hba1c_n0 => eadv.lab_bld_hba1c_ngsp._.lastdv().where(dt > sysdate - 360);
         
-        hba1c_n1 => eadv.lab_bld_hba1c_ngsp._.lastdv(1).where(dt > sysdate - 720);
+        hba1c_n1 => eadv.lab_bld_hba1c_ngsp._.lastdv(1).where(dt > sysdate - 720);;
         
         hba1c_delta : { hba1c_n1_val!? => hba1c_n0_val - hba1c_n1_val};
         
@@ -509,24 +537,41 @@ BEGIN
                             { hba1c_n0_val >=10 =>4},{=>0};
         
         cd_dm_glyc_cntrl : { dm=1 => n0_st};
-        
+
         #define_attribute(
             cd_dm_glyc_cntrl,
             {
-                label:"Diabetic glycaemic control",
+                label:"Diabetes glycaemic control __f__",
                 desc:"Diabetic glycaemic control class",
+                is_reportable:1,type:2
+            }
+        );
+        
+        #define_attribute(
+            hba1c_n0_val,
+            {
+                label:"Diabetes Last HbA1c ngsp __n__",
+                desc:"Last HbA1c ngsp",
                 is_reportable:1,
                 type:2
             }
         );
         
-         #define_attribute(
-            hba1c_n0_val,
+        #define_attribute(
+            hba1c_max,
             {
-                label:"Last HbA1c ngsp",
-                desc:"Last HbA1c ngsp",
+                label:"Diabetes Maximum HbA1c ngsp __n__",
                 is_reportable:1,
                 type:2
+            }
+        );
+        
+        #define_attribute(
+            hba1c_delta,
+            {
+                 label:"Diabetes HbA1c delta __n__",
+                 is_reportable:1,
+                 type:2
             }
         );
         
@@ -555,8 +600,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess diabetic management",
-                is_active:2,
-                filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
+                is_active:2
                 
             }
         );
@@ -586,13 +630,41 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Diabetic management",
+                label:"Diabetes management plan __b__",
                 desc:"Diabetic management",
                 is_reportable:1,
                 type:2
             }
         );
         
+        #define_attribute(
+            rv_pod_ld,
+            {
+                label:"Diabetes mx last podiatry review date __t__",
+                is_reportable:1,
+                type:12
+            }
+        );
+        
+        #define_attribute(
+             rv_edu_ld,
+            {
+                 label:"Diabetes mx last diabetic educator review date __t__",
+                 is_reportable:1,
+                 type:12
+            }
+        );
+        
+        #define_attribute(
+             cp_dm_ld,
+            {
+                 label:"Diabetes mx last careplan",
+                 is_reportable:1,
+                 type:12
+            }
+        );
+
+
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -661,7 +733,34 @@ BEGIN
         dpp4 => eadv.[rxnc_a10bh].dt.min().where(val=1);
         glp1 => eadv.[rxnc_a10bj].dt.min().where(val=1);
         sglt2 => eadv.[rxnc_a10bk].dt.min().where(val=1);
+
+        ins_long_f : {ins_long!? => 1},{=>0};
         
+        ins_int_f : {ins_int!? => 1},{=>0};
+        
+        ins_mix_f : {ins_mix!? => 1},{=>0};
+        
+        ins_short_f : {ins_short!? => 1},{=>0};
+        
+        bg_f : {bg!? => 1},{=>0};
+        
+        su_f : {su!? => 1},{=>0};
+        
+        dpp4_f : {dpp4!? => 1},{=>0};
+        
+        glp1_f : {glp1!? => 1},{=>0};
+        
+        sglt2_f : {sglt2!? => 1},{=>0};
+        
+        #define_attribute(ins_long_f,{label:"Diabetes long acting insulin __b__",is_reportable:1,type:2});
+        #define_attribute(ins_int_f,{label:"Diabetes intermediate acting insulin __b__",is_reportable:1,type:2});
+        #define_attribute(ins_mix_f,{label:"Diabetes mixed insulin __b__",is_reportable:1,type:2});
+        #define_attribute(ins_short_f,{label:"Diabetes short acting insulin __b__",is_reportable:1,type:2});
+        #define_attribute(bg_f,{label:"Diabetes biguanides __b__",is_reportable:1,type:2});
+        #define_attribute(su_f,{label:"Diabetes sulphonylurea __b__",is_reportable:1,type:2});
+        #define_attribute(glp1_f,{label:"Diabetes GLP1a __b__",is_reportable:1,type:2});
+        #define_attribute(sglt2_f,{label:"Diabetes SGLT2i __b__",is_reportable:1,type:2});
+
         #doc(,{
                 txt:"Derive contraindications"
         });

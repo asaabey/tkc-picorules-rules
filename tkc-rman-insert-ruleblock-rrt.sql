@@ -59,21 +59,11 @@ BEGIN
         hhd_op_enc_dt_max => eadv.[enc_op_ren_hdp, enc_op_ren_rhd].dt.max();
         */
         
-        hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max(); 
+        hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max();
         
-        hd_dt => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
+        hd_dt => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max();
         
-        hd_icd_dt_min => eadv.[caresys_1310000,icd_z49_1].dt.min();
-        
-                
-        hd_icpc_dt_min => eadv.[icpc_u59001,icpc_u59008,mbs_13105].dt.min();
-        
-        hd_mbs_dt_min => eadv.[mbs_13105].dt.min();
-        
-        hd_dt_min : {hd_icpc_dt_min > hd_icd_dt_min => hd_icpc_dt_min},
-            {hd_icpc_dt_min? and hd_icd_dt_min? and hd_mbs_dt_min!? => hd_mbs_dt_min},
-            {hd_icd_dt_min? and hd_mbs_dt_min!? => hd_mbs_dt_min},
-            {=> hd_icd_dt_min};
+        hd_dt_min => eadv.[caresys_1310000,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.min();
         
         
         #doc(,
@@ -93,7 +83,7 @@ BEGIN
                 txt : "Transplant problem ICPC2p coding"
             }
         );
-        tx_dt_icpc => eadv.icpc_u28001.dt.min();
+        tx_dt_icpc => eadv.icpc_u28001.dt.min().where(to_number(substr(loc,2,2))=90);
         
         #doc(,
             {
@@ -165,7 +155,7 @@ BEGIN
         );
         
         /* adjusted mbs_13105 11-02-2023*/
-        rrt:{homedx_dt > nvl(greatest_date(hd_icpc_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
+        rrt:{homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
             {hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 and tx_active=0 => 1},
             {hd_icpc_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and coalesce(hd_dt,mbs_13105_dt_max)>sysdate-90 =>1},
             {mbs_13105_dt_max!?=> 1},

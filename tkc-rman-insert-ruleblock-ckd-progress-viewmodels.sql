@@ -47,11 +47,9 @@ BEGIN
         
         enc_ld => rout_engmnt_renal.enc_ld.val.bind();
         
+        avf => rout_ckd_access.avf.val.bind();
         
-                
-        ipa_sep_ld => rout_ipa_sep.icd_ld.val.bind();
-        
-        opa_sep_ld => rout_opa_sep.op_ld.val.bind();
+        avf_dt => rout_ckd_access.avf_dt.val.bind();
         
         creat1_val => rout_ckd_labs.creat1_val.val.bind();
         
@@ -87,7 +85,45 @@ BEGIN
         
         review_int  : {rrt>0 =>3},{ ckd_stage_val>4 => 3},{ckd_stage_val>2 =>6},{=>12};
         
+        edu_init => rout_ckd_journey.edu_init.val.bind();
         
+        edu_rv => rout_ckd_journey.edu_rv.val.bind();
+        
+        cp_ckd_val => rout_ckd_careplan.cp_ckd_val.val.bind();
+        
+        cp_ckd_ld => rout_ckd_careplan.cp_ckd_ld.val.bind();
+        
+        hb_lv => rout_ckd_complications.hb_val.val.bind();
+        
+        hb_ld => rout_ckd_complications.hb_dt.val.bind();
+        
+        esa_ld => rout_ckd_complications.esa_dt.val.bind();
+        
+        ipa_sep_ld => rout_ipa_sep.icd_ld.val.bind();
+        
+        opa_sep_ld => rout_opa_sep.op_ld.val.bind();
+        
+        #define_attribute(ckd_stage,{label:"CKD CKD stage",is_reportable:1,type:1});
+        #define_attribute(ipa_sep_ld,{label:"CKD ipa_sep_ld",is_reportable:1,type:12});
+        #define_attribute(opa_sep_ld,{label:"CKD opa_sep_ld",is_reportable:1,type:12});
+        #define_attribute(creat1_val,{label:"CKD Creatinine",is_reportable:1,type:2});
+        #define_attribute(egfr1_val,{label:"CKD eGFR",is_reportable:1,type:2});
+        #define_attribute(egfr1_dt,{label:"CKD eGFR date",is_reportable:1,type:12});
+        #define_attribute(uacr1_val,{label:"CKD uACR",is_reportable:1,type:2});
+        #define_attribute(uacr1_dt,{label:"CKD uACR date",is_reportable:1,type:12});
+        #define_attribute(avf,{label:"CKD AVF present",is_reportable:1,type:2});
+        #define_attribute(avf_dt,{label:"CKD AVF formation date",is_reportable:1,type:12});
+        #define_attribute(cp_ckd_val,{label:"CKD Careplan",is_reportable:1,type:2});
+        #define_attribute(cp_ckd_ld,{label:"CKD Careplan date",is_reportable:1,type:12});
+        #define_attribute(hb_lv,{label:"CKD Haemoglobin",is_reportable:1,type:2});
+        #define_attribute(hb_ld,{label:"CKD Haemoglobin date",is_reportable:1,type:12});
+        #define_attribute(esa_ld,{label:"CKD Anaemia ESA date",is_reportable:1,type:12});
+        #define_attribute(sbp_mu_1,{label:"CKD Blood pressure mean",is_reportable:1,type:2});
+        #define_attribute(dm,{label:"CKD Diabetes Present",is_reportable:1,type:2});
+        #define_attribute(hba1c_ld,{label:"CKD Diabetes HbA1c date",is_reportable:1,type:12});
+        #define_attribute(hba1c_lv,{label:"CKD Diabetes HbA1c",is_reportable:1,type:2});
+        #define_attribute(edu_init,{label:"CKD CKD Education Initial",is_reportable:1,type:12});
+        #define_attribute(edu_rv,{label:"CKD CKD Education Review",is_reportable:1,type:12});
         
         [[rb_id]] : { ckd>0 => 1};    
         

@@ -90,7 +90,7 @@ BEGIN
                 label:"Latest HD Loc",
                 desc:"Location of latest haemodialysis",
                 is_reportable:1,
-                type:3
+                type:1002
             }
         );
 

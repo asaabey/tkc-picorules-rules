@@ -412,15 +412,6 @@ BEGIN
         );
         
         #define_attribute(
-            k_high,
-            {
-                label:"Hyperkalaemia in CKD",
-                is_reportable:1,
-                type:2
-            }
-        );
-        
-        #define_attribute(
             ckd_anm_no_esa,
             {
                 label:"Anaemia in CKD without ESA",
@@ -979,11 +970,11 @@ BEGIN
                 txt : " Encounters with specialist services"
         });
         
-        enc_n => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%].dt.count();
-        enc_ld => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%].dt.max();
-        enc_fd => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%].dt.min();
-        
-        enc_ld_1y => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%].dt.max().where(dt>sysdate-365);
+        enc_n => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.count();
+        enc_ld => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.max();
+        enc_fd => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.min();
+
+        enc_ld_1y => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.max().where(dt>sysdate-365);
         
         enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
         
@@ -1524,17 +1515,6 @@ BEGIN
                 type:12
             }
         );
-        
-        #define_attribute(
-            dx_ckd_stage,
-            {
-                label:"CKD panel coded CKD Stage",
-                is_reportable:1,
-                type:2
-            }
-        );
-        
-        
         
         mm1 : { ckd>3 and coalesce(hd_131_n,0)>0 =>1},{=>0};
         

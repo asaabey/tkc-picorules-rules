@@ -66,19 +66,19 @@ BEGIN
         
         #define_attribute(dcm,{ 
                 label: "presence of dilated cardiomyopathy",
-                type :2,
+                type :12,
                 is_reportable:1
         });
         
         #define_attribute(hocm,{ 
                 label: "presence of hypertrophic cardiomyopathy",
-                type : 2,
+                type : 12,
                 is_reportable:1
         });
         
         #define_attribute(rcm,{ 
                 label: "presence of restrictive cardiomyopathy",
-                type : 2,
+                type : 12,
                 is_reportable:1
         });
     ';
