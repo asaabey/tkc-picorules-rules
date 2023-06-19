@@ -1,0 +1,30 @@
+/* Rule block to determine Haemodialysis parameters*/
+
+#define_ruleblock(rrt_hd_param,
+    {
+        description: "Rule block to determine Haemodialysis parameters",
+        is_active:2
+
+    }
+);
+
+
+
+rrt => rout_rrt.rrt.val.bind();
+
+mode => eadv.[psi_hd_param_mode]._.lastdv();
+
+hours => eadv.hd_param_hours._.lastdv();
+
+ibw => eadv.obs_dry_weight._.lastdv().where(dt > sysdate-90);
+
+bw => eadv.obs_weight._.lastdv().where(dt > sysdate-90);
+
+ex_wt : {bw_dt > ibw_dt => bw_val - ibw_val};
+
+dx => eadv.[psi_hd_param_dx]._.lastdv();
+
+mode_hdf : {mode_val in (20,22)=>1},{=>0};
+
+
+rrt_hd_param : { rrt in (1,4) and coalesce(mode_val,hours_val,ibw_val,dx_val)!? =>1},{=>0};

@@ -1,0 +1,29 @@
+/*  This is a algorithm to identify hypothyroidism  */
+
+#define_ruleblock(cd_endo_hypothyroid,
+    {
+        description: "This is a algorithm to identify hypothyroidism",
+        is_active:2
+
+    }
+);
+
+cong_fd => eadv.[icd_e03_1,icpc_t86004].dt.min();
+
+rx_induced_fd => eadv.[icd_e03_2,icpc_t86008].dt.min();
+
+post_mx_fd => eadv.[icd_89%,icpc_t86005,icpc_t86006].dt.min();
+
+nos_fd => eadv.[icpc_t86009,icpc_t86003,icd_e03_5,icd_e03_8,icd_e03_9].dt.min();
+
+code_fd : { . => least_date(cong_fd,rx_induced_fd,post_mx_fd,nos_fd)};
+
+rx_h03aa_ld => eadv.[rxnc_h03aa].dt.max().where(val=1);
+
+cd_endo_hypothyroid : { coalesce(code_fd,rx_h03aa_ld)!? =>1},{=>0};
+
+#define_attribute(cd_endo_hypothyroid,
+    {
+        label: "Presence of hypothyroidism"
+    }
+);

@@ -1,0 +1,39 @@
+/* Rule block to determine RRT 1 metrics*/
+
+#define_ruleblock(rrt_journey,
+    {
+        description: "Rule block to determine RRT 1 metrics",
+        is_active:2
+
+    }
+);
+
+#doc(,
+    {
+        txt : "rrt session regularity"
+    }
+);
+
+rrt => rout_rrt.rrt.val.bind();
+
+hd_dt => eadv.icd_z49_1.dt.max();
+
+hd_dt_2w => eadv.icd_z49_1.dt.max().where(dt> sysdate-14);
+
+hd0_2w_f : { hd_dt_2w!? => 1},{=>0};
+
+hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
+
+hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ksc,enc_op_ren_gpd,enc_op_ren_rsr].dt.max();
+
+
+rrt_journey : {. =>1};
+
+#define_attribute(
+    rrt_hhd,
+    {
+        label:"RRT Home haemodialysis",
+        is_reportable:1,
+        type:2
+    }
+);

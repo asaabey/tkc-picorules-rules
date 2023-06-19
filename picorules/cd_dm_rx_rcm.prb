@@ -1,0 +1,91 @@
+/* Ruleblock to recommend diabetic pharmacotherapy*/
+
+#define_ruleblock(cd_dm_rx_rcm,
+    {
+        description: "Ruleblock to recommend diabetic pharmacotherapy",
+        is_active:2
+
+    }
+);
+
+
+#doc(,{
+        txt:"Get careplan information"
+});
+
+dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+
+#doc(,{
+        txt:"Get past medication"
+});
+
+
+ins_long_0 => eadv.[rxnc_a10ae].dt.max().where(val=0);
+ins_int_0 => eadv.[rxnc_a10ac].dt.max().where(val=0);
+ins_mix_0 => eadv.[rxnc_a10ad].dt.max().where(val=0);
+ins_short_0 => eadv.[rxnc_a10ab].dt.max().where(val=0);
+
+bg_0 => eadv.rxnc_a10ba.dt.max().where(val=0);
+su_0 => eadv.[rxnc_a10bb].dt.max().where(val=0);
+
+dpp4_0 => eadv.[rxnc_a10bh].dt.max().where(val=0);
+glp1_0 => eadv.[rxnc_a10bj].dt.max().where(val=0);
+sglt2_0 => eadv.[rxnc_a10bk].dt.max().where(val=0);
+
+#doc(,{
+        txt:"Get cuurent medication"
+});
+
+
+ins_long => eadv.[rxnc_a10ae].dt.min().where(val=1);
+ins_int => eadv.[rxnc_a10ac].dt.min().where(val=1);
+ins_mix => eadv.[rxnc_a10ad].dt.min().where(val=1);
+ins_short => eadv.[rxnc_a10ab].dt.min().where(val=1);
+
+bg => eadv.rxnc_a10ba.dt.min().where(val=1);
+su => eadv.[rxnc_a10bb].dt.min().where(val=1);
+
+dpp4 => eadv.[rxnc_a10bh].dt.min().where(val=1);
+glp1 => eadv.[rxnc_a10bj].dt.min().where(val=1);
+sglt2 => eadv.[rxnc_a10bk].dt.min().where(val=1);
+
+ins_long_f : {ins_long!? => 1},{=>0};
+
+ins_int_f : {ins_int!? => 1},{=>0};
+
+ins_mix_f : {ins_mix!? => 1},{=>0};
+
+ins_short_f : {ins_short!? => 1},{=>0};
+
+bg_f : {bg!? => 1},{=>0};
+
+su_f : {su!? => 1},{=>0};
+
+dpp4_f : {dpp4!? => 1},{=>0};
+
+glp1_f : {glp1!? => 1},{=>0};
+
+sglt2_f : {sglt2!? => 1},{=>0};
+
+#define_attribute(ins_long_f,{label:"Diabetes long acting insulin __b__",is_reportable:1,type:2});
+#define_attribute(ins_int_f,{label:"Diabetes intermediate acting insulin __b__",is_reportable:1,type:2});
+#define_attribute(ins_mix_f,{label:"Diabetes mixed insulin __b__",is_reportable:1,type:2});
+#define_attribute(ins_short_f,{label:"Diabetes short acting insulin __b__",is_reportable:1,type:2});
+#define_attribute(bg_f,{label:"Diabetes biguanides __b__",is_reportable:1,type:2});
+#define_attribute(su_f,{label:"Diabetes sulphonylurea __b__",is_reportable:1,type:2});
+#define_attribute(glp1_f,{label:"Diabetes GLP1a __b__",is_reportable:1,type:2});
+#define_attribute(sglt2_f,{label:"Diabetes SGLT2i __b__",is_reportable:1,type:2});
+
+#doc(,{
+        txt:"Derive contraindications"
+});
+
+egfr_lv => eadv.lab_bld_egfr_c.val.last().where(dt>sysdate-90);
+
+bmi => rout_cd_obesity.bmi.val.bind();
+
+panc_dt => eadv.[icpc_d99058,icpc_d99043,icd_k86%,icd_k85%].dt.max();
+
+
+
+cd_dm_rx_rcm : {dm=1 => 1},{=>0};

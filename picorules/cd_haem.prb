@@ -1,0 +1,45 @@
+/*  This is a algorithm to identify haematological disease  */
+
+#define_ruleblock(cd_haem,
+    {
+        description: "This is a algorithm to identify haematological disease",
+        is_active:2
+    }
+);
+
+hb1 => eadv.lab_bld_hb._.lastdv().where(dt>sysdate-365);
+
+hb2 => eadv.lab_bld_hb._.lastdv(2).where(dt>sysdate-365);
+
+
+mcv => eadv.lab_bld_rbc_mcv._.lastdv().where(dt>sysdate-365);
+
+wcc => eadv.lab_bld_wcc_neutrophils._.lastdv().where(dt>sysdate-365);
+
+plt => eadv.lab_bld_platelets._.lastdv().where(dt>sysdate-365);
+
+fer => eadv.lab_bld_ferritin._.lastdv().where(dt>sysdate-365);
+
+hb_low : { hb1_val <100 => 1},{=>0};
+
+wcc_low : { wcc_val <1.5 => 1},{=>0};
+
+plt_low : { plt_val <100 => 1},{=>0};
+
+
+
+
+low_cat : { (hb_low + wcc_low + plt_low=3) => 3},
+            { (hb_low + wcc_low + plt_low=2) =>2},
+            { (hb_low + wcc_low + plt_low=1) =>1},
+            { =>0};
+
+cd_haem : { low_cat>0 =>1},{=>0};
+
+#define_attribute(cd_haem,
+    {
+        label: "Presence of haematological disease",
+        is_reportable:1,
+        type:2
+    }
+);

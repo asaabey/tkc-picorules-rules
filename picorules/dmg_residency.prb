@@ -1,0 +1,24 @@
+/* Algorithm to assess residential status */
+
+#define_ruleblock(dmg_residency,
+    {
+        description: "Algorithm to assess residential status",
+        is_active:2
+
+    }
+);
+
+mbs731 => eadv.mbs_731.dt.max().where(dt > sysdate -730);
+
+nhr : { mbs731!? => 1},{=>0};
+
+dmg_residency : { nhr=1 => 1 },{=>0};
+
+#define_attribute(
+    dmg_residency,
+    {
+        label:"Nursing home resident",
+        type:2,
+        is_reportable:1
+    }
+);

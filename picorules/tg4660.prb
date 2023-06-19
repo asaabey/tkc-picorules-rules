@@ -1,0 +1,59 @@
+/*  Algorithm medication safety concern in CKD   */
+
+ #define_ruleblock(tg4660,
+    {
+        description: "Algorithm medication safety concern in CKD ",
+
+        is_active:2,
+
+        priority:2
+
+    }
+);
+
+ckd => rout_ckd.ckd.val.bind();
+
+dod => rout_dmg.dod.val.bind();
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg4660._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+#doc(,
+    {
+        txt:"presence of biguanide sglt2 nsaids ",
+        cite: "tg4660_ref1, tg4660_ref2, tg4660_ref3"
+    }
+);
+
+
+dm_rxn_bg => rout_cd_dm_dx.dm_rxn_bg.val.bind();
+
+dm_rxn_sglt2 => rout_cd_dm_dx.dm_rxn_sglt2.val.bind();
+
+rx_nsaids => eadv.[rxnc_m01a%].dt.count(0).where(val=1);
+
+#doc(,
+    {
+        txt:"activate if ckd3+ and above present"
+    }
+);
+
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
+
+tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
+
+#define_attribute(
+        tg4660,
+        {
+            label:"Alert:Medication safety concern",
+            desc:"Integer [0-1] if meets criteria ",
+            is_reportable:1,
+            is_trigger:1,
+            type:2
+        }
+    );

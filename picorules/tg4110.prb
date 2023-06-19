@@ -1,0 +1,50 @@
+/*  Algorithm to generate AKI from hospital coded diagnosis   */
+
+ #define_ruleblock(tg4110,
+    {
+        description: "Algorithm to generate AKI from hospital coded diagnosis",
+
+        is_active:0,
+        priority:2
+
+    }
+);
+
+#doc(,
+    {
+        txt:"Based only on ICD 10CM coding"
+    }
+);
+
+dod => rout_dmg.dod.val.bind();
+
+aki_icd => eadv.[icd_n17%].dt.count(0).where(dt>sysdate-180);
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg4110._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+
+
+
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
+
+tg4110 : {aki_icd>0 and ex_flag=0 => 1},{=>0};
+
+
+
+ #define_attribute(
+        tg4110,
+        {
+            label:"Alert:Acute kidney injury in hospital by coding",
+            desc:"Integer [0-1] if meets criteria ",
+            is_reportable:1,
+            is_trigger:1,
+            type:2,
+            priority:1
+        }
+    );

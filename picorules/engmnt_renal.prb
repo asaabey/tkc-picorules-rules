@@ -1,0 +1,55 @@
+/* Rule block to assess encounters with renal */
+
+  #define_ruleblock(engmnt_renal,
+    {
+        description: "Rule block to assess encounters with renal",
+        is_active:2
+
+    }
+);
+
+#doc(,{
+        txt : "Referral from primary care for renal"
+});
+
+ref_ren_n => eadv.[ref_nephrologist,icpc_u67004].dt.count();
+ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
+
+ref_renal : { coalesce(ref_ren_n,0)>0 =>1},{=>0};
+
+#doc(,{
+        txt : " Encounters with specialist services"
+});
+
+enc_n => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.count();
+enc_ld => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.max();
+enc_fd => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.min();
+
+enc_ld_1y => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.max().where(dt>sysdate-365);
+
+enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
+
+enc_renal_1y :  {enc_ld_1y!? =>1},{=>0};
+
+enc_null : { coalesce(enc_n,0)=0 =>1},{=>0};
+
+
+engmnt_renal : { ref_renal>0 or enc_renal>0 => 1},{=>0};
+
+
+ #define_attribute(
+    enc_renal,
+    {
+        label:"Encounter with renal services",
+        is_reportable:1,
+        type:2
+    }
+);
+#define_attribute(
+    ref_renal,
+    {
+        label:"Renal referral from primary care",
+        is_reportable:1,
+        type:2
+    }
+);

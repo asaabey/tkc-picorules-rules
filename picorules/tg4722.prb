@@ -1,0 +1,51 @@
+/*  Algorithm to detect new RRT within 1 year  */
+
+ #define_ruleblock(tg4722,
+    {
+        description: "Algorithm to detect new RRT",
+
+        is_active:2
+
+    }
+);
+
+dod => rout_dmg.dod.val.bind();
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg4722._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+hd_dt_min => eadv.icd_z49_1.dt.min();
+hd_n => eadv.icd_z49_1.dt.count(0);
+hd_dt_max => eadv.icd_z49_1.dt.max();
+
+
+
+pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
+
+
+hd_start : {hd_dt_min > sysdate-365 and hd_n>=10 => 1},{=>0};
+
+pd_start : {pd_dt_min > sysdate-365 => 1},{=>0};
+
+rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
+
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
+
+tg4722 : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
+
+#define_attribute(
+        tg4722,
+        {
+            label:"Alert:New commencement on Renal replacement therapy within 1 year",
+            desc:"Integer [0-1] if meets criteria ",
+            is_reportable:1,
+            is_trigger:1,
+            type:2,
+            priority:3
+        }
+    );

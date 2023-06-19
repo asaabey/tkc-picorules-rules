@@ -1,0 +1,25 @@
+/*  This is a algorithm to identify thyroid carcinoma  */
+
+#define_ruleblock(ca_thyroid,
+    {
+        description: "This is a algorithm to identify thyroid carcinoma",
+        is_active:2
+
+    }
+);
+
+icd_fd => eadv.[icd_c37%].dt.first();
+
+icpc_fd => eadv.[icpc_t71%].dt.first();
+
+code_fd : { . => least_date(icd_fd,icpc_fd)};
+
+ca_thyroid : { code_fd!? =>1},{=>0};
+
+#define_attribute(ca_thyroid,
+    {
+        label: "Presence of thyroid carcinoma",
+        is_reportable:1,
+        type:2
+    }
+);

@@ -1,0 +1,51 @@
+/* Algorithm to plot hb graph  */
+
+
+ #define_ruleblock(hb_graph,
+    {
+        description: "Algorithm to plot hb graph",
+
+        is_active:2
+
+    }
+);
+
+hb_max => eadv.lab_bld_hb._.maxldv().where(dt>sysdate-730);
+
+hb_min => eadv.lab_bld_hb._.minldv().where(dt>sysdate-730);
+
+
+hb_n => eadv.lab_bld_hb.dt.count().where(dt>sysdate-730);
+
+rrt => rout_rrt.rrt.val.bind();
+
+hb_graph_canvas_x : {1=1 => 350};
+
+hb_graph_canvas_y : {1=1 => 100};
+
+
+hb_target_max : { . => 130};
+hb_target_min : { . => 100};
+
+
+
+hb_graph => eadv.lab_bld_hb.val.serializedv2(round(val,0)~dt).where(dt>sysdate-730);
+
+
+hb_graph_y_max : {. => hb_max_val};
+
+hb_graph_y_min : { hb_min_val < hb_target_min => hb_min_val},{=> hb_target_min};
+
+hb_graph_x_scale : {. => round(hb_graph_canvas_x/730,5)};
+
+hb_graph_y_scale : { hb_graph_y_max > hb_graph_y_min => round(hb_graph_canvas_y/(hb_graph_y_max-hb_graph_y_min),5)},{=>round(hb_graph_canvas_y/10,5)};
+
+
+line_upper_y : {.=> 0};
+
+line_lower_y : {. => (hb_graph_y_max-hb_graph_y_min) * hb_graph_y_scale};
+
+line_target_upper_y : {hb_graph_y_min< hb_target_max and hb_graph_y_max> hb_target_max => (hb_graph_y_max-10) * hb_graph_y_scale};
+
+
+hb_graph : { rrt=1 and hb_n>3 =>1},{=>0};

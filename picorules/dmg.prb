@@ -1,0 +1,86 @@
+/* Algorithm to assess demographics */
+
+#define_ruleblock(dmg,
+    {
+        description: "Algorithm to assess demographics",
+
+        is_active:2
+
+    }
+);
+
+dob => eadv.dmg_dob.dt.max();
+
+dod => eadv.dmg_dod.dt.max();
+
+gender => eadv.dmg_gender.val.last();
+
+age : { dob!? => round((sysdate-dob)/365.25,0)};
+
+alive : {dod? => 1},{=>0};
+
+female : { gender=0 => 1},{=>0};
+
+/* Constants */
+st_rman_ver : {.=> 1000};
+
+st_rman_init : {. => 1010};
+
+st_rman_rb : {. => 2010};
+
+st_rman_rb_err : {. => 2014};
+dmg : { 1=1 => 1},{=>0};
+
+#define_attribute(
+    age,
+    {
+        label:"Demography Age",
+        type:2,
+        is_reportable:1
+    }
+);
+
+#define_attribute(
+    female,
+    {
+        label:"Demography Female Gender __b__",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(
+    dob,
+    {
+        label:"Demography Date of birth __t__",
+        type:12,
+        is_reportable:1
+    }
+);
+
+#define_attribute(
+    dod,
+    {
+        label:"Demography Date of death",
+        type:12,
+        is_reportable:1
+    }
+);
+
+#define_attribute(
+    gender,
+    {
+        label:"Gender [male=1 female=0]",
+        type:2,
+        is_reportable:1
+    }
+);
+
+#define_attribute(
+    alive,
+    {
+        label:"Demography Alive with absent DOD",
+        type:2,
+        is_reportable:1
+    }
+);

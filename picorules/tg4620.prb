@@ -1,0 +1,67 @@
+/*  Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF   */
+
+
+ #define_ruleblock(tg4620,
+    {
+        description: "Algorithm to generate CKD4 or 5 rapid progression 5% decline per annum no AVF",
+        is_active:2
+
+    }
+);
+
+#doc(,
+    {
+        txt:"Get CKD G stage and slope and AVF proc codes"
+    }
+);
+
+dod => rout_dmg.dod.val.bind();
+
+age => rout_dmg.age.val.bind();
+
+ckd => rout_ckd.ckd.val.bind();
+
+eb => rout_ckd_egfr_metrics.egfr_slope2.val.bind();
+
+assert_level => rout_ckd.assert_level.val.bind();
+
+ckd_stage =>rout_ckd.ckd_stage.val.bind();
+
+avf => rout_ckd.avf.val.bind();
+
+
+
+ref_ren => rout_engmnt_renal.ref_renal.val.bind();
+
+enc_ren_1y => rout_engmnt_renal.enc_renal_1y.val.bind();
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg4620._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+#doc(,
+    {
+        txt:"Triggered for stage 4+ with eb of minus 5pc or more and no avf proc",
+        cite: "tg4620_ref1, tg4620_ref2"
+    }
+);
+
+ex_flag : {dod!? or enc_ren_1y=1 or age>69 or assert_level<111100 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
+
+tg4620 : {ckd=6  and avf=0 and ex_flag=0 => 1},{=>0};
+
+#define_attribute(
+        tg4620,
+        {
+            label:"Alert:No AVF with advanced CKD 4+ with rapid progression",
+            desc:"Integer [0-1] if meets criteria ",
+            is_reportable:1,
+            is_trigger:1,
+            type:2,
+            priority:1
+        }
+    );

@@ -1,0 +1,133 @@
+/* Rule block to Calculate egfr metrics */
+
+  #define_ruleblock(ckd_egfr_metrics,
+    {
+        description: "Rule block to Calculate egfr metrics",
+        is_active:2
+    }
+);
+
+
+
+#doc(,
+    {
+        txt : "Calculate egfr metrics"
+    }
+);
+
+#doc(,
+    {
+        txt : "Gather last first and penultimate within 3-12 month windows with cardinality"
+    }
+);
+
+
+egfr_l => eadv.lab_bld_egfr_c._.lastdv();
+
+egfr_l1 => eadv.lab_bld_egfr_c._.lastdv().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
+
+egfr_l1_mu => eadv.lab_bld_egfr_c.val.avg().where(dt<egfr_l_dt-90 and dt>egfr_l_dt-365);
+
+
+
+egfr_l2 => eadv.lab_bld_egfr_c._.lastdv().where(dt < egfr_l_dt-365);
+
+egfr_f => eadv.lab_bld_egfr_c.val.firstdv();
+
+egfr_outdated:{ (sysdate-egfr_l_dt>730) =>1},{=>0};
+
+
+#doc(,{
+        txt : "Check for 30 day egfr assumption violation with a threshold of 20% change between last and 30 days avg"
+});
+
+egfr_30_n2 => eadv.lab_bld_egfr_c.val.count().where(dt>egfr_l_dt-30);
+egfr_30_mu => eadv.lab_bld_egfr_c.val.avg().where(dt>egfr_l_dt-30);
+
+egfr_30_qt : {egfr_30_n2>=2 => round(egfr_l_val/egfr_30_mu,2)};
+
+asm_viol_30 : {nvl(egfr_30_qt,1)>1.2 or nvl(egfr_30_qt,1)<0.8  => 1},{=> 0};
+
+#doc(,{
+        txt : "L1 average and 30 day average ratio to determine true 1y baseline egfr"
+});
+
+l1_30_qt : { egfr_30_mu>0 => round(egfr_l1_mu/egfr_30_mu,2) };
+
+egfr_base : { l1_30_qt > 2 => egfr_l1_val},{=> egfr_l_val};
+
+#doc(,{
+        txt : "Check for 1 year egfr assumption violation with absolute 20 units change"
+});
+
+egfr_1y_delta : {egfr_l1_val!? => egfr_l_val-egfr_l1_val};
+
+asm_viol_1y : {abs(egfr_1y_delta)>20 => 1},{=> 0};
+
+
+#doc(,{
+        txt : "Composite Assumption violation "
+});
+
+g_asm_viol_ex : { asm_viol_1y=1 or asm_viol_30=1 =>0},{=>1};
+
+#doc(,{
+        txt : "calculate egfr slope and related metrics"
+});
+
+
+
+egfr_max => eadv.lab_bld_egfr_c._.maxldv();
+
+egfr_ld_max_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt>egfr_max_dt and dt < egfr_l_dt);
+
+#doc(,
+    {
+        txt : "Slope between last and last maximum value assuming last max represents baseline"
+    }
+);
+
+
+
+egfr_slope2 : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};
+
+egfr_decline : {egfr_l_dt - egfr_max_dt >365 and egfr_ld_max_n >2 and egfr_max_val - egfr_l_val>=20 => 1},{=>0};
+
+egfr_rapid_decline : { egfr_decline=1 and egfr_slope2<-10 =>1},{=>0};
+
+
+
+
+#doc(,{
+        txt : "Check for 90 day egfr persistence"
+});
+
+
+g_pers : { l1_30_qt<2 and egfr_l1_val<90 and egfr_l_val<60 => 1},{ egfr_l2_val<90 and egfr_l_val<60 =>1},{=>0};
+
+#doc(,{
+        txt : "Check for 1y egfr progression"
+});
+
+ckd_prog : { egfr_l2_val!? =>1},{=>0};
+
+l_l2_delta : { egfr_l2_val!? => egfr_l_val-egfr_l2_val};
+
+g_stage_prog : {l_l2_delta < -15 =>1},{=>0};
+
+#doc(,
+    {
+        txt : "Apply KDIGO 2012 staging",
+        cite: "ckd_ref1, ckd_ref2"
+    }
+);
+
+
+
+ckd_egfr_metrics:  {egfr_base>=90 => 1},
+        {egfr_base<90 AND egfr_base>=60 => 2},
+        {egfr_base<60 AND egfr_base>=45 => 3},
+        {egfr_base<45 AND egfr_base>=30 => 4},
+        {egfr_base<30 AND egfr_base>=15 => 5},
+        {egfr_base<15 => 6},
+        {=>0};

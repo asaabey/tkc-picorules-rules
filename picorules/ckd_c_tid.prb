@@ -1,0 +1,51 @@
+   /* Rule block to determine coded tubulointerstitial disease */
+
+
+#define_ruleblock(ckd_c_tid,
+       {
+           description: "Rule block to determine coded tubulointerstitial disease",
+           is_active:2
+
+       }
+);
+
+#doc(,{txt :"
+   Chronic tubulo-interstitial disease
+"});
+
+#doc(,{txt :"
+   N11  Chronic tubulo-interstitial nephritis
+   N12  Tubulo-interstitial nephritis not specified as acute or chronic
+   N13  Obstructive and reflux uropathy
+   N14  Drug- and heavy-metal-induced tubulo-interstitial and tubular conditions
+   N15  Other renal tubulo-interstitial diseases
+   N16  Renal tubulo-interstitial disorders in diseases classified elsewhere
+   N25  Disorders resulting from impaired renal tubular function
+"});
+
+
+c_n11 => eadv.[icd_n11%].dt.min();
+
+c_n12 => eadv.[icd_n12%].dt.min();
+
+c_n13 => eadv.[icd_n13%].dt.min();
+
+c_n14 => eadv.[icd_n14%].dt.min();
+
+c_n15 => eadv.[icd_n15%].dt.min();
+
+c_n16 => eadv.[icd_n16%].dt.min();
+
+c_n25 => eadv.[icd_n25%].dt.min();
+
+ckd_c_tid : { coalesce(c_n11,c_n12,c_n13,c_n14,c_n15,c_n16,c_n25)!? =>1 },{=>0};
+
+#define_attribute(
+       ckd_c_tid,
+       {
+           label:"Renal Tubulo-interstitial disease Chronic",
+           desc:"Integer [0-1] if found ",
+           is_reportable:1,
+           type:2
+       }
+);

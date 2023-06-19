@@ -1,0 +1,49 @@
+/*  Algorithm to detect high haemoglobin while on ESA  */
+
+ #define_ruleblock(tg4810,
+    {
+        description: "Algorithm to detect high haemoglobin while on ESA",
+
+        is_active:2
+
+    }
+);
+
+dod => rout_dmg.dod.val.bind();
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg4810._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+esa_dt => eadv.rxnc_b03xa.dt.max().where(val=1);
+
+hb_i => eadv.lab_bld_hb.val.lastdv().where(dt>sysdate-180);
+
+hb_i1 => eadv.lab_bld_hb.val.lastdv(1);
+
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
+
+#doc(,
+    {
+        txt:"activate if ckd3+ and above present",
+        cite: "tg4810_ref1, tg4810_ref2"
+    }
+);
+
+tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
+
+#define_attribute(
+        tg4810,
+        {
+            label:"Alert: High Hb associated with ESA therapy",
+            desc:"Integer [0-1] if meets criteria ",
+            is_reportable:1,
+            is_trigger:1,
+            type:2,
+            priority:2
+        }
+    );

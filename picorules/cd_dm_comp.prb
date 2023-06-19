@@ -1,0 +1,129 @@
+/* Ruleblock to assess diabetes */
+
+#define_ruleblock(cd_dm_comp,
+    {
+        description: "Ruleblock to assess diabetes",
+        is_active:2
+
+    }
+);
+
+
+#doc(,
+    {
+        txt:"Calculate information entropy"
+    }
+);
+
+
+dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+
+
+#doc(,{
+        section: "Complications"
+});
+
+#doc(,{
+        txt:"Determine diabetic complications including retinopathy neuropathy dm foot",
+        cite:"dm_dmcare_2014"
+});
+
+#doc(,{
+        txt:"Non-proliferative diabetic retinopathy ICD codes"
+
+});
+
+ndr_icd_e31 => eadv.[icd_e10_31,icd_e11_31,icd_e13_31].dt.min();
+
+ndr_icd_e32 => eadv.[icd_e10_32,icd_e11_32,icd_e13_32].dt.min();
+
+ndr_icd_e33 => eadv.[icd_e10_33,icd_e11_33,icd_e13_33].dt.min();
+
+ndr_icd_e34 => eadv.[icd_e10_34,icd_e11_34,icd_e13_34].dt.min();
+
+ndr_icd : {coalesce(ndr_icd_e31, ndr_icd_e32,ndr_icd_e33,ndr_icd_e34)!? =>1},{=>0};
+
+#doc(,{
+        txt:"Proliferative diabetic retinopathy ICD codes"
+
+});
+
+pdr_icd_e35 => eadv.[icd_e11_35%,icd_e11_35%,icd_e13_35%].dt.min();
+
+#doc(,{
+        txt:"Diabetic retinopathy ICPC codes"
+});
+
+dr_icpc_f83 => eadv.icpc_f83002.dt.min();
+
+dm_micvas_retino : { ndr_icd=1 or pdr_icd_e35!? or dr_icpc_f83!? =>1},{=>0};
+
+#doc(,{
+        txt:"Diabetic neuropathy ICD codes"
+});
+
+dm_micvas_neuro_fd => eadv.[icd_e11_4%,icpc_n94012,icpc_s97013].dt.min();
+
+dm_micvas_neuro : { dm_micvas_neuro_fd!? =>1},{=>0};
+
+#doc(,{
+        txt:"Diabetic foot ulcer"
+});
+
+dm_foot_ulc_fd => eadv.icd_e11_73.dt.min();
+
+dm_foot_ulc : {dm_foot_ulc_fd!? =>1},{=>0};
+
+dm_micvas :{ dm_micvas_neuro!? or dm_micvas_retino!? or dm_foot_ulc!?=> 1};
+
+#doc(,{
+        txt:"Diabetic ketoacidosis"
+});
+
+dka_icd_ld => eadv.icd_e11_11.dt.max();
+
+dka_icd_fd => eadv.icd_e11_11.dt.min();
+
+dka_icpc_ld => eadv.icpc_t99077.dt.max();
+
+dka_ld : { .=> greatest(dka_icd_ld,dka_icpc_ld)};
+
+dm_dka : { dka_ld!? => 1};
+
+
+cd_dm_comp : { coalesce(dm_micvas,dm_dka)>0 and dm=1 =>1},{=>0};
+
+
+#define_attribute(
+    cd_dm_comp,
+    {
+        label:"Diabetic complications",
+        desc:"Presence of Diabetic complications",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(dm_foot_ulc,
+    {
+        label:"Diabetic foot ulcer __b__",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(dm_micvas_retino,
+    {
+        label:"Diabetic retinopathy __b__",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(dm_micvas_neuro,
+    {
+        label:"Diabetic neuropathy __b__",
+        is_reportable:1,
+        type:2
+    }
+);

@@ -1,0 +1,89 @@
+/*  Algorithm to detect detect untreated chronic disease   */
+
+ #define_ruleblock(tg2610,
+    {
+        description: "Algorithm to detect untreated chronic disease",
+
+        is_active:2
+
+
+    }
+);
+
+dod => rout_dmg.dod.val.bind();
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg2610._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+dm => rout_cd_dm_dx.dm.val.bind();
+
+dm_rxn => rout_cd_dm_dx.dm_rxn.val.bind();
+
+hba1c_n0_val => rout_cd_dm_glyc_cntrl.hba1c_n0_val.val.bind();
+
+cga_a => rout_ckd.cga_a_val.val.bind();
+
+cga_g => rout_ckd.ckd.val.bind();
+
+acr_outdt => rout_ckd.acr_outdated.val.bind();
+
+egfr_outdt => rout_ckd.egfr_outdated.val.bind();
+
+res_outdt : { greatest(acr_outdt,egfr_outdt)>0 =>1},{=>0};
+
+ckd_met : { cga_a >= 3 and cga_g >=1 and cga_g<4 and res_outdt=0 =>1},{=>0};
+
+
+raas_aa => eadv.[rxnc_c09aa].val.lastdv();
+
+raas_ca => eadv.[rxnc_c09ca].val.lastdv();
+
+/*  raas => eadv.[rxnc_c09%].val.lastdv(); */
+
+
+raas_cur : { coalesce(raas_aa_val,0)=1 or coalesce(raas_ca_val,0)=1 =>1},{=>0};
+
+raas_past : { (raas_aa_dt!? or raas_ca_dt!?) and raas_cur=0 =>1 },{=>0};
+
+
+
+sbp => eadv.obs_bp_systolic.val.lastdv();
+
+k => eadv.lab_bld_potassium.val.lastdv();
+
+sbp_safe : { sbp_val> 110 and sbp_dt>sysdate-365 =>1},{=>0};
+
+k_safe : { k_val< 5 and k_dt>sysdate-365 => 1},{=>0};
+
+
+ckd_untreat : { ckd_met=1 and sbp_safe=1 and k_safe=1 and raas_cur=0 =>1},{=>0};
+
+dm_untreat : {dm=1 and nvl(dm_rxn,0)=0 and nvl(hba1c_n0_val,0)>8 => 1},{=>0};
+
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
+
+#doc(,
+    {
+        txt:"Chronic diseases include ckd, dm, possibly not on treatment",
+        cite: "tg2610_ref1, tg2610_ref2"
+    }
+);
+
+tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
+
+#define_attribute(
+        tg2610,
+        {
+            label:"Alert:Potentially untreated chronic disease",
+            desc:"Integer [0-1] if meets criteria ",
+            is_reportable:1,
+            is_trigger:1,
+            type:2,
+            priority:2
+        }
+    );

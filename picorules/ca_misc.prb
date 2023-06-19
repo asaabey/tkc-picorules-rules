@@ -1,0 +1,23 @@
+/*  Algorithm to identify misc carcinoma  */
+
+#define_ruleblock(ca_misc,
+    {
+        description: "Algorithm to identify misc carcinoma",
+        is_active: 2
+
+    }
+);
+
+ca_att => eadv.[icd_c%].att.first();
+
+ca_fd => eadv.[icd_c%].dt.first().where(att=ca_att);
+
+ca_misc : { ca_att!? =>1},{=>0};
+
+#define_attribute(ca_misc,
+    {
+        label: "Presence of misc carcinoma",
+        is_reportable: 1,
+        type: 2
+    }
+);

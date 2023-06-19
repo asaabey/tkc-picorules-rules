@@ -1,0 +1,170 @@
+/* Rule block to determine CKD complications */
+
+#define_ruleblock(ckd_complications,
+    {
+        description: "Rule block to determine CKD complications",
+        is_active:2
+    }
+);
+
+#doc(,
+    {
+        txt:"Complications including Hb low, metabolic bone, and electrolyte disturbances",
+        cite : "ckd_complications_ref1, ckd_complications_ref2"
+    }
+);
+
+ckd => rout_ckd.ckd.val.bind();
+
+#doc(,
+    {
+        txt:"Haematenics"
+    }
+);
+
+
+hb => eadv.lab_bld_hb._.lastdv().where(dt>sysdate-365);
+
+pth => eadv.lab_bld_pth._.lastdv().where(dt>sysdate-365);
+
+wcc_neut => eadv.lab_bld_wcc_neutrophils._.lastdv().where(dt>sysdate-365);
+
+wcc_eos => eadv.lab_bld_wcc_eosinophils._.lastdv().where(dt>sysdate-365);
+
+rbc_mcv => eadv.lab_bld_rbc_mcv._.lastdv().where(dt>sysdate-365);
+
+esa => eadv.rxnc_b03xa._.lastdv().where(dt>sysdate-365);
+
+b05_ld => eadv.[rxnc_b05cb,rxnc_b05xa].dt.max().where(val=1);
+
+#doc(,
+    {
+        txt:"Electrolytes"
+    }
+);
+
+k => eadv.lab_bld_potassium._.lastdv().where(dt>sysdate-365);
+
+ca => eadv.lab_bld_calcium_corrected._.lastdv().where(dt>sysdate-365);
+
+phos => eadv.lab_bld_phosphate._.lastdv().where(dt>sysdate-365);
+
+hco3 => eadv.lab_bld_bicarbonate._.lastdv().where(dt>sysdate-365);
+
+alb => eadv.lab_bld_albumin._.lastdv().where(dt>sysdate-365);
+
+fer => eadv.lab_bld_ferritin._.lastdv().where(dt>sysdate-365);
+
+
+#doc(,
+    {
+        txt:"Determine haematenic complications"
+    }
+);
+
+
+hb_state : { nvl(hb_val,0)>0 and nvl(hb_val,0)<100 =>1},
+            { nvl(hb_val,0)>=100 and nvl(hb_val,0)<180 =>2},
+            { nvl(hb_val,0)>180 =>3},
+            {=>0};
+
+mcv_state : { hb_state=1 and nvl(rbc_mcv_val,0)>0 and nvl(rbc_mcv_val,0)<70 => 11 },
+            { hb_state=1 and nvl(rbc_mcv_val,0)>=70 and nvl(rbc_mcv_val,0)<80 => 12 },
+            { hb_state=1 and nvl(rbc_mcv_val,0)>=80 and nvl(rbc_mcv_val,0)<=100 => 20 },
+            { hb_state=1 and nvl(rbc_mcv_val,0)>=100 => 31 },{ =>0};
+
+iron_low : { hb_state=1 and nvl(fer_val,0)>0 and nvl(fer_val,0)<250 => 1},{=>0};
+
+thal_sig : {mcv_state=11 =>1 },{=>0};
+
+esa_null : { esa_dt? =>1},{=>0};
+
+esa_state : { esa_null=0 and esa_val=1 => 1},{ esa_null=0 and esa_val=0 => 2},{=>0};
+
+#doc(,
+    {
+        txt:"Determine CKD-MBD complications"
+    }
+);
+
+alb_low : { alb_val<32 => 1},{=>0};
+
+phos_high : {phos_val>=2 =>1},{=>0};
+
+pth_high : {pth_val>=63 =>1},{=>0};
+
+#doc(,
+    {
+        txt:"Determine CKD electrolyte and acid base complications"
+    }
+);
+
+
+k_high : {k_val>=6 =>1},{=>0};
+
+#doc(,
+    {
+        txt:"Need to include bicarbonate therapy"
+    }
+);
+
+ckd_anm_no_esa : { hb_state=1 and ckd>4 and esa_state=0 =>1 },{=>0};
+
+hco3_low : {hco3_val<22 =>1},{=>0};
+
+rcm_bicarb : {hco3_low=1 and b05_ld? => 1},{=>0};
+
+ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_low)>0=> 1},{=>0};
+
+#define_attribute(
+    ckd_complications,
+    {
+        label:"CKD complication present",
+        desc:"Integer [0-1] if CKD current complication present",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(
+    pth_high,
+    {
+        label:"Hyperphosphataemia due to CKD",
+        is_reportable:1,
+        type:2
+    }
+);
+#define_attribute(
+    phos_high,
+    {
+        label:"Likely secondary hyperparathyroidism due to CKD",
+        is_reportable:1,
+        type:2
+    }
+);
+#define_attribute(
+    alb_low,
+    {
+        label:"Hypoalbuminaemia in CKD",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(
+    k_high,
+    {
+        label:"Hyperkalaemia in CKD",
+        is_reportable:1,
+        type:2
+    }
+);
+
+#define_attribute(
+    ckd_anm_no_esa,
+    {
+        label:"Anaemia in CKD without ESA",
+        is_reportable:1,
+        type:2
+    }
+);

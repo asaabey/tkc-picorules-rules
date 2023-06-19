@@ -4,10 +4,9 @@ import re
 import json
 from typing import Dict, List
 from dataclasses import dataclass, asdict
-from dataclasses_json import dataclass_json
+from collections import Counter
 
 
-@dataclass_json
 @dataclass(frozen=True)
 class PicoRuleDTO:
     name: str
@@ -22,15 +21,27 @@ BLOCKBODY_RGX = r"(?:rb\.picoruleblock\s{0,}\:=\s{0,}\')([^\']*)(?:\')"
 BLOCK_PH = "[[rb_id]]"
 BLOCK_MATURITY_LEVEL = r"(?:is_active\s{0,}\:\s{0,})(0|1|2)"
 
-PICORULE_FILE_PATH = "picorule_fmt"
-PICORULE_FILE_EXT = "picorule"
+PICORULE_FILE_PATH = "picorules"
+PICORULE_FILE_EXT = "prb"
 
 PICORULE_UNI_JSON_FILE_PATH = "json"
 PICORULE_UNI_JSON_FILE = "picorule_uni.json"
 
+#include_inactive_ruleblocks = True
+#should_unindent = False
+#should_replace_rbid = True
+
+
 include_inactive_ruleblocks = True
+should_unindent = True
+should_replace_rbid = True
+
 
 wd = os.path.abspath(os.getcwd())
+
+output_directory = os.path.join(wd, PICORULE_FILE_PATH)
+os.makedirs(output_directory, exist_ok=True )
+
 file_list = []
 
 
@@ -47,8 +58,8 @@ def minifytxt(s):
     return re.sub(r"\\s{2,}",r"\\s",s)
 
 def writefile(fname, body):
-
     f_path = os.path.join(wd, PICORULE_FILE_PATH, fname)
+    
 
     with open(f_path, "w") as f:
         f.write(body)
@@ -88,10 +99,30 @@ def processfiles():
 
                     for idx, file_bid in enumerate(file_bids):
                         fb = "        " + file_blockbodies[idx].strip()
-                        fb = fb.replace(BLOCK_PH, file_bid)
+                        
+                        newlines:list[str] = list()
+                        lines = fb.splitlines()
+                        
+                        occurence_count = Counter([spaces for spaces in re.findall("^( *)", fb, flags=re.MULTILINE)])
+                        probable_indent = len(occurence_count.most_common(1)[0][0])
+
+                        for line in lines:
+                            #un-indent
+                            if should_unindent:
+                                line = re.sub(f"^ {{0,{probable_indent}}}", "", line)
+                                line = line.rstrip(' ')
+
+                            newlines.append(line)
+                        
+                        fb = "\n".join(newlines)
+                        
+                        if should_replace_rbid:
+                            fb = fb.replace(BLOCK_PH, file_bid)
+                        
+
                         #fb = minifytxt(fb)
                         # is_active = True if int(file_bmls[idx])>0 else False
-                        active_flag = int(file_bmls[idx]) > 0
+                        active_flag = int(file_bmls[idx]) >= 2
 
                         print(
                             f"----> writing [{idx}]:active:[{file_bmls[idx]}] | {file_bid} : "
@@ -109,21 +140,24 @@ def processfiles():
                         except:
                             print("----> File write Exception!!")
     print(f"Total files created : {files_created}")
-
-    #properties are serialized to json in a non deterministic order
-    #json_body = PicoRuleDTO.schema().dumps(picoRuleDTO_list, many=True, indent=2, sort_keys=None)
     
-    #properties seem to be serialized to json in a deterministic order (and in the order as defined in the PicoRuleDTO class)
-    json_body = json.dumps(picoRuleDTO_list, default=lambda o: o.as_jsonable(), indent=2)
+    if False:   #the combined json file is now managed by picorules_tool.py in the picodomain repository
+        #properties are serialized to json in a non deterministic order
+        #json_body = PicoRuleDTO.schema().dumps(picoRuleDTO_list, many=True, indent=2, sort_keys=None)
 
-    try:
-        with open(
-            os.path.join(wd, PICORULE_UNI_JSON_FILE_PATH, PICORULE_UNI_JSON_FILE), "w"
-        ) as json_file:
-            json_file.write(json_body)
-        print("----> Unified json file created")
-    except:
-        print("----> Unified json file couldnt be created!!")
+        picoRuleDTO_list = sorted(picoRuleDTO_list, key=lambda pr:pr.name)
+        
+        #properties seem to be serialized to json in a deterministic order (and in the order as defined in the PicoRuleDTO class)
+        json_body = json.dumps(picoRuleDTO_list, default=lambda o: o.as_jsonable(), indent=2)
+
+        try:
+            with open(
+                os.path.join(wd, PICORULE_UNI_JSON_FILE_PATH, PICORULE_UNI_JSON_FILE), "w"
+            ) as json_file:
+                json_file.write(json_body)
+            print("----> Unified json file created")
+        except:
+            print("----> Unified json file couldnt be created!!")
 
 
 if __name__ == "__main__":

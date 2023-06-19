@@ -1,0 +1,100 @@
+/*  Test  */
+
+#define_ruleblock(at_risk_dense,
+    {
+        description: "This is the at_risk_dense algorithm",
+        is_active:0
+
+    }
+);
+
+ckd => rout_ckd_dense.ckd.val.bind();
+
+rrt => rout_ckd_dense.rrt.val.bind();
+
+alive => rout_ckd_dense.alive.val.bind();
+
+ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
+
+dm_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.min();
+
+dm_icpc_fd => eadv.[icpc_t89%,icpc_t90%].dt.min();
+
+
+
+dm_fd : {.=>least_date(dm_icd_fd, dm_icpc_fd)};
+
+dm_prev : { dm_fd!? => 1 },{=>0};
+
+dm_incd : { dm_fd > sysdate - 365 => 1},{=>0};
+
+htn_icd_fd => eadv.[icd_i10_%,icd_i15_%].dt.min();
+
+htn_icpc_fd => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
+
+htn_fd : { htn_icd_fd!? and htn_icpc_fd!? => least(htn_icd_fd,htn_icpc_fd) },{htn_icd_fd!? => htn_icd_fd},{htn_icpc_fd!? => htn_icpc_fd};
+
+htn_prev : { htn_fd!? => 1 },{=>0};
+
+htn_incd : { htn_fd > sysdate - 365 => 1},{=>0};
+
+ihd_fd => eadv.[icd_z95_1%,icpc_k54007,icd_i21%,icd_i22%,icd_i23%,icd_i24%,icd_i25%,icpc_k74%,icpc_k75%,icpc_k76%].dt.min(2999);
+
+cva_fd => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min(2999);
+
+pvd_fd => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min(2999);
+
+cvd_fd : { least(ihd_fd,cva_fd,pvd_fd)< to_date(`29991231`,`YYYYMMDD`) => least(ihd_fd,cva_fd,pvd_fd)};
+
+
+cvd_prev : { cvd_fd!? => 1 },{=>0};
+
+cvd_incd : { cvd_fd > sysdate - 365 => 1},{=>0};
+
+
+
+dyslip_fd => eadv.[icpc_t93%].dt.min();
+
+dyslip_prev : { dyslip_fd!? => 1 },{=>0};
+
+dyslip_incd : { dyslip_fd > sysdate - 365 => 1},{=>0};
+
+obese_fd => eadv.[icd_e66%,icpc_t82%].dt.min();
+
+obese_prev : { obese_fd!? => 1 },{=>0};
+
+obese_incd : { obese_fd > sysdate - 365 => 1},{=>0};
+
+at_risk : {coalesce(obese_fd, dyslip_fd,cvd_fd,htn_fd,dm_fd)!? and ckd=0 and rrt=0 and alive=1 =>1},{=>0};
+
+
+egfr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
+
+uacr_1y_n => eadv.lab_bld_egfr_c.dt.count(0).where(dt > sysdate -365);
+
+
+
+screen_egfr : { egfr_1y_n>0 =>1 },{ => 0};
+
+screen_uacr : { uacr_1y_n>0 =>1 },{ => 0};
+
+
+
+screen_full : { . => screen_egfr + screen_uacr };
+
+mbs_715 => eadv.mbs_715.dt.count().where(dt > sysdate -365);
+
+mbs_715_2y => eadv.mbs_715.dt.count().where(dt > sysdate -730);
+
+mbs_721 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
+
+mbs_723 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
+
+mbs_flag : { . => coalesce(mbs_715,mbs_721,mbs_723)};
+at_risk_dense : {1=1 =>1};
+
+#define_attribute(at_risk_dense,
+    {
+        label: "This is a test variable uics"
+    }
+);

@@ -1,0 +1,23 @@
+/*  This is a algorithm to identify cancer careplan  */
+
+#define_ruleblock(ca_careplan,
+    {
+        description: "This is a algorithm to identify cancer careplan",
+        is_active:2
+
+    }
+);
+
+
+op_enc_ld => eadv.[enc_op_onc%].dt.max();
+
+
+ca_careplan : { op_enc_ld!? => 1},{=>0};
+
+#define_attribute(ca_careplan,
+    {
+        label: "Attendance at oncology clinic",
+        is_reportable:1,
+        type:2
+    }
+);

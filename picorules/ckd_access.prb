@@ -1,0 +1,36 @@
+/* Rule block to stage CKD */
+
+  #define_ruleblock(ckd_access,
+    {
+        description: "Rule block to stage CKD",
+        is_active:2
+
+    }
+);
+
+#doc(,
+    {
+        txt : "Access formation"
+    }
+);
+
+avf_proc => eadv.[caresys_3450901,caresys_3451200,caresys_3451800].dt.max();
+
+avf_icpc => eadv.icpc_k99049.dt.max();
+
+avf_icd => eadv.icd_z49_0.dt.max();
+
+avf : { coalesce(avf_proc,avf_icd,avf_icpc)!?  =>1},{=>0};
+
+avf_dt : { coalesce(avf_proc,avf_icd,avf_icpc)!? => least_date(avf_proc,avf_icd,avf_icpc)};
+
+ckd_access :{ .=> avf};
+
+#define_attribute(
+    avf,
+    {
+        label:"Prevalent arteriovenous fistula for haemodialysis",
+        is_reportable:1,
+        type:2
+    }
+);

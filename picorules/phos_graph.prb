@@ -1,0 +1,52 @@
+/* Algorithm to plot phosphate graph  */
+
+
+ #define_ruleblock(phos_graph,
+    {
+        description: "Algorithm to plot phosphate graph",
+        is_active:2
+
+
+    }
+);
+
+phos_max => eadv.lab_bld_phosphate._.maxldv().where(dt>sysdate-730);
+
+phos_min => eadv.lab_bld_phosphate._.minldv().where(dt>sysdate-730);
+
+
+phos_n => eadv.lab_bld_phosphate.dt.count().where(dt>sysdate-730);
+
+rrt => rout_rrt.rrt.val.bind();
+
+phos_graph_canvas_x : {1=1 => 350};
+
+phos_graph_canvas_y : {1=1 => 100};
+
+
+phos_target_max : { . => 1.7};
+phos_target_min : { . => 1.1};
+
+
+
+phos_graph => eadv.lab_bld_phosphate.val.serializedv2(round(val,1)~dt).where(dt>sysdate-730);
+
+
+phos_graph_y_max : {. => greatest(phos_max_val,phos_target_max)};
+
+phos_graph_y_min : {. => least(phos_min_val,phos_target_min)};
+
+phos_graph_x_scale : {. => round(phos_graph_canvas_x/730,5)};
+
+phos_graph_y_scale : { . => round(phos_graph_canvas_y/(phos_graph_y_max-phos_graph_y_min),5)};
+
+
+line_upper_y : {.=> 0};
+
+line_lower_y : {. => 100};
+
+
+line_target_upper_y : { phos_max_val > phos_target_max => (phos_max_val - phos_target_max) * phos_graph_y_scale },{ => 0 };
+
+line_target_lower_y : { phos_min_val < phos_target_min => (phos_target_min - phos_min_val) * phos_graph_y_scale },{ => phos_graph_canvas_y };
+phos_graph : { rrt in (1,2,4) and phos_n>3 =>1},{=>0};

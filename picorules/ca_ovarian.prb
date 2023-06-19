@@ -1,0 +1,25 @@
+/*  Algorithm to identify ovarian carcinoma  */
+
+#define_ruleblock(ca_ovarian,
+    {
+        description: "Algorithm to identify ovarian carcinoma",
+        is_active:2
+
+    }
+);
+
+icd_fd => eadv.[icd_c56%].dt.first();
+
+icpc_fd => eadv.[icpc_x77006].dt.first();
+
+code_fd : { . => least_date(icd_fd,icpc_fd)};
+
+ca_ovarian : { code_fd!? =>1},{=>0};
+
+#define_attribute(ca_ovarian,
+    {
+        label: "Presence of ovarian carcinoma",
+        is_reportable:1,
+        type:2
+    }
+);

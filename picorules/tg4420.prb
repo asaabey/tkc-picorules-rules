@@ -1,0 +1,119 @@
+/* Algorithm to detect nephritic syndrome */
+
+ #define_ruleblock(tg4420,
+    {
+        description: "Algorithm to detect nephritic syndrome",
+
+        is_active:2,
+
+        priority:2
+
+    }
+);
+
+#doc(,
+    {
+        txt:"Calculate information quantity"
+    }
+);
+
+dod => rout_dmg.dod.val.bind();
+
+#doc(,{
+        txt:"previous CSU action and assumes that the trigger will never fire again"
+});
+
+csu_act => eadv.csu_action_tg4420._.lastdv();
+
+dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+iq_uacr => eadv.lab_ua_acr.val.count(0).where(dt>sysdate-365);
+iq_egfr => eadv.lab_bld_egfr.val.count(0).where(dt>sysdate-365);
+iq_urbc => eadv.lab_ua_rbc.val.count(0).where(dt>sysdate-365);
+iq_uleu => eadv.lab_ua_leucocytes.val.count(0).where(dt>sysdate-365);
+
+iq_sbp => eadv.obs_bp_systolic.val.count(0).where(dt>sysdate-365);
+
+iq_ana => eadv.lab_bld_ana.val.count().where(dt>sysdate-(365*5));
+iq_anca => eadv.[lab_bld_anca_pr3,lab_bld_anca_mpo].val.count(0).where(dt>sysdate-(365*5));
+iq_comp => eadv.[lab_bld_complement_c3,lab_bld_complement_c4].val.count(0).where(dt>sysdate-(365*5));
+
+#doc(,
+    {
+        txt:"Exclusions RRT"
+    }
+);
+
+rrt => rout_rrt.rrt.val.bind();
+
+#doc(,
+    {
+        txt:"Exclude previously diagnosed nephrotic syndromes from coding"
+    }
+);
+
+
+
+dx_nephritic => eadv.[icd_n0%].dt.count(0);
+
+#doc(,
+    {
+        txt:"Exclude if renal encounters present"
+    }
+);
+
+
+
+ref_ren => rout_engmnt_renal.ref_renal.val.bind();
+
+enc_ren => rout_engmnt_renal.enc_renal.val.bind();
+
+
+ex_flag:{greatest(rrt,enc_ren,dx_nephritic)>0 or dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
+
+#doc(,
+    {
+        txt:"Inclusions for nephritic syndrome",
+        cite: "tg4420_ref1, tg4420_ref2, tg4420_ref3"
+    }
+);
+
+#doc(,
+    {
+        txt:"Inclusion by urine rbc"
+    }
+);
+
+/*  Urine analysis */
+
+ua_rbc => eadv.lab_ua_rbc.val.last().where(dt>sysdate-365);
+
+ua_leu => eadv.lab_ua_leucocytes.val.last().where(dt>sysdate-365);
+
+ua_acr => eadv.lab_ua_acr.val.last().where(dt>sysdate-365);
+
+#doc(,
+    {
+        txt:"urine rbc threshold more than 100 provided leucs less than 40"
+    }
+);
+
+
+
+t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
+            {ua_rbc>100 and ua_leu<40 => 1},
+            {=>0};
+
+tg4420 : { t4420_code >=2 and ex_flag=0 => 1},{=>0};
+
+#define_attribute(
+    tg4420,
+    {
+        label:"Alert:Possible nephritic syndrome",
+        desc:"Integer [0-1] if meets criteria ",
+        is_reportable:1,
+        is_trigger:1,
+        type:2,
+        priority:1
+    }
+);

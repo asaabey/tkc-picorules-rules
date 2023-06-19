@@ -1,0 +1,56 @@
+/* Rule block to assess careplan */
+
+  #define_ruleblock(ckd_careplan,
+    {
+        description: "Rule block to assess careplan",
+        is_active:2
+
+    }
+);
+
+#doc(,
+    {
+        txt : "Gather careplan info and extract CKD specific component"
+    }
+);
+
+cp_l => eadv.careplan_h9_v1.val.lastdv();
+
+phc => rout_dmg_source.phc_1.val.bind();
+
+is_pcis : { phc=1 =>1},{=>0};
+
+cp_ckd_val : {cp_l_val!? => to_number(substr(to_char(cp_l_val),-5,1))},{=>0};
+
+cp_ckd_ld : {cp_l_dt!? => cp_l_dt};
+
+#doc(,{
+        txt : "Supportive care"
+});
+
+rsc_ld => eadv.icpc_u59011.dt.last();
+
+
+rsc : {rsc_ld!? =>1},{=>0};
+
+ckd_careplan_doc : {. => cp_ckd_val};
+
+ckd_careplan : { ckd_careplan_doc>0 or rsc=1=> 1},{=>0};
+
+
+ #define_attribute(
+    rsc,
+    {
+        label:"Renal supportive care",
+        is_reportable:1,
+        type:2
+    }
+);
+#define_attribute(
+    ref_ren,
+    {
+        label:"Renal referral from primary care",
+        is_reportable:1,
+        type:2
+    }
+);
