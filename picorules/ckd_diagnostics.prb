@@ -71,7 +71,7 @@ ua_rbc_pos : {nvl(ua_rbc_val,0)>=30 =>1},{=>0};
 ua_wcc_pos : {nvl(ua_wcc_val,0)>=30 =>1},{=>0};
 ua_acr_pos : {nvl(acr_val,0)>30 =>1},{=>0};
 
-
+ua_null : { ua_rbc_dt? => 1},{=>0};
 
 ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
         { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },

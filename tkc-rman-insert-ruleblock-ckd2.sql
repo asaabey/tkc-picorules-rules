@@ -190,7 +190,7 @@ BEGIN
         ua_wcc_pos : {nvl(ua_wcc_val,0)>=30 =>1},{=>0};
         ua_acr_pos : {nvl(acr_val,0)>30 =>1},{=>0};
         
-          
+        ua_null : { ua_rbc_dt? => 1},{=>0};
         
         ua_pos : { ua_rbc_pos=1 and ua_wcc_pos=0 and ua_acr_pos=1 =>1 },
                 { ua_rbc_pos=1 and ua_wcc_pos=1 => 2 },
@@ -1070,15 +1070,6 @@ BEGIN
                 type:2
             }
         );
-        #define_attribute(
-            ref_ren,
-            {
-                label:"Renal referral from primary care",
-                is_reportable:1,
-                type:2
-            }
-        );
-            
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -1466,15 +1457,6 @@ BEGIN
                 label:"Misclassifcation occured",
                 desc:"Integer [0-1]",
                 is_reportable:0,
-                type:2
-            }
-        );
-        
-        #define_attribute(
-            avf_has,
-            {
-                label:"AVF present",
-                is_reportable:1,
                 type:2
             }
         );

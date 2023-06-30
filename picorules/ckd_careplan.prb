@@ -46,11 +46,3 @@ ckd_careplan : { ckd_careplan_doc>0 or rsc=1=> 1},{=>0};
         type:2
     }
 );
-#define_attribute(
-    ref_ren,
-    {
-        label:"Renal referral from primary care",
-        is_reportable:1,
-        type:2
-    }
-);
