@@ -28,12 +28,3 @@ hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ks
 
 
 rrt_journey : {. =>1};
-
-#define_attribute(
-    rrt_hhd,
-    {
-        label:"RRT Home haemodialysis",
-        is_reportable:1,
-        type:2
-    }
-);

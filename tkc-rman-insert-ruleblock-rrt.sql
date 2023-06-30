@@ -352,15 +352,6 @@ BEGIN
         
         
         [[rb_id]] : {. =>1};
-        
-        #define_attribute(
-            rrt_hhd,
-            {
-                label:"RRT Home haemodialysis",
-                is_reportable:1,
-                type:2
-            }
-        );
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
