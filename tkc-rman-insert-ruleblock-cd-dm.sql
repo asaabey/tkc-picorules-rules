@@ -558,7 +558,7 @@ BEGIN
         );
         
         #define_attribute(
-            hba1c_max,
+            hba1c_max_val,
             {
                 label:"Diabetes Maximum HbA1c ngsp __n__",
                 is_reportable:1,
