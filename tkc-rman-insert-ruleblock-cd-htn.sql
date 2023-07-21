@@ -337,14 +337,18 @@ BEGIN
         
         htn => rout_cd_htn.cd_htn.val.bind();
         
-        sbp_target_max : {age>=75 or cvra_cat=3 => 120},{=>140};
+        rrt => rout_rrt.rrt.val.bind();
         
-        dbp_target_max : {age>=75 or cvra_cat=3 => 80},{=>90};
+        sbp_target_max : {age < 65 and cvra_cat=3 and rrt=0 => 120},{=>140};
+        
+        dbp_target_max : {age < 65 and cvra_cat=3 and rrt=0 => 80},{=>90};
         
         sbp_target_min : {1=1 => 100};
                 
+        sbp => eadv.obs_bp_systolic._.lastdv().where(dt>=sysdate-730);
         
-                     
+        dbp => eadv.obs_bp_systolic._.lastdv().where(dt>=sysdate-730);
+        
         sbp_mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
         
         sbp_med_1 => eadv.obs_bp_systolic.val.median().where(dt>=sysdate-365); 

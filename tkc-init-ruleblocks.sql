@@ -89,6 +89,9 @@
 @"tkc-rman-insert-ruleblock-kpis.sql";
 
 
+@"tkc-rman-insert-ruleblock-cd-multi-m1.sql"
+@"tkc-rman-insert-ruleblock-obs-vm.sql"
+
 
 --Re-init Rman package
 alter package rman_pckg compile;
