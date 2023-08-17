@@ -398,9 +398,10 @@ BEGIN
          
          
           
-          akin_stage : {cr_base_max_1y_qt>2 => 3 },
-                        {cr_base_max_1y_qt>1.5 => 2 },
-                        {cr_base_max_1y_qt between 1 and 1.5 => 1 },
+
+          akin_stage : {cr_base_max_1y_qt>3 => 3 }, 
+                        {cr_base_max_1y_qt>2 => 2 }, 
+                        {cr_base_max_1y_qt  >1.5 => 1 }, 
                         {=>0};
         
         #doc(,
