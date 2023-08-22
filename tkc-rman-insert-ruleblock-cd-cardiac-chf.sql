@@ -48,11 +48,22 @@ BEGIN
         noscm => eadv.[icd_i42_8,icd_42_9,icpc_k84041].dt.min();
         
         echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
+
+        rx_arni_ld => eadv.[rxnc_c09dx04].dt.min();
         
+        rx_arni : {rx_arni_ld!? =>1},{=>0};
+        
+        #define_attribute(rx_arni,{ 
+              label: "prescribed ARNI",
+              type: 2,
+              is_reportable: 1
+        });
+
+
          /* NT cardiac report hot linking*/
         echo_rep => eadv.[ntc_rep_tte]._.lastdv();
             
-        chf : {coalesce(chf_code,dcm,hocm,rcm,ethocm,noscm)!? =>1},{=>0};
+        chf : {coalesce(chf_code,dcm,hocm,rcm,ethocm,noscm,rx_arni_ld)!? =>1},{=>0};
         
         [[rb_id]] : {chf=1 =>1},{=>0};
         
