@@ -291,10 +291,12 @@ BEGIN
     
         /*  Algorithm to generate AKI trigger   */
         
-        #define_ruleblock([[rb_id]],
+         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to generate AKI trigger from labs",
+                
                 is_active:2
+                
             }
         );
         
@@ -308,7 +310,7 @@ BEGIN
           
         ckd => rout_ckd.ckd.val.bind();
           
-        #doc(,{
+          #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
@@ -318,42 +320,43 @@ BEGIN
 
 
 
-        cr_n => eadv.lab_bld_creatinine.dt.count(); 
-        cr_fd => eadv.lab_bld_creatinine.dt.min(); 
-        cr_ld => eadv.lab_bld_creatinine.dt.max(); 
-
-        egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<cr_ld-90 and dt>cr_ld-365);
-
-        cr_span_days : {1=1 => cr_ld-cr_fd}; 
-        cr_tail_days : {1=1 => round(sysdate-cr_ld,0)}; 
+        
+          cr_n => eadv.lab_bld_creatinine.dt.count(); 
+          cr_fd => eadv.lab_bld_creatinine.dt.min(); 
+          cr_ld => eadv.lab_bld_creatinine.dt.max(); 
+          
+          egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<cr_ld-90 and dt>cr_ld-365);
+          
+          cr_span_days : {1=1 => cr_ld-cr_fd}; 
+          cr_tail_days : {1=1 => round(sysdate-cr_ld,0)}; 
         
         #doc(,{
                 txt:"Minima Maxima and last"
         });  
           
         
-        cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365); 
-        cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365); 
-        cr_min_1y_real => eadv.lab_bld_creatinine.val.min().where(dt>sysdate-365);
+          cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365); 
+          cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365); 
+          cr_min_1y_real => eadv.lab_bld_creatinine.val.min().where(dt>sysdate-365);
           
         #doc(,{
                 txt:"adjust creatinine for unusually low values due to error"
         }); 
          
-        cr_median_1y => eadv.lab_bld_creatinine.val.median().where(dt<cr_ld-90);  
+          cr_median_1y => eadv.lab_bld_creatinine.val.median().where(dt<cr_ld-90);  
          
-        cr_min_1y : { cr_min_1y_real > 40 => cr_min_1y_real},{=> cr_median_1y};  
+          cr_min_1y : { cr_min_1y_real > 40 => cr_min_1y_real},{=> cr_median_1y};  
           
-        #doc(,
+         #doc(,
             {
                 txt:"Date of event and window"
             }
         ); 
         
         
-        cr_max_ld_1y => eadv.lab_bld_creatinine.dt.max().where(val=cr_max_1y and dt>sysdate-365); 
-        win_lb : {1=1 => cr_max_ld_1y-30 };
-        win_ub : {1=1 => cr_max_ld_1y+30 };
+          cr_max_ld_1y => eadv.lab_bld_creatinine.dt.max().where(val=cr_max_1y and dt>sysdate-365); 
+          win_lb : {1=1 => cr_max_ld_1y-30 };
+          win_ub : {1=1 => cr_max_ld_1y+30 };
           
         #doc(,
             {
@@ -361,26 +364,27 @@ BEGIN
             }
         );
 
-        cr_avg_2y => eadv.lab_bld_creatinine.val.avg().where(val<cr_max_1y and val>cr_min_1y and dt>sysdate-730 and dt<cr_ld-30);
-        cr_avg_min_1y_qt : {nvl(cr_avg_2y,0)>0 => round(cr_min_1y/cr_avg_2y,1) };
-        cr_base : {cr_avg_min_1y_qt<0.5 => cr_avg_2y},{=>cr_min_1y};
-
+          
+          cr_avg_2y => eadv.lab_bld_creatinine.val.avg().where(val<cr_max_1y and val>cr_min_1y and dt>sysdate-730 and dt<cr_ld-30);
+          cr_avg_min_1y_qt : {nvl(cr_avg_2y,0)>0 => round(cr_min_1y/cr_avg_2y,1) };
+          cr_base : {cr_avg_min_1y_qt<0.5 => cr_avg_2y},{=>cr_min_1y};
+          
         #doc(,
             {
                 txt:"Calculate proportions"
             }
         );
-
-
-
-
-        cr_base_max_1y_qt : {nvl(cr_base,0)>0 => round(cr_max_1y/cr_base,1) };
+          
         
         
-        cr_base_lv_1y_qt : {nvl(cr_base,0)>0 => round(cr_lv/cr_base,1) };
-        
-        cr_max_lv_1y_qt : {nvl(cr_lv,0)>0 => round(cr_max_1y/cr_lv,1) };
-        
+          
+          cr_base_max_1y_qt : {nvl(cr_base,0)>0 => round(cr_max_1y/cr_base,1) };
+          
+          
+          cr_base_lv_1y_qt : {nvl(cr_base,0)>0 => round(cr_lv/cr_base,1) };
+          
+          cr_max_lv_1y_qt : {nvl(cr_lv,0)>0 => round(cr_max_1y/cr_lv,1) };
+          
         
         
         #doc(,
@@ -390,45 +394,46 @@ BEGIN
             }
         );
           
-        /*Sensitivity adjustment : only for ckd <4 */
-        
-        
-        
-        akin_stage : {cr_base_max_1y_qt>3 => 3 },
-                     {cr_base_max_1y_qt>2 => 2 },
-                     {cr_base_max_1y_qt>1.5 => 1 },
-                     {=>0};
+         /*Sensitivity adjustment : only for ckd <4 */
+         
+         
+          
+
+          akin_stage : {cr_base_max_1y_qt>3 => 3 }, 
+                        {cr_base_max_1y_qt>2 => 2 }, 
+                        {cr_base_max_1y_qt  >1.5 => 1 }, 
+                        {=>0};
         
         #doc(,
             {
                 txt:"AKI context as per baseline function"
             }
         );
-        
-        
-        
-        aki_context : { akin_stage>=1 and egfr_base_val>=60 => 1},
-                      { akin_stage>=1 and egfr_base_val>30 and egfr_base_val<60 => 2},
-                      { akin_stage>=1 and egfr_base_val<30 => 3},{=>0};
+          
+          
+          
+          aki_context : { akin_stage>=1 and egfr_base_val>=60 => 1},
+                        { akin_stage>=1 and egfr_base_val>30 and egfr_base_val<60 => 2},
+                        { akin_stage>=1 and egfr_base_val<30 => 3},{=>0};
         
         #doc(,
             {
                 txt:"AKI resolution to baseline"
             }
-        );
-        
+        );  
+          
 
-        
-        aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
-                      {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
-                      {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
-        
-        ex_flag : {dod!? or rrt>0 or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
-        
-        
-        [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
-        
-        #define_attribute(
+          
+          aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
+                        {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
+                        {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
+          
+          ex_flag : {dod!? or rrt>0 or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
+          
+          
+          [[rb_id]] : {cr_base_max_1y_qt>4 and akin_stage>=2 and aki_outcome>=2 and ex_flag=0 => 1 },{=>0};
+          
+          #define_attribute(
                 [[rb_id]],
                 {
                     label:"Alert:Acute kidney injury in community",
@@ -439,6 +444,8 @@ BEGIN
                     priority:1
                 }
             );
+                        
+          
         
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
