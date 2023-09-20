@@ -29,8 +29,7 @@ BEGIN
                 {
                     description: "Algorithm to derive egfr metrics",
                     
-                    is_active:0,
-                    filter : "select eid from rout_rrt where rrt=0"
+                    is_active:0
                     
                     
                 }

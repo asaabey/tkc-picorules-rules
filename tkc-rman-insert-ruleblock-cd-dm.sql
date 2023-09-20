@@ -446,8 +446,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Ruleblock to assess diabetic glycaemic control",                
-                is_active:2,
-                filter: "SELECT eid FROM rout_cd_dm_dx WHERE cd_dm_dx=1"
+                is_active:2
                 
             }
         );

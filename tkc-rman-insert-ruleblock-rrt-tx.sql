@@ -28,8 +28,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine Tx metrics",
-                is_active:2,
-                filter: "SELECT eid FROM rout_rrt WHERE rrt=3"
+                is_active:2
                 
             }
         );
