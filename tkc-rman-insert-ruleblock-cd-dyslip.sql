@@ -58,6 +58,8 @@ BEGIN
         
         ldl => eadv.lab_bld_cholesterol_ldl._.lastdv().where(dt>sysdate-365);
         
+        ldl_5_n => eadv.lab_bld_cholesterol_ldl.dt.count().where(val > 5 and dt > sysdate-1825);
+        
         ldl_unl : { ascvd=1 => 1.8},{=>4.9};
         
         ldl_dls_wt :    { ldl_val>8.5 => 8},
@@ -121,6 +123,16 @@ BEGIN
             }
         );
         
+        
+        #define_attribute(
+            ldl_5_n,
+            {
+                label:"LDL gt 5 threshold",
+                desc:"LDL gt 5 threshold",
+                is_reportable:1,
+                type:2
+            }
+        );
         #define_attribute(
             [[rb_id]],
             {
