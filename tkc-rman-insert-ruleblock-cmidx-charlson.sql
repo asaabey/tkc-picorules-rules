@@ -55,7 +55,7 @@ BEGIN
                     icd_m32_%,icd_m33_%,icd_m34_%,
                     icd_m35_1, icd_m35_3, icd_m36_0].dt.exists();
                 
-        pud => eadv.[icd_k25_%,icd_k26_%,icd_k27_%,icd_k28_%,].dt.exists();
+        pud => eadv.[icd_k25_%,icd_k26_%,icd_k27_%,icd_k28_%].dt.exists();
         
         mld => eadv.[icd_b18_%, icd_k70_0,icd_k70_1,icd_k70_2,icd_k70_3,icd_k70_9, 
                     icd_k71_3, icd_k71_4,icd_k71_5,icd_k71_7,
@@ -94,7 +94,7 @@ BEGIN
         
         met => eadv.[icd_c77_%,icd_c78_%,icd_c79_%,icd_c80_%].dt.exists();
         
-        hiv => eadv.[icd_b20_%,icd_b21_%icd_b22_%,icd_b24_%].dt.exists();
+        hiv => eadv.[icd_b20%,icd_b21%,icd_b22%,icd_b23%,icd_b24%].dt.exists();
         
         #doc(,{
                 txt:"apply weights and sum"

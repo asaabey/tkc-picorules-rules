@@ -18,7 +18,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "these are the rules for KPIs which do not fit into other categories",
-                is_active:1
+                is_active:0
             }
         );
         

@@ -65,7 +65,7 @@ egfr_ss : { egfr_l_l1_qt>0.8 and egfr_l_l1_qt<1.2 =>1 },{=>0};
 eb_thresh : {ckd<3 => -20},{ckd>=3 and ckd<6 => -30};
 
 
-ckd_null : { nvl(ckd,0)=0 =>1},{=0};
+ckd_null : { nvl(ckd,0)=0 =>1},{=>0};
 
 #doc(,{
         txt:"Exclude existing referred or reviewed"

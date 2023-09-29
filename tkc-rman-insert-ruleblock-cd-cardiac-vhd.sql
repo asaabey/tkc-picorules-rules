@@ -305,7 +305,7 @@ BEGIN
             
         
             
-        age_score : {age <65 => 0},{age>75 > 2},{=>1};
+        age_score : {age <65 => 0},{age>75 => 2},{=>1};
             
         gender_score : {.=>gender};
             

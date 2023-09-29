@@ -182,7 +182,7 @@ BEGIN
          
         
         dsdna_pos : { nvl(dsdna_val,0)>6 => 1},{=>0};
-        sflc_ratio : { nvl(sflc_lambda_val,0)>0 => round(nvl(sflc_kappa_val,0)/sflc_lambda_val,2)},{=1};
+        sflc_ratio : { nvl(sflc_lambda_val,0)>0 => round(nvl(sflc_kappa_val,0)/sflc_lambda_val,2)},{=>1};
         
         sflc_ratio_abn : {sflc_ratio<0.26 or sflc_ratio>1.65 =>1 },{=>0};
         

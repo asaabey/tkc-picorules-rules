@@ -590,7 +590,7 @@ BEGIN
         eb_thresh : {ckd<3 => -20},{ckd>=3 and ckd<6 => -30};
         
         
-        ckd_null : { nvl(ckd,0)=0 =>1},{=0};
+        ckd_null : { nvl(ckd,0)=0 =>1},{=>0};
         
         #doc(,{
                 txt:"Exclude existing referred or reviewed"
@@ -764,7 +764,7 @@ BEGIN
         
         
         
-        pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
+        pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
         hd_start : {hd_dt_min > sysdate-90 and hd_n>=10 => 1},{=>0};
@@ -829,7 +829,7 @@ BEGIN
         
         
         
-        pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
+        pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
         hd_start : {hd_dt_min > sysdate-365 and hd_n>=10 => 1},{=>0};

@@ -71,7 +71,7 @@ BEGIN
         fhc_prob :  { dls>8 =>4 },
                     { dls between 6 and 8 =>3},
                     { dls between 3 and 5 =>2},
-                    { dls<3 =1},
+                    { dls<3 =>1},
                     {=>0};
         
         

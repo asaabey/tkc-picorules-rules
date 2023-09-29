@@ -58,7 +58,7 @@ BEGIN
         hd_dt_min => eadv.icd_z49_1.dt.min();
         
         
-        pd_dt => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
+        pd_dt => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.max(1900);
         
         tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
         
@@ -76,7 +76,7 @@ BEGIN
             {=>0};
 
              
-        pd_dt_min => eadv.[caresys_13100_06,caresys_13100_07,caresys_13100_08,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
+        pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         
         hd_incd : {hd_dt_min > sysdate-365 and hd_z49_n>=10 => 1},{=>0};
@@ -188,7 +188,7 @@ BEGIN
                 {g_l_val>2 and ckd_ex_flag=0 => g_l_val},
                 {=> 0};
         
-        dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j95,6].val.last();
+        dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j96].val.last();
         
         dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};            
         
