@@ -107,7 +107,7 @@ vhd_ie_icd_dt => eadv.[icd_i33%,icd_i38%,icd_i39%].dt.min();
     }
 );
 
-car_enc_l_dt => eadv.enc_op_car.dt.last();
+car_enc_l_dt => eadv.[enc_op_car_%].dt.last();
 
 #doc(,
     {

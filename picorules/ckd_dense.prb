@@ -42,7 +42,7 @@ tx_dt => eadv.[icpc_u28001,icd_z94%].dt.max(1900);
 homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
 
 
-ren_enc => eadv.enc_op_renal.dt.max(1900);
+ren_enc => eadv.[enc_op_ren_%].dt.max(1900);
 
 rrt_ex_flag : { alive=0 =>1},{=>0};
 

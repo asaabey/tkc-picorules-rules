@@ -45,9 +45,9 @@ BEGIN
             }
         );
           
-        enc_n => eadv.[enc_op_ren,enc_op_rdu].dt.count();
-        enc_ld => eadv.[enc_op_ren,enc_op_rdu].dt.max();
-        enc_fd => eadv.[enc_op_ren,enc_op_rdu].dt.min();
+        enc_n => eadv.[enc_op_ren_%,enc_op_rdu_%].dt.count();
+        enc_ld => eadv.[enc_op_ren_%,enc_op_rdu_%].dt.max();
+        enc_fd => eadv.[enc_op_ren_%,enc_op_rdu_%].dt.min();
         
         avf => eadv.caresys_3450901.dt.max();
         
@@ -970,11 +970,11 @@ BEGIN
                 txt : " Encounters with specialist services"
         });
         
-        enc_n => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.count();
-        enc_ld => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.max();
-        enc_fd => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.min();
+        enc_n => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.count();
+        enc_ld => eadv.[enc_op_ren%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max();
+        enc_fd => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.min();
 
-        enc_ld_1y => eadv.[enc_op_ren%,enc_op_rdu%,enc_op_med_rlp%,enc_op_med_rac%,enc_op_med_nep%].dt.max().where(dt>sysdate-365);
+        enc_ld_1y => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max().where(dt>sysdate-365);
         
         enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
         

@@ -132,7 +132,7 @@ BEGIN
                 }
             ); 
             
-            car_enc_l_dt => eadv.enc_op_car.dt.last();
+            car_enc_l_dt => eadv.[enc_op_car_%].dt.last();
             
             #doc(,
                 {

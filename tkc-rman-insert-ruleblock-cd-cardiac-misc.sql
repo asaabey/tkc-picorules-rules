@@ -132,9 +132,9 @@ BEGIN
             }
         );
         
-           car_enc_f_dt => eadv.enc_op_car.dt.first();
+           car_enc_f_dt => eadv.[enc_op_car_%].dt.first();
            
-           car_enc_l_dt => eadv.enc_op_car.dt.last();
+           car_enc_l_dt => eadv.[enc_op_car_%].dt.last();
            
            [[rb_id]] : {car_enc_l_dt!? => 1},{=>0};
            
