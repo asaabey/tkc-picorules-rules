@@ -91,6 +91,7 @@
 
 @"tkc-rman-insert-ruleblock-cd-multi-m1.sql"
 @"tkc-rman-insert-ruleblock-obs-vm.sql"
+@"tkc-rman-insert-ruleblock-bi_vm.sql"
 
 
 --Re-init Rman package

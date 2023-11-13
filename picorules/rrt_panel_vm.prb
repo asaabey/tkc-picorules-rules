@@ -10,6 +10,8 @@
 
 rrt => rout_rrt.rrt.val.bind();
 
+hd_start_dt => rout_rrt.hd_dt_min.val.bind();
+
 loc_1s_txt => rout_rrt_hd_location.loc_mode_1m_txt.val.bind();
 
 hd_recent_flag => rout_rrt.hd_recent_flag.val.bind();
@@ -257,4 +259,9 @@ rrt_panel_vm : {rrt in (1,4) => 1},{=>0};
          label:"Dialysis panel access type",
          is_reportable:1,
          type:2
+ });
+#define_attribute(hd_start_dt ,{
+         label:"Dialysis (HD) commencement date",
+         is_reportable:1,
+         type:12
  });

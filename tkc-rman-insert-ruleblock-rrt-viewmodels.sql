@@ -34,10 +34,12 @@ BEGIN
 
        rrt => rout_rrt.rrt.val.bind();
        
+       hd_start_dt => rout_rrt.hd_dt_min.val.bind();
+       
        loc_1s_txt => rout_rrt_hd_location.loc_mode_1m_txt.val.bind();
        
        hd_recent_flag => rout_rrt.hd_recent_flag.val.bind();
-             
+       
        sodium1_val => rout_rrt_labs_euc.sodium1_val.val.bind();
        
        sodium1_dt => rout_rrt_labs_euc.sodium1_dt.val.bind();
@@ -52,9 +54,9 @@ BEGIN
        calcium1_dt => rout_ckd_shpt.calcium1_dt.val.bind();
        
        magnesium1_val => rout_ckd_shpt.magnesium1_val.val.bind();
-    
+       
        phosphate1_val => rout_ckd_shpt.phos1_val.val.bind();
-    
+       
        pth1_val =>rout_ckd_shpt.pth1_val.val.bind();
        
        pth1_dt =>rout_ckd_shpt.pth1_dt.val.bind();
@@ -282,7 +284,11 @@ BEGIN
                 is_reportable:1,
                 type:2
         });
- 
+       #define_attribute(hd_start_dt ,{
+                label:"Dialysis (HD) commencement date",
+                is_reportable:1,
+                type:12
+        });
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
