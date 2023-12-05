@@ -6,6 +6,7 @@
 @"tkc-rman-insert-ruleblock-core.sql";
 @"tkc-rman-insert-ruleblock-dmg.sql";
 @"tkc-rman-insert-ruleblock-dmg-loc.sql";
+@"tkc-rman-insert-ruleblock-dmg-loc-origin.sql";
 @"tkc-rman-insert-ruleblock-dmg-source.sql";
 @"tkc-rman-insert-ruleblock-dmg-viewmodels.sql";
 

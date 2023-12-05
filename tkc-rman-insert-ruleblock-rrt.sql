@@ -23,7 +23,7 @@ BEGIN
     
         /* Rule block to determine RRT status*/
         
-        #define_ruleblock([[rb_id]],
+        #define_ruleblock(rrt,
             {
                 description: "Rule block to determine RRT status",
                 is_active:2
@@ -45,19 +45,10 @@ BEGIN
         
         hd_131_1y_n => eadv.[caresys_1310000].dt.count().where(dt>sysdate-365);
         
-        /*
-        hd_dt0 => eadv.[caresys_1310000,caresys_1310004, icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.max(); 
-        */
         
         mbs_13105_dt_max => eadv.mbs_13105.dt.max(); 
         
         mbs_13105_dt_min => eadv.mbs_13105.dt.min(); 
-        
-        /*
-        hhd_op_enc_dt_min => eadv.[enc_op_ren_hdp, enc_op_ren_rhd].dt.min();
-        
-        hhd_op_enc_dt_max => eadv.[enc_op_ren_hdp, enc_op_ren_rhd].dt.max();
-        */
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max();
         
@@ -72,12 +63,16 @@ BEGIN
             }
         );
         
-        pd_dt => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
+        pd_dt0 => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.max();
         
         pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
         
         pd_ex_dt => eadv.[caresys_1311000].dt.min();
         
+        pd_enc_ld => eadv.[enc_op_ren_hpd].dt.max();
+
+        pd_dt : {. => greatest_date(pd_dt0,pd_enc_ld) };
+
         #doc(,
             {
                 txt : "Transplant problem ICPC2p coding"
@@ -101,19 +96,21 @@ BEGIN
                 
         tx_dt_icd_last => eadv.icd_z94_0.dt.max();
         
+        tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
+        
         #doc(,{ 
             txt : "Number and last date of hd between transplant codes indicating graft failure and multi parity" 
         } );
         
-        hd_tx_tx2_n => eadv.icd_z49_1.dt.count().where(dt between tx_dt_icd and tx_dt_icd_last );
+        hd_tx_tx2_n => eadv.icd_z49_1.dt.count().where(dt between tx_dt_icd and tx_dt );
         
-        hd_tx_tx2_ld => eadv.icd_z49_1.dt.max().where(dt between tx_dt_icd and tx_dt_icd_last );
+        hd_tx_tx2_ld => eadv.icd_z49_1.dt.max().where(dt between tx_dt_icd and tx_dt );
         
         #doc(,{ 
             txt : "Number of hd after last transplant indicating graft failure" 
         } );
         
-        hd_tx2 => eadv.icd_z49_1.dt.count().where(dt > tx_dt_icd_last + 30 );
+        hd_tx2 => eadv.icd_z49_1.dt.count().where(dt > tx_dt + 30 );
         
         tx_multi_fd => eadv.icd_z94_0.dt.min().where(dt > hd_tx_tx2_ld );
         
@@ -121,9 +118,31 @@ BEGIN
         
         tx_multi_current : { tx_multi_flag =1 and coalesce(hd_tx2,0)=0 =>1},{=>0};        
         
-        tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
+        tx_enc_op_fd => eadv.[enc_op_ren_rnt,enc_op_ren_rtc, enc_op_ren_rtn, enc_op_ren_rcf].dt.min();
         
-        tx_active : { tx_dt_icd_last!? and coalesce(hd_tx2,0)<10 =>1 },{=>0};
+        tx_enc_op_ld => eadv.[enc_op_ren_rnt, enc_op_ren_rtc, enc_op_ren_rtn, enc_op_ren_rcf].dt.max();
+        
+        tx_enc_active : {tx_enc_op_ld > sysdate - 365 =>1 },{=>0};
+        
+        
+        
+        tx_coding : { tx_dt!? =>1 },{=>0}; 
+        
+        tdm_tac => eadv.lab_bld_tdm_tacrolimus._.lastdv().where(dt > sysdate-365);
+        
+        tdm_evl => eadv.lab_bld_tdm_everolimus._.lastdv().where(dt > sysdate-365);
+        
+        rx_l04ad => eadv.rxnc_l04ad.dt.last();
+        
+        rx_l04aa => eadv.rxnc_l04aa.dt.last();
+        
+        cni_mtor_rx  : {coalesce(rx_l04ad,rx_l04aa)!? => 1},{=>0};
+        
+        cni_mtor_mon : { coalesce(tdm_tac_val,tdm_evl_val)!?=>1 },{=>0};
+        
+        
+        
+        tx_active : { tx_dt!? and coalesce(hd_tx2,0)<10  =>1 },{=>0};
         
         #doc(,{
                 txt : "Home-haemodialysis ICPC2p coding"
@@ -141,8 +160,9 @@ BEGIN
         homedx_enc_ld => eadv.[enc_op_ren_hdp,enc_op_ren_rhd].dt.max();
         
         /* adjusted date to account for delayed data entry 03-02-23 */
+        /* adjusted to prioritise home enc 29-11-23 */
         
-        homedx_dt : { homedx_icpc_ld!? => homedx_icpc_ld},{ homedx_enc_ld!? => homedx_enc_ld-30};
+        homedx_dt : { homedx_enc_ld!? => homedx_enc_ld},{ homedx_icpc_ld!? => homedx_icpc_ld};
         
         /* homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();*/        
         
@@ -155,20 +175,24 @@ BEGIN
         );
         
         /* adjusted mbs_13105 11-02-2023*/
-        rrt:{homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
-            {hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10) and tx_multi_current=0 and tx_active=0 => 1},
-            {hd_icpc_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and coalesce(hd_dt,mbs_13105_dt_max)>sysdate-90 =>1},
-            {mbs_13105_dt_max > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt)=> 1},
-            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_dt>coalesce(pd_ex_dt,lower__bound__dt) and tx_multi_current=0 => 2},
-            {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt,pd_dt,homedx_dt),lower__bound__dt) => 3},
+        /* adjusted to order tx hhd pd hd 29-11-2023*/
+        rrt:
+            {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt,pd_dt-30,homedx_dt-30),lower__bound__dt) => 3},
             {tx_dt!? and tx_multi_current=1 => 3},
             {tx_active=1 => 3},
+            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
+            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_dt>coalesce(pd_ex_dt,lower__bound__dt) and tx_multi_current=0 => 2},
+            {hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10 or nvl(pd_dt, homedx_dt)!?) and tx_multi_current=0 and tx_active=0 => 1},
+            {hd_icpc_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and coalesce(hd_dt,mbs_13105_dt_max)>sysdate-90 =>1},
+            {mbs_13105_dt_max > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt)=> 1},
             {=>0};
         #doc(,
             {
                 txt: "Generate binary variables for rrt categories"
             }
         );
+        
+        tx_assert_level : { rrt=3 => (tx_coding *1000) + (cni_mtor_mon *100) + (cni_mtor_rx * 10 )+ tx_enc_active },{=>0};
         
         rrt_mm1 : { hd_dt<sysdate-90 =>1},{=>0};
             
@@ -224,7 +248,7 @@ BEGIN
         tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
         
         #define_attribute(
-            [[rb_id]],
+            rrt,
             {
                 label:"Prevalent renal replacement therapy category [1=HD, 2=PD, 3=TX, 4=HHD]",
                 desc:"Integer [1-4] where 1=HD, 2=PD, 3=TX, 4=HHD",
