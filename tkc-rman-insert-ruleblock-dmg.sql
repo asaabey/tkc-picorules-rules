@@ -37,6 +37,14 @@ BEGIN
         
         age : { dob!? => round((sysdate-dob)/365.25,0)};
         
+        indig => eadv.dmg_indigenous_status.val.last();
+        
+        eth_aboriginal : { indig=1 or indig=3=>1},{=>0};
+        
+        eth_tsi : { indig=2 or indig=3=>1},{=>0};
+
+
+
         alive : {dod? => 1},{=>0};
         
         female : { gender=0 => 1},{=>0};
@@ -104,10 +112,22 @@ BEGIN
                 is_reportable:1
             }
         );
-        
-        
-        
-                
+        #define_attribute(
+            eth_aboriginal,
+            {
+                label:"Demography Aboriginal Ethnicity",
+                type:2,
+                is_reportable:1
+            }
+        );
+        #define_attribute(
+            eth_tsi,
+            {
+                label:"Demography Torres Strait Islander Ethnicity",
+                type:2,
+                is_reportable:1
+            }
+        );
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     

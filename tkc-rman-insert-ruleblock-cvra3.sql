@@ -24,18 +24,15 @@ BEGIN
         
         #define_ruleblock(cvra_predict1_aus,{
                 description: "Ruleblock to assess CVRA risk based on Aus Predict1",            
-                is_active:2
+                is_active:0
                 
         });
         
         #doc(,{
-                txt:"Will  update ruleblock when validated CV risk assessment equation is available for Indigenous patients",
+                txt:"still under development",
                 cite:"cvra_hlc_2019,cvra_circ_2018"
         });
         
-        #doc(,{
-                txt:"External bindings"
-        });
         
         
         ckd => rout_ckd.ckd.val.bind();
@@ -54,11 +51,13 @@ BEGIN
         
         asm_cvra => eadv.asm_cvra.val.lastdv();
         
-        
-        
         age => rout_dmg.age.val.bind();
         
         male => rout_dmg.gender.val.bind();
+        
+        egfr => eadv.lab_bld_egfr_c.val.last().where(dt > sysdate -365);
+        
+        acr => eadv.lab_ua_acr.val.last().where(dt > sysdate -365);
         
         
         /*add rout bindings*/
@@ -72,10 +71,30 @@ BEGIN
         
         smoke0 => eadv.status_smoking_h2_v1.val.last();
 
+        hba1c => eadv.lab_bld_hba1c_ifcc.val.last().where(dt > sysdate -365);
         
-        smoke : {smoke0>=29 =>1},{0};
+        dm_ins => rout_cd_dm_dx.dm_rxn_ins.val.bind();
         
-        lvh => const(0);
+        dm_fd => rout_cd_dm_dx.dm_fd.val.bind();
+
+        bmi => rout_cd_obesity.bmi.val.bind();
+        
+        af => rout_cd_cardiac_af.af.val.bind();
+        
+        bplm => rout_cd_htn.htn_rxn.val.bind();
+        
+        llm_dt => rout_cd_cardiac_rx.rxn_statin.val.bind();
+        
+        oatm_dt => rout_cd_cardiac_rx.rxn_anticoag.val.bind();
+        
+        llm : { llm_dt!? => 1},{=>0};
+        
+        oatm : { oatm_dt!? => 1},{=>0};
+        
+        
+        smoke : {smoke0>=29 =>1},{=>0};
+        
+        
         
         
         #doc(,{
@@ -92,29 +111,22 @@ BEGIN
         
         /* mock vars*/
         seifa : {.=>2};
-        exsm : {.=> 1};
-        sm : {.=>0};
-        af : {.=>0};
-        dm_yr : {.=>0};
-        bmi : {.=>25};
+        exsm : {smoke0=29 or smoke0=20 => 1},{=>0};
+        sm : { smoke0=30 =>1},{=>0};
+        
+        dm_yr : { dm_fd!? => round((sysdate-dm_fd)/365,0)};
         hdlq : { coalesce(hdl,0)>0 => tc/hdl};
         
-        rxbp : {.=>0};
-        rxlm : {.=>0};
-        rxac : {.=>0};
+        rxbp : {.=> bplm};
+        rxlm : {.=> llm};
+        rxac : {.=> oatm};
         
-        egfr : {.=>90};
-        hba1c : {.=>60};
-        acr3 : {.=>0};
-        acr30 : {.=>0};
         
-        dm_ins : {.=>0};
+        acr3 : { acr > 3 and acr<= 30 =>1},{=>0};
+        acr30 : { acr > 30 =>1},{=>0};
         
-        bplm : {.=>1};
-        llm : {.=>1};
-        oatm : {.=>1};
-        
-        eq : { .=> 1};
+                       
+        eq : { .=> 3};
         
         
       
@@ -136,13 +148,13 @@ BEGIN
         
         var_l : {eq=1 => (hdlq - 4.325589) * 0.1350063},{eq=2 => (hdlq - 3.641988) * 0.1067098},{eq=3 => (sbp - 131.8995) * 0.004488},{eq=4 => (sbp - 132.2317) * 0.0084873};
         
-        var_c : {(eq=1 or eq=2) and rxbp=1=> 1},{eq=3 => (hdlq - 4.267316) * 0.0858267},{eq=3 => 1},{eq=4 => hdlq - 3.882821) * 0.1025064},{=>0};
+        var_c : {(eq=1 or eq=2) and rxbp=1=> 1},{eq=3 => (hdlq - 4.267316) * 0.0858267},{eq=4 => (hdlq - 3.882821) * 0.1025064},{=>0};
         
         var_d : {(eq=1 or eq=2) and rxlm=1=> 1},{eq=3 => (egfr - 88.15267) * 0.002239},{eq=4 => (egfr - 88.38233) * 0.0082137},{=> 0};
         
-        var_p : {(eq=1 or eq=2) and rxac=1=> 1},{eq=3 => hba1c - 57.84909) * 0.0065082},{eq=4 => (hba1c - 57.84909) * 0.0065082},{=> 0};
+        var_p : {(eq=1 or eq=2) and rxac=1=> 1},{eq=3 => (hba1c - 57.84909) * 0.0065082},{eq=4 => (hba1c - 57.84909) * 0.0065082},{=> 0};
         
-        var_h : {eq=1 => (age - 53.77579) * dm * -0.018881)},{eq=2 => (age - 58.47472) * dm * -0.0230893)},{eq=3 => acr3 * 0.4277236},{eq=4 => acr3 * 0.2030524};
+        var_h : {eq=1 => (age - 53.77579) * dm * -0.018881},{eq=2 => (age - 58.47472) * dm * -0.0230893},{eq=3 => acr3 * 0.4277236},{eq=4 => acr3 * 0.2030524};
         
         var_u : {eq=1 => -.0001952 * (age - 53.77579) * (sbp - 129.2052)},{eq=2 => -.0002353 * (age - 58.47472) * (sbp - 129.2052)},{eq=3 => acr30 * 0.803022},{eq=4 => acr30 * 0.7023991};
         
@@ -167,12 +179,18 @@ BEGIN
         
         var_b : {eq=3 or eq=4 => wt_t };
         
-        var_w : {eq=3 => age_i + seifa+t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_ c + var_d + var_p + var_h + var_u + var_g + 0.1316217 +var_m + var_x + var_f},
-                {eq=4 => age_i + seifa+t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_ c + var_d + var_p + var_h + var_u + var_g + 0.1594838 +var_m + var_x + var_f};
+        var_w : {eq=3 => age_i + seifa_t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_c + var_d + var_p + var_h + var_u + var_g + 0.1316217 +var_m + var_x + var_f},
+                {eq=4 => age_i + seifa_t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_c + var_d + var_p + var_h + var_u + var_g + 0.1594838 +var_m + var_x + var_f};
         
-        const_e : { .=> 2.718282};
-        
-        var_prob : {eq=1 => round(1-(0.9728782^(const_e^var_m)))},{eq=2 => 1},{eq=3 => 1},{eq=4 => 1};
+              
+                
+        var_prob : {eq=1 => 1-(power(0.9728782,(exp(var_m))))*100},
+                    {eq=2 => 1-(power(0.9828361,(exp(var_m))))*100},
+                    {eq=3 => 1-(power(0.9483001,(exp(var_m))))*100},
+                    {eq=4 => 1-(power(0.9664823,(exp(var_m))))*100};
+                    
+        adj_prob : {eq in (1,2) and var_prob<1 => round(var_prob * var_x,0)},
+                   {eq in (3,4) and var_prob<1 => round(var_prob * var_b,0)};
         
         
         

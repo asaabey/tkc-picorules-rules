@@ -717,7 +717,7 @@ BEGIN
         sglt2_0 => eadv.[rxnc_a10bk].dt.max().where(val=0);
         
         #doc(,{
-                txt:"Get cuurent medication"
+                txt:"Get current medication"
         });
         
         
@@ -750,7 +750,11 @@ BEGIN
         glp1_f : {glp1!? => 1},{=>0};
         
         sglt2_f : {sglt2!? => 1},{=>0};
-        
+
+        glp1_3y_dt => eadv.[rxnc_a10bj].dt.min().where(dt > sysdate - 1080);
+
+        glp1_3y : {glp1_3y_dt!? => 1},{=>0};
+
         #define_attribute(ins_long_f,{label:"Diabetes long acting insulin __b__",is_reportable:1,type:2});
         #define_attribute(ins_int_f,{label:"Diabetes intermediate acting insulin __b__",is_reportable:1,type:2});
         #define_attribute(ins_mix_f,{label:"Diabetes mixed insulin __b__",is_reportable:1,type:2});
@@ -759,6 +763,7 @@ BEGIN
         #define_attribute(su_f,{label:"Diabetes sulphonylurea __b__",is_reportable:1,type:2});
         #define_attribute(glp1_f,{label:"Diabetes GLP1a __b__",is_reportable:1,type:2});
         #define_attribute(sglt2_f,{label:"Diabetes SGLT2i __b__",is_reportable:1,type:2});
+        #define_attribute(glp1_3y,{label:"Diabetes GLP1a use in 3 years __b__",is_reportable:1,type:2});
 
         #doc(,{
                 txt:"Derive contraindications"

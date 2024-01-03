@@ -12,7 +12,7 @@
 
 /* Uses 715 assumption */
 
-loc_first => eadv.[mbs_715, mbs_13105].loc.first();
+loc_first => eadv.[mbs_715, mbs_723, mbs_13105].loc.first();
 
 loc_code : {loc_first!? => substr(loc_first,4)};
 
@@ -23,6 +23,8 @@ loc_region : {loc_first!? => substr(loc_first,5,1)};
 loc_locality : {loc_first!? => substr(loc_first,8,1)};
 
 dmg_loc_origin : { loc_first!? => 1},{=>0};
+
+loc_source : {loc_first!? => substr(loc_first,2,2)};
 
 #define_attribute(loc_code,
 {
@@ -47,6 +49,12 @@ dmg_loc_origin : { loc_first!? => 1},{=>0};
 #define_attribute(loc_locality,
 {
         label:"Origin PHC Locality",
+        type:1,
+        is_reportable:1
+});
+#define_attribute(loc_source ,
+{
+        label:"Origin PHC source",
         type:1,
         is_reportable:1
 });
