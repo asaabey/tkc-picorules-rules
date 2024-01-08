@@ -8,7 +8,13 @@
     }
 );
 
-prost_clinic_fd => eadv.[enc_op__kpt,enc_op__prd, enc_op__pot].dt.first();
+/* 2024-01-08 (cresb):
+   add renamed attributes to prepare for MSSQL Migration
+   enc_op__kpt,enc_op__prd,enc_op__pot
+   will become
+   enc_op_po_kpt,enc_op_po_prd,enc_op_po_pot
+*/
+prost_clinic_fd => eadv.[enc_op__kpt,enc_op__prd,enc_op__pot,enc_op_po_kpt,enc_op_po_prd,enc_op_po_pot].dt.first();
 
 icd_fd => eadv.[icd_y83_5].dt.first();
 
