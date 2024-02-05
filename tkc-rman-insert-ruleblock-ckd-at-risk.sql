@@ -117,6 +117,18 @@ BEGIN
         
         tkc_cat : { ckd>0 or rrt>0 => 1 },{ at_risk=1 => 2},{ => 3};
         
+        tkc_cat2_lbl : {at_risk = 1 => `At risk`},
+                       {ckd = 1 => `CKD stage 1`},
+                       {ckd = 2 => `CKD stage 2`},
+                       {ckd = 3 => `CKD stage 3a`},
+                       {ckd = 4 => `CKD stage 3b`},
+                       {ckd = 5 => `CKD stage 4`},
+                       {ckd = 6 => `CKD stage 5`},
+                       {rrt = 1 => `Haemodialysis`},
+                       {rrt = 2 => `Peritoneal dialysis`},
+                       {rrt = 3 => `Transplant`},
+                       {rrt = 4 => `Home haemodialysis`},
+                       {=> `Undefined`};
         
         #doc(,{
                 txt:"Determine if renal screened"
@@ -280,6 +292,13 @@ BEGIN
                     type:2
                 }
         );
+        
+        #define_attribute(tkc_cat2_lbl,{
+                label: "TKC Category 2 label",
+                is_reportable:1,
+                is_bi_obj:1,
+                type:1
+        });
         
     ';
     

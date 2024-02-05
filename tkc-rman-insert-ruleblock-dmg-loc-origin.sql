@@ -19,7 +19,6 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-    
         /* Algorithm to assess demographics origin*/
         
         #define_ruleblock(dmg_loc_origin,
