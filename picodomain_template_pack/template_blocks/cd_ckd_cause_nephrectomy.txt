@@ -1,0 +1,12 @@
+    {% if ckd_cause.c_z90_5 %}
+        <br />
+        <ol>
+            <li><b>Nephrectomy</b>
+            <ol>
+                <li>First procedure {{ picodate('ckd_cause.c_z90_5') }}</li>
+            </ol>
+            </li>
+        </ol>
+    {% endif %}
+
+    

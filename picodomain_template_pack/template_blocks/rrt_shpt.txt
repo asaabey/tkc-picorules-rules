@@ -1,0 +1,11 @@
+    {% if ckd_shpt.esrd == 1 %}
+        <li>Bone mineral disease management
+            <ol>
+                <li>PTH {{ picoformat('ckd_shpt.pth1_val') }} ({{ picodate('ckd_shpt.pth1_dt') }})</li>
+                {% if ckd_shpt.calcium1_val %}<li>Calcium {{ picoformat('ckd_shpt.calcium1_val') }} mmol/l ({{ picodate('ckd_shpt.calcium1_dt') }})</li>{% endif %}
+                {% if ckd_shpt.phos1_val %}<li>Phosphate {{ picoformat('ckd_shpt.phos1_val') }} mmol/l ({{ picodate('ckd_shpt.phos1_dt') }})</li>{% endif %}
+                {% if ckd_shpt.cinacalcet_ld %}<li>Cinacalcet last scripted {{ picodate('ckd_shpt.cinacalcet_ld') }}</li>{% endif %}
+                {% if ckd_shpt.calcitriol_ld %}<li>Calcitriol last scripted {{ picodate('ckd_shpt.calcitriol_ld') }}</li>{% endif %}
+            </ol>
+        </li>
+    {% endif %}

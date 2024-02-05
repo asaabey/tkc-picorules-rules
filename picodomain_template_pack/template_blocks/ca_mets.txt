@@ -1,0 +1,46 @@
+    
+    <li><b>Metastatic disease</b></li>
+        {% if ca_mets.bone_met_fd %}
+        <ol>
+            <li>Bone metastatases {{ picodate('ca_mets.bone_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.cns_met_fd %}
+        <ol>
+            <li>Brain or CNS metastatases {{ picodate('ca_mets.cns_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.adr_met_fd %}
+        <ol>
+            <li>Adrenal metastatases {{ picodate('ca_mets.adr_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.liver_met_fd %}
+        <ol>
+            <li>Liver metastatases {{ picodate('ca_mets.liver_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.lung_met_fd %}
+        <ol>
+            <li>Liver metastatases {{ picodate('ca_mets.lung_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.perit_met_fd %}
+        <ol>
+            <li>Peritoneal metastatases {{ picodate('ca_mets.perit_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.nodal_met_fd %}
+        <ol>
+            <li>Nodal metastatases {{ picodate('ca_mets.nodal_met_fd') }}</li>
+        </ol>
+        {% endif %}
+        {% if ca_mets.nos_met_fd %}
+        <ol>
+            <li>Metastatases NOS {{ picodate('ca_mets.nos_met_fd') }}</li>
+        </ol>
+        {% endif %}
+
+    
+
+    

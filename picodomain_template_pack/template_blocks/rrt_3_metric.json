@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": null,
+  "last_updated": null,
+  "is_active": true,
+  "name": "rrt_3_metric",
+  "related_ruleblock": "rrt_tx",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

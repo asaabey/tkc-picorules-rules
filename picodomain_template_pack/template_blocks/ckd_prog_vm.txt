@@ -1,0 +1,35 @@
+ <br />
+    <p>
+    {% if ckd_prog_vm.rrt == 0 %}
+    Case conference :
+    {% if ckd_prog_vm.gender == 0 %}She {% endif %}{% if ckd_prog_vm.gender == 1 %}He {% endif %} is a {{ picoformat('ckd_prog_vm.age') }} year old patient with CKD stage {{ picoformat('ckd_prog_vm.ckd_stage') }}.{% if ckd_prog_vm.enc_ld %}Previous review was on the {{ picodate('ckd_prog_vm.enc_ld') }}{% endif %} 
+    {% if ckd_prog_vm.ipa_sep_ld %}The last hospital admission was on the {{ picodate('ckd_prog_vm.ipa_sep_ld') }}{% endif %}.
+    The last Creatinine is {{ picoformat('ckd_prog_vm.creat1_val') }} umol/l with a corresponding eGFR of {{ picoformat('ckd_prog_vm.egfr1_val') }}({{ picodate('ckd_prog_vm.egfr1_dt') }})ml/min/1.72m2. {% if ckd_prog_vm.uacr1_val %}uACR {{ picoformat('ckd_prog_vm.uacr1_val') }} mg/mmol ({{ picodate('ckd_prog_vm.uacr1_dt') }}) .{% endif %}
+    The average blood pressure was {{ picoformat('ckd_prog_vm.sbp_mu_1') }}/{{ picoformat('ckd_prog_vm.dbp_mu_1') }} mmHg with a maximum of {{ picoformat('ckd_prog_vm.sbp_max') }} mmHg. 
+    {% if ckd_prog_vm.dm %}{% if ckd_prog_vm.hba1c_lv %}The Last HbA1c is {{ picoformat('ckd_prog_vm.hba1c_lv') }}({{ picodate('ckd_prog_vm.hba1c_ld') }}).{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 11 %}The glycaemic control is sub-optimal.{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 12 %}The glycaemic control is optimal.{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 22 %}The glycaemic control is optimal and stable.{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 23 %}The glycaemic control is optimal but worsening.{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 31 %}The glycaemic control is sub-optimal but improving.{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 32 %}The glycaemic control is sub-optimal with no imporovement.{% endif %}
+    {% if ckd_prog_vm.hba1c_stmt == 33 %}The glycaemic control is sub-optimal and continues to worsen.{% endif %}
+    {% endif %}
+    </p>
+    
+    <p>
+    <h3>Plan</h3>
+    <ul>
+        <li>Suggested medication changes :  </li>
+        <li>Blood test interval : {{ picoformat('ckd_prog_vm.review_int') }} months </li>
+        <li>Blood pressure target : {{ picoformat('ckd_prog_vm.sbp_target_max') }}/{{ picoformat('ckd_prog_vm.dbp_target_max') }} mmHg</li>
+        <li>Referral : </li>
+        <li>Review by renal in : {{ picoformat('ckd_prog_vm.review_int') }} months </li>
+    </ul>
+    </p>
+    {% endif %}
+    <p>
+    <br />
+    {% if ckd_prog_vm.tkc_provider == 2 %}Dr Asanga Abeyaratne, Nephrologist, Royal Darwin Hospital{% endif %}
+    <br />
+    </p>

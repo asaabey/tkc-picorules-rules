@@ -1,0 +1,9 @@
+{% if cd_dm_mx.cp_dm == 0 %}
+              <li>PCIS diabetes careplan was not detected [2.4]</li>
+    {% endif %}
+    {% if cd_dm_mx.cp_dm %}
+
+            <li>PCIS diabetes careplan was updated on {{ picodate('cd_dm_mx.cp_dm_ld') }}</li>
+    {% endif %}
+    {% if cd_dm_mx.rv_edu_ld %}<li>Last Diabetic educator review {{ picodate('cd_dm_mx.rv_edu_ld') }}</li>{% endif %}
+    {% if cd_dm_mx.rv_pod_ld %}<li>Last Podiatry review {{ picodate('cd_dm_mx.rv_pod_ld') }}</li>{% endif %}

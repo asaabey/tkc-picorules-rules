@@ -1,0 +1,11 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('__header__') }}
+{{ pico_template_block('alert_tg4100') }}
+{{ pico_template_block('alert_tg4410') }}
+{{ pico_template_block('alert_tg4720') }}
+{{ pico_template_block('alert_tg4660') }}
+{{ pico_template_block('alert_tg2610') }}
+{{ pico_template_block('alert_tg4620') }}
+{{ pico_template_block('alert_tg4610') }}
+{% endblock content %}

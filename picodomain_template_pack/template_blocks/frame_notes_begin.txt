@@ -1,0 +1,5 @@
+    <hr />
+    <div class="syn_notes_box">
+    <h4>Footnotes</h4>
+    <small>
+    

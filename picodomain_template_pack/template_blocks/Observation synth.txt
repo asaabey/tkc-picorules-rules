@@ -1,0 +1,6 @@
+<div>{% if obs_vm.wt_dt %}Weight {{ picoformat('obs_vm.wt_val') }} kg [{{ picodate('obs_vm.wt_dt') }}]{% endif %}
+{% if obs_vm.ht_dt %}; Height {{ picoformat('obs_vm.ht_val') }} m [{{ picodate('obs_vm.ht_dt') }}]{% endif %}
+{% if obs_vm.bmi_val %}; BMI {{ picoformat('obs_vm.bmi_val') }} kg/m2 [{{ picodate('obs_vm.wt_dt') }}]{% endif %}
+Blood pressure :  {% if obs_vm.sbp_dt %} Latest: {{ picoformat('obs_vm.dbp_val') }}/{{ picoformat('obs_vm.dbp_val') }} mmHg [{{ picodate('obs_vm.sbp_dt') }}]{% endif %}
+{% if obs_vm.sbp_mu_1 %} Mean: {{ picoformat('obs_vm.sbp_mu_1') }}/{{ picoformat('obs_vm.dbp_mu_1') }} mmHg {% endif %}
+{% if obs_vm.sbp_max_1 %} Systolic Range: {{ picoformat('obs_vm.sbp_min_1') }}-{{ picoformat('obs_vm.sbp_max_1') }}  mmHg {% endif %}

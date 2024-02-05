@@ -1,0 +1,10 @@
+    <div class="alert alert-warning" role="alert">
+    <h5>
+    Alert: Nephrotic range proteinuria in the absence of diabetes (Trigger 4410)
+    </h5>
+    The last uACR was {{ picoformat('tg4410.uacr1') }} mg/mmol and the one before was {{ picoformat('tg4410.uacr2') }} mg/mmol. <br />  
+    {% if tg4410.iq_tier == 3 %}Serum Albumin and Cholesterol have been checked {% if tg4410.low_alb %} and there is hypoalbuminaemia{% endif %}{% if tg4410.high_chol %} and hypercholesterolaemia{% endif %}. {% endif %}
+    This is consistent with a primary nephrotic syndrome. 
+    {% if tg4410.iq_tier == 4 %}It is noted that autoimmune and other relevant serological tests have been performed.{% endif %}
+    </div>
+    

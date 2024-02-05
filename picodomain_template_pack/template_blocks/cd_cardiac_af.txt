@@ -1,0 +1,13 @@
+    <br />
+        <b><li>Atrial fibrillation</b>
+        <ol>
+            <li>Diagnosed {{ picodate('cd_cardiac_af.af_dt') }}</li>
+            {% if cd_cardiac_af.vhd == 0 %}<li>Non-valvular AF</li>{% endif %}
+            {% if cd_cardiac_af.vhd == 1 %}<li>Valvular AF</li>{% endif %}
+            {% if cd_cardiac_af.cha2ds2vasc %}<li>CHA2DS2VASC score  : {{ picoformat('cd_cardiac_af.cha2ds2vasc') }}</li>{% endif %}
+            {% if cd_cardiac_af.rxn_anticoag %}<li>Anticoagulation {{ picodate('cd_cardiac_af.rxn_anticoag_dt') }}</li>{% endif %}
+            {% if cd_cardiac_af.rxn_anticoag == 0 %}<li>Not on anticoagulation </li>{% endif %}
+{% if cd_cardiac_af.echo_ld %}<li>Last Echocardiogram {{ picodate('cd_cardiac_af.echo_ld') }}</li>{% endif %}
+        </ol>
+        </li>
+    

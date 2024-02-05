@@ -1,0 +1,12 @@
+    <br />
+    <li><b>Respiratory infection requiring hospitalization</b>
+        <ol>
+            {% if id_cap.cap_viral_ld %}<li>Viral pneumonia {{ picodate('id_cap.cap_viral_ld') }}</li>{% endif %}
+            {% if id_cap.cap_strep_ld %}<li>Streptococcal pneumonia {{ picodate('id_cap.cap_strep_ld') }}</li>{% endif %}
+            {% if id_cap.cap_hi_ld %}<li>Haemophilus pneumonia {{ picodate('id_cap.cap_hi_ld') }}</li>{% endif %}
+            {% if id_cap.cap_mel_ld %}<li>Melioidosis {{ picodate('id_cap.cap_mel_ld') }}</li>{% endif %}
+{% if id_cap.cap_crypt_ld %}<li>Cryptococcus {{ picodate('id_cap.cap_crypt_ld') }}</li>{% endif %}
+            {% if id_cap.cap_nos_ld %}<li>Community acquired pneumonia NOS {{ picodate('id_cap.cap_nos_ld') }}</li>{% endif %}
+        </ol>
+    </li>
+    

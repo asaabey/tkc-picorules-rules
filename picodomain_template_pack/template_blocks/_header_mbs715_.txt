@@ -1,0 +1,19 @@
+<head>
+    <style>
+      .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+        align-items: left;
+        flex-direction: column;
+      }
+
+      .image-container img {
+        width: 750px;
+        height: auto;
+
+        max-height: calc(100% / 7 );
+      }
+
+    </style>
+  </head>

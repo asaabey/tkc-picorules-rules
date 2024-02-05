@@ -1,0 +1,39 @@
+<head>
+<style>
+.infographic {
+  height: 75vh;
+  width: 75vw;
+  padding: 1em;
+  position: relative;
+}
+.ckdstage_elem {
+  top: 10px;
+  left: 10px;
+  position: absolute;
+}
+
+.gfrtitle_elem {
+  position: absolute;
+  left: 400px;
+}
+
+.gfrval_elem {
+  position: absolute;
+  left: 400px;
+  top: 70px;
+  font-size: 84px;
+  font-weight: bold;
+  letter-spacing: -2px;
+  color: #d47d68;
+}
+
+.gfrunit_elem {
+  position: absolute;
+  left: 500px;
+  top: 75px;
+  font-size: 24px;
+  color: #d47d68;
+}
+</style>
+
+</head>

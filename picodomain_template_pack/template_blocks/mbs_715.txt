@@ -1,0 +1,26 @@
+<div class="image-container">
+      <img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p1.png" alt="page 1">
+      <img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p2.png" alt="page 2">
+      <img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p3.png" alt="page 3">
+      <img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p4.png" alt="page 4">
+<img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p5.png" alt="page 5">
+<img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p6.png" alt="page 6">
+<img src="https://d1xcrowuazv720.cloudfront.net/images/mbs-715/mbs-715-p7.png" alt="page 7">
+    </div>
+    
+{% if mbs715.mbs_ld %}
+<div style="position: absolute; top: 560px; left: 600px;">{{ picodate('mbs715.mbs_ld') }}</div>
+{% endif %}
+    <div style="position: absolute; top: 560px; left: 320px;">X</div>
+    <div style="position: absolute; top: 630px; left: 320px;">X</div>
+    <div style="position: absolute; top: 660px; left: 320px;">X</div>
+    <div style="position: absolute; top: 795px; left: 400px;">{{ picodate('mbs715.dob') }}</div>
+    <div style="position: absolute; top: 795px; left: 510px;">{{ picoformat('mbs715.age') }}</div>
+    <div style="position: absolute; top: 795px; left: 580px;">{{ picoformat('mbs715.gender_lab') }}</div>
+{% if mbs715.dm %}<div style="position: absolute; top: 1610px; left: 40px;">X</div>{% endif %}
+{% if mbs715.htn %}<div style="position: absolute; top: 1630px; left: 40px;">X</div>{% endif %}
+{% if mbs715.ami %}<div style="position: absolute; top: 1650px; left: 40px;">X</div>{% endif %}
+{% if mbs715.cva %}<div style="position: absolute; top: 1667px; left: 40px;">X</div>{% endif %}
+{% if mbs715.ckd_flag %}<div style="position: absolute; top: 1685px; left: 40px;">X</div>{% endif %}
+{% if mbs715.copd %}<div style="position: absolute; top: 1630px; left: 195px;">X</div>{% endif %}
+{% if mbs715.rhd %}<div style="position: absolute; top: 1650px; left: 195px;">X</div>{% endif %}

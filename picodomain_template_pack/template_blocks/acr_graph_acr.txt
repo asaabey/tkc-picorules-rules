@@ -1,0 +1,40 @@
+    <hr />
+    <div class="syn_synopsis_box">
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            uACR profile for the last {{ picoformat('acr_graph.dspan_y') }} years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                      <svg height={{ picoformat('acr_graph.acr_graph_canvas_y') }} width={{ picoformat('acr_graph.acr_graph_canvas_x') }}>
+                            <style> .small { font:Ariel 8px;font-weight:normal;} </style>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+                                  <circle cx="5" cy="5" r="10" fill="blue" />
+                                </marker>
+                            </defs>
+                        <polyline points="{{ picoformat('acr_graph.xy_coords') }}" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <line x1="0" x2="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y1="{{ picoformat('acr_graph.line_lower_y') }}" y2="{{ picoformat('acr_graph.line_lower_y') }}" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('acr_graph.acr_graph_y_max') }}</text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('acr_graph.acr_graph_y_min') }}</text>
+                    </svg>
+                    <svg height=10 width={{ picoformat('acr_graph.acr_graph_canvas_x') }}>
+
+                        <text x="0" y="10" style="fill: #000000; stroke: none; font-size: 10px;">{{ picodate('acr_graph.acr_f_dt') }}</text>  
+                        <text x="290" y="10" style="fill: #000000; stroke: none; font-size: 10px;">{{ picodate('acr_graph.acr_l_dt') }}</text> 
+                    </svg>
+                </div>
+                <div class="col-md-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small><strong>Last {{ picoformat('acr_graph.acr_l_val') }} ({{ picodate('acr_graph.acr_l_dt') }}) </strong></small></li>
+                        <li class="list-group-item"><small>Max {{ picoformat('acr_graph.acr_max_val') }} ({{ picodate('acr_graph.acr_max_dt') }}) </small></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    

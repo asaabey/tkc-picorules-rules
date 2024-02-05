@@ -1,0 +1,8 @@
+    <br />
+        {% if sx_abdo.exp_lap_fd %}<li><b>Exploratory Laparotomy </b>({{ picodate('sx_abdo.exp_lap_fd') }})</li>{% endif %}
+        {% if sx_abdo.r_hemi_fd %}<li><b>Right Hemicolectomy </b>({{ picodate('sx_abdo.r_hemi_fd') }})</li>{% endif %}
+        {% if sx_abdo.l_hemi_fd %}<li><b>Left Hemicolectomy </b>({{ picodate('sx_abdo.l_hemi_fd') }})</li>{% endif %}
+        {% if sx_abdo.h_ar_fd %}<li><b>High Anterior resection </b>({{ picodate('sx_abdo.h_ar_fd') }})</li>{% endif %}
+        {% if sx_abdo.l_ar_fd %}<li><b>Low Anterior resection </b>({{ picodate('sx_abdo.l_ar_fd') }})</li>{% endif %}
+        {% if sx_abdo.hartmann_fd %}<li><b>Hartmann procedure </b>({{ picodate('sx_abdo.hartmann_fd') }})</li>{% endif %}        
+    

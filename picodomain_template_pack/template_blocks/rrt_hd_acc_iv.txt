@@ -1,0 +1,23 @@
+            <li>Vascular access
+                <ol>
+                    {% if rrt_hd_acc_iv.avf_dt %}<li><b>AVF</b> date {{ picodate('rrt_hd_acc_iv.avf_dt') }}</li>{% endif %}
+                    {% if rrt_hd_acc_iv.acc_detail %}<li>
+                        {% if rrt_hd_acc_iv.acc_side_val == 1 %}Left{% endif %}
+                        {% if rrt_hd_acc_iv.acc_side_val == 2 %}Right{% endif %}
+                        {% if rrt_hd_acc_iv.acc_type_val == 1 %}-Radio-cephalic AVF{% endif %}
+                        {% if rrt_hd_acc_iv.acc_type_val == 2 %}-Brachio-cephalic AVF{% endif %}
+                        {% if rrt_hd_acc_iv.acc_type_val == 3 %}-Brachio-basilic AVF{% endif %}
+                        {% if rrt_hd_acc_iv.acc_type_val == 4 %}-sided AVF{% endif %}
+                    </li>{% endif %}
+                    {% if rrt_hd_acc_iv.av_us_ld %}<li>Last US fistulogram {{ picoformat('rrt_hd_acc_iv.av_us_ld') }}</li>{% endif %}
+                    {% if rrt_hd_acc_iv.av_gram_ld %}<li>Last DSA fistulogram {{ picodate('rrt_hd_acc_iv.av_gram_ld') }}</li>{% endif %}
+                    {% if rrt_hd_acc_iv.av_plasty_ld %}<li>DSA fistuloplasty [{{ picodate('rrt_hd_acc_iv.av_plasty_ld') }}-{{ picodate('rrt_hd_acc_iv.av_plasty_fd') }}][{{ picoformat('rrt_hd_acc_iv.av_plasty_n') }}]</li>{% endif %}
+                    {% if rrt_hd_acc_iv.av_plasty_ld %}<li>
+                        {% if rrt_hd_acc_iv.iv_periodicity == 99 %}Periodicity cannot be determined{% endif %}
+                        {% if rrt_hd_acc_iv.iv_periodicity == 3 %}Periodicity 3 monthly{% endif %}
+                        {% if rrt_hd_acc_iv.iv_periodicity == 6 %}Periodicity 6 monthly{% endif %}
+                        {% if rrt_hd_acc_iv.iv_periodicity == 12 %}Periodicity yearly{% endif %}                
+                    </li>{% endif %}
+                </ol>
+            </li>
+    

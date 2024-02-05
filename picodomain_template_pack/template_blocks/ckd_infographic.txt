@@ -1,0 +1,5 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('__ckd_infographic_header__') }}
+{{ pico_template_block('ckd_edu_my_ckd') }}
+{% endblock content %}

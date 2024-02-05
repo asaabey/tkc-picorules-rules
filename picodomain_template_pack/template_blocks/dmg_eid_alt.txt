@@ -1,0 +1,9 @@
+    <div class="alert alert-warning" role="alert">
+
+        <h5> Potential duplicate {{ picoformat('dmg_eid_alt.alt_eid_last') }}
+        <p>Record may be incomplete !</p>
+        </h5>
+        {% if dmg_eid_alt.alt_eid_last_1 %}<h5> Another duplicate {{ picoformat('dmg_eid_alt.alt_eid_last_1') }}</h5>{% endif %}
+
+    </div>
+    

@@ -1,0 +1,28 @@
+            <br />
+            <li><b>Coronary artery disease</b>
+                <ol>
+                    {% if cd_cardiac_cad.cabg %}<li>Coronary artery bypass grafting {{ picodate('cd_cardiac_cad.cabg') }}</li>{% endif %}
+                    {% if cd_cardiac_cad.ami_icd_null %}<li>No recorded myocardial infarction in hospital</li>{% endif %}
+                    {% if cd_cardiac_cad.stemi_fd %}<li>First STEMI {{ picodate('cd_cardiac_cad.stemi_fd') }}{% endif %}
+                        {% if cd_cardiac_cad.stemi_fd %}<ol>{% endif %}
+                            {% if cd_cardiac_cad.stemi_anat == 1 %}<li>LMS or LAD territory</li>{% endif %}
+                            {% if cd_cardiac_cad.stemi_anat == 2 %}<li>RCA territory</li>{% endif %}
+                            {% if cd_cardiac_cad.stemi_anat == 3 %}<li>Left circumflex territory</li>{% endif %}
+                            {% if cd_cardiac_cad.stemi_anat == 4 %}<li>territory not specified</li>{% endif %}
+                        {% if cd_cardiac_cad.stemi_fd %}</ol></li>{% endif %}
+                    {% if cd_cardiac_cad.stemi_ld %}<li>Most recent STEMI {{ picodate('cd_cardiac_cad.stemi_ld') }}</li>{% endif %}
+                    
+                    {% if cd_cardiac_cad.nstemi_fd %}<li>First NSTEMI {{ picodate('cd_cardiac_cad.nstemi_fd') }}</li>{% endif %}
+                    {% if cd_cardiac_cad.nstemi_ld %}<li>Most recent NSTEMI {{ picodate('cd_cardiac_cad.nstemi_ld') }}</li>{% endif %}
+                    {% if cd_cardiac_cad.rxn %}<li>relevant medication{% endif %} 
+                                {% if cd_cardiac_cad.rxn %}<ol>{% endif %}
+                                    {% if cd_cardiac_cad.rxn_ap %}<li>Anti-platelet agent(s) {{ picodate('cd_cardiac_cad.rxn_ap') }} </li>{% endif %}
+                                    {% if cd_cardiac_cad.rxn_bb %}<li>Betablocker {{ picodate('cd_cardiac_cad.rxn_bb') }} </li>{% endif %}
+                                    {% if cd_cardiac_cad.rxn_raas %}<li>ACEi or ARB {{ picodate('cd_cardiac_cad.rxn_raas') }} </li>{% endif %}
+                                    {% if cd_cardiac_cad.rxn_statin %}<li>Statin {{ picodate('cd_cardiac_cad.rxn_statin') }} </li>{% endif %}
+                                {% if cd_cardiac_cad.rxn %}</ol>{% endif %}
+                    {% if cd_cardiac_cad.rxn %}</li>{% endif %}
+                    {% if cd_cardiac_cad.echo_ld %}<li>Last Echocardiogram {{ picodate('cd_cardiac_cad.echo_ld') }}</li>{% endif %}
+                    {% if cd_cardiac_cad.cardang_ld %}<li>Cardiac angiogram {{ picodate('cd_cardiac_cad.cardang_ld') }}</li>{% endif %}
+                    </ol>
+            </li>

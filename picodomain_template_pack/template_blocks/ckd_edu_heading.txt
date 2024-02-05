@@ -1,0 +1,3 @@
+<h1>Your Kidney Story</h1>
+<p>The following graphs tells the story of what is happening to your kidneys</p>
+<br />

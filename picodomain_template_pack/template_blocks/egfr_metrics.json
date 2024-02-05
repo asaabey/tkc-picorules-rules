@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": null,
+  "last_updated": null,
+  "is_active": true,
+  "name": "egfr_metrics",
+  "related_ruleblock": "egfr_metrics",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

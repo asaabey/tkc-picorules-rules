@@ -1,0 +1,8 @@
+    <br />
+    <li><b>Chronic obstructive pulmonary disease</b>
+        <ol>
+            {% if cd_pulm.code_copd_dt %}<li>Diagnosed {{ picodate('cd_pulm.code_copd_dt') }}</li>{% endif %}
+            {% if cd_pulm.rx_r03_dt %}<li>Bronchodilator therapy {{ picodate('cd_pulm.rx_r03_dt') }}</li>{% endif %}
+        </ol>
+    </li>
+    

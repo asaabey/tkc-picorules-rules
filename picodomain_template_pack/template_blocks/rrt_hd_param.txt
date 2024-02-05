@@ -1,0 +1,11 @@
+    <li>Haemodialysis prescription
+        <ol>
+            {% if rrt_hd_param.mode_val == 10 %}<li>High Flux haemodialysis</li>{% endif %}
+            {% if rrt_hd_param.mode_val == 20 %}<li>Haemodialfitration (post dilutional)</li>{% endif %}
+            {% if rrt_hd_param.mode_val == 22 %}<li>Haemodialfitration (mixed dilutional</li>){% endif %}
+            {% if rrt_hd_param.hours_val %}<li>Hours : {{ picoformat('rrt_hd_param.hours_val') }}</li>{% endif %}
+            {% if rrt_hd_param.dx_val %}<li>Dialyzer : {{ picoformat('rrt_hd_param.dx_val') }}</li>{% endif %}
+            {% if rrt_hd_param.ibw_val %}<li>IBW : {{ picoformat('rrt_hd_param.ibw_val') }} kg</li>{% endif %}
+        </ol>
+    </li>
+    

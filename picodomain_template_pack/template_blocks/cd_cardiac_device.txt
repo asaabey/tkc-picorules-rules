@@ -1,0 +1,8 @@
+    <br />
+        <b><li>Implanted cardiac device</b>
+        <ol>
+            {% if cd_cardiac_device.ppm_fd %}<li>Pacemaker {{ picodate('cd_cardiac_device.ppm_fd') }}</li>{% endif %}
+            {% if cd_cardiac_device.defib_fd %}<li>Defibrilator {{ picodate('cd_cardiac_device.defib_fd') }}</li>{% endif %}
+        </ol>
+        </li>
+    

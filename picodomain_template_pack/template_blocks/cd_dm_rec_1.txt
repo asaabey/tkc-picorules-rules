@@ -1,0 +1,4 @@
+    {% if cd_dm.n0_st == 3 %}<div>Recommendation [2.3] Suggest optimizing glycaemic control</div>{% endif %}
+    {% if cd_dm.n0_st == 4 %}<div>Recommendation [2.3] Suggest optimizing glycaemic control</div>{% endif %}
+    {% if cd_dm.cp_dm == 0 %}<div>Recommendation [2.4] Suggest modify care plan to include diabetes</div>{% endif %}
+    

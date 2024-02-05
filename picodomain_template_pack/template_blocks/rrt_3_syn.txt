@@ -1,0 +1,18 @@
+    {% if rrt.rrt == 3 %}
+    <li><b>Renal transplant due to (ESRD)</b>
+        <ol>
+            {% if rrt.tx_multi_current %}<li>Multiparity detected</li>{% endif %}
+            {% if rrt.tx_multi_current == 0 %}<li>Functioning allograft, since {{ picodate('rrt.tx_dt') }}</li>{% endif %}
+            {% if rrt.tx_multi_current == 1 %}<li>Functioning allograft, since {{ picodate('rrt.tx_multi_fd') }}</li>{% endif %}
+            {% if rrt.tx_multi_current == 1 %}<li>First graft {{ picodate('rrt.tx_dt') }}</li>{% endif %}
+            {% if rrt.rrt_past == 1 %}
+                <li>Past renal replacement therapies
+                    <ol>
+                        {% if rrt.pd_dt %}<li>Past peritoneal dialysis {{ picodate('rrt.pd_dt') }}</li>{% endif %}
+                        {% if rrt.hd_dt %}<li>Past haemo dialysis {{ picodate('rrt.hd_dt') }}</li>{% endif %}
+                        {% if rrt.homedx_dt %}<li>Home haemo dialysis {{ picodate('rrt.homedx_dt') }}</li>{% endif %}
+                    </ol>
+                </li>
+            {% endif %}
+    {% endif %}
+    

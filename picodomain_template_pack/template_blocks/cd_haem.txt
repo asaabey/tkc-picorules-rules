@@ -1,0 +1,31 @@
+    <br />
+        {% if cd_haem.low_cat == 3 %}<b><li>Pancytopaenia</b>{% endif %}
+        {% if cd_haem.low_cat == 2 %}<b><li>Bicytopaenia</b>{% endif %}
+        {% if cd_haem.low_cat == 1 %}<b><li>Monocytopaenia</b>{% endif %}
+        {% if cd_haem.low_cat %}
+            <ul>
+            {% if cd_haem.hb_low == 1 %}
+                <b><li>Anaemia</b>
+                <ol>
+                    <li>Last Haemoglobin {{ picoformat('cd_haem.hb1_val') }} g/L ({{ picodate('cd_haem.hb1_dt') }})</li>
+                </ol>
+                </li>
+            {% endif %}
+            {% if cd_haem.plt_low == 1 %}
+                <b><li>Thrombocytopaenia</b>
+                <ol>
+                    <li>Last Platelet count {{ picoformat('cd_haem.plt_val') }} x10^6/ml ({{ picodate('cd_haem.plt_dt') }})</li>
+                </ol>
+                </li>
+            {% endif %}
+            {% if cd_haem.wcc_low == 1 %}
+                <b><li>Neutropaenia</b>
+                <ol>
+                    <li>Last Neutrophil count {{ picoformat('cd_haem.wcc_val') }} x10^6/ml ({{ picodate('cd_haem.wcc_dt') }})</li>
+                </ol>
+                </li>
+            {% endif %}
+            </ul>
+            </li>
+        {% endif %}
+    

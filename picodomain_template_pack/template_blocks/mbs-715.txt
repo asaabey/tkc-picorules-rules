@@ -1,0 +1,5 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('_header_mbs715_') }}
+{{ pico_template_block('mbs_715') }}
+{% endblock content %}

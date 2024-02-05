@@ -1,0 +1,8 @@
+        <li>BP control
+        <ol>
+            <li>Recommended target {{ picoformat('cd_htn_bp_control.sbp_target_max') }}/{{ picoformat('cd_htn_bp_control.dbp_target_max') }} mmHg or less</li>
+            <li>Average BP {{ picoformat('cd_htn_bp_control.sbp_mu_1') }}/{{ picoformat('cd_htn_bp_control.dbp_mu_1') }} ({{ picoformat('cd_htn_bp_control.sbp_min') }}-{{ picoformat('cd_htn_bp_control.sbp_max') }}) mmHg </li>
+            <li>Time in range {{ picoformat('cd_htn_bp_control.sbp_tir_1y') }}%</li>
+        </ol>
+        </li>
+    

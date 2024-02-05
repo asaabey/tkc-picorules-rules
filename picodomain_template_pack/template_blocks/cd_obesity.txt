@@ -1,0 +1,7 @@
+    <br />
+    <li><b>Obesity</b>
+        <ol>
+            <li>obesity class {{ picoformat('cd_obesity.bmi_class') }}: BMI {{ picoformat('cd_obesity.bmi') }} kg/m2 ({{ picodate('cd_obesity.wt_dt') }})</li>
+        </ol>
+    </li>
+    

@@ -1,0 +1,12 @@
+    <br />
+    <li><b>Venous thrombo-embolism</b>
+        <ol>
+            {% if cd_cardiac_vte.pe_multi %}<li>Multiple PE {{ picodate('cd_cardiac_vte.pe_fd') }}-{{ picodate('cd_cardiac_vte.pe_ld') }}</li>{% endif %}
+            {% if cd_cardiac_vte.pe_ld %}<li>PE {{ picodate('cd_cardiac_vte.pe_ld') }}</li>{% endif %}
+            {% if cd_cardiac_vte.dvt_fd %}<li>Deep vein thrombosis {{ picodate('cd_cardiac_vte.dvt_fd') }}</li>{% endif %}
+            {% if cd_cardiac_vte.svt_fd %}<li>Superficial vein thrombosis {{ picodate('cd_cardiac_vte.svt_fd') }}</li>{% endif %}
+            {% if cd_cardiac_vte.budd_chiari_fd %}<li>Budd-Chiari Syndrome {{ picodate('cd_cardiac_vte.budd_chiari_fd') }}</li>{% endif %}
+            {% if cd_cardiac_vte.rxn_anticoag_dt %}<li>Anticoagulated {{ picodate('cd_cardiac_vte.rxn_anticoag_dt') }}</li>{% endif %}
+        </ol>
+    </li>
+    

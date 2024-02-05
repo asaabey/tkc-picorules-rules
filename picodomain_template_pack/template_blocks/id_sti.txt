@@ -1,0 +1,9 @@
+    <br />
+    <li><b>Recurrent Soft tissue infection</b>
+        <ol>
+            {% if id_sti.code_ld %}<li>Last episode {{ picodate('id_sti.code_ld') }}</li>{% endif %}
+            <li>{{ picoformat('id_sti.icd_n') }} infections over {{ picoformat('id_sti.gap') }} years</li>
+
+        </ol>
+    </li>
+    

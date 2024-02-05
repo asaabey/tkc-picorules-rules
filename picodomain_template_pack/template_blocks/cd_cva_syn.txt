@@ -1,0 +1,8 @@
+    <br />
+        <li><b>Cerebrovascular disease</b>
+        <ol>
+            {% if cd_cva.cva_infarct_dt %}<li>cerebral infarct {{ picodate('cd_cva.cva_infarct_dt') }}</li>{% endif %}
+            {% if cd_cva.cva_hmrage_dt %}<li>subarachnoid or intracerebral haemorrhage {{ picodate('cd_cva.cva_hmrage_dt') }}</li>{% endif %}
+            {% if cd_cva.cva_nos_dt %}<li>Stroke {{ picodate('cd_cva.cva_nos_dt') }}</li>{% endif %}
+        </ol> 
+    

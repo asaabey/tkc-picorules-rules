@@ -1,0 +1,43 @@
+        <tr>
+            <td>CO2 (mmol/l)</td>
+            <td>{% if ckd_labs.bicarb1_val %}<strong>{{ picoformat('ckd_labs.bicarb1_val') }}</strong>({{ picodate('ckd_labs.bicarb1_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.bicarb2_val %}<strong>{{ picoformat('ckd_labs.bicarb2_val') }}</strong>({{ picodate('ckd_labs.bicarb2_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.bicarb3_val %}<strong>{{ picoformat('ckd_labs.bicarb3_val') }}</strong>({{ picodate('ckd_labs.bicarb3_dt') }}) {% endif %}</td>
+
+        </tr>
+        <tr><td> </td><td> </td><td> </td><td> </td></tr>
+        <tr>
+            <td>Calcium (mmol/l)</td>
+            <td>{% if ckd_labs.calcium1_val %}<strong>{{ picoformat('ckd_labs.calcium1_val') }}</strong>({{ picodate('ckd_labs.calcium1_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.calcium2_val %}<strong>{{ picoformat('ckd_labs.calcium2_val') }}</strong>({{ picodate('ckd_labs.calcium2_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.calcium3_val %}<strong>{{ picoformat('ckd_labs.calcium3_val') }}</strong>({{ picodate('ckd_labs.calcium3_dt') }}) {% endif %}</td>
+        </tr>
+        <tr>
+            <td>Phosphate (mmol/l)</td>
+            <td>{% if ckd_labs.phos1_val %}<strong>{{ picoformat('ckd_labs.phos1_val') }}</strong> ({{ picodate('ckd_labs.phos1_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.phos2_val %}<strong>{{ picoformat('ckd_labs.phos2_val') }}</strong> ({{ picodate('ckd_labs.phos2_dt') }}){% endif %}</td>
+            <td>{% if ckd_labs.phos3_val %}<strong>{{ picoformat('ckd_labs.phos3_val') }}</strong> ({{ picodate('ckd_labs.phos3_dt') }}){% endif %}</td>
+        </tr>
+        <tr>
+            <td>Magnesium (mmol/l)</td>
+            <td>{% if ckd_labs.magnesium1_val %}<strong>{{ picoformat('ckd_labs.magnesium1_val') }}</strong> ({{ picodate('ckd_labs.magnesium1_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.magnesium2_val %}<strong>{{ picoformat('ckd_labs.magnesium2_val') }}</strong> ({{ picodate('ckd_labs.magnesium2_dt') }}){% endif %}</td>
+            <td>{% if ckd_labs.magnesium3_val %}<strong>{{ picoformat('ckd_labs.magnesium3_val') }}</strong> ({{ picodate('ckd_labs.magnesium3_dt') }}){% endif %}</td>
+        </tr>
+        <tr>
+            <td>PTH (pmol/l)</td>
+            <td>{% if ckd_labs.pth1_val %}<strong>{{ picoformat('ckd_labs.pth1_val') }}</strong> ({{ picodate('ckd_labs.pth1_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.pth2_val %}<strong>{{ picoformat('ckd_labs.pth2_val') }}</strong> ({{ picodate('ckd_labs.pth2_dt') }}){% endif %}</td>
+            <td>{% if ckd_labs.pth3_val %}<strong>{{ picoformat('ckd_labs.pth3_val') }}</strong> ({{ picodate('ckd_labs.pth3_dt') }}){% endif %}</td>
+        </tr>
+        {% if ckd_labs.rrt == 0 %}
+        <tr>
+            <td>uACR (mg/mmol)</td>
+            <td>{% if ckd_labs.uacr1_val %}<strong>{{ picoformat('ckd_labs.uacr1_val') }}</strong> ({{ picodate('ckd_labs.uacr1_dt') }}){% endif %}</td>
+            <td>{% if ckd_labs.uacr2_val %}<strong>{{ picoformat('ckd_labs.uacr2_val') }}</strong> ({{ picodate('ckd_labs.uacr2_dt') }}){% endif %}</td>
+            <td>{% if ckd_labs.uacr3_val %}<strong>{{ picoformat('ckd_labs.uacr3_val') }}</strong> ({{ picodate('ckd_labs.uacr3_dt') }}){% endif %}</td>
+
+        </tr>
+        {% endif %}
+
+    

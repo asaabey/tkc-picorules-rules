@@ -1,0 +1,18 @@
+    <br />
+    <b><li>Dyslipidaemia</b>
+        <ol>
+            {% if cd_dyslip.ldl_dt %}<li>Last LDL-C value {{ picoformat('cd_dyslip.ldl_val') }}({{ picodate('cd_dyslip.ldl_dt') }})</li>{% endif %}
+            {% if cd_dyslip.ascvd %}<li>Secondary prevention as there is past atherosclerotic cvd </li>{% endif %}
+            {% if cd_dyslip.ldl_subopt == 1 %}<li>Suboptimal control (LDL-C level 20% above threshold of {{ picoformat('cd_dyslip.ldl_unl') }})</li>{% endif %}
+            {% if cd_dyslip.fhc_prob == 4 %}
+                <li>Definite familial hypercholesterolaemia based on an abbreviated dutch lipid score of {{ picoformat('cd_dyslip.dls') }}</li>
+            {% endif %}
+            {% if cd_dyslip.fhc_prob == 3 %}
+                <li>Probable familial hypercholesterolaemia based on an abbreviated dutch lipid score of {{ picoformat('cd_dyslip.dls') }}</li>
+            {% endif %}
+            {% if cd_dyslip.fhc_prob == 2 %}
+                <li>Possible familial hypercholesterolaemia based on an abbreviated dutch lipid score of {{ picoformat('cd_dyslip.dls') }}</li>
+            {% endif %}
+        </ol>
+    </li>
+    

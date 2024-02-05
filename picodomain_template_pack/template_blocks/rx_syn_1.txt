@@ -1,0 +1,11 @@
+    <hr/> 
+    <br />
+    <div class="syn_synopsis_box">
+    <h3>Medications</h3>
+<p>Please Note: there may be inaccuracy in the display of medicines, always crosscheck with source system </p>
+    <ul>
+        {{ picolookup('rx_name_obj', 'rx_desc.rx_name_obj') }}
+    </ul>
+    </div>
+
+    

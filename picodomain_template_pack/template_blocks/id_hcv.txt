@@ -1,0 +1,7 @@
+    <br />
+    <li><b>Chronic Hepatitis C</b>
+        <ol>
+            {% if id_hcv.icpc_code %}<li>Diagnosed {{ picodate('id_hcv.icpc_code') }}</li>{% endif %}
+        </ol>
+    </li>
+    

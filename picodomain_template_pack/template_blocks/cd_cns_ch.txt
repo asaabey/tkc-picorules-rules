@@ -1,0 +1,8 @@
+<br />
+    <li><b>Cerebral Haemorrhage </b>
+        <ol>
+            {% if cd_cns_ch.code_sdh_fd %}<li>Subdural Haemorrhage {{ picodate('cd_cns_ch.code_sdh_fd') }}</li>{% endif %}
+            {% if cd_cns_ch.code_ich_fd %}<li>Intracerebral Haemorrhage {{ picodate('cd_cns_ch.code_ich_fd') }}</li>{% endif %}
+            {% if cd_cns_ch.code_edh_fd %}<li>Extradural Haemorrhage {{ picoformat('cd_cns_ch.code_edh_fd') }}</li>{% endif %}
+        </ol>
+    </li>

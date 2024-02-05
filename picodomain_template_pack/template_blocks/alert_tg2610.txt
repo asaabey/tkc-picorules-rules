@@ -1,0 +1,9 @@
+    <div class="alert alert-warning" role="alert">
+        <h5>
+        Alert: Potentially untreated chronic disease (Trigger 2610)
+        </h5>
+        {% if tg2610.dm_untreat %}Likely to require pharmacotherapy for glycaemic control. No active medications are detected. {% endif %}
+        {% if tg2610.ckd_untreat %}Likely to benefit from RAAS blockade therapy (ACEi or ARB) in the context of albuminuric chronic kidney disease. {% endif %}
+        {% if tg2610.ckd_untreat %}Last systolic BP is {{ picoformat('tg2610.sbp_val') }} mmHg ( {{ picodate('tg2610.sbp_dt') }}) and serum potassium is {{ picoformat('tg2610.k_val') }} mmol/l ({{ picodate('tg2610.k_dt') }}).{% endif %}
+    </div>
+    

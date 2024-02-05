@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": null,
+  "last_updated": null,
+  "is_active": true,
+  "name": "rrt_shpt",
+  "related_ruleblock": "ckd_shpt",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

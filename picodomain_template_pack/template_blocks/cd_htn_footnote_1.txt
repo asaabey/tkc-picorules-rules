@@ -1,0 +1,5 @@
+    {% if cd_htn.iq_tier %}
+        <div>Note [3.1] This is based on {{ picoformat('cd_htn.iq_sbp') }} blood pressure readings within the last 2 years</div>
+    {% endif %}
+
+    

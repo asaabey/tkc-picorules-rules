@@ -1,0 +1,3 @@
+<h1>Your Blood Pressure</h1>
+<p>The following graph shows how your blood pressure (BP) has been going </p>
+<br />

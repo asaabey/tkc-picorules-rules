@@ -1,0 +1,8 @@
+    <div class="alert alert-warning" role="alert">
+    <h5>
+    Alert: New commencement on Renal replacement therapy (Trigger 4720)
+    </h5>
+    {% if tg4720.hd_start %}Patient has been commenced on haemodialysis on {{ picodate('tg4720.hd_dt_min') }}. {% endif %}
+    {% if tg4720.pd_start %}Patient has been commenced on peritoneal dialysis on {{ picodate('tg4720.pd_dt_min') }}. {% endif %}
+    </div>
+    

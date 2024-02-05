@@ -1,0 +1,35 @@
+        {% if ckd_cause.esrd == 0 %}
+        <li>Aetiology
+            <ol>
+                <li>Potential cause for CKD
+                <ol>
+                    {% if ckd_cause.aet_dm == 1 %}<li>Diabetes mellitus</li>{% endif %}
+                    {% if ckd_cause.aet_htn == 1 %}<li>Hypertension</li>{% endif %}
+                    {% if ckd_cause.aet_gn_ln == 1 %}<li>Lupus nephritis</li>{% endif %}
+                    {% if ckd_cause.aet_gn == 1 %}<li>Glomerulopathy NOS</li>{% endif %}
+                    {% if ckd_cause.c_n00 %}<li>Acute nephritic syndrome {{ picodate('ckd_cause.c_n00') }}</li>{% endif %}
+                    {% if ckd_cause.c_n01 %}<li>Rapidly progressive nephritic syndrome {{ picodate('ckd_cause.c_n01') }}</li>{% endif %}
+                    {% if ckd_cause.c_n03 %}<li>Chronic nephritic syndrome {{ picodate('ckd_cause.c_n03') }}</li>{% endif %}
+                    {% if ckd_cause.c_n04 %}<li>Nephrotic syndrome {{ picodate('ckd_cause.c_n04') }}</li>{% endif %}
+                    {% if ckd_cause.c_n05 %}<li>Unspecified nephritic syndrome {{ picodate('ckd_cause.c_n05') }}</li>{% endif %}
+                    {% if ckd_cause.c_n07 %}<li>Hereditary nephropathy, not elsewhere classified {{ picodate('ckd_cause.c_n07') }}</li>{% endif %}
+                    {% if ckd_cause.c_n08 %}<li>Glomerular disorders in diseases classified elsewhere {{ picodate('ckd_cause.c_n08') }}</li>{% endif %}
+                    {% if ckd_cause.c_n10_n16 %}<li>Renal tubulo-interstitial diseases {{ picoformat('ckd_cause.c_n10_n16') }}</li>{% endif %}
+                    {% if ckd_cause.c_n17 %}<li>Acute kidney failure and chronic kidney disease {{ picodate('ckd_cause.c_n17') }}</li>{% endif %}
+                    {% if ckd_cause.c_n20_n23 %}<li>Urolithiasis {{ picodate('ckd_cause.c_n20_n23') }}</li>{% endif %}
+                    {% if ckd_cause.c_n26_n27 %}<li>Unspecified contracted kidney {{ picodate('ckd_cause.c_n26_n27') }}</li>{% endif %}
+                    {% if ckd_cause.c_n30_n39 %}<li>Other diseases of the urinary system including bladder dysfunction {{ picodate('ckd_cause.c_n30_n39') }}</li>{% endif %}
+                    {% if ckd_cause.c_n40 %}<li>Benign prostatic hyperplasia {{ picodate('ckd_cause.c_n40') }}</li>{% endif %}
+                    {% if ckd_cause.c_q60 %}<li>Renal agenesis and other reduction defects of kidney {{ picodate('ckd_cause.c_q60') }}</li>{% endif %}
+                    {% if ckd_cause.c_q61 %}<li>Cystic kidney disease {{ picodate('ckd_cause.c_q61') }}</li>{% endif %}
+                    {% if ckd_cause.c_q62 %}<li>Congenital obstructive defects of renal pelvis and congenital malformations of ureter {{ picodate('ckd_cause.c_q62') }}</li>{% endif %}
+                    {% if ckd_cause.c_q63 %}<li>Other congenital malformations of kidney {{ picodate('ckd_cause.c_q63') }}</li>{% endif %}
+                    {% if ckd_cause.c_q64 %}<li>Other congenital malformations of urinary system {{ picodate('ckd_cause.c_q64') }}</li>{% endif %}
+                    {% if ckd_cause.c_c64 %}<li>Renal cell cancer {{ picodate('ckd_cause.c_c64') }}</li>{% endif %}
+                    {% if ckd_cause.c_z90_5 %}<li>Complete or partial nephrectomy (Acquired single kidney) {{ picodate('ckd_cause.c_z90_5') }}</li>{% endif %}
+                </ol>
+                </li>
+            </ol>
+        </li>
+        {% endif %}
+    

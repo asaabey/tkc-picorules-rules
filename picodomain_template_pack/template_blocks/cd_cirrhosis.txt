@@ -1,0 +1,11 @@
+    <br />
+    <li><b>Cirrhosis of liver</b>
+        <ol>
+            {% if cd_cirrhosis.code_fd %}<li>Diagnosed {{ picodate('cd_cirrhosis.code_fd') }}</li>{% endif %} 
+            {% if cd_cirrhosis.cirr_pbc_fd %}<li>Primary biliary cirrhosis</li>{% endif %}
+            {% if cd_cirrhosis.cirr_nos_fd %}<li>Cirrhosis Nos</li>{% endif %}
+            {% if cd_cirrhosis.cps_abbr_class == 3 %}<li>CTP class C</li>{% endif %}
+            {% if cd_cirrhosis.cps_abbr_class == 2 %}<li>CTP class B</li>{% endif %}
+            {% if cd_cirrhosis.cps_abbr_class == 1 %}<li>CTP class A</li>{% endif %}
+        </ol>
+    </li>

@@ -1,0 +1,4 @@
+    <hr />
+    <div class="syn_recm_box">
+    <h3>Comments</h3>
+    

@@ -1,0 +1,8 @@
+        <br />
+        {% if cd_cardiac_rhd.rhd_dt %}<li><b>Rheumatic heart disease</b>
+            <ol>
+                <li>Diagnosed {{ picodate('cd_cardiac_rhd.rhd_dt') }}</li>
+{% if cd_cardiac_rhd.echo_ld %}<li>Last Echocardiogram {{ picodate('cd_cardiac_rhd.echo_ld') }}</li>{% endif %}
+            </ol></li>
+            {% endif %}   
+    

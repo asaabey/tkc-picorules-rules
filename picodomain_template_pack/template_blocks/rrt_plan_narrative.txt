@@ -1,0 +1,14 @@
+    <br />
+    <h3>Plan</h3>
+    <ul>
+        <li>Medication changes : None </li>
+        <li>IBW changed:</li>
+        <li>Review by renal in : 3 months </li>
+    </ul>
+    </p>
+    <p>
+    <br />
+    {% if rrt_hd_prog_vm.tkc_provider == 2 %}Dr Asanga Abeyaratne, Nephrologist, Royal Darwin Hospital{% endif %}
+    <br />
+    </p>
+    

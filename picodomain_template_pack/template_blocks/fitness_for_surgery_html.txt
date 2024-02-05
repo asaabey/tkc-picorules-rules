@@ -1,0 +1,14 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('perioperative_edu_heading') }}
+{{ pico_template_block('periop_edu_bp') }}
+{{ pico_template_block('graph_bp') }}
+{{ pico_template_block('periop_edu_hb') }}
+{{ pico_template_block('hb_graph') }}
+{{ pico_template_block('periop_edu_hba1c') }}
+{{ pico_template_block('hba1c_graph') }}
+{{ pico_template_block('periop_edu_egfr') }}
+{{ pico_template_block('graph_egfr2') }}
+{{ pico_template_block('perioperative_edu_reminders') }}
+{{ pico_template_block('perioperative_video_1') }}
+{% endblock content %}

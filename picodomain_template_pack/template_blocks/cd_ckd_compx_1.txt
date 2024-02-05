@@ -1,0 +1,31 @@
+    <ol>
+        <li>CKD Complications
+        <ol>
+            <li>Haemopoetic function
+            <ol>
+                {% if ckd_complications.hb_lv %}<li>Last haemoglobin on {{ picoformat('ckd_complications.hb_ld') }} is {{ picoformat('ckd_complications.hb_lv') }} g/L</li>{% endif %}
+                {% if ckd_complications.hb_state == 2 %}<li>acceptable range</li>{% endif %}
+                {% if ckd_complications.hb_state == 1 %}{% if ckd_complications.mcv_state == 11 %}<li>consistent with severe microcytic anaemia</li>{% endif %}{% endif %}
+                {% if ckd_complications.hb_state == 1 %}{% if ckd_complications.mcv_state == 12 %}<li>consistent with microcytic anaemia</li>{% endif %}{% endif %}
+                {% if ckd_complications.hb_state == 1 %}{% if ckd_complications.mcv_state == 20 %}<li>consistent with normocytic anaemia</li>{% endif %}{% endif %}
+                {% if ckd_complications.hb_state == 1 %}{% if ckd_complications.mcv_state == 31 %}<li>consistent with macrocytic anaemia</li>{% endif %}{% endif %}
+                {% if ckd_complications.hb_state == 1 %}{% if ckd_complications.mcv_state == 0 %}<li>consistent with anaemia{% endif %}</li>{% endif %}
+                {% if ckd_complications.esa_state == 0 %}<li>No ESA use</li>{% endif %}
+                {% if ckd_complications.esa_state == 1 %}<li>Current ESA use</li>{% endif %}
+                {% if ckd_complications.esa_state == 2 %}<li>Past ESA use but not current</li>{% endif %}
+                {% if ckd_complications.iron_low %}<li>Iron stores low</li>
+                    <ol>
+                        {% if ckd_complications.fer_val %}<li>Ferritin {{ picoformat('ckd_complications.fer_val') }}({{ picodate('ckd_complications.fer_dt') }})</li>{% endif %}
+                    </ol>
+                {% endif %}
+            </ol>
+            </li>
+            <li>Acid-base balance
+            <ol>
+                {% if ckd_complications.hco3_low %}<li>low tCO2 at {{ picoformat('ckd_complications.hco3_val') }} mmol/l ({{ picodate('ckd_complications.hco3_dt') }}) likely due to metabolic acidosis</li>{% endif %}
+            </ol>
+            </li>
+        </ol>
+        </li>
+    </ol>
+    

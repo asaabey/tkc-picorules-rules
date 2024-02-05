@@ -1,0 +1,14 @@
+    <br />
+    <li><b>Rheumatoid Arthritis</b>
+        <ol>
+            <li>Diagnosed {{ picodate('cd_rheum_ra.ra_fd') }} 
+            <ol>
+                {% if cd_rheum_ra.rxn_l04ax %}<li>Thiopurine {{ picodate('cd_rheum_ra.rxn_l04ax') }}</li>{% endif %}
+                {% if cd_rheum_ra.rxn_p01ba %}<li>Hydroxychloroquine {{ picodate('cd_rheum_ra.rxn_p01ba') }}</li>{% endif %}
+                {% if cd_rheum_ra.rxn_a07ec %}<li>Aminosalicylic acid and similar agents {{ picodate('cd_rheum_ra.rxn_a07ec') }}</li>{% endif %}
+            </ol>
+            </li>
+            {% if cd_rheum_ra.op_enc_ld %}<li>Last specialist clinic {{ picodate('cd_rheum_ra.op_enc_ld') }}</li>{% endif %}
+        </ol>
+    </li>
+    

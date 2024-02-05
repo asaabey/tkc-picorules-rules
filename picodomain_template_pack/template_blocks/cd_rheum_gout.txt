@@ -1,0 +1,12 @@
+    <br />
+    <li><b>Gout</b>
+        <ol>
+            <li>Diagnosed {{ picodate('cd_rheum_gout.gout_fd') }}
+            <ol>
+                {% if cd_rheum_gout.rxnc_m04aa_ld %}<li>Urate lowering therapy {{ picodate('cd_rheum_gout.rxnc_m04aa_ld') }}</li>{% endif %}
+            </ol>
+             </li>
+            {% if cd_rheum_gout.op_enc_ld %}<li>Last specialist clinic {{ picodate('cd_rheum_gout.op_enc_ld') }}</li>{% endif %}
+        </ol>
+    </li>
+    

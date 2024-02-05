@@ -1,0 +1,11 @@
+    <hr />
+    <div class="syn_notes_box"><small>
+    Debug info:
+        {{ picolookup('rman_status_key_val', 'dmg.st_rman_ver') }};
+        {{ picolookup('rman_status_key_ts', 'dmg.st_rman_init') }};
+        {{ picolookup('rman_status_key_ts', 'dmg.st_rman_rb') }};
+        {{ picolookup('rman_status_key_val', 'dmg.st_rman_rb_err') }};
+
+        </small>
+    </div>
+    

@@ -1,0 +1,7 @@
+   <hr/> 
+   <div class="syn_synopsis_box">
+   <h3>GA Labs</h3>
+        {{ picoformat('ckd_labs_ga.egfr') }}
+        {{ picoformat('ckd_labs_ga.creat') }}
+        {{ picoformat('ckd_labs_ga.uacr') }}
+   </div>

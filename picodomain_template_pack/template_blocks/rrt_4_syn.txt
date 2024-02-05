@@ -1,0 +1,14 @@
+    {% if rrt.rrt == 4 %}
+    <li><b>End-stage renal failure (ESRD)</b>
+        <ol>
+            <li>Currently on home or community dialysis, since {{ picodate('rrt.homedx_dt') }}</li>
+            {% if rrt.rrt_past == 1 %}
+                <li>Past renal replacement therapies</li>
+                    <ol>
+                        {% if rrt.pd_dt %}<li>Past peritoneal dialysis {{ picodate('rrt.pd_dt') }}</li>{% endif %}
+                        {% if rrt.hd_dt %}<li>Past haemo dialysis {{ picodate('rrt.hd_dt') }}</li>{% endif %}
+                        {% if rrt.tx_dt %}<li>Past failed renal transplant {{ picodate('rrt.tx_dt') }}</li>{% endif %}
+                    </ol>
+            {% endif %}
+    {% endif %}
+    

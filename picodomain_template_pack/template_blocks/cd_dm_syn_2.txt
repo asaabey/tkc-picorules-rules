@@ -1,0 +1,14 @@
+<li>Diabetic complications 
+                <ol>
+                    
+                        {% if cd_dm_comp.ndr_icd_e31 %}<li>Background retinopathy {{ picodate('cd_dm_comp.ndr_icd_e31') }}</li>{% endif %}
+                                {% if cd_dm_comp.ndr_icd_e32 %}<li>Mild non-proliferative retinopathy {{ picodate('cd_dm_comp.ndr_icd_e32') }}</li>{% endif %}
+                                {% if cd_dm_comp.ndr_icd_e33 %}<li>Moderate non-proliferative retinopathy {{ picodate('cd_dm_comp.ndr_icd_e33') }}</li>{% endif %}
+                                {% if cd_dm_comp.ndr_icd_e34 %}<li>Severe non-proliferative retinopathy {{ picodate('cd_dm_comp.ndr_icd_e34') }}</li>{% endif %}
+                                {% if cd_dm_comp.pdr_icd_e35 %}<li>Severe non-proliferative retinopathy {{ picodate('cd_dm_comp.pdr_icd_e35') }}</li>{% endif %}
+                    
+                    {% if cd_dm_comp.dm_micvas_neuro %}<li>Diabetic neuropathy ({{ picoformat('cd_dm_comp.dm_micvas_neuro') }})</li>{% endif %}
+                    {% if cd_dm_comp.dm_foot_ulc %}<li>Diabetic foot ulcer ({{ picoformat('cd_dm_comp.dm_foot_ulc') }})</li>{% endif %}
+                    {% if cd_dm_comp.dm_dka %}<li>Diabetic ketoacidosis {{ picodate('cd_dm_comp.dka_ld') }}</li>{% endif %}
+                </ol>                
+            </li>

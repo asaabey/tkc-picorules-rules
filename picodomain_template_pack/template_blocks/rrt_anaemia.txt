@@ -1,0 +1,31 @@
+    {% if ckd_anaemia.esrd == 1 %}
+        <li>Anaemia management
+            <ol>
+                {% if ckd_anaemia.hb_val %}<li>Last Hb {{ picoformat('ckd_anaemia.hb_val') }} ({{ picodate('ckd_anaemia.hb_dt') }})
+                    <ol>
+                        {% if ckd_anaemia.hb_state == 2 %}<li>Severe anaemia</li>{% endif %}
+                        {% if ckd_anaemia.hb_state == 3 %}<li>Moderate anaemia</li>{% endif %}
+                        {% if ckd_anaemia.hb_state == 4 %}<li>Acceptable range</li>{% endif %}
+                        {% if ckd_anaemia.hb_cum_qt == 0 %}<li>Steady over 60 days</li>{% endif %}
+                        {% if ckd_anaemia.hb_cum_qt == 1 %}<li>Sustained increase more than 20%</li>{% endif %}
+                        {% if ckd_anaemia.hb_cum_qt == 2 %}<li>Sustained increase more than 10%</li>{% endif %}
+                        {% if ckd_anaemia.hb_cum_qt == 3 %}<li>Sustained decrease more than 10%</li>{% endif %}
+                        {% if ckd_anaemia.hb_cum_qt == 4 %}<li>Sustained decrease more than 20%</li>{% endif %}
+
+                    </ol>
+                </li>{% endif %}
+                {% if ckd_anaemia.fe_status_null == 1 %}<li>Iron status unknown</li>{% endif %}
+                {% if ckd_anaemia.fe_status_null == 0 %}<li>Iron stores{% endif %}
+                    {% if ckd_anaemia.fe_status_null == 0 %}<ol>{% endif %}
+                        {% if ckd_anaemia.fe_status_null == 0 %}<li>{% if ckd_anaemia.fer_val %}Ferritin {{ picoformat('ckd_anaemia.fer_val') }} ({{ picodate('ckd_anaemia.fer_dt') }}){% endif %}{% if ckd_anaemia.tsat1_val %}TSAT {{ picoformat('ckd_anaemia.tsat1_val') }}% ({{ picodate('ckd_anaemia.tsat1_dt') }}){% endif %}</li>{% endif %}
+                        {% if ckd_anaemia.fe_low == 1 %}<li><b>Low iron stores</b></li>{% endif %}
+                        {% if ckd_anaemia.hyper_ferr == 1 %}<li>Hyperferritinaemia</li>{% endif %}
+                        {% if ckd_anaemia.hyper_ferr == 1 %}{% if ckd_anaemia.crp_val %}<li>CRP {{ picoformat('ckd_anaemia.crp_val') }}</li>{% endif %}{% endif %}
+                    {% if ckd_anaemia.fe_status_null == 0 %}</ol>{% endif %}
+                {% if ckd_anaemia.fe_status_null == 0 %}</li>{% endif %}
+                {% if ckd_anaemia.esa_state == 0 %}<li>No ESA use</li>{% endif %}
+                {% if ckd_anaemia.esa_state == 1 %}<li>Current ESA use</li>{% endif %}
+                {% if ckd_anaemia.esa_state == 2 %}<li>Past ESA use but not current</li>{% endif %}
+            </ol>
+        </li>
+    {% endif %}

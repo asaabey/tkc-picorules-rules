@@ -1,0 +1,5 @@
+    <div id="column1" style="min-width: 450px; max-width: 48%; padding-right: 2%;">
+    <br /><br />
+    <h3>Diagnoses</h3>
+    <ol>
+    

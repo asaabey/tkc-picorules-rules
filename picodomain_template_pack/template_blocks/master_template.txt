@@ -1,0 +1,3 @@
+<syn_body>
+{% block content %}{% endblock content %}
+</syn_body>

@@ -1,0 +1,10 @@
+    <br />
+     <li><b>Systemic Lupus Erythematosus</b>
+            <ol>
+                <li>Diagnosed {{ picodate('cd_rheum_sle.sle_fd') }} </li>
+                {% if cd_rheum_sle.rxn_l04ax %}<li>Thiopurine {{ picodate('cd_rheum_sle.rxn_l04ax') }}</li>{% endif %}
+                {% if cd_rheum_sle.rxn_p01ba %}<li>Hydroxychloroquine {{ picodate('cd_rheum_sle.rxn_p01ba') }}</li>{% endif %}
+            </ol>
+        </li>
+
+    

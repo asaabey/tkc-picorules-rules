@@ -1,0 +1,6 @@
+    <div class="alert alert-warning" role="alert">
+        <h5>Alert: Advanced CKD with rapid progression, possibly unprepared (Trigger 4620)</h5>
+        There is CKD stage {{ picoformat('tg4620.ckd_stage') }} disease with an annual decline of {{ picoformat('tg4620.eb') }} ml/min/yr without a recent specialist encounter. <br />
+        There is no recorded access creation
+    </div>
+    

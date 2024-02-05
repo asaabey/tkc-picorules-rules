@@ -1,0 +1,3 @@
+    <div id="column2" style="min-width: 600px; max-width: 48%; padding-left: 2%;">
+    <ol>
+    

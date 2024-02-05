@@ -1,0 +1,24 @@
+    {% if ckd.ckd_stage_val == 1 %}<li><b><div data-type="diagnosis" data-coding-system="snomed" data-code="431855005" data-description="CKD stage 1" snomed-id="431855005">CKD stage 1</div></b>{% endif %}
+    {% if ckd.ckd_stage_val == 2 %}<li><b><div data-type="diagnosis" data-coding-system="snomed" data-code="431856006" data-description="CKD stage 2" snomed-id="431856006">CKD stage 2</div></b>{% endif %}
+    {% if ckd.ckd_stage_val == 3 %}<li><b><div data-type="diagnosis" data-coding-system="snomed" data-code="700378005" data-description="CKD stage 3a" snomed-id="700378005">CKD stage 3a</div></b>{% endif %}
+    {% if ckd.ckd_stage_val == 4 %}<li><b><div data-type="diagnosis" data-coding-system="snomed" data-code="700379002" data-description="CKD stage 3b" snomed-id="700379002">CKD stage 3b</div></b>{% endif %}
+    {% if ckd.ckd_stage_val == 5 %}<li><b><div data-type="diagnosis" data-coding-system="snomed" data-code="431857002" data-description="CKD stage 4" snomed-id="431857002">CKD stage 4</div></b>{% endif %}
+    {% if ckd.ckd_stage_val == 6 %}<li><b><div data-type="diagnosis" data-coding-system="snomed" data-code="433146000" data-description="CKD stage 5" snomed-id="433146000">CKD stage 5</div></b>{% endif %}
+    {% if ckd.mm1 %}?{% endif %}{% if ckd.mm2 %}*{% endif %}
+            <ol>
+                {% if ckd.assert_level == 101100 %}<li>Has not met persistent criteria</li>{% endif %}
+                {% if ckd.mm1 %}<li>Could be a dialysis patient with non-captured episodes</li>{% endif %}
+                {% if ckd.ckd_stage %}<li>{% if ckd.dx_ckd %}Diagnosed {% endif %}{% if ckd.pers %}Persistent {% endif %}CKD stage <strong> ({{ picoformat('ckd.cga_g') }}{{ picoformat('ckd.cga_a') }})</strong> [1.1].</li>{% endif %}
+                {% if ckd.dx_ckd == 0 %}<li>No coded diagnosis on the primary care EHR (ICPC coding) [1.2]</li>{% endif %}
+                {% if ckd.dx_ckd %}<li>The diagnosis on the primary care EHR is CKD stage {{ picoformat('ckd.dx_ckd_stage') }} [1.2]</li>{% endif %}
+                {% if ckd.egfr_l_val %}<li>Last eGFR is <strong>{{ picoformat('ckd.egfr_l_val') }}</strong> ml/min/1.73m2 ({{ picodate('ckd.egfr_l_dt') }}){% if ckd.egfr_outdated %} and is outdated [1.3].{% endif %}</li>{% endif %}
+                {% if ckd.acr_l_val %}<li>Last uACR is {{ picoformat('ckd.acr_l_val') }} mg/mmol ({{ picodate('ckd.acr_l_dt') }}){% if ckd.acr_outdated %} and is outdated [1.3].{% endif %}</li>{% endif %}
+                {% if ckd.egfr_decline %}<li>{% if ckd.egfr_rapid_decline %}rapid {% endif %}progressive decline of renal function with an annual decline of {{ picoformat('ckd.egfr_slope2') }}ml/min/yr [1.3]</li>{% endif %}
+                {% if ckd.enc_ld %}<li>Last captured encounter with renal services was on {{ picodate('ckd.enc_ld') }} and there have been {{ picoformat('ckd.enc_n') }} encounters since {{ picodate('ckd.enc_fd') }}</li>{% endif %}
+                {% if ckd.ref_ld %}<li>Last renal <b>referral</b> {{ picodate('ckd.ref_ld') }}</li>{% endif %}
+                {% if ckd.avf %}<li>An <strong>arterio-venous fistula</strong> has been created on {{ picodate('ckd.avf_dt') }}</li>{% endif %}
+                {% if ckd.rsc_ld %}<li><b>Renal supportive care {{ picodate('ckd.rsc_ld') }}</b></li>{% endif %}
+                {% if ckd.is_pcis == 1 %}{% if ckd.cp_ckd == 0 %}<li>No current PCIS careplan for CKD</li>{% endif %}{% endif %}
+                {% if ckd.is_pcis == 1 %}{% if ckd.cp_ckd %}<li>CKD current PCIS careplan is {{ picoformat('ckd.cp_ckd') }} updated on {{ picodate('ckd.cp_ckd_ld') }}</li>{% endif %}{% endif %}
+                {% if ckd.is_pcis == 1 %}<ol>{% if ckd.cp_mis %}<li>existing care plan may not be adequate [1.8]</li>{% endif %}</ol>{% endif %}
+                </li>

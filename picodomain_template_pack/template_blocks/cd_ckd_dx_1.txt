@@ -1,0 +1,35 @@
+        <li>Diagnostic workup
+        {% if ckd_diagnostics.canddt_gn_wu == 1 %}
+        <ol>
+            <li>Basic urinalysis
+            {% if ckd_diagnostics.ua_null == 1 %} not performed {% endif %}
+            {% if ckd_diagnostics.ua_rbc_dt %} last performed on {{ picodate('ckd_diagnostics.ua_rbc_dt') }} and shows{% endif %}
+            {% if ckd_diagnostics.ua_null == 0 %}
+                {% if ckd_diagnostics.ua_pos == 0 %} no significant findings{% endif %}
+                {% if ckd_diagnostics.ua_pos == 1 %} haematuria with leucocyturia {% endif %}
+                {% if ckd_diagnostics.ua_pos == 2 %} haematuria without leucocyturia {% endif %}
+            {% endif %}</li>
+            {% if ckd_diagnostics.ana_dt %}<li>ANA Serology: {{ picodate('ckd_diagnostics.ana_dt') }}</li>{% endif %}
+                  
+            {% if ckd_diagnostics.anca_dt %}<li>ANCA Serology: {{ picodate('ckd_diagnostics.anca_dt') }}</li>{% endif %}
+            {% if ckd_diagnostics.c3_dt %}<li>Complements: {{ picodate('ckd_diagnostics.c3_dt') }}
+                {% if ckd_diagnostics.c3_pos == 1 %},C3 hypocomplementaemia {% endif %}
+                {% if ckd_diagnostics.c4_pos == 1 %},C4 hypocomplementaemia {% endif %}
+            </li>{% endif %}
+            {% if ckd_diagnostics.spep_dt %}<li>Serum protein electrophoresis: {{ picodate('ckd_diagnostics.spep_dt') }}</li>{% endif %}
+            {% if ckd_diagnostics.sflc_kappa_dt %}<li>SFLC assay: {{ picodate('ckd_diagnostics.sflc_kappa_dt') }}
+                {% if ckd_diagnostics.sflc_ratio_abn == 1 %}:SIGNIFICANT {% endif %}
+            </li>{% endif %}
+            {% if ckd_diagnostics.gbma_dt %}<li>Anti-GBM : {{ picodate('ckd_diagnostics.gbma_dt') }}</li>{% endif %}
+            {% if ckd_diagnostics.aca_dt %}<li>Anti-cardiolipin : {{ picodate('ckd_diagnostics.aca_dt') }}</li>{% endif %}
+            {% if ckd_diagnostics.b2gpa_dt %}<li>Anti-beta 2 glycoprotein 1 : {{ picodate('ckd_diagnostics.b2gpa_dt') }}</li>{% endif %}
+            {% if ckd_diagnostics.cryo_dt %}<li>Cryoglobulin : {{ picodate('ckd_diagnostics.cryo_dt') }}</li>{% endif %}
+            {% if ckd_diagnostics.usk_null == 1 %}<li>Renal imaging not found</li>{% endif %}
+            {% if ckd_diagnostics.ris_usk_ld %}<li>Most recent ultrasound kidney on {{ picodate('ckd_diagnostics.ris_usk_ld') }}</li>{% endif %}
+{% if ckd_diagnostics.ris_ctab_ld %}<li>Most recent CT Abdomen on {{ picodate('ckd_diagnostics.ris_ctab_ld') }}</li>{% endif %}
+            {% if ckd_diagnostics.ris_bxk_ld %}<li><b>Kidney biopsy </b>on {{ picodate('ckd_diagnostics.ris_bxk_ld') }}</li>{% endif %}
+        </ol>
+        </li>
+        {% endif %}
+
+    

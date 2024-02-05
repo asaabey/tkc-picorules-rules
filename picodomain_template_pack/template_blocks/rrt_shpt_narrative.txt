@@ -1,0 +1,8 @@
+    {% if ckd_shpt.esrd == 1 %}
+        {% if ckd_shpt.calcium1_val %}Serum calcium is {{ picoformat('ckd_shpt.calcium1_val') }} mmol/l ({{ picodate('ckd_shpt.calcium1_dt') }})</li>{% endif %}
+        {% if ckd_shpt.phos1_val %}, phosphate is {{ picoformat('ckd_shpt.phos1_val') }} mmol/l ({{ picodate('ckd_shpt.phos1_dt') }}){% endif %}
+        {% if ckd_shpt.pth1_val %}and PTH is {{ picoformat('ckd_shpt.pth1_val') }} pg/ml ({{ picodate('ckd_shpt.pth1_dt') }}).{% endif %}
+        {% if ckd_shpt.cinacalcet_ld %}Cinacalcet last scripted {{ picodate('ckd_shpt.cinacalcet_ld') }}{% endif %}
+        {% if ckd_shpt.calcitriol_ld %}Calcitriol last scripted {{ picodate('ckd_shpt.calcitriol_ld') }}{% endif %}
+        </p>
+    {% endif %}

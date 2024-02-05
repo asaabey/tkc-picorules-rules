@@ -1,0 +1,2 @@
+    {% if cvra.risk_high_ovr == 0 %}<div>Note [4.1] The Framingham risk equation was used as per heart foundation guidelines. The CARPA 7th STM uses the same methodology</div>{% endif %}
+    

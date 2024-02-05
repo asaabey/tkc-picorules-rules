@@ -1,0 +1,5 @@
+    {% if ckd.dx_ckd_diff %}<div>Recommendation [1.2] Update diagnosis to CKD stage{{ picoformat('ckd.ckd_stage') }} </div>{% endif %}
+    {% if ckd.egfr_outdated %}<div>Recommendation [1.3] Repeat renal function tests.</div>{% endif %}
+    {% if ckd.cp_mis %}<div>Recommendation [1.7] Modify care plan to include appropriate stage of CKD</div>{% endif %}
+
+    

@@ -1,0 +1,8 @@
+        <li>Glycaemic control
+        <ol>
+            {% if cd_dm_glyc_cntrl.hba1c_n_tot %}<li>Last recorded HbA1c (NGSP) is {{ picoformat('cd_dm_glyc_cntrl.hba1c_n0_val') }} % ({{ picodate('cd_dm_glyc_cntrl.hba1c_n0_dt') }})</li>{% endif %}
+            {% if cd_dm_glyc_cntrl.hba1c_max_val %}<li>Maximum HbA1c (NGSP) is {{ picoformat('cd_dm_glyc_cntrl.hba1c_max_val') }} % ({{ picodate('cd_dm_glyc_cntrl.hba1c_max_dt') }})</li>{% endif %}
+            {% if cd_dm_glyc_cntrl.n_opt_qt %}<li>Time in range {{ picoformat('cd_dm_glyc_cntrl.n_opt_qt') }} % in the last 2 years </li>{% endif %}
+        </ol>
+        </li>
+    

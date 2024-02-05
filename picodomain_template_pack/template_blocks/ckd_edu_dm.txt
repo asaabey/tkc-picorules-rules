@@ -1,0 +1,4 @@
+<br />
+<h1>Your Blood Sugar Levels</h1>
+<p>The following graph shows how your Blood Sugar Levels have been going </p>
+<br />

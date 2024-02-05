@@ -1,0 +1,16 @@
+    <br />
+        <li><b>Hypertension</b>
+        <ol>
+            <li>{% if cd_htn.htn_icpc %}Diagnosed{% endif %} Hypertension {% if cd_htn.htn_from_obs %} from observations {% endif %} {% if cd_htn.htn_fd_yr %} since {% endif %}{{ picoformat('cd_htn.htn_fd_yr') }}</li>
+            {% if cd_htn.sbp_outdated == 1 %}<li>No readings within last two years</li>{% endif %}
+            <li>{% if cd_htn.htn_rxn %}Current antihypertensive classes{% endif %}
+            <ol>
+                {% if cd_htn.htn_rxn_arb %}<li>Angiotensin receptor blocker (ARB)</li>{% endif %}
+                {% if cd_htn.htn_rxn_acei %}<li>ACE inhibitor</li>{% endif %}
+                {% if cd_htn.htn_rxn_ccb %}<li>Calcium channel blocker (CCB)</li>{% endif %}
+                {% if cd_htn.htn_rxn_bb %}<li>Beta blocker</li>{% endif %}
+                {% if cd_htn.htn_rxn_diuretic_thiazide %}<li>Thiazide diuretic</li>{% endif %}
+                {% if cd_htn.htn_rxn_diuretic_loop %}<li>Loop diuretic</li>{% endif %}
+            </ol>
+            </li>
+    

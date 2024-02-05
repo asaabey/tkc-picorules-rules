@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": null,
+  "last_updated": null,
+  "is_active": true,
+  "name": "cd_cardiac_vte",
+  "related_ruleblock": "cd_cardiac_vte",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

@@ -1,0 +1,6 @@
+    <blockquote class="blockquote">
+        {% if dmg_tkcuser_interact.corr_ld %}Last correspondence sent on {{ picodate('dmg_tkcuser_interact.corr_ld') }}{% endif %}
+        {% if dmg_tkcuser_interact.tag_sys_pr_dt %}This record has been flagged as <span class="badge badge-pill badge-danger">Partial</span> by user {{ picolookup('user_id_name', 'dmg_tkcuser_interact.tag_sys_pr_val') }} on {{ picodate('dmg_tkcuser_interact.tag_sys_pr_dt') }}{% endif %}
+    </blockquote>
+    <hr>
+    

@@ -1,0 +1,8 @@
+    {% if dmg_vm.dmg_source == 999 %}
+        <div class="alert alert-warning" role="alert">
+<p>
+<svg width="64" height="64" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="Layer 2"><path d="M0 0h24v24H0z" fill="none"></path><circle cx="11" cy="9.5" r="2.5" stroke="#b37524" stroke-linecap="round" stroke-linejoin="round" fill="none" class="stroke-000000"></circle><path d="M9 14h4a2 2 0 0 1 2 2v1h0-8 0v-1a2 2 0 0 1 2-2ZM16 11a1 1 0 0 1 1-1h0a1 1 0 0 1 1 1h0a1 1 0 0 1-.29.71l-.71.7M17 14h0" stroke="#b37524" stroke-linecap="round" stroke-linejoin="round" fill="none" class="stroke-000000"></path></g></svg>
+            Possible Interstate client,Client of non-participating PHC, Client has not attended clinic in 3 years or Linking failure </p>
+        </div>
+    {% endif %}
+    

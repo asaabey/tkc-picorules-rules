@@ -1,0 +1,9 @@
+<br />
+    <li><b>Obstetric history</b>
+        <ol>
+            {% if pregnancy.partum_n %}<li>GxP{{ picoformat('pregnancy.partum_n') }}</li>{% endif %}
+            {% if pregnancy.partum_ld %}<li>Last Partum {{ picodate('pregnancy.partum_ld') }}</li>{% endif %}
+            {% if pregnancy.partum_lscs_ld %}<li>Last C-section {{ picodate('pregnancy.partum_lscs_ld') }}</li>{% endif %}
+            {% if pregnancy.gdm_code_fd %}<li>Gestational diabetes {{ picodate('pregnancy.gdm_code_fd') }}</li>{% endif %}
+        </ol>
+    </li>

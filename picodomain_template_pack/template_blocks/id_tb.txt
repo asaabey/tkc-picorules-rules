@@ -1,0 +1,8 @@
+    <br />
+    <li><b>Tuberculosis</b>
+        <ol>
+            {% if id_tb.tb_code %}<li>TB first diagnosed {{ picodate('id_tb.tb_code') }}</li>{% endif %}
+            {% if id_tb.ltb_code %}<li>Latent TB first diagnosed {{ picodate('id_tb.ltb_code') }}</li>{% endif %}
+        </ol>
+    </li>
+    

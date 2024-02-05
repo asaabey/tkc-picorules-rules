@@ -1,0 +1,7 @@
+    <div class="card">
+                <div class="card-body">
+
+                   <span>
+                    {% if dmg_vm.dmg_source == 90 %}<h6>Nephrology clinic</h6>{% endif %}
+                    {% if dmg_vm.dmg_source == 999 %}<h6>No recent primary care episodes</h6>{% endif %}                
+                    <div class="d-none d-print-block">EID({{ picoformat('dmg_vm.eid') }})</div>

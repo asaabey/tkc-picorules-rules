@@ -1,0 +1,7 @@
+    <br />
+    <li><b>Recurrent UTI</b>
+        <ol>
+            {% if id_uti.uti_ld %}<li>Last UTI {{ picodate('id_uti.uti_ld') }}</li>{% endif %}
+        </ol>
+    </li>
+    

@@ -1,0 +1,23 @@
+        <tr>
+            <td>
+                <div>Sodium (mmol/l)</div>
+
+            </td>
+            <td>{% if ckd_labs.sodium1_val %}<strong>{{ picoformat('ckd_labs.sodium1_val') }}</strong> ({{ picodate('ckd_labs.sodium1_dt') }}){% endif %}</td>
+            <td>{% if ckd_labs.sodium2_val %}<strong>{{ picoformat('ckd_labs.sodium2_val') }}</strong> ({{ picodate('ckd_labs.sodium2_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.sodium3_val %}<strong>{{ picoformat('ckd_labs.sodium3_val') }}</strong> ({{ picodate('ckd_labs.sodium3_dt') }}){% endif %}</td>
+
+        </tr>
+        <tr>
+            <td>
+            <div>Potassium (mmol/l)</div>
+
+
+            </td>
+            <td>{% if ckd_labs.potassium1_val %}<strong>{{ picoformat('ckd_labs.potassium1_val') }}</strong>({{ picodate('ckd_labs.potassium1_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.potassium2_val %}<strong>{{ picoformat('ckd_labs.potassium2_val') }}</strong>({{ picodate('ckd_labs.potassium2_dt') }}) {% endif %}</td>
+            <td>{% if ckd_labs.potassium3_val %}<strong>{{ picoformat('ckd_labs.potassium3_val') }}</strong>({{ picodate('ckd_labs.potassium3_dt') }}) {% endif %}</td>
+
+
+        </tr>
+    

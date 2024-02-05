@@ -1,0 +1,9 @@
+    <div class="alert alert-warning" role="alert">
+
+            <h5>Alert: Unmanaged possible early albuminuric CKD with rapid progression (Trigger 4610)</h5>
+            The current glomerular stage is {{ picoformat('tg4610.ckd_stage') }} with an annual decline of {{ picoformat('tg4610.eb') }} ml/min/yr without a recent specialist encounter or referral. <br />
+            {% if tg4610.egfr_l_val %}The last eGFR was {{ picoformat('tg4610.egfr_l_val') }} ml/min on {% endif %}{{ picodate('tg4610.egfr_l_dt') }}{% if tg4610.egfr_max_val %} with a decline from {{ picoformat('tg4610.egfr_max_val') }} ml/min on {{ picodate('tg4610.egfr_max_dt') }}{% endif %}
+            {% if tg4610.ckd_null %}Please note the absence of CKD staging as this does not currently fullfill criteria. {% endif %}
+
+    </div>
+    

@@ -1,0 +1,6 @@
+<br />
+    <li><b>Bronchiectasis</b>
+        <ol>
+            {% if cd_pulm_bt.bt_fd %}<li>Diagnosed {{ picodate('cd_pulm_bt.bt_fd') }}</li>{% endif %}
+        </ol>
+    </li>

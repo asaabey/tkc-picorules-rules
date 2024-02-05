@@ -1,0 +1,10 @@
+    <div class="alert alert-warning" role="alert">
+    <h5>
+    Alert: Medication safety concern (Trigger 4660)
+    </h5>
+    This patient is on {% if tg4660.dm_rxn_bg %}a biguanide,{% endif %}{% if tg4660.dm_rxn_sglt2 %} SGLT2 inhibitor,{% endif %}{% if tg4660.rx_nsaids %} NSAIDS,{% endif %} which may be inconsistent with current renal function. <br />
+    {% if tg4660.dm_rxn_bg %}Biguanides may be rarely associated with lactic acidosis at this level of renal function. {% endif %}
+    {% if tg4660.dm_rxn_sglt2 %}SGLT2 inhibitors are relatively contra-indicated at this level of renal function. {% endif %}
+    {% if tg4660.rx_nsaids %}NSAIDS may cause additional renal injury.{% endif %}
+    </div>
+    

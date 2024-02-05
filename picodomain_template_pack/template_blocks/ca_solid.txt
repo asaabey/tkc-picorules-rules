@@ -1,0 +1,41 @@
+ <br />
+        <li><b>Solid organ cancer</b>
+            {% if ca_solid.ca_prostate_fd %}
+            <ol>
+                <li>Prostate carcinoma {{ picodate('ca_solid.ca_prostate_fd') }}</li> 
+            </ol>
+            {% endif %}
+            {% if ca_solid.ca_crc_fd %}
+            <ol>
+                <li>Colorectal carcinoma {{ picodate('ca_solid.ca_crc_fd') }}</li> 
+            </ol>
+            {% endif %}
+            {% if ca_solid.ca_rcc_fd %}
+            <ol>
+                <li>Renal cell carcinoma {{ picodate('ca_solid.ca_rcc_fd') }}</li> 
+            </ol>
+            {% endif %}
+            {% if ca_solid.ca_lung_fd %}
+            <ol>
+                <li>Lung carcinoma {{ picodate('ca_solid.ca_lung_fd') }}</li> 
+            </ol>
+            {% endif %}
+            {% if ca_solid.ca_thyroid_fd %}
+            <ol>
+                <li>Thyroid carcinoma {{ picodate('ca_solid.ca_thyroid_fd') }}</li> 
+            </ol>
+            {% endif %}
+            {% if ca_solid.ca_ovarian_fd %}
+            <ol>
+                <li>Ovarian carcinoma {{ picodate('ca_solid.ca_ovarian_fd') }}</li> 
+            </ol>
+            {% endif %}
+            {% if ca_solid.ca_endometrial_fd %}
+            <ol>
+                <li>Endometrial carcinoma {{ picodate('ca_solid.ca_endometrial_fd') }}</li> 
+            </ol>
+            {% endif %}
+            <ol>
+                {% if ca_solid.op_enc_ld %}<li>Last oncology clinic visit {{ picodate('ca_solid.op_enc_ld') }}</li>{% endif %}
+            </ol>
+        </li>

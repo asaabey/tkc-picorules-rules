@@ -1,0 +1,19 @@
+<div class="infographic">
+<div class="ckdstage_elem">
+{% if ckd.ckd_stage_1 %}<span><h3>CKD stage 1</h3><img src="https://d1xcrowuazv720.cloudfront.net/images/kidneys-s1.png" height="200" /></span>{% endif %}
+   {% if ckd.ckd_stage_2 %}<span><h3>CKD stage 2</h3><img src="https://d1xcrowuazv720.cloudfront.net/images/kidneys-s2.png" height="200" /></span>{% endif %}
+   {% if ckd.ckd_stage_3a %}<span><h3>CKD stage 3a</h3><img src="https://d1xcrowuazv720.cloudfront.net/images/kidneys-s3.png" height="200" /></span> {% endif %}
+   {% if ckd.ckd_stage_3b %}<span><h3>CKD stage 3b</h3><img src="https://d1xcrowuazv720.cloudfront.net/images/kidneys-s3.png" height="200" /></span> {% endif %}
+   {% if ckd.ckd_stage_4 %}<span><h3>CKD stage 4</h3><img src="https://d1xcrowuazv720.cloudfront.net/images/kidneys-s4.png" height="200" /></span>{% endif %}
+   {% if ckd.ckd_stage_5 %}<span><h3>CKD stage 5</h3><img src="https://d1xcrowuazv720.cloudfront.net/images/kidneys-s5.png" height="200" /></span>{% endif %}
+</div>
+<div class="gfrtitle_elem">
+    <img src="https://d1xcrowuazv720.cloudfront.net/images/gfrtitle.png">
+</div>
+<div class="gfrval_elem">
+{{ picoformat('ckd.egfr_l_val') }}
+</div>
+<div class="gfrunit_elem">
+ml/min
+</div>
+</div>

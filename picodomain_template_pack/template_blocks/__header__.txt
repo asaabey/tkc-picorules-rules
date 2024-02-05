@@ -1,0 +1,43 @@
+        <head>
+         <style> 
+            .badge-purple {color: #5032a8; background-color: #ffffff ;border: 2px solid;}
+
+            .badge-danger {color: #c90202; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+
+            .badge-warning {color: #2596be; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+
+            .badge-success {color: #32a852; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+
+            .badge-teal {color: #08768c; font-weight: 600; background-color: #ffffff ;border: 1px solid;}
+
+
+            ol {
+              list-style-type: none;
+              counter-reset: item;
+              margin: 0;
+              padding: 0;
+            }
+
+            ol > li {
+              display: table;
+              counter-increment: item;
+              margin-bottom: 0.6em;
+            }
+
+            ol > li:before {
+              content: counters(item, ".") ". ";
+              display: table-cell;
+              padding-right: 0.6em;    
+            }
+
+            li ol > li {
+              margin: 0;
+            }
+
+            li ol > li:before {
+              content: counters(item, ".") " ";
+            }
+
+        </style>
+        </head>
+    

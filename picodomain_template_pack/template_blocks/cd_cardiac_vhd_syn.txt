@@ -1,0 +1,31 @@
+           <br />
+            {% if cd_cardiac_vhd.vhd %}<li><b>Valvular heart disease</b>
+            <ol>
+                {% if cd_cardiac_vhd.vhd_ie_icd %}<li>Infective endocarditis {{ picoformat('cd_cardiac_vhd.vhd_ie_icd') }}</li>{% endif %}
+                {% if cd_cardiac_vhd.vhd_icpc %}<li>Valvular disease NOS{{ picoformat('cd_cardiac_vhd.vhd_icpc') }}</li>{% endif %}
+                {% if cd_cardiac_vhd.rhd_aet %}<li>Likely due to <b>rheumatic</b> heart disease</li>{% endif %}
+                {% if cd_cardiac_vhd.car_enc_l_dt %}<li>Last outpatient encounter {{ picodate('cd_cardiac_vhd.car_enc_l_dt') }}</li>{% endif %}
+
+                {% if cd_cardiac_vhd.mv %}<li>Mitral valve involvement
+                <ol>
+                    {% if cd_cardiac_vhd.mv_s %}<li>Mitral stenosis {{ picodate('cd_cardiac_vhd.mv_s_dt') }}</li>{% endif %}
+                    {% if cd_cardiac_vhd.mv_i %}<li>Mitral regurgitation {{ picodate('cd_cardiac_vhd.mv_i_dt') }}</li>{% endif %}
+                    {% if cd_cardiac_vhd.mv_r %}<li>Mitral replacement {{ picodate('cd_cardiac_vhd.mv_r_dt') }}</li>{% endif %}
+                </ol></li>{% endif %}
+                {% if cd_cardiac_vhd.av %}<li>Aortic valve involvement
+                <ol>
+                    {% if cd_cardiac_vhd.av_s %}<li>Aortic stenosis {{ picodate('cd_cardiac_vhd.av_s_dt') }}</li>{% endif %}
+                    {% if cd_cardiac_vhd.av_i %}<li>Aortic regurgitation {{ picodate('cd_cardiac_vhd.av_i_dt') }}</li>{% endif %}
+                    {% if cd_cardiac_vhd.av_r %}<li>Aortic replacement {{ picodate('cd_cardiac_vhd.av_r_dt') }}</li>{% endif %}
+                </ol></li>{% endif %}
+                {% if cd_cardiac_vhd.tv %}<li>Tricuspid valve involvement
+                <ol>
+                    {% if cd_cardiac_vhd.tv_s %}<li>Tricuspid stenosis {{ picodate('cd_cardiac_vhd.tv_s_dt') }}</li>{% endif %}
+                    {% if cd_cardiac_vhd.tv_i %}<li>Tricuspid regurgitation {{ picodate('cd_cardiac_vhd.tv_i_dt') }}</li>{% endif %}
+                    {% if cd_cardiac_vhd.tv_r %}<li>Tricuspid replacement {{ picodate('cd_cardiac_vhd.tv_r_dt') }}</li>{% endif %}
+                </ol></li>{% endif %}
+                {% if cd_cardiac_vhd.rxn_anticoag %}<li>On anticoagulation </li>{% endif %}
+{% if cd_cardiac_vhd.echo_ld %}<li>Last Echocardiogram {{ picodate('cd_cardiac_vhd.echo_ld') }}</li>{% endif %}
+            </ol>
+            {% endif %}
+    

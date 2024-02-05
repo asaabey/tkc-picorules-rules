@@ -1,0 +1,27 @@
+{% if cm_vm.vax_max_dt %}
+<svg width="32" height="32" fill="none" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.75 1a.75.75 0 0 1 .75.75v16.5a.75.75 0 0 1-1.5 0V1.75A.75.75 0 0 1 9.75 1Z" fill="#2d753c" class="fill-212121"></path></svg>
+<svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g data-name="Vaccine-Covid 19-Syring-Drug-Coronavirus"><path d="M52 14h-7V8h4a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H35a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4v6h-2.84A15 15 0 1 0 34 37.67V43a1 1 0 0 0 1 1h2v3a1 1 0 0 0 1 1h1v13a1.008 1.008 0 0 0 .71.96.967.967 0 0 0 .29.04.984.984 0 0 0 .83-.45l4-6A.967.967 0 0 0 45 55v-7h1a1 1 0 0 0 1-1v-3h2a1 1 0 0 0 1-1V20h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1ZM36 6V4h12v2Zm7 2v6h-2V8ZM26 38a13 13 0 1 1 13-13 13.012 13.012 0 0 1-13 13Zm17 16.7-2 3V48h2Zm2-8.7h-6v-2h6Zm3-24h-2v2h2v2h-2v2h2v2h-4v2h4v2h-2v2h2v2h-2v2h2v2H36v-5.85A14.851 14.851 0 0 0 40.12 20H48Zm3-4H39.26a15.5 15.5 0 0 0-1.29-2H51Z" fill="#2d753c" class="fill-000000"></path><path d="M30.9 26h2.379a2 2 0 1 0 0-2H30.9a4.969 4.969 0 0 0-.732-1.753l1.687-1.687a1.941 1.941 0 0 0 1.924-.51 2 2 0 1 0-3.34-.9l-1.686 1.687A4.961 4.961 0 0 0 27 20.1v-2.378a2 2 0 1 0-2 0V20.1a4.961 4.961 0 0 0-1.753.732l-1.686-1.687a2.04 2.04 0 1 0-1.415 1.414l1.687 1.687A4.969 4.969 0 0 0 21.1 24h-2.378a2 2 0 1 0 0 2H21.1a4.969 4.969 0 0 0 .732 1.753l-1.686 1.687a1.992 1.992 0 0 0-1.924.51 2 2 0 1 0 3.34.9l1.686-1.687A4.961 4.961 0 0 0 25 29.9v2.379a2 2 0 1 0 2 0V29.9a4.961 4.961 0 0 0 1.753-.732l1.686 1.687a2 2 0 1 0 1.415-1.413l-1.687-1.688A4.969 4.969 0 0 0 30.9 26ZM26 28a3 3 0 1 1 3-3 3 3 0 0 1-3 3Z" fill="#2d753c" class="fill-000000"></path><path d="M25 24h2v2h-2z" fill="#2d753c" class="fill-000000"></path></g></svg>
+{% endif %}
+
+        {% if cm_vm.vax_pf %}<span>~</span><span class="badge badge-pill badge-success">Pfizer</span>{% endif %}
+        {% if cm_vm.vax_az %}<span>~</span><span class="badge badge-pill badge-success">Aztrazenaca</span>{% endif %}
+        {% if cm_vm.vax_md %}<span>~</span><span class="badge badge-pill badge-success">Moderna</span>{% endif %}
+        {% if cm_vm.vax_max_dt %}<span>~</span><span class="badge badge-pill badge-success">{{ picodate('cm_vm.vax_max_dt') }}</span>{% endif %}
+        {% if cm_vm.vax_max_val %}<span>~</span><span class="badge badge-pill badge-success">{{ picoformat('cm_vm.vax_max_val') }}</span>{% endif %}
+        <svg width="32" height="32" fill="none" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.75 1a.75.75 0 0 1 .75.75v16.5a.75.75 0 0 1-1.5 0V1.75A.75.75 0 0 1 9.75 1Z" fill="#ad2121" class="fill-212121"></path></svg>
+
+<svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g data-name="06-clipboard"><path d="M26 19h11v44H1V19h11" fill="none" stroke="#ad2121" stroke-linejoin="round" stroke-width="2px" class="stroke-000000"></path><path d="M26 22h8v38H4V22h8" fill="none" stroke="#ad2121" stroke-linejoin="round" stroke-width="2px" class="stroke-000000"></path><path d="M12 17h14v7H12zM7 27h8v8H7zM7 38h8v8H7zM7 49h8v8H7zM18 29h14M18 33h9M29 33h3" fill="none" stroke="#ad2121" stroke-linejoin="round" stroke-width="2px" class="stroke-000000"></path><path d="m9 30 2 2 6-5M9 41l2 2 6-5M9 52l2 2 6-5M18 40h5M25 40h7M18 44h8M28 44h4M18 55h14M18 51h10M30 51h2M33 16h4l3-6 3 14 3-9 2 5 2-4h3" fill="none" stroke="#ad2121" stroke-linejoin="round" stroke-width="2px" class="stroke-000000"></path><path d="M23.3 15a13.893 13.893 0 0 1-.3-2.862 11.1 11.1 0 0 1 20-6.662 11.1 11.1 0 0 1 20 6.662 13.454 13.454 0 0 1-4.824 10.407L43 35l-4-3.283" fill="none" stroke="#ad2121" stroke-linejoin="round" stroke-width="2px" class="stroke-000000"></path></g></svg>
+        {% if cm_vm.cmcat_charlson == 1 %}<span class="badge badge-pill badge-success">Charlson cmi ~ {{ picoformat('cm_vm.cmidx_charlson') }} </span>{% endif %}
+        {% if cm_vm.cmcat_charlson == 2 %}<span class="badge badge-pill badge-warning">Charlson cmi ~ {{ picoformat('cm_vm.cmidx_charlson') }} </span>{% endif %}
+        {% if cm_vm.cmcat_charlson == 3 %}<span class="badge badge-pill badge-danger">Charlson cmi ~ {{ picoformat('cm_vm.cmidx_charlson') }} </span>{% endif %}
+
+        {% if cm_vm.cvra_cat == 2 %}<span>~</span><span class="badge badge-pill badge-warning">Mod CVR</span>{% endif %}
+        {% if cm_vm.cvra_cat == 3 %}<span>~</span><span class="badge badge-pill badge-danger">High CVR</span>{% endif %}
+
+        {% if cm_vm.dm == 1 %}<span>~</span><span class="badge badge-pill badge-danger">DM</span>{% endif %}
+        {% if cm_vm.esrd_risk == 1 %}<span>~</span><span class="badge badge-pill badge-success">ESRD Risk 1</span>{% endif %}
+        {% if cm_vm.esrd_risk == 2 %}<span>~</span><span class="badge badge-pill badge-warning">ESRD Risk 2</span>{% endif %}
+        {% if cm_vm.esrd_risk == 3 %}<span>~</span><span class="badge badge-pill badge-danger">ESRD Risk 3</span>{% endif %}
+        {% if cm_vm.esrd_risk == 4 %}<span>~</span><span class="badge badge-pill badge-danger">ESRD Risk 4</span>{% endif %}
+        {% if cm_vm.cad %}<span>~</span><span class="badge badge-pill badge-danger">CAD</span>{% endif %}
+        {% if cm_vm.rrt_flag %}<span>~</span><span class="badge badge-pill badge-danger">ESRD~RRT</span>{% endif %}

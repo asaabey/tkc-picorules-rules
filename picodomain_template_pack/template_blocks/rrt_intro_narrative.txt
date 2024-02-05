@@ -1,0 +1,9 @@
+    <br />
+    <p>
+    {% if rrt_hd_prog_vm.gender == 0 %}She {% endif %}{% if rrt_hd_prog_vm.gender == 1 %}He {% endif %} is a {{ picoformat('rrt_hd_prog_vm.age') }} year old patient reviewed today at the Dialysis clinic.{% if rrt_hd_prog_vm.enc_ld %} Previous review was on the {{ picodate('rrt_hd_prog_vm.enc_ld') }}{% endif %} 
+    {% if rrt_hd_prog_vm.ipa_sep_ld %}The last hospital admission was on the {{ picodate('rrt_hd_prog_vm.ipa_sep_ld') }}{% endif %}.
+    </p><p>
+    {% if rrt_hd_prog_vm.ibw_val %}The IBW is {{ picoformat('rrt_hd_prog_vm.ibw_val') }} set on {{ picodate('rrt_hd_prog_vm.ibw_dt') }}.{% endif %}The average blood pressure was {{ picoformat('rrt_hd_prog_vm.sbp_mu_1') }}/{{ picoformat('rrt_hd_prog_vm.dbp_mu_1') }} mmHg with a maximum of {{ picoformat('rrt_hd_prog_vm.sbp_max') }} mmHg. 
+    {% if rrt_hd_prog_vm.spktv %}Single pool Kt/V is {{ picoformat('rrt_hd_prog_vm.spktv') }}{% endif %}{% if rrt_hd_prog_vm.hours %} and dialysis durations is {{ picoformat('rrt_hd_prog_vm.hours') }} hrs.{% endif %}
+    </p>
+    

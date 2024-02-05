@@ -1,0 +1,11 @@
+    <div class="syn_synopsis_box">
+    <h3>Lab data panel</h3>
+    <table class="table table-sm table-striped">
+    <colgroup>
+          <col class="col-md-1">
+          <col class="col-md-1">
+          <col class="col-md-1">
+          <col class="col-md-1">
+    </colgroup>
+        <tbody>
+    

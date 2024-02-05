@@ -1,0 +1,40 @@
+    <hr />
+    <div class="syn_synopsis_box">
+
+    <div class="card" style="width: 640px;">
+        <div class="card-header">
+            Hb profile for the last 2 years
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <svg height={{ picoformat('hb_graph.hb_graph_canvas_y') }} width={{ picoformat('hb_graph.hb_graph_canvas_x') }}>
+                            <defs>
+                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                                    markerWidth="5" markerHeight="5">
+                                  <circle cx="5" cy="5" r="15" fill="gray" />
+                                </marker>
+                            </defs>
+                        <polyline points="{{ picoformat('hb_graph.xy_coords') }}" 
+                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="{{ picoformat('hb_graph.hb_graph_canvas_x') }}" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+                          <line x1="0" x2="{{ picoformat('hb_graph.hb_graph_canvas_x') }}" y1="{{ picoformat('hb_graph.line_lower_y') }}" y2="{{ picoformat('hb_graph.line_lower_y') }}" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+
+                          <rect x="0" y="{{ picoformat('hb_graph.line_target_upper_y') }}"  width="{{ picoformat('hb_graph.hb_graph_canvas_x') }}" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+
+                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('hb_graph.hb_graph_y_max') }}</text>
+                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('hb_graph.hb_graph_y_min') }}</text>
+                    </svg>
+            </div>
+            <div class="col-md-4">
+                        <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small>Max {{ picoformat('hb_graph.hb_max_val') }} ({{ picodate('hb_graph.hb_max_dt') }})</small></li>
+                        <li class="list-group-item"><small>Min {{ picoformat('hb_graph.hb_min_val') }} ({{ picodate('hb_graph.hb_min_dt') }})</small></li>                        
+                        </ul>
+                </div>
+        </div>        
+    </div>    
+    </div>
+
+    

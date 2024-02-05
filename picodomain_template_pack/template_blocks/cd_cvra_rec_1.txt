@@ -1,0 +1,5 @@
+    {% if cvra.cvra == 3 %}{% if cvra.cp_hicvr == 0 %}<div>Recommendation [4.1] Suggest modify care plan to include high CVR </div>{% endif %}{% endif %}
+    {% if cvra.cvra == 3 %}{% if cvra.smoke0 == 30 %}<div>Recommendation [4.2] Given high CVR status the smoking cessation is strongly advised </div>{% endif %}{% endif %}
+    {% if cvra.cvra == 2 %}{% if cvra.smoke0 == 30 %}<div>Recommendation [4.2] Given moderate CVR status the smoking cessation is advised </div>{% endif %}{% endif %}
+
+    

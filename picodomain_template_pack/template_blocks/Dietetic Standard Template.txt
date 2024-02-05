@@ -1,0 +1,25 @@
+<p>Renal Dietitian</p>
+<p>(Input by Author - Information about patient consent, referral reason (initial ax/review), persons present, current condition etc.)</p>
+<p><u>PMHx: </u>(pre-filled from TKC)</p>
+<p><u>Medications: </u>(pre-filled from TKC)</p>
+<p><u>Social History:</u> (input by author)</p>
+<p><strong><u>Assessment</u></strong></p>
+<p><u>Anthropometry: </u></p>
+<p>IBW/Weight (dependant on dialysis/CKD patient):</p>
+<p>Height: (pre-filled by TKC)</p>
+<p>BMI: (input by author?)</p>
+<p>Weight Hx: (pre-filled from TKC)</p>
+<p>SGA: (input by author)</p>
+<p>? if previous SGA results can be pre-filled by TKC if available in PCIS</p>
+<p><u>Biochemistry (date): </u>(pre-filled by TKC)</p>
+<ul>
+<li>Is it possible to select what measurements we&rsquo;d want to appear on the correspondence on a case by case basis as this changes depending on the persons stage of CKD etc.</li>
+<li>Otherwise biochemical markers we&rsquo;d like to see are: EUC, CMP, Albumin, Lipids, HbA1c, CO2, uACR, eGFR + Hb</li>
+<li>Need historical measurements/trends</li>
+</ul>
+<p><u>Clinical:</u> (input by author)</p>
+<p><u>Diet:</u> (input by author)</p>
+<p><strong><u>Nutrition Diagnosis:</u></strong> (input by author)</p>
+<p><strong><u>Intervention:</u></strong> (input by author)</p>
+<p><strong><u>Monitoring and Evaluation:</u></strong> (input by author)</p>
+<p>Electronic signature?</p>

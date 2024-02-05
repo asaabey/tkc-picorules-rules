@@ -1,0 +1,19 @@
+            {% if rrt_tx.cr_min_dt %}<li>Best graft function creatinine {{ picoformat('rrt_tx.cr_min_val') }} on {{ picodate('rrt_tx.cr_min_dt') }}</li>{% endif %} 
+            {% if rrt_tx.cr_last_dt %}<li>Last recorded creatinine {{ picoformat('rrt_tx.cr_last_val') }} on {{ picodate('rrt_tx.cr_last_dt') }}</li>{% endif %}
+            {% if rrt_tx.enc_op_ld %}<li>Last transplant clinic {{ picodate('rrt_tx.enc_op_ld') }}</li>{% endif %}
+            {% if rrt_tx.rxn %}
+            <li>Immunosuppressant regimen
+                <ol>
+                    {% if rrt_tx.rx_h02ab %}<li>Corticosteroid {{ picodate('rrt_tx.rx_h02ab') }}</li>{% endif %}
+                    {% if rrt_tx.rx_l04ad %}
+                        <li>Calcineurin inhibitor {{ picodate('rrt_tx.rx_l04ad') }}
+                        <ol>
+                            {% if rrt_tx.tac %}<li>Tacrolimus C0 {{ picoformat('rrt_tx.tdm_tac_val') }}({{ picodate('rrt_tx.tdm_tac_dt') }})</li>{% endif %}
+                        </ol>
+                    </li>{% endif %}
+                    {% if rrt_tx.rx_l04aa %}<li>Antimetabolite or MTOR class agent {{ picodate('rrt_tx.rx_l04aa') }}</li>{% endif %}
+                    {% if rrt_tx.rx_l04ax %}<li>L04AX class agent {{ picodate('rrt_tx.rx_l04ax') }}</li>{% endif %}
+                </ol>
+            </li>
+            {% endif %}
+    

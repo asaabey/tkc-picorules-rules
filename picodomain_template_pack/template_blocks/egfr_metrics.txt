@@ -1,0 +1,8 @@
+    <div class="syn_synopsis_box">
+    {% if egfr_metrics.r1_stg == 1 %}Normal renal function of {{ picoformat('egfr_metrics.egfr_r1_val') }} ml/min at entry{% endif %}
+    {% if egfr_metrics.r1_stg == 2 %}Near normal renal function of {{ picoformat('egfr_metrics.egfr_r1_val') }} ml/min at entry{% endif %}
+    {% if egfr_metrics.p3pg_signal == 1 %}Apparent progression from {{ picoformat('egfr_metrics.egfr60_last_val') }} ml/min to {{ picoformat('egfr_metrics.egfr_rn_val') }} ml/min during ({{ picodate('egfr_metrics.egfr60_last_dt') }}-{{ picodate('egfr_metrics.egfr_rn_dt') }}) {% endif %}
+    {% if egfr_metrics.est_esrd_lapsed == 0 %}{% if egfr_metrics.est_esrd_dt %}Estimated ESRD around {{ picodate('egfr_metrics.est_esrd_dt') }}.{% endif %}{% endif %}
+    {% if egfr_metrics.est_esrd_lapsed == 1 %}Imminent ESRD, with estimation boundry in the past{% endif %}
+    </div>
+    

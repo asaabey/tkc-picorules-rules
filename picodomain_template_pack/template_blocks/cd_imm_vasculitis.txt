@@ -1,0 +1,14 @@
+    <br />
+    <li><b>Systemic vasculitis</b>
+        <ol>
+            {% if cd_imm_vasculitis.gpa_fd %}<li>Granulomatosis with polyangiitis (Wegeners granulomatosis) {{ picodate('cd_imm_vasculitis.gpa_fd') }}</li>{% endif %}
+            {% if cd_imm_vasculitis.gca_fd %}<li>Giant cell arteritis/Polymaglia rheumatica {{ picodate('cd_imm_vasculitis.gca_fd') }}</li>{% endif %}
+            {% if cd_imm_vasculitis.mpo_fd %}<li>Microscopic polyaniitis {{ picodate('cd_imm_vasculitis.mpo_fd') }}</li>{% endif %}
+            {% if cd_imm_vasculitis.tak_fd %}<li>Takayasu arteritis {{ picodate('cd_imm_vasculitis.tak_fd') }}</li>{% endif %}
+            <ol>
+                {% if cd_imm_vasculitis.rxn_l01xc %}<li>Monoclonal antibody therapy {{ picodate('cd_imm_vasculitis.rxn_l01xc') }}</li>{% endif %}
+                {% if cd_imm_vasculitis.rxn_h02ab %}<li>Corticosteroid therapy {{ picodate('cd_imm_vasculitis.rxn_h02ab') }}</li>{% endif %}
+            </ol>
+        </ol>
+    </li>
+    

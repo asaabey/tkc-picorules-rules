@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": null,
+  "last_updated": null,
+  "is_active": true,
+  "name": "cd_cardiac_af",
+  "related_ruleblock": "cd_cardiac_af",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

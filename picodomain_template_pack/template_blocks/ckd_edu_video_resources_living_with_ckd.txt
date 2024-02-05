@@ -1,0 +1,14 @@
+<br />
+<h1>Lifestyle and Chronic Kidney Disease</h1>
+<br />
+<h2> Living with Kidney Disease </h2>
+<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/3/The%20Kidney%20Stories%20-%20Living%20with%20Kidney%20Disease.mp4" controls ></video>
+<br />
+<br />
+<h2> Diet and Kidney Disease </h2>
+<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/1/The%20Kidney%20Stories%20-%20Diet%20and%20Kidney%20Disease.mp4" controls ></video>
+<br />
+<br />
+<h2> When your Kidneys get Sick </h2>
+<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/8/The%20Kidney%20Stories%20-%20When%20your%20Kidneys%20Get%20Sick.mp4" controls ></video>
+<br />

@@ -1,0 +1,15 @@
+    <br />
+    <li><b>Hypothyroidism</b>
+        <ol>
+            {% if cd_endo_hypothyroid.code_fd %}<li>Cause{% endif %}
+            <ol>
+                {% if cd_endo_hypothyroid.cong_fd %}<li>Congenital {{ picodate('cd_endo_hypothyroid.cong_fd') }}</li>{% endif %}
+                {% if cd_endo_hypothyroid.rx_induced_fd %}<li>Acquired {{ picodate('cd_endo_hypothyroid.rx_induced_fd') }}</li>{% endif %}
+                {% if cd_endo_hypothyroid.post_mx_fd %}<li>Post ablative therapy {{ picodate('cd_endo_hypothyroid.post_mx_fd') }}</li>{% endif %}
+                {% if cd_endo_hypothyroid.nos_fd %}<li>Unspecified cause {{ picodate('cd_endo_hypothyroid.nos_fd') }}</li>{% endif %}
+            </ol>
+            {% if cd_endo_hypothyroid.rx_h03aa_ld %}<li>Thyroxin replacement therapy {{ picodate('cd_endo_hypothyroid.rx_h03aa_ld') }}</li>{% endif %}
+            </li>
+        </ol>
+    </li>
+    

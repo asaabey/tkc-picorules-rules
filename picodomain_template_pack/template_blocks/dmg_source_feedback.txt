@@ -1,0 +1,9 @@
+    <div class="card">
+      <div class="card-body">
+         <a href="mailto:asanga.abeyaratne@nt.gov.au?cc=renal.csu@nt.gov.au&subject=TKC Feedback EID: {{ picoformat('dmg_vm.eid') }} HRN: {{ picoformat('dmg_vm.hrn') }}" class="btn btn-primary btn-sm">TKC Feedback</a>
+         {% if dmg_vm.tkc_provider == 1 %}<a href="mailto:pratish.george@nt.gov.au?subject=TKC Enquiry EID: {{ picoformat('dmg_vm.eid') }} HRN: {{ picoformat('dmg_vm.hrn') }}" class="btn btn-warning btn-sm">Contact Specialist (Dr George)</a> {% endif %}
+         {% if dmg_vm.tkc_provider == 2 %}<a href="mailto:asanga.abeyaratne@nt.gov.au?subject=TKC Enquiry EID: {{ picoformat('dmg_vm.eid') }} HRN: {{ picoformat('dmg_vm.hrn') }}" class="btn btn-warning btn-sm">Contact Specialist (Dr Abeyaratne)</a> {% endif %}
+         
+      </div>
+    </div>
+    

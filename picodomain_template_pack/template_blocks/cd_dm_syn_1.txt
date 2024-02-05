@@ -1,0 +1,15 @@
+    <br />
+        {% if cd_dm_dx.dm_type == 1 %}<li><b>Diabetes Mellitus Type 1</b> {% if cd_dm_dx.dm1_mm %} ? {% endif %}{% endif %}
+        {% if cd_dm_dx.dm_type == 2 %}<li><b>Diabetes Mellitus Type 2</b> {% if cd_dm_dx.dm2_mm_1 %} ? {% endif %}{% if cd_dm_dx.dm2_mm_2 %} ? {% endif %}{% if cd_dm_dx.dm2_mm_3 %} ? {% endif %}{% if cd_dm_dx.dm2_mm_4 %} ? {% endif %}{% endif %}
+        <ol>
+            {% if cd_dm_dx.dm2_mm_3 %}<li>Dm2 codes predate pre-diabetes</li> {% endif %}
+            {% if cd_dm_dx.dm2_mm_4 %}<li>Codes suggestive of non type 1 or non-type 2</li> {% endif %}
+            {% if cd_dm_dx.dm_mixed %}<li>coded as type 1? on {{ picodate('cd_dm_dx.dm1_fd') }}</li>{% endif %}
+            {% if cd_dm_dx.dm_fd_year %}<li>since {{ picoformat('cd_dm_dx.dm_fd_year') }}</li>{% endif %}
+            {% if cd_dm_dx.dm_dx_uncoded %}<li>not coded on primary care EHR</li>{% endif %}
+            {% if cd_dm_dx.cd_dm_dx_code == 110000 %}<li>based only on hospital records on {{ picodate('cd_dm_dx.dm_icd_fd') }}</li>{% endif %}
+            {% if cd_dm_dx.cd_dm_dx_code == 101110 %}<li>based on primary EHR, lab tests and presence of medication {{ picodate('cd_dm_dx.dm_icpc_fd') }}</li>{% endif %}
+            {% if cd_dm_dx.cd_dm_dx_code == 111110 %}<li>based on hospital and primary EHR, lab tests and presence of medication {{ picodate('cd_dm_dx.dm_icpc_fd') }}</li>{% endif %}
+            {% if cd_dm_dx.cd_dm_dx_code == 100000 %}<li>based on a single HbA1c of {{ picoformat('cd_dm_dx.gluc_hba1c_high_f_val') }} on {{ picodate('cd_dm_dx.gluc_hba1c_high_f_dt') }}</li>{% endif %}
+
+    

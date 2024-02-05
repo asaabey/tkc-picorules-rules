@@ -1,0 +1,6 @@
+            <li>Solute clearance adequacy
+                <ol>
+                    {% if rrt_hd_adequacy.urr %}<li>URR {{ picoformat('rrt_hd_adequacy.urr') }} spKT/V {{ picoformat('rrt_hd_adequacy.spktv') }} ({{ picodate('rrt_hd_adequacy.post_u_dt') }}) {% if rrt_hd_adequacy.err_urr_flag %}Sampling error ?{% endif %}</li>{% endif %}
+                    {% if rrt_hd_adequacy.low_urr_flag %}<li><b>Persistently low adequacy target</b></li>{% endif %}
+                </ol>
+            </li>

@@ -1,0 +1,18 @@
+ {% if cd_dm_dx.dm_rxn == 0 %}
+                <li>No medications recorded</li>
+    {% endif %}
+    {% if cd_dm_dx.dm_rxn %}
+                <li>Current medication classes
+                <ol>
+                    {% if cd_dm_dx.dm_rxn_su %}<li>sulphonylurea ({{ picodate('cd_dm_dx.dm_rxn_su') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_bg %}<li>biguanide ({{ picodate('cd_dm_dx.dm_rxn_bg') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_ins_long %}<li>long-acting insulin ({{ picodate('cd_dm_dx.dm_rxn_ins_long') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_ins_int %}<li>Intermediate-acting insulin ({{ picodate('cd_dm_dx.dm_rxn_ins_int') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_ins_mix %}<li>Mixed insulin ({{ picodate('cd_dm_dx.dm_rxn_ins_mix') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_ins_short %}<li>short-acting insulin ({{ picodate('cd_dm_dx.dm_rxn_ins_short') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_glp1 %}<li>GLP1 analogue ({{ picodate('cd_dm_dx.dm_rxn_glp1') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_dpp4 %}<li>DPP4 inhibitor ({{ picodate('cd_dm_dx.dm_rxn_dpp4') }})</li>{% endif %}
+                    {% if cd_dm_dx.dm_rxn_sglt2 %}<li>SGLT2 inhibitor ({{ picodate('cd_dm_dx.dm_rxn_sglt2') }})</li>{% endif %}
+                </ol>
+                </li>
+    {% endif %}

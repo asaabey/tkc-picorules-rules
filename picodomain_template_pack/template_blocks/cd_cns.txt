@@ -1,0 +1,24 @@
+    <br />
+        {% if cd_cns.md %}<b><li>Mood disorder</b>
+        <ol>
+            <li>Diagnosed ({{ picodate('cd_cns.code_md_dt') }}) and medicated</li>
+        </ol></li>
+        {% endif %}
+        {% if cd_cns.schiz %}<b><li>Psychotic disorder</b>
+        <ol>
+            {% if cd_cns.code_shiz_dt %}<li>Diagnosed ({{ picoformat('cd_cns.code_shiz_dt') }}) and medicated</li>{% endif %}
+            {% if cd_cns.rx_n05a_dt %}<li>medicated for ?</li>{% endif %}
+        </ol></li>
+        {% endif %}
+        {% if cd_cns.epil %}<b><li>Seizure disorder</b>
+        <ol>
+            {% if cd_cns.code_epil_dt %}<li>Diagnosed ({{ picodate('cd_cns.code_epil_dt') }}) and medicated</li>{% endif %}
+            {% if cd_cns.rx_n03_dt %}<li>Medicated for ({{ picoformat('cd_cns.rx_n03_dt') }})</li>{% endif %}
+        </ol></li>
+        {% endif %}
+        {% if cd_cns.pd %}<b><li>Parkinson disease</b>
+        <ol>
+            <li>Diagnosed ({{ picodate('cd_cns.code_pd_dt') }}) and medicated</li>
+        </ol></li>
+        {% endif %}
+    

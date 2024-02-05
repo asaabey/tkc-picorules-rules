@@ -1,0 +1,9 @@
+        <li>Dialysis attendance metrics
+        <ol>
+            {% if rrt_1_metrics.loc_fixed %}<li>{{ picolookup('loc_sublocality', 'rrt_1_metrics.loc_def') }} (sessions={{ picoformat('rrt_1_metrics.loc_1_n') }})</li>{% endif %}
+            {% if rrt_1_metrics.tspan_y %}<li>Dialysis vintage {{ picoformat('rrt_1_metrics.tspan_y') }} years</li>{% endif %}
+
+            <li>Thrice weekly target achievement {{ picoformat('rrt_1_metrics.hd_oe') }}% </li>
+        </ol>
+        </li>
+    

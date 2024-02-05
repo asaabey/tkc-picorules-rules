@@ -1,0 +1,9 @@
+        
+            <li>Breast carcinoma {{ picodate('ca_breast.code_fd') }} 
+            <ol>
+                {% if ca_breast.rxnc_l02bg %}<li>Aromatase inhibitor {{ picodate('ca_breast.rxnc_l02bg') }}</li>{% endif %}
+                {% if ca_breast.rxnc_l02ba %}<li>Anti-oestrogren therapy {{ picodate('ca_breast.rxnc_l02ba') }}</li>{% endif %}
+            </ol>
+            </li>
+        
+    

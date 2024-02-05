@@ -1,0 +1,22 @@
+    {% if at_risk.at_risk == 1 %}
+    <li><b>At risk of CKD</b>
+        <ol>
+            <li>CKD criteria not met</li>
+            <li>Risk factors</li>
+            <ol>
+                {% if at_risk.dm %}<li>Diabetes mellitus</li>{% endif %}
+                {% if at_risk.htn %}<li>Hypertension</li>{% endif %}
+                {% if at_risk.cad %}<li>Coronary artery disease</li>{% endif %}
+                {% if at_risk.obesity %}<li>Obesity</li>{% endif %}
+                {% if at_risk.struc %}<li>GU tract abnormalities</li>{% endif %}
+                {% if at_risk.lit %}<li>Nephro-Urolithiasis</li>{% endif %}
+                {% if at_risk.aki %}<li>AKI {{ picodate('at_risk.aki_ld') }}</li>{% endif %}
+                {% if at_risk.gn %}<li>Resolved Glomerulonephritis</li>{% endif %}
+                {% if at_risk.tid %}<li>Tubulo-interstitial disease</li>{% endif %}
+                {% if at_risk.obst %}<li>Obstructive uropathy</li>{% endif %}
+                {% if at_risk.cti %}<li>Connective tissue disorder</li>{% endif %}
+            </ol>
+        </ol>
+        </li>
+    {% endif %}
+    

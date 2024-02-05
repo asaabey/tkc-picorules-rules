@@ -1,0 +1,4 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('ckd_edu_video_resources_treatment_options') }}
+{% endblock content %}

@@ -1,0 +1,26 @@
+<h4>Comorbidities</h4>
+<ul>
+{% if cd_multi_m1.dm_type == 1 %}<li><div snomed-id="46635009">Diabetes Mellitus Type 1 ({{ picoformat('cd_multi_m1.dm_fd_year') }}) {% if cd_multi_m1.dm1_mm %} ? {% endif %}</div></li>{% endif %}
+{% if cd_multi_m1.dm_type == 2 %}<li><div snomed-id="44054006">Diabetes Mellitus Type 2 ({{ picoformat('cd_multi_m1.dm_fd_year') }}) {% if cd_multi_m1.dm2_mm_1 %} ? {% endif %}{% if cd_multi_m1.dm2_mm_2 %} ? {% endif %}{% if cd_multi_m1.dm2_mm_3 %} ? {% endif %}{% if cd_multi_m1.dm2_mm_4 %} ? {% endif %}</div></li>{% endif %}
+{% if cd_multi_m1.htn_yr %}<li>Hypertension ({{ picoformat('cd_multi_m1.htn_yr') }})</li>{% endif %}
+{% if cd_multi_m1.ckd == 1 %}<li>CKD Stage 1</li>{% endif %}
+{% if cd_multi_m1.ckd == 2 %}<li>CKD Stage 2</li>{% endif %}
+{% if cd_multi_m1.ckd == 3 %}<li>CKD Stage 3a</li>{% endif %}
+{% if cd_multi_m1.ckd == 4 %}<li>CKD Stage 3b</li>{% endif %}
+{% if cd_multi_m1.ckd == 5 %}<li>CKD Stage 4</li>{% endif %}
+{% if cd_multi_m1.ckd == 6 %}<li>CKD Stage 5</li>{% endif %}
+{% if cd_multi_m1.rrt == 1 %}<li>End stage renal failure - Haemodialysis</li>{% endif %}
+{% if cd_multi_m1.rrt == 2 %}<li>End stage renal failure - Peritoneal dialysis</li>{% endif %}
+{% if cd_multi_m1.rrt == 3 %}<li>End stage renal failure - Transplant</li>{% endif %}
+{% if cd_multi_m1.rrt == 4 %}<li>End stage renal failure - Home haemo dialysis</li>{% endif %}
+{% if cd_multi_m1.cad_yr %}<li>Coronary artery disease ({{ picoformat('cd_multi_m1.cad_yr') }})</li>{% endif %}
+{% if cd_multi_m1.cvd == 1 %}<li>Cerebrovascular disease</li>{% endif %}
+{% if cd_multi_m1.pvd == 1 %}<li>Peripheral vascular disease</li>{% endif %}
+{% if cd_multi_m1.obesity == 1 %}<li>Obesity</li>{% endif %}
+{% if cd_multi_m1.rhd_yr %}<li>Rheumatic heart disease ({{ picoformat('cd_multi_m1.rhd_yr') }})</li>{% endif %}
+{% if cd_multi_m1.hepb == 1 %}<li>Chronic hepatitis B</li>{% endif %}
+{% if cd_multi_m1.cd_cirrhosis_yr %}<li>Cirrhosis ({{ picoformat('cd_multi_m1.cd_cirrhosis_yr') }})</li>{% endif %}
+{% if cd_multi_m1.ca_breast_yr %}<li>Carcinoma of the breast ({{ picoformat('cd_multi_m1.ca_breast_yr') }})</li>{% endif %}
+{% if cd_multi_m1.cd_pulm_copd_yr %}<li>Chronic Obstructive pulmonary disease ({{ picoformat('cd_multi_m1.cd_pulm_copd_yr') }})</li>{% endif %}
+{% if cd_multi_m1.cd_pulm_bt_yr %}<li>Bronchiectasis ({{ picoformat('cd_multi_m1.cd_pulm_bt_yr') }})</li>{% endif %}
+</ul>

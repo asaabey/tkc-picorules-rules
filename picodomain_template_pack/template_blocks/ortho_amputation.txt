@@ -1,0 +1,13 @@
+<br />
+    <li><b>Limb amputation</b>
+        <ol>
+            {% if ortho_amputation.prost_clinic_fd %}<li>First orthotic/prosthetic clinic {{ picodate('ortho_amputation.prost_clinic_fd') }}</li>{% endif %}
+            {% if ortho_amputation.ta_ld %}<li>Toe Amputation {{ picodate('ortho_amputation.ta_ld') }}</li>{% endif %}
+            {% if ortho_amputation.aa_ld %}<li>Amputation at Ankle {{ picodate('ortho_amputation.aa_ld') }}</li>{% endif %}
+            {% if ortho_amputation.mta_ld %}<li>Mid-Tarsal Amputation {{ picodate('ortho_amputation.mta_ld') }}</li>{% endif %}
+            {% if ortho_amputation.tma_ld %}<li>Trans-Metatarsal Amputation {{ picodate('ortho_amputation.tma_ld') }}</li>{% endif %}
+            {% if ortho_amputation.aka_ld %}<li>Above knee Amputation{{ picodate('ortho_amputation.aka_ld') }}</li>{% endif %}
+            {% if ortho_amputation.bka_ld %}<li>Below knee Amputation {{ picodate('ortho_amputation.bka_ld') }}</li>{% endif %}
+            {% if ortho_amputation.ha_ld %}<li>Amputation at Hip {{ picodate('ortho_amputation.ha_ld') }}</li>{% endif %}
+        </ol>
+    </li>

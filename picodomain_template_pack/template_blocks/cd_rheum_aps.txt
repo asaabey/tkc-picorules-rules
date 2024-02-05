@@ -1,0 +1,12 @@
+    <br />
+    <li><b>Antiphospholipid syndrome</b>
+        <ol>
+            <li>Diagnosed {{ picodate('cd_rheum_aps.aps_fd') }} 
+            <ol>
+                {% if cd_rheum_aps.rxn_anticoag_dt %}<li>Anticoagulated {{ picodate('cd_rheum_aps.rxn_anticoag_dt') }}</li>{% endif %}
+            </ol>
+            </li>
+            {% if cd_rheum_aps.op_enc_ld %}<li>Last specialist clinic {{ picodate('cd_rheum_aps.op_enc_ld') }}</li>{% endif %}
+        </ol>
+    </li>
+    

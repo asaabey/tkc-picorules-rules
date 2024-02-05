@@ -1,0 +1,14 @@
+    <br />
+    <li><b>Chronic Hepatitis B</b>
+        <ol>
+            {% if cd_hepb_coded.hepb_imm %}
+                <li>Immune
+                <ol>
+                    {% if cd_hepb_coded.hepb_imm_vac %}<li>by vaccination {{ picodate('cd_hepb_coded.hepb_imm_vac') }}</li>{% endif %}
+                    {% if cd_hepb_coded.hepb_imm_inf %}<li>by infection {{ picodate('cd_hepb_coded.hepb_imm_inf') }}</li>{% endif %}
+                </ol>
+                </li>
+            {% endif %}
+        </ol>
+    </li>
+    

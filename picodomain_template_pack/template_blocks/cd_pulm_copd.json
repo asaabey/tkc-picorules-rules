@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": null,
+  "last_updated": null,
+  "is_active": true,
+  "name": "cd_pulm_copd",
+  "related_ruleblock": "cd_pulm_copd",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

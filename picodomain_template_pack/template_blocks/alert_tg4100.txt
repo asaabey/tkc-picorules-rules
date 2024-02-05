@@ -1,0 +1,10 @@
+    <div class="alert alert-warning" role="alert">
+    <h5>Alert: Acute kidney injury in community (Trigger 4100)</h5>
+    Baseline creatinine is estimated to be {{ picoformat('tg4100.cr_base') }} umol/l and the maxima is {{ picoformat('tg4100.cr_max_1y') }} umol/l on {{ picodate('tg4100.cr_max_ld_1y') }}. <br /> 
+    This is consistent with an acute kidney injury (AKIN stage 2 or above). 
+    {% if tg4100.aki_outcome == 3 %}There is no resolution. {% endif %} 
+    {% if tg4100.aki_outcome == 2 %}There appears to be partial resolution. {% endif %}
+    {% if tg4100.aki_outcome == 1 %}There appears to be complete resolution. {% endif %} 
+    last recorded creatinine is {{ picoformat('tg4100.cr_lv') }}umol/l on {{ picodate('tg4100.cr_ld') }}.
+    </div>
+    

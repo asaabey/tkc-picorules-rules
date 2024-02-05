@@ -1,0 +1,14 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('ckd_edu_heading') }}
+{{ pico_template_block('ckd_edu_my_ckd') }}
+{{ pico_template_block('graph_egfr2') }}
+{{ pico_template_block('ckd_edu_ckd_stages_pic') }}
+{{ pico_template_block('ckd_edu_bp') }}
+{{ pico_template_block('graph_bp') }}
+{{ pico_template_block('cd_htn_bp_control') }}
+{{ pico_template_block('ckd_edu_dm') }}
+{{ pico_template_block('hba1c_graph') }}
+{{ pico_template_block('ckd_edu_iron_story') }}
+{{ pico_template_block('hb_graph') }}
+{% endblock content %}

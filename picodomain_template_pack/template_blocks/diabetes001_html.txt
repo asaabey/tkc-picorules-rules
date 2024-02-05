@@ -1,0 +1,44 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('__header__') }}
+{{ pico_template_block('dmg_phc_null') }}
+{{ pico_template_block('dmg_eid_alt') }}
+{{ pico_template_block('dmg_tkcuser_interact') }}
+{{ pico_template_block('_top_banner_begin') }}
+{{ pico_template_block('dmg_network_summary') }}
+{{ pico_template_block('dmg_loc_summary') }}
+{{ pico_template_block('dmg_hosp_summary') }}
+{{ pico_template_block('_top_banner_end') }}
+{{ pico_template_block('dmg_residency') }}
+{{ pico_template_block('alert_tg4620') }}
+{{ pico_template_block('alert_tg4610') }}
+{{ pico_template_block('alert_tg4100') }}
+{{ pico_template_block('alert_tg4410') }}
+{{ pico_template_block('alert_tg4720') }}
+{{ pico_template_block('alert_tg4660') }}
+{{ pico_template_block('alert_tg2610') }}
+{{ pico_template_block('cd_cvra_banner_1') }}
+{{ pico_template_block('__frame_begin__') }}
+{{ pico_template_block('__synth_left_begin__') }}
+{{ pico_template_block('cd_dm_syn_1') }}
+{{ pico_template_block('cd_dm_syn_2') }}
+{{ pico_template_block('cd_dm_syn_3') }}
+{{ pico_template_block('cd_dm_syn_4') }}
+{{ pico_template_block('cd_dm_syn_5') }}
+{{ pico_template_block('cd_dm_syn_end') }}
+{{ pico_template_block('cd_obesity') }}
+{{ pico_template_block('cd_htn_syn_1') }}
+{{ pico_template_block('cd_htn_bp_control') }}
+{{ pico_template_block('cd_htn_syn_end') }}
+{{ pico_template_block('__synth_left_end__') }}
+{{ pico_template_block('__synth_right_begin__') }}
+{{ pico_template_block('multi disease m1 level') }}
+{{ pico_template_block('rx_syn_2') }}
+{{ pico_template_block('ckd_labs_ga') }}
+{{ pico_template_block('Observation synth') }}
+{{ pico_template_block('__synth_right_end__') }}
+{{ pico_template_block('__frame_end__') }}
+{{ pico_template_block('hba1c_graph') }}
+{{ pico_template_block('graph_bp') }}
+{{ pico_template_block('ldl_graph') }}
+{% endblock content %}
