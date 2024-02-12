@@ -15,7 +15,7 @@ dod => rout_dmg.dod.val.bind();
 
 ckd => rout_ckd.ckd.val.bind();
 
-csu => eadv.csu_action_tg4123.dt.last();
+csu_act => eadv.[csu_action_tg4123]._.lastdv();
 
 ren_enc => rout_engmnt_renal.enc_renal.val.bind();
 
@@ -24,7 +24,7 @@ mbs => eadv.[mbs_%].dt.last().where(dt > sysdate - 180);
 
 dmg_source => rout_dmg_source.dmg_source.val.bind();
 
-ex_flag : {dod!? or csu!? or dmg_source=999 => 1  },{=>0};
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1  },{=>0};
 
 
 

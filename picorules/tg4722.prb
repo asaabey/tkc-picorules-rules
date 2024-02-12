@@ -15,7 +15,7 @@ dod => rout_dmg.dod.val.bind();
         txt:"previous CSU action and assumes that the trigger will never fire again"
 });
 
-csu_act => eadv.csu_action_tg4722._.lastdv();
+csu_act => eadv.[csu_action_tg4722]._.lastdv();
 
 dmg_source => rout_dmg_source.dmg_source.val.bind();
 
@@ -36,7 +36,7 @@ rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
 
 ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
 
-tg4722 : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
+tg4722 : { (hd_start=1 or pd_start=1) and ex_flag=0 => 1},{=>0};
 
 #define_attribute(
         tg4722,

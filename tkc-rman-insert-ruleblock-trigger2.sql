@@ -754,7 +754,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4720._.lastdv();
+        csu_act => eadv.[csu_action_tg4720]._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -773,9 +773,9 @@ BEGIN
         
         rrt_start :{ .=> greatest_date(hd_dt_min,pd_dt_min)};
         
-        ex_flag : {dod!? or dmg_source=999 => 1},{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
           
-        tg4720 : { hd_start=1 or pd_start=1 and ex_flag=0 or csu_act_dt!? => 1},{=>0};
+        tg4720 : { (hd_start=1 or pd_start=1) and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 tg4720,
@@ -819,7 +819,7 @@ BEGIN
                 txt:"previous CSU action and assumes that the trigger will never fire again"
         });  
         
-        csu_act => eadv.csu_action_tg4722._.lastdv();
+        csu_act => eadv.[csu_action_tg4722]._.lastdv();
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
         
@@ -840,7 +840,7 @@ BEGIN
         
         ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1},{=>0};
           
-        [[rb_id]] : { hd_start=1 or pd_start=1 and ex_flag=0 => 1},{=>0};
+        [[rb_id]] : { (hd_start=1 or pd_start=1) and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
                 [[rb_id]],
@@ -1129,7 +1129,7 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
-        csu => eadv.csu_action_tg4122.dt.last();
+        csu_act => eadv.[csu_action_tg4122]._.lastdv();
 
         ren_enc => rout_engmnt_renal.enc_renal.val.bind();
 
@@ -1137,7 +1137,7 @@ BEGIN
         
         dmg_source => rout_dmg_source.dmg_source.val.bind();
 
-        ex_flag : {dod!? or csu!? or dmg_source=999 => 1  },{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1  },{=>0};
 
           
         tg4122 : {ckd = 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
@@ -1184,7 +1184,7 @@ BEGIN
         
         ckd => rout_ckd.ckd.val.bind();
         
-        csu => eadv.csu_action_tg4123.dt.last();
+        csu_act => eadv.[csu_action_tg4123]._.lastdv();
 
         ren_enc => rout_engmnt_renal.enc_renal.val.bind();
 
@@ -1193,7 +1193,7 @@ BEGIN
 
         dmg_source => rout_dmg_source.dmg_source.val.bind();
 
-        ex_flag : {dod!? or csu!? or dmg_source=999 => 1  },{=>0};
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1  },{=>0};
 
 
           
