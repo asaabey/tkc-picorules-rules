@@ -8,8 +8,8 @@
 {{ pico_template_block('dmg_network_summary') }}
 {{ pico_template_block('dmg_loc_summary') }}
 {{ pico_template_block('dmg_hosp_summary') }}
-{{ pico_template_block('_top_banner_end') }}
 {{ pico_template_block('dmg_residency') }}
+{{ pico_template_block('cd_cvra_banner_1') }}
 {{ pico_template_block('alert_tg4620') }}
 {{ pico_template_block('alert_tg4610') }}
 {{ pico_template_block('alert_tg4100') }}
@@ -17,7 +17,7 @@
 {{ pico_template_block('alert_tg4720') }}
 {{ pico_template_block('alert_tg4660') }}
 {{ pico_template_block('alert_tg2610') }}
-{{ pico_template_block('cd_cvra_banner_1') }}
+{{ pico_template_block('_top_banner_end') }}
 {{ pico_template_block('__frame_begin__') }}
 {{ pico_template_block('__synth_left_begin__') }}
 {{ pico_template_block('cd_dm_syn_1') }}
