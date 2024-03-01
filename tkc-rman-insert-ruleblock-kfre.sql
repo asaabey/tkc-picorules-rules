@@ -154,7 +154,7 @@ BEGIN
         
         cvra => eadv.asm_cvra.val.lastdv();
         
-        tc => eadv.lab_bld_cholesterol_tot.va.lastdv();
+        tc => eadv.lab_bld_cholesterol_tot._.lastdv();
         
         sbp130 => eadv.obs_bp_systolic.val.last();
         

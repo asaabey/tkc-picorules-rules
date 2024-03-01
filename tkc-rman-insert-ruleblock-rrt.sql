@@ -166,7 +166,7 @@ BEGIN
         
         /* homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();*/        
         
-        ren_enc => eadv.[enc_op%].dt.max();
+        ren_enc => eadv.[enc_op_%].dt.max();
         
         #doc(,
             {

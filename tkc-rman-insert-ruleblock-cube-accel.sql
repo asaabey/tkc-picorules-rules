@@ -200,6 +200,7 @@ BEGIN
         
         assert_level : {. => 100000 + ckd_pers*10000 + asm_viol_ex*1000 + ckd_prog*100};
 
+        [[rb_id]] : { . => 1};
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -234,7 +235,7 @@ BEGIN
         
         alive => rout_ckd_dense.alive.val.bind();
         
-        ckd_icpc_val => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
+        ckd_icpc_ld => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039].dt.max();
         
         dm_icd_fd => eadv.[icd_e08%,icd_e09%,icd_e10%,icd_e11%,icd_e14%].dt.min();
         

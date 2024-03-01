@@ -22,7 +22,7 @@ ref_renal : { coalesce(ref_ren_n,0)>0 =>1},{=>0};
 });
 
 enc_n => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.count();
-enc_ld => eadv.[enc_op_ren%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max();
+enc_ld => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max();
 enc_fd => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.min();
 
 enc_ld_1y => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max().where(dt>sysdate-365);

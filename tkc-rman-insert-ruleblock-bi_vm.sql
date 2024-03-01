@@ -21,7 +21,6 @@ BEGIN
             }
         );
 
-        dmg_eid => rout_dmg.eid._.bind();
         dmg_hrn_last => rout_dmg_hrn.hrn_last._.bind();
         dmg_loc_mode_24 => rout_dmg_loc.loc_mode_24._.bind();
         dmg_loc_mode => rout_dmg_loc.loc_mode._.bind();
@@ -53,6 +52,8 @@ BEGIN
 
         ckd_assert_level => rout_ckd.assert_level._.bind();
         ckd_access => rout_ckd_access.ckd_access._.bind();
+
+        bi_vm: { . => 1 }
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

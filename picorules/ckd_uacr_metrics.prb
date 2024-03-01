@@ -58,7 +58,7 @@ a_pers : {coalesce(acr_1m_v3_n,0)>0 => 1},{=>0};
     txt : "check for uACR assumption violation"
 });
 
-u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes].dt.lastdv().where(dt > acr_l_dt-14 and dt < acr_l_dt+14);
+u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes]._.lastdv().where(dt > acr_l_dt-14 and dt < acr_l_dt+14);
 
 a_asm_viol_ex : { u_leuc_val=0 =>1},{=>0};
 

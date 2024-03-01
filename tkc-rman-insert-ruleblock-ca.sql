@@ -30,7 +30,7 @@ BEGIN
         );
         
         
-        op_enc_ld => eadv.[enc_op_onc%].dt.max();
+        op_enc_ld => eadv.[enc_op_onc_%].dt.max();
         
         
         [[rb_id]] : { op_enc_ld!? => 1},{=>0};

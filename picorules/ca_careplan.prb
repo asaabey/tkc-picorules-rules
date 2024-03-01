@@ -9,7 +9,7 @@
 );
 
 
-op_enc_ld => eadv.[enc_op_onc%].dt.max();
+op_enc_ld => eadv.[enc_op_onc_%].dt.max();
 
 
 ca_careplan : { op_enc_ld!? => 1},{=>0};

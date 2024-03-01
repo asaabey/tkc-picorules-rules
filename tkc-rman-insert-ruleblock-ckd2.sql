@@ -849,7 +849,7 @@ BEGIN
             txt : "check for uACR assumption violation"
         });
         
-        u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes].dt.lastdv().where(dt > acr_l_dt-14 and dt < acr_l_dt+14);
+        u_leuc => eadv.[lab_ua_poc_leucocytes,lab_ua_leucocytes]._.lastdv().where(dt > acr_l_dt-14 and dt < acr_l_dt+14);
         
         a_asm_viol_ex : { u_leuc_val=0 =>1},{=>0};
         
@@ -971,7 +971,7 @@ BEGIN
         });
         
         enc_n => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.count();
-        enc_ld => eadv.[enc_op_ren%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max();
+        enc_ld => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max();
         enc_fd => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.min();
 
         enc_ld_1y => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep].dt.max().where(dt>sysdate-365);
