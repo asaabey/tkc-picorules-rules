@@ -24,7 +24,17 @@ hd0_2w_f : { hd_dt_2w!? => 1},{=>0};
 
 hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
 
-hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ksc,enc_op_ren_gpd,enc_op_ren_rsr].dt.max();
-
+hd_clinic_ld => eadv.[
+  enc_op_ren_nru,
+  enc_op_ren_wdd,
+  enc_op_ren_gpd,
+  enc_op_ren_rsr,
+  enc_op_rdu_nru,
+  enc_op_rdu_wdd,
+  enc_op_rdu_gpd,
+  enc_op_rdu_rsr,
+  enc_op_med_ksc,
+  enc_op_med_rpc
+].dt.max();
 
 rrt_journey : {. =>1};

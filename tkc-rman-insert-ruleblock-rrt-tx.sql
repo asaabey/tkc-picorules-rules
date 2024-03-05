@@ -46,7 +46,7 @@ BEGIN
         
         cr_last => eadv.lab_bld_creatinine._.lastdv().where(dt > tx_dt);
         
-        enc_op_ld => eadv.enc_op_ren_rnt.dt.last();
+        enc_op_ld => eadv.[enc_op_ren_rnt, enc_op_rdu_rnt].dt.last();
         
         rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
         

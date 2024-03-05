@@ -69,7 +69,7 @@ BEGIN
         
         pd_ex_dt => eadv.[caresys_1311000].dt.min();
         
-        pd_enc_ld => eadv.[enc_op_ren_hpd].dt.max();
+        pd_enc_ld => eadv.[enc_op_ren_hpd, enc_op_rdu_hpd].dt.max();
 
         pd_dt : {. => greatest_date(pd_dt0,pd_enc_ld) };
 
@@ -118,13 +118,29 @@ BEGIN
         
         tx_multi_current : { tx_multi_flag =1 and coalesce(hd_tx2,0)=0 =>1},{=>0};        
         
-        tx_enc_op_fd => eadv.[enc_op_ren_rnt,enc_op_ren_rtc, enc_op_ren_rtn, enc_op_ren_rcf].dt.min();
-        
-        tx_enc_op_ld => eadv.[enc_op_ren_rnt, enc_op_ren_rtc, enc_op_ren_rtn, enc_op_ren_rcf].dt.max();
+        tx_enc_op_fd => eadv.[
+          enc_op_ren_rnt,
+          enc_op_ren_rtc,
+          enc_op_ren_rtn,
+          enc_op_ren_rcf,
+          enc_op_rdu_rnt,
+          enc_op_rdu_rtc,
+          enc_op_rdu_rtn,
+          enc_op_rdu_rcf
+        ].dt.min();
+
+        tx_enc_op_ld => eadv.[
+          enc_op_ren_rnt,
+          enc_op_ren_rtc,
+          enc_op_ren_rtn,
+          enc_op_ren_rcf,
+          enc_op_rdu_rnt,
+          enc_op_rdu_rtc,
+          enc_op_rdu_rtn,
+          enc_op_rdu_rcf
+        ].dt.max();
         
         tx_enc_active : {tx_enc_op_ld > sysdate - 365 =>1 },{=>0};
-        
-        
         
         tx_coding : { tx_dt!? =>1 },{=>0}; 
         
@@ -157,14 +173,19 @@ BEGIN
         /* adjusted switch order to catpure home haemo 18-08-21*/
         homedx_icpc_ld => eadv.[icpc_u59j99].dt.max();
         
-        homedx_enc_ld => eadv.[enc_op_ren_hdp,enc_op_ren_rhd].dt.max();
+        homedx_enc_ld => eadv.[
+          enc_op_ren_hdp,
+          enc_op_ren_rhd,
+          enc_op_rdu_hdp,
+          enc_op_rdu_rhd
+        ].dt.max();
         
         /* adjusted date to account for delayed data entry 03-02-23 */
         /* adjusted to prioritise home enc 29-11-23 */
         
         homedx_dt : { homedx_enc_ld!? => homedx_enc_ld},{ homedx_icpc_ld!? => homedx_icpc_ld};
         
-        /* homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();*/        
+        /* homedx_dt => eadv.[icpc_u59j99,enc_op_ren_hdp,enc_op_ren_rhd].dt.max();*/
         
         ren_enc => eadv.[enc_op_%].dt.max();
         
@@ -372,8 +393,18 @@ BEGIN
         
         hd_tr => eadv.icd_z49_1.dt.temporal_regularity();
         
-        hd_clinic_ld => eadv.[enc_op_ren_nru,enc_op_med_rpc,enc_op_ren_wdd,enc_op_med_ksc,enc_op_ren_gpd,enc_op_ren_rsr].dt.max();
-        
+        hd_clinic_ld => eadv.[
+          enc_op_ren_nru,
+          enc_op_ren_wdd,
+          enc_op_ren_gpd,
+          enc_op_ren_rsr,
+          enc_op_rdu_nru,
+          enc_op_rdu_wdd,
+          enc_op_rdu_gpd,
+          enc_op_rdu_rsr,
+          enc_op_med_ksc,
+          enc_op_med_rpc
+        ].dt.max();
         
         [[rb_id]] : {. =>1};
     ';
