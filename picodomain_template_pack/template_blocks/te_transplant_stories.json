@@ -1,10 +1,10 @@
 {
   "author": null,
-  "description": "dmg_eid_alt",
+  "description": "te_transplant_stories",
   "last_updated": null,
   "is_active": true,
-  "name": "dmg_eid_alt",
-  "related_ruleblock": "dmg_eid_alt",
+  "name": "te_transplant_stories",
+  "related_ruleblock": null,
   "is_composition": false,
   "is_mhr": false,
   "version": null

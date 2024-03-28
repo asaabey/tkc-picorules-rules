@@ -65,7 +65,7 @@ BEGIN
         homedx_dt => eadv.[icpc_u59j99].dt.max(1900);
         
         
-        ren_enc => eadv.[enc_op_ren_%].dt.max(1900);
+        ren_enc => eadv.[enc_op_ren_%,enc_op_renal_edu].dt.max(1900);
         
         rrt_ex_flag : { alive=0 =>1},{=>0};
         

@@ -41,7 +41,6 @@ BEGIN
         ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
         
         is_active : { ld > sysdate-730 =>1 },{=>0};
-
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -65,7 +64,7 @@ BEGIN
         
         rhd => rout_cd_cardiac_rhd.cd_cardiac_rhd.val.bind();
         
-        hepb => rout_cd_hepb.cd_hepb.val.bind();
+        hepb => rout_cd_hepb_master.chb_flag.val.bind();
         
         
         aki_icd_ld => eadv.[icd_n17%].dt.max();

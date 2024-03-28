@@ -1,0 +1,61 @@
+#define_ruleblock(cd_hep_b_sero,
+    {
+        description: "Algorithm to detect Chronic hepatitis B from serology",
+        is_active: 2
+    }
+);
+
+/* Hep B Surface antibody and antigen */
+s_ab_level => eadv.lab_bld_hbs_ab_level._.lastdv();
+s_ab_val : {s_ab_level_val >0 =>1},{=>0};
+
+s_ag => eadv.lab_bld_hbs_ag._.lastdv();
+
+/* Hep B Core antibody*/
+c_ab => eadv.lab_bld_hbc_ab._.lastdv();
+
+/* Hep B e antibody and antigen */
+e_ab_0 => eadv.[lab_bld_hbe_ab_level,lab_bld_hbe_ab]._.lastdv();
+e_ag_0 => eadv.[lab_bld_hbe_ag_level,lab_bld_hbe_ag]._.lastdv();
+
+e_ab : { e_ab_0_val >0 =>1},{=>0};
+
+e_ag : { e_ag_0_val >0 =>1},{=>0};
+
+/* Hep B Viral Load */
+vl => eadv.[lab_bld_hbv_viral_load]._.lastdv();
+
+/* Liver Function AST */
+ast => eadv.[lab_bld_ast]._.lastdv();
+alt => eadv.[lab_bld_alt]._.lastdv();
+
+
+/*
+chronic hbv         1
+acute hbv           2 NA due to IgM NA
+non-immune          3
+immune from inf     4
+immune from vacc    5
+chronic hbv nos     6
+
+*/
+
+hbv_status : { s_ag_val=1 and c_ab_val=1 and s_ab_val=0 => 1},
+             { s_ag_val=0 and c_ab_val=0 and s_ab_val=0 => 3},
+             { s_ag_val=0 and c_ab_val=1 and s_ab_val=1 => 4},
+             { s_ag_val=0 and c_ab_val=0 and s_ab_val=1 => 5},
+             { s_ag_val=0 and c_ab_val=1 and s_ab_val=0 => 6};
+
+/*
+immune tolerance   1
+immune clearance   2
+immune control     3
+immune escape      4
+*/
+hbv_phase : { e_ag =1 and alt_val < 30 and vl_val > 1000000 => 1 },
+            { e_ag =1 and alt_val > 30 and vl_val > 20000 => 2 },
+            { e_ag =0 and e_ab=1 and alt_val <30 and vl_val < 2000 => 3 },
+            { e_ag =0 and e_ab=1 and alt_val > 30 and vl_val > 2000 => 4 };
+
+
+cd_hep_b_sero : {hbv_status in (1,6)  => 1},{=>0};

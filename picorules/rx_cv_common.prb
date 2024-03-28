@@ -1,0 +1,91 @@
+/* Rx: Common cardiac drugs */
+
+
+#define_ruleblock(rx_cv_common,{
+        description: "Rx: Common cardiac drugs",
+        is_active:2
+});
+
+/* ACEi and ARB single */
+#doc(,{txt:"ARB"});
+
+/* Irbesartan*/
+irb_75 => eadv.[rxn_cui_316100].dt.last();
+irb_150 => eadv.[rxn_cui_316098].dt.last();
+irb_300 => eadv.[rxn_cui_316099].dt.last();
+
+irb : {coalesce(irb_75,irb_150,irb_300)!? =>1};
+
+
+#doc(,{txt:"ACEI"});
+/* Perindopril */
+/* Perindopril arginine not available in US pharmacopia */
+/* Using codes for doses 3.5, 7 and 14 */
+per_2_5 => eadv.[rxn_cui_1600723].dt.last();
+per_5 => eadv.[rxn_cui_1600727].dt.last();
+per_10 => eadv.[rxn_cui_1600712].dt.last();
+
+per : {coalesce(per_2_5,per_5,per_10)!? =>1};
+
+/* Ramipril */
+ram_2_5 => eadv.[rxn_cui_316628].dt.last();
+ram_5 => eadv.[rxn_cui_317482].dt.last();
+ram_10 => eadv.[rxn_cui_316627].dt.last();
+
+ram : {coalesce(ram_2_5,ram_5,ram_10)!? =>1};
+
+#doc(,{txt:"CCB"});
+/* Amlodipine */
+amlo_5 => eadv.[rxn_cui_329528].dt.last();
+amlo_10 => eadv.[rxn_cui_329526].dt.last();
+
+amlo :{ coalesce(amlo_5, amlo_10)!?=>1};
+
+
+#doc(,{txt:"Beta blockers"});
+/* Metoprolol succinate */
+/* Dosing not available in US pharmacopia */
+/* Using 25, 5,100, 200 */
+mtprl_xr_23_75 => eadv.[rxn_cui_1370489].dt.last();
+mtprl_xr_47_5 => eadv.[rxn_cui_1370474].dt.last();
+mtprl_xr_95 => eadv.[rxn_cui_1370483].dt.last();
+mtprl_xr_190 => eadv.[rxn_cui_1370500].dt.last();
+
+mtprl_50 => eadv.[rxn_cui_866435].dt.last();
+mtprl_100 => eadv.[rxn_cui_866411].dt.last();
+
+mtprl : { coalesce(mtprl_xr_23_75,mtprl_xr_47_5,mtprl_xr_95 , mtprl_xr_190, mtprl_50, mtprl_100)!? =>1};
+
+/* Bisoprolol */
+bis_2_5 => eadv.[rxn_cui_854915].dt.last();
+bis_5 => eadv.[rxn_cui_854904].dt.last();
+bis_10 => eadv.[rxn_cui_854900].dt.last();
+
+bis : { coalesce(bis_2_5,bis_5, bis_10 )!? => 1};
+
+/* Atenolol */
+atn_50 => eadv.[rxn_cui_315438].dt.last();
+
+atn : {atn_50!? =>1};
+
+/* Carvedilol */
+carv_6_25 => eadv.[rxn_cui_315577].dt.last();
+carv_12_5 => eadv.[rxn_cui_315575].dt.last();
+carv_25 => eadv.[rxn_cui_315576].dt.last();
+
+carv : { coalesce(carv_6_25, carv_12_5, carv_25)!?=>1};
+
+/* Diuretics */
+fru_20 => eadv.[rxn_cui_315970].dt.last();
+fru_40 => eadv.[rxn_cui_315971].dt.last();
+fru_500 => eadv.[rxn_cui_331965].dt.last();
+
+fru : { coalesce(fru_20, fru_40, fru_500)!? =>1};
+
+/* Nitrates */
+ismn_60  =>  eadv.[rxn_cui_381044].dt.last();
+ismn_120  =>  eadv.[rxn_cui_353420].dt.last();
+
+ismn : { coalesce(ismn_60, ismn_120)!? => 1};
+
+rx_cv_common : {coalesce(irb, per, ram, amlo, mtprl, atn, bis, carv, fru, ismn)!? =>1},{=>0};

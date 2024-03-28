@@ -1,0 +1,11 @@
+<div>
+ {% if rrt_tx.tx_dt%}Transplant Date: {{ picodate('rrt_tx.tx_dt') }}{% endif %}
+ {% if rrt_tx.tac%}
+ <div class="alert alert-info" role="alert">
+        <h5>Tacrolimus</h5>
+<img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/T0861002.gif" ><br /> Tacrolimus 1mg
+
+ </div>
+
+ {% endif %}
+</div>

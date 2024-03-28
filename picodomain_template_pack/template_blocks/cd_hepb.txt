@@ -1,13 +1,18 @@
 <br />
-    <li><b>Chronic Hepatitis B</b>
+{% if cd_hepb_master.chb_flag%}
+    <li><b>Chronic Hepatitis B (HBV)</b>
         <ol>
-            {% if cd_hepb.hepb_imm %}
-                <li>Immune
-                <ol>
-                    {% if cd_hepb.hepb_imm_vac %}<li>by vaccination {{ picodate('cd_hepb.hepb_imm_vac') }}</li>{% endif %}
-                    {% if cd_hepb.hepb_imm_inf %}<li>by infection {{ picodate('cd_hepb.hepb_imm_inf') }}</li>{% endif %}
-                </ol>
-                </li>
+            {% if cd_hepb_master.c_s_cngr == 1000 %}<li>Coded and Seropositive</li>{% endif %}
+            {% if cd_hepb_master.c_s_cngr == 1010 %}<li>Coded but Seronegative</li>{% endif %}
+            {% if cd_hepb_master.c_s_cngr == 1011 %}<li>Not Coded but Seropositive</li>{% endif %}
+            {% if cd_hepb_master.rx_av %}
+            <li> treatment with {{ picoformat('cd_hepb_master.rx_av_lbl') }}</li>
             {% endif %}
+            {% if cd_hepb_master.sp == 1%}<li>HBeAg-positive chronic infection(immune tolerance phase)</li>{% endif %}
+            {% if cd_hepb_master.sp == 2%}<li>HBeAg-positive chronic hepatitis (immune clearance phase)</li>{% endif %}
+            {% if cd_hepb_master.sp == 3%}<li>HBeAg-negative chronic infection (immune control phase)</li>{% endif %}
+            {% if cd_hepb_master.sp == 4%}<li>HBeAg-negative chronic hepatitis (immune escape phase)</li>{% endif %}
+            {% if cd_hepb_master.vl_dt %}<li>Viral load {{ picoformat('cd_hepb_master.vl_val') }}({{ picoformat('cd_hepb_master.vl_dt')}})</li>{% endif %}
         </ol>
     </li>
+{% endif %}

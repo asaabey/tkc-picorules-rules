@@ -15,8 +15,8 @@ BEGIN
         
         #define_ruleblock(cd_hepb,
             {
-                description: "Algorithm to detect Chronioc hepatitis B from coding",
-                is_active: 2,
+                description: "Algorithm to detect Chronic hepatitis B from coding - deprecated",
+                is_active: 0,
                 author: "richardh@iinet.net.au"
             }
         );

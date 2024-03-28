@@ -1,0 +1,23 @@
+{% set base_url = 'https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rx_is' %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 30%;">Medication form & Strength</th>
+      <th scope="col" style="width: 30%;">Image</th>
+      <th scope="col" >Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if rx_is_sot.tac_0_5_ir %}<tr><td>Tacrolimus 0.5mg</td><td><img src="{{ base_url }}/prograf_0_5.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.tac_1_ir %}<tr><td>Tacrolimus 1mg</td><td><img src="{{ base_url }}/prograf_1.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.tac_1_ir %}<tr><td>Tacrolimus 5mg</td><td><img src="{{ base_url }}/prograf_5.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.mmf_250 %}<tr><td>Mycophenolate mofetil 250mg</td><td><img src="{{ base_url }}/cellcept_250.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.mmf_500 %}<tr><td>Mycophenolate mofetil 500mg</td><td><img src="{{ base_url }}/cellcept_500.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.evl_0_5 %}<tr><td>Everolimus 0.5mg</td><td><img src="{{ base_url }}/certican_0_5.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.evl_0_75 %}<tr><td>Everolimus 0.75mg</td><td><img src="{{ base_url }}/certican_0_75.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.evl_1 %}<tr><td>Everolimus 1mg</td><td><img src="{{ base_url }}/certican_1.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.prd_1 %}<tr><td>Prednisolone 1mg</td><td><img src="{{ base_url }}/panafcortelone_1.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.prd_5 %}<tr><td>Prednisolone 5mg</td><td><img src="{{ base_url }}/panafcortelone_5.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_is_sot.prd_25 %}<tr><td>Prednisolone 25mg</td><td><img src="{{ base_url }}/panafcortelone_25.gif" height="60"></td><td></td></tr>{% endif %}
+  </tbody>
+</table>

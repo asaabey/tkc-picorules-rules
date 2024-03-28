@@ -1,0 +1,50 @@
+/* Rx: Common renal drugs */
+
+
+#define_ruleblock(rx_rrt_common,{
+        description: "Rx: Common renal drugs",
+        is_active:2
+});
+
+
+#doc(,{txt:"Calcitriol"});
+
+d3_0_25 => eadv.[rxn_cui_315513, rxn_cui_308867].dt.last();
+
+d3 : {d3_0_25!? =>1};
+
+
+#doc(,{txt:"Calcium carbonate"});
+
+cal_600 => eadv.[rxn_cui_328936].dt.last();
+
+cal : {cal_600!? =>1};
+
+
+#doc(,{txt:"Sevelamer"});
+
+sev_hcl => eadv.[rxn_cui_857223].dt.last();
+
+sev_co3 => eadv.[rxn_cui_749204].dt.last();
+
+sev : {coalesce(sev_hcl,sev_co3)!? =>1};
+
+
+#doc(,{txt:"Pantoprazole"});
+
+pnt_20 => eadv.[rxn_cui_336764].dt.last();
+pnt_40 => eadv.[rxn_cui_330396].dt.last();
+
+pnt : {coalesce(pnt_20,pnt_40)!? =>1};
+
+#doc(,{txt:"Bactrim"});
+
+bac_800_160 => eadv.[rxn_cui_198335].dt.last();
+
+bac : {bac_800_160!? =>1};
+
+#doc(,{txt:"Patiromer"});
+
+pat => eadv.[rxn_cui_1716205,rxn_cui_1716216].dt.last();
+
+rx_rrt_common : {coalesce(d3,cal,sev,pnt,bac)!? =>1},{=>0};

@@ -80,7 +80,6 @@
 {{ pico_template_block('id_uti') }}
 {{ pico_template_block('id_tb') }}
 {{ pico_template_block('id_hcv') }}
-{{ pico_template_block('cd_hepb_coded') }}
 {{ pico_template_block('cd_hepb') }}
 {{ pico_template_block('pregnancy') }}
 {{ pico_template_block('sx_abdo') }}

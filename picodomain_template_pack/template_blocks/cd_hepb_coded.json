@@ -1,8 +1,8 @@
 {
   "author": null,
-  "description": null,
+  "description": "hepb template (deprecated)",
   "last_updated": null,
-  "is_active": true,
+  "is_active": false,
   "name": "cd_hepb_coded",
   "related_ruleblock": "cd_hepb_coded",
   "is_composition": false,

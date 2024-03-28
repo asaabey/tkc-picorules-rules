@@ -1,77 +1,39 @@
-#define_ruleblock(cd_hepb_coded,
-    {
-        description: "Algorithm to detect Chronioc hepatitis B from coding",
-        is_active:0,
-        author: "richardh@iinet.net.au"
-    }
-);
+#define_ruleblock(cd_hepb_coded,{
+        description: "Algorithm to detect Chronic hepatitis B from coding",
+        is_active:2
+});
 
 /* Hep B ICPC codes */
-hepb_imm_vac => eadv.[icpc_d72j97].dt.max();
 
-hepb_imm_inf => eadv.[icpc_d72j96].dt.max();
+hepb_icpc_code => eadv.[icpc_d72j%].att.last();
 
-hepb_imm_nos => eadv.[icpc_d72j99].dt.max();
+hepb_status : {hepb_icpc_code = `icpc_d72j94` =>20 },
+             {hepb_icpc_code = `icpc_d72j95` =>21},
+             {hepb_icpc_code = `icpc_d72j95` =>21},
+             {hepb_icpc_code = `icpc_d72j93` =>10},
+             {hepb_icpc_code = `icpc_d72j97` =>12},
+             {hepb_icpc_code = `icpc_d72j99` =>13},
+             {hepb_icpc_code = `icpc_d72j92` =>15},
+             {=>0};
 
-hepb_imm : { coalesce(hepb_imm_vac,hepb_imm_inf,hepb_imm_nos)!? =>1},{=>0};
+hepb_status_lbl : {hepb_status = 20 => `CHB - Not on Rx`},
+                 {hepb_status = 21 => `CHB - on Rx`},
+                 {hepb_status = 10 => `HepB Non Immune`},
+                 {hepb_status = 11 => `HepB Immune by exposure`},
+                 {hepb_status = 12 => `HepB Immune by vaccination`},
+                 {hepb_status = 13 => `HepB Immune - NOS`},
+                 {hepb_status = 15 => `HepB Immunosuppressed`};
 
-hepb_nonimm => eadv.[icpc_d72j93].dt.max();
+/* Treatment with Nucleoside and nucleotide reverse transcriptase inhibitors */
 
-hepb_nos => eadv.[icpc_d72j92,icpc_d72j94,icpc_d72j95,icpc_d72003,icpc_d72010].dt.max();
+rx_av_ld => eadv.[rxnc_j05af].dt.last().where(val=1);
 
-/* Hep B Surface antibody and antigen */
-hb_s_ab => eadv.lab_bld_hbs_ab_level._.lastdv();
-hb_s_ag => eadv.lab_bld_hbs_ag._.lastdv();
-
-/* Hep B Core antibody*/
-hb_c_ab => eadv.lab_bld_hbc_ab._.lastdv();
+rx_av : { rx_av_ld!? =>1},{=>0};
 
 
-/* Hep B e antibody and antigen */
-hb_e_ab => eadv.[lab_bld_hbe_ab]._.lastdv();
-hb_e_ag => eadv.[lab_bld_hbe_ag]._.lastdv();
+chb : { hepb_status =20 or hepb_status=21 =>1},{=>0};
 
-/* Hep B Viral Load */
-hb_vl => eadv.[lab_bld_hbv_viral_load]._.lastdv();
+chb_on_rx : { hepb_status =21 =>1},{=>0};
+chb_not_on_rx : { hepb_status =20 =>1},{=>0};
 
-/* Liver Function AST */
-ast => eadv.[lab_bld_ast]._.lastdv();
-
-/*
-recovery            1
-immunized           2
-non-immune          3
-immune tolerance    4
-immune response     5
-immune control      6
-immune escape       7
-*/
-
-hbv_status : { hb_s_ag_val = 0 and hb_c_ab_val = 1 => 1},
-{ hb_s_ag_val = 0 and hb_s_ab_val = 1 => 2},
-{ hb_s_ag_val = 0 and hb_s_ab_val = 0 => 3},
-{ hb_s_ag_val = 1 and hb_e_ab_val = 0 and hb_e_ag_val = 1  and hb_vl_val > 2000 and ast_val<32 =>  4},
-{ hb_s_ag_val = 1 and hb_e_ab_val = 1 and hb_e_ag_val = 1  and hb_vl_val > 2000 =>  5},
-{ hb_s_ag_val = 1 and hb_e_ab_val = 1 and hb_vl_val < 2000 and ast_val <32 =>  6},
-{ hb_s_ag_val = 1 and hb_e_ab_val = 1 and hb_e_ag_val = 0 and hb_vl_val > 2000 and ast_val >32 =>  7},
-{=>0};
-
-rcm_hbv_ic : {hbv_status = 1 =>1},{=>0};
-
-rcm_hbv_vacc : {hbv_status =3 =>1},{=>0};
-
-rcm_hbv_gp : { hbv_status in (4,6) => 12},{hbv_status in (5,7) => 3 },{=>0};
-
-rcm_hbv_path : { hbv_status in (5,7) => 3},{ hbv_status = 6 => 12},{=>0};
-
-rcm_hbv_rad : { hbv_status = 6 => 12},{ hbv_status = 7 => 6},{=>0};
-
-rcm_hbv_hepref : {hbv_status =5 => 1},{=>0};
-
-cd_hepb_coded : { hbv_status>0 =>1},{=>0};
-
-#define_attribute(cd_hepb_coded,
-    {
-        label: "Chronic HepB"
-    }
-);
+cd_hepb_coded : { hepb_status>0 =>1},{=>0};

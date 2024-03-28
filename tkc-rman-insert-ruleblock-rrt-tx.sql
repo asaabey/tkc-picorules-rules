@@ -48,14 +48,17 @@ BEGIN
         
         enc_op_ld => eadv.[enc_op_ren_rnt, enc_op_rdu_rnt].dt.last();
         
+        /* CNI */
         rx_l04ad => eadv.rxnc_l04ad.dt.last().where(val=1);
         
         tdm_tac => eadv.lab_bld_tdm_tacrolimus._.lastdv().where(dt > sysdate-365);
         
+        /* MTOR and MPA*/ 
         rx_l04aa => eadv.rxnc_l04aa.dt.last().where(val=1);
         
         tdm_evl => eadv.lab_bld_tdm_everolimus._.lastdv().where(dt > sysdate-365);
         
+        /* azathioprine */
         rx_l04ax => eadv.rxnc_l04ax.dt.last().where(val=1);
         
         

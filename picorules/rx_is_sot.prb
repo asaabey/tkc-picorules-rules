@@ -1,0 +1,52 @@
+/* Rx: Immunosuppresion for Solid organ Transplant */
+
+
+#define_ruleblock(rx_is_sot,{
+        description: "Rx: Immunosuppresion for Solid organ Transplant",
+        is_active:2
+});
+
+
+#doc(,{txt:"Tacrolimus"});
+
+tac_0_5_ir => eadv.[rxn_cui_330404].dt.last();
+
+tac_1_ir => eadv.[rxn_cui_42316].dt.last();
+
+tac : {coalesce(tac_0_5_ir,tac_1_ir)!? =>1};
+
+
+#doc(,{txt:"Everolimus"});
+
+evl_0_5 => eadv.[rxn_cui_977437].dt.last();
+
+evl_0_75 => eadv.[rxn_cui_977437].dt.last();
+
+evl_1 => eadv.[rxn_cui_2056894].dt.last();
+
+evl_5 => eadv.[rxn_cui_845514].dt.last();
+
+evl : {coalesce(evl_0_5,evl_0_75,evl_1,evl_5)!? =>1};
+
+
+#doc(,{txt:"MMF"});
+
+mmf_250 => eadv.[rxn_cui_316316].dt.last();
+
+mmf_500 => eadv.[rxn_cui_316317].dt.last();
+
+mmf : {coalesce(mmf_250,mmf_500)!? =>1};
+
+
+#doc(,{txt:"Prednisolone"});
+
+prd_1 => eadv.[rxn_cui_333209].dt.last();
+
+prd_5 => eadv.[rxn_cui_316579].dt.last();
+
+prd_25 => eadv.[rxn_cui_333210].dt.last();
+
+prd : {coalesce(prd_1,prd_5,prd_25)!? =>1};
+
+
+rx_is_sot : {coalesce(tac,evl,mmf,prd)!? =>1},{=>0};

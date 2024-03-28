@@ -1,0 +1,51 @@
+{% set base_url = 'https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rx_cv' %}
+<table class="table">
+<thead>
+    <tr>
+      <th scope="col" style="width: 30%;">Medication form & Strength</th>
+      <th scope="col" style="width: 30%;">Image</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+      
+        {% if rx_cv_common.irb_75 %}<tr><td>Irbesartan 75 mg</td><td><img src="{{ base_url }}/avapro_75.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.irb_150 %}<tr><td>Irbesartan 150 mg</td><td><img src="{{ base_url }}/avapro_150.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.irb_300 %}<tr><td>Irbesartan 300 mg</td><td><img src="{{ base_url }}/avapro_300.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.per_2_5 %}<tr><td>Perindopril 2.5 mg</td><td><img src="{{ base_url }}/coversyl_2_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.per_5 %}<tr><td>Perindopril 5 mg</td><td><img src="{{ base_url }}/coversyl_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.per_10 %}<tr><td>Perindopril 10 mg</td><td><img src="{{ base_url }}/coversyl_10.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.ram_2_5 %}<tr><td>Ramipril 2.5 mg</td><td><img src="{{ base_url }}/ramipirl_apo_2_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.ram_5 %}<tr><td>Ramipril 5 mg</td><td><img src="{{ base_url }}/ramipril_apo_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.ram_10 %}<tr><td>Ramipril 10 mg</td><td><img src="{{ base_url }}/ramipril_apo_10.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.amlo_5 %}<tr><td>Amlodipine 5 mg</td><td><img src="{{ base_url }}/norvasc_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.amlo_10 %}<tr><td>Amlodipine 10 mg</td><td><img src="{{ base_url }}/norvasc_10.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.mtprl_xr_23_75 %}<tr><td>Metoprolol XR 23.75 mg</td><td><img src="{{ base_url }}/toprol_23_75.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.mtprl_xr_47_5 %}<tr><td>Metoprolol XR 47.5 mg</td><td><img src="{{ base_url }}/toprol_47_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.mtprl_xr_95 %}<tr><td>Metoprolol XR 95 mg</td><td><img src="{{ base_url }}/toprol_95.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.mtprl_xr_190 %}<tr><td>Metoprolol XR 190 mg</td><td><img src="{{ base_url }}/toprol_190.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.mtprl_50 %}<tr><td>Metoprolol 50 mg</td><td><img src="{{ base_url }}/metoprolol_sandoz_50.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	
+	{% if rx_cv_common.bis_2_5 %}<tr><td>Bisoprolol 2.5 mg</td><td><img src="{{ base_url }}/bicor_2_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.bis_5 %}<tr><td>Bisoprolol 5 mg</td><td><img src="{{ base_url }}/bicor_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.bis_10 %}<tr><td>Bisoprolol 10 mg</td><td><img src="{{ base_url }}/bicor_10.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.atn_50 %}<tr><td>Atenolol 50mg</td><td><img src="{{ base_url }}/noten_50.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.carv_6_25 %}<tr><td>Carvedilol 6.25 mg</td><td><img src="{{ base_url }}/dilatrend_6_25.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.carv_12_5 %}<tr><td>Carvedilol 12.5 mg</td><td><img src="{{ base_url }}/dilatrend_12_5.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.carv_25 %}<tr><td>Carvedilol 25 mg</td><td><img src="{{ base_url }}/dilatrend_25.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.fru_20 %}<tr><td>Frusemide 20 mg</td><td><img src="{{ base_url }}/frusemix_20.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.fru_40 %}<tr><td>Frusemide 40 mg</td><td><img src="{{ base_url }}/frusemix_40.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.fru_500 %}<tr><td>Frusemide 500 mg</td><td><img src="{{ base_url }}/urex_forte_500.gif" height="60"></td><td></td></tr>{% endif %}
+	
+	{% if rx_cv_common.ismn_60 %}<tr><td>ISMN 60mg</td><td><img src="{{ base_url }}/imdur_60.gif" height="60"></td><td></td></tr>{% endif %}
+	{% if rx_cv_common.ismn_120 %}<tr><td>ISMN 120mg</td><td><img src="{{ base_url }}/imdur_120.gif" height="60"></td><td></td></tr>{% endif %}
+	
+  </tbody>
+</table>

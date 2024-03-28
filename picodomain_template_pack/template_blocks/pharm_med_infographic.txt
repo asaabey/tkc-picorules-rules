@@ -1,0 +1,6 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('rx_is_sot') }}
+{{ pico_template_block('rx_rrt_common') }}
+{{ pico_template_block('rx_cv_common') }}
+{% endblock content %}

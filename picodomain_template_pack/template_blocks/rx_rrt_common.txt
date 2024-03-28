@@ -1,0 +1,19 @@
+{% set base_url = 'https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rx_common' %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 30%;">Medication form & Strength</th>
+      <th scope="col" style="width: 30%;">Image</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if rx_rrt_common.d3_0_25 %}<tr><td>Calcitriol 0.25 mg</td><td><img src="{{ base_url }}/calcitriol_0_25.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_rrt_common.cal_600 %}<tr><td>Caltrate 600mg</td><td><img src="{{ base_url }}/caltrate_600.jpg" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_rrt_common.sev_hcl %}<tr><td>Sevelamer 800mg</td><td><img src="{{ base_url }}/sevelamer_renagel.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_rrt_common.sev_co3 %}<tr><td>Sevelamer 800mg</td><td><img src="{{ base_url }}/sevelamer_arx.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_rrt_common.pnt_20 %}<tr><td>Pantoprazole 20mg</td><td><img src="{{ base_url }}/somac_20.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_rrt_common.pnt_40 %}<tr><td>Pantoprazole 40mg</td><td><img src="{{ base_url }}/somac_40.gif" height="60"></td><td></td></tr>{% endif %}
+    {% if rx_rrt_common.bac_800_160 %}<tr><td>Bactrim DS</td><td><img src="{{ base_url }}/resprim_forte.gif" height="60"></td><td></td></tr>{% endif %}
+  </tbody>
+</table>

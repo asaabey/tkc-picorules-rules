@@ -1,0 +1,4 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('te_transplant_stories') }}
+{% endblock content %}
