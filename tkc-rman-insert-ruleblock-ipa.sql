@@ -29,17 +29,17 @@ BEGIN
             }
         );
         
-        icu_vent_los => eadv.adm_icu_vent_los._.lastdv(); 
+        icu_vent_los => eadv.adm_icu_vent_los._.lastdv();
         
         vent_ld => eadv.[caresys_1387900,caresys_1388200,caresys_1388201,caresys_1388202].dt.last();
         
         vent_fd => eadv.[caresys_1387900,caresys_1388200,caresys_1388201,caresys_1388202].dt.last();
         
-        icu_los => eadv.adm_icu._.lastdv(); 
+        icu_los => eadv.adm_icu._.lastdv();
         
-        icu_vent_max_los => eadv.adm_icu_vent_los._.maxldv(); 
+        icu_vent_max_los => eadv.adm_icu_vent_los._.maxldv();
         
-        icu_max_los => eadv.adm_icu._.maxldv(); 
+        icu_max_los => eadv.adm_icu._.maxldv();
         
         cvvhf_ld => eadv.[caresys_1310004,caresys_1310002].dt.last();
         
@@ -51,7 +51,7 @@ BEGIN
         
         icu_fd : {.=> least_date(cvvhf_fd,vent_fd)};
         
-        [[rb_id]] : { coalesce(icu_vent_los_dt,icu_los_dt,cvvhf_ld,vent_ld)!? => 1 },{=>0};    
+        [[rb_id]] : { coalesce(icu_vent_los_dt,icu_los_dt,cvvhf_ld,vent_ld)!? => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],
@@ -100,7 +100,7 @@ BEGIN
         
         icd_fd => eadv.[icd_%].dt.first().where(att not in(`icd_z49_1`));
         
-        [[rb_id]] : { icd_ld!? => 1 },{=>0};    
+        [[rb_id]] : { icd_ld!? => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],

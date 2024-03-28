@@ -28,10 +28,10 @@ BEGIN
             }
         );
         
-        mbs_715_ld => ealdv.mbs_715.dt.max().where(loc=134720711547001);  
+        mbs_715_ld => ealdv.mbs_715.dt.max().where(loc=134720711547001);
         
         loc_1 => ealdv.mbs_715.loc.stats_mode();
-      
+        
         
     ';
     

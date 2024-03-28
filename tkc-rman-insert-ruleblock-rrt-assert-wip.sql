@@ -20,7 +20,7 @@ BEGIN
             {
                 description: "(work in progress at 2024 03 20) - Algorithm to assess RRT level assertion criteria ",
                 is_active: 2,
-	author: "E. Coccetti"
+        	author: "E. Coccetti"
             }
         );
         
@@ -66,17 +66,17 @@ BEGIN
         
         
         #doc(,{
-            txt:"rrt assertion is calculated only when a client has been assigned a modality by the rrt ruleblock, rout.rrt table.
+            txt:"rrt assertion is calculated only when a client has been assigned a modality by the rrt ruleblock, rout.rrt table.        
                          2. Assign rrt assertion level based on imported calculations"
         });
-        
-        
-        tx_any_stage : { tx_dt!?  =>1 },{=>0}; 
-        pd_any_stage : { pd_dt!?  =>1 },{=>0};                                           
-        homed_any_stage : { homedx_dt!?  =>1 },{=>0};                                                                       
-        hd_any_stage : { hd_dt!?  =>1 },{=>0};                                        
-        hd_30plus  : { hd_dt!? and hd_z49_n > 29 =>1},{=>0};                          
-        hd_120days : { hd_dt!? and hd_dt > sysdate-150 =>1},{=>0};                    
+
+
+        tx_any_stage : { tx_dt!?  =>1 },{=>0};
+        pd_any_stage : { pd_dt!?  =>1 },{=>0};
+        homed_any_stage : { homedx_dt!?  =>1 },{=>0};
+        hd_any_stage : { hd_dt!?  =>1 },{=>0};
+        hd_30plus  : { hd_dt!? and hd_z49_n > 29 =>1},{=>0};
+        hd_120days : { hd_dt!? and hd_dt > sysdate-150 =>1},{=>0};
         
         
         rrt_assert : { rrt > 0 => ( tx_any_stage * 100000) + (pd_any_stage  * 10000) + (homed_any_stage * 1000) + (hd_any_stage * 100) + (hd_30plus * 10) + (hd_120days * 1 ) },{=>0};

@@ -46,9 +46,9 @@ BEGIN
         hd_131_1y_n => eadv.[caresys_1310000].dt.count().where(dt>sysdate-365);
         
         
-        mbs_13105_dt_max => eadv.mbs_13105.dt.max(); 
+        mbs_13105_dt_max => eadv.mbs_13105.dt.max();
         
-        mbs_13105_dt_min => eadv.mbs_13105.dt.min(); 
+        mbs_13105_dt_min => eadv.mbs_13105.dt.min();
         
         hd_icpc_dt => eadv.[icpc_u59001,icpc_u59008].dt.max();
         
@@ -58,7 +58,7 @@ BEGIN
         
         
         #doc(,
-            {   
+            {
                 txt : "Peritoneal episode ICD and problem ICPC2p coding"
             }
         );
@@ -90,24 +90,24 @@ BEGIN
         
         tx_dt_icd => eadv.icd_z94_0.dt.min();
         
-        #doc(,{ 
-            txt : "Handling muliparity based on intervening hd " 
+        #doc(,{
+            txt : "Handling muliparity based on intervening hd "
         } );
-                
+        
         tx_dt_icd_last => eadv.icd_z94_0.dt.max();
         
         tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
         
-        #doc(,{ 
-            txt : "Number and last date of hd between transplant codes indicating graft failure and multi parity" 
+        #doc(,{
+            txt : "Number and last date of hd between transplant codes indicating graft failure and multi parity"
         } );
         
         hd_tx_tx2_n => eadv.icd_z49_1.dt.count().where(dt between tx_dt_icd and tx_dt );
         
         hd_tx_tx2_ld => eadv.icd_z49_1.dt.max().where(dt between tx_dt_icd and tx_dt );
         
-        #doc(,{ 
-            txt : "Number of hd after last transplant indicating graft failure" 
+        #doc(,{
+            txt : "Number of hd after last transplant indicating graft failure"
         } );
         
         hd_tx2 => eadv.icd_z49_1.dt.count().where(dt > tx_dt + 30 );
@@ -116,7 +116,7 @@ BEGIN
         
         tx_multi_flag : { hd_tx_tx2_n >10 =>1},{=>0};
         
-        tx_multi_current : { tx_multi_flag =1 and coalesce(hd_tx2,0)=0 =>1},{=>0};        
+        tx_multi_current : { tx_multi_flag =1 and coalesce(hd_tx2,0)=0 =>1},{=>0};
         
         tx_enc_op_fd => eadv.[
           enc_op_ren_rnt,
@@ -142,7 +142,7 @@ BEGIN
         
         tx_enc_active : {tx_enc_op_ld > sysdate - 365 =>1 },{=>0};
         
-        tx_coding : { tx_dt!? =>1 },{=>0}; 
+        tx_coding : { tx_dt!? =>1 },{=>0};
         
         tdm_tac => eadv.lab_bld_tdm_tacrolimus._.lastdv().where(dt > sysdate-365);
         

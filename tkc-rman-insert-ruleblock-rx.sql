@@ -53,28 +53,28 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid = rb.blockid;
 
     rb.picoruleblock := '
-    
+        
         /* Algorithm to assess Medication  */
         
-            
-             #define_ruleblock([[rb_id]],
-                {
-                    description: "Algorithm to serialize active medications",
-                    
-                    is_active:2
-                    
-                }
-            );
-            
-            
-            
-            
-            rx_name_obj => eadv.rx_desc_ptr.val.serialize2();
-            
-            rx_n => eadv.rx_desc_ptr.val.count();
-            
-            [[rb_id]] : {coalesce(rx_n,0)>0 =>1},{=>0};
-            
+        
+         #define_ruleblock([[rb_id]],
+            {
+                description: "Algorithm to serialize active medications",
+                
+                is_active:2
+                
+            }
+        );
+        
+        
+        
+        
+        rx_name_obj => eadv.rx_desc_ptr.val.serialize2();
+        
+        rx_n => eadv.rx_desc_ptr.val.count();
+        
+        [[rb_id]] : {coalesce(rx_n,0)>0 =>1},{=>0};
+        
     ';
     rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
     rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -164,7 +164,7 @@ BEGIN
         
         
         #doc(,{txt:"ACEI"});
-        /* Perindopril */ 
+        /* Perindopril */
         /* Perindopril arginine not available in US pharmacopia */
         /* Using codes for doses 3.5, 7 and 14 */
         per_2_5 => eadv.[rxn_cui_1600723].dt.last();
@@ -173,7 +173,7 @@ BEGIN
         
         per : {coalesce(per_2_5,per_5,per_10)!? =>1};
         
-        /* Ramipril */ 
+        /* Ramipril */
         ram_2_5 => eadv.[rxn_cui_316628].dt.last();
         ram_5 => eadv.[rxn_cui_317482].dt.last();
         ram_10 => eadv.[rxn_cui_316627].dt.last();

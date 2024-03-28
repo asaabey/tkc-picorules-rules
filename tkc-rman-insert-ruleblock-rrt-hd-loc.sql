@@ -58,9 +58,9 @@ BEGIN
         loc_te_other_1m_n : {coalesce(loc_te_all_1m_n,0) > coalesce(loc_te_nru_1m_n,loc_te_7ad_1m_n, loc_te_kdh_1m_n, loc_te_pdu_1m_n, loc_te_tiwi_1m_n,0) => loc_te_all_1m_n };
 
         loc_prplhouse_1m_n => eadv.[mbs_13105].dt.distinct_count()
-                                .where(substr(loc,1,5)=`11571`and dt >= sysdate-30); 
+                                .where(substr(loc,1,5)=`11571`and dt >= sysdate-30);
         loc_miwatj_1m_n => eadv.[mbs_13105].dt.distinct_count()
-                                .where(substr(loc,1,5)=`13472`and dt >= sysdate-30); 
+                                .where(substr(loc,1,5)=`13472`and dt >= sysdate-30);
                                             
         loc_all_1m_n => eadv.[caresys_1310000,caresys_1310004,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].dt.distinct_count()
                                 .where(dt >= sysdate-30);
@@ -68,7 +68,7 @@ BEGIN
         loc_mode_1m => eadv.[caresys_1310000,caresys_1310004,icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].loc.stats_mode()
                                 .where(dt >= sysdate-90);
                                 
-        loc_mode_1m_txt : {loc_mode_1m = 111711800010132  => `CA-GAP`}, 
+        loc_mode_1m_txt : {loc_mode_1m = 111711800010132  => `CA-GAP`},
                     {loc_mode_1m = 111721600013032   => `TEHS-NRU`},
                     {loc_mode_1m = 111711800010122   => `CA-FD`},
                     {loc_mode_1m  = 111711800010122  => `CA-TCH`},

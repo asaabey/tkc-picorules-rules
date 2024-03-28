@@ -101,7 +101,7 @@ BEGIN
         dm_code_fd : { . => least_date(dm_icd_fd,dm_icpc_fd) };
         
         
-        dm_type_1 : { dm1_icpc_fd!? and dm1_icpc_fd>=dm_icpc_fd => 1},{ dm2_icpc_fd? and dm1_icd_fd!? =>1},{=>0}; 
+        dm_type_1 : { dm1_icpc_fd!? and dm1_icpc_fd>=dm_icpc_fd => 1},{ dm2_icpc_fd? and dm1_icd_fd!? =>1},{=>0};
         
         
         
@@ -288,7 +288,7 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-    
+        
         /* Ruleblock to assess diabetes */
         
         #define_ruleblock([[rb_id]],
@@ -307,7 +307,7 @@ BEGIN
         );
         
        
-       dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
+        dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
         
         
         #doc(,{
@@ -445,7 +445,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess diabetic glycaemic control",                
+                description: "Ruleblock to assess diabetic glycaemic control",
                 is_active:2
                 
             }

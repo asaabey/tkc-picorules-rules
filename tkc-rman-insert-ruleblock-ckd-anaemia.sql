@@ -27,7 +27,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine CKD complications",
-                is_active:2                
+                is_active:2
             }
         );
                 
@@ -36,9 +36,9 @@ BEGIN
                 txt:"Complications including Hb low",
                 cite : "ckd_complications_ref1, ckd_complications_ref2"
             }
-        );        
+        );
         
-        ckd => rout_ckd.ckd.val.bind(); 
+        ckd => rout_ckd.ckd.val.bind();
         
         rrt => rout_rrt.rrt.val.bind();
         

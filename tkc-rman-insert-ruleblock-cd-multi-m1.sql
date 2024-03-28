@@ -92,7 +92,7 @@ BEGIN
         
         #define_attribute([[rb_id]],
             {
-                label: "Multimorb M1", 
+                label: "Multimorb M1",
                 type:2
             }
         );

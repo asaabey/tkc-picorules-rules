@@ -57,7 +57,7 @@ BEGIN
         test1 : {1=1 =>1};
         
         #define_attribute(test1,
-            { 
+            {
                 label: "This is test variable"
             }
         );
@@ -132,7 +132,7 @@ BEGIN
         [[rb_id]] : {. =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a test variable uics"
             }
         );
@@ -188,7 +188,7 @@ BEGIN
         [[rb_id]] : {1=1 =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a test variable uics"
             }
         );
@@ -242,7 +242,7 @@ BEGIN
         [[rb_id]] : {1=1 =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a test variable uics"
             }
         );
@@ -285,7 +285,7 @@ BEGIN
         [[rb_id]] : { n_t!? =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a test variable uics"
             }
         );

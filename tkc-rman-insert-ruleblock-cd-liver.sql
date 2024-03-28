@@ -50,14 +50,14 @@ BEGIN
         
         cps_abbr_class : { cps_abbr_scr >9 => 3},{cps_abbr_scr >6 => 2},{cps_abbr_scr <=6 => 1};
     
-        code_fd : {.=> least_date(cirr_pbc_fd,cirr_nos_fd)};    
+        code_fd : {.=> least_date(cirr_pbc_fd,cirr_nos_fd)};
         
         
         
         cd_cirrhosis : { code_fd!? =>1},{=>0};
         
         #define_attribute(cd_cirrhosis,
-            { 
+            {
                 label: "Presence of Cirrhosis",
                 is_reportable:1,
                 type:2

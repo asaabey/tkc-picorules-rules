@@ -53,7 +53,7 @@ BEGIN
         
         tdm_tac => eadv.lab_bld_tdm_tacrolimus._.lastdv().where(dt > sysdate-365);
         
-        /* MTOR and MPA*/ 
+        /* MTOR and MPA*/
         rx_l04aa => eadv.rxnc_l04aa.dt.last().where(val=1);
         
         tdm_evl => eadv.lab_bld_tdm_everolimus._.lastdv().where(dt > sysdate-365);

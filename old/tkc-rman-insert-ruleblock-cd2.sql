@@ -103,7 +103,7 @@ BEGIN
                         {dm_icd_fd!? => dm_icd_fd},
                         {dm_icpc_fd!? => dm_icpc_fd};
         
-        dm_type_1 : {least(dm1_icpc_fd,dm1_icd_fd) < to_date(`29991231`,`YYYYMMDD`) => 1},{=>0}; 
+        dm_type_1 : {least(dm1_icpc_fd,dm1_icd_fd) < to_date(`29991231`,`YYYYMMDD`) => 1},{=>0};
         
         
         #doc(,
@@ -260,7 +260,7 @@ BEGIN
                             { dm_vintage_yr_>=10 and dm_vintage_yr_ <20 => 2 },
                             { dm_vintage_yr_>=20=> 3 },{=>0};
         
-        dm_longstanding : {dm_vintage_cat>=2 => 1},{=>0};   
+        dm_longstanding : {dm_vintage_cat>=2 => 1},{=>0};
         
         
         dm : { dm_fd!? =>1},{=>0};
@@ -496,13 +496,13 @@ BEGIN
         );
         
         
-        sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365); 
+        sigma_2 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-730 and dt<sysdate-365);
         mu_2 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
         slice140_2_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-730 and dt<sysdate-365);
         
-        sigma_1 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-365); 
-        mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
+        sigma_1 => eadv.obs_bp_systolic.val.count(0).where(dt>=sysdate-365);
+        mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365);
         slice140_1_n => eadv.obs_bp_systolic.val.count(0).where(val>=140 and dt>=sysdate-365);
         slice140_1_mu => eadv.obs_bp_systolic.val.avg().where(val>=140 and dt>=sysdate-365);
         
@@ -644,7 +644,7 @@ BEGIN
                 {
                     txt:"first date of coronary insufficiency based on coding (ICD and ICPC)"
                 }
-            );    
+            );
             
             
             
@@ -656,13 +656,13 @@ BEGIN
                 {
                     txt:"first date of type 2 AMI"
                 }
-            );   
+            );
             
             mi_type2_icd => eadv.icd_i21_a1.dt.min();
             
             cad_chronic_icd => eadv.[icd_i24%,icd_i25%].dt.min();
             
-            cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();        
+            cad_ihd_icpc => eadv.[icpc_k74%,icpc_k75%,icpc_k76%].dt.min();
                 
                 
             #doc(,
@@ -674,13 +674,13 @@ BEGIN
                 {
                     txt:"valvular heart disease based on coding"
                 }
-            );     
+            );
             
              #doc(,
                 {
                     txt:"mitral and aortic"
                 }
-            ); 
+            );
             
             vhd_mv_icd => eadv.[icd_i34_%,icd_i05%].dt.min();
             
@@ -690,7 +690,7 @@ BEGIN
                 {
                     txt:"other valvular including rheumatic heart disease and infective endocarditis"
                 }
-            ); 
+            );
             vhd_ov_icd => eadv.[icd_i07%,icd_i08%,icd_i09%,icd_i36%,icd_i37%].dt.min();
             
             vhd_ie_icd => eadv.[icd_i33%,icd_i38%,icd_i39%].dt.min();
@@ -701,7 +701,7 @@ BEGIN
                 {
                     txt:"atrial fibrillation based on coding"
                 }
-            );  
+            );
             
             af_icd => eadv.[icd_i48_%].dt.min();
             
@@ -717,7 +717,7 @@ BEGIN
                 {
                     txt:"Other atherosclerotic disease"
                 }
-            );   
+            );
             
             
             cva => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
@@ -734,7 +734,7 @@ BEGIN
                 txt: "Medication",
                 cite: "cvd_tg_2019,cvd_heart_foundation_2012"
             }
-            ); 
+            );
             
             
             
@@ -742,7 +742,7 @@ BEGIN
                 {
                     txt: "antiplatelet agents"
                 }
-            ); 
+            );
             
             
             
@@ -753,7 +753,7 @@ BEGIN
                 {
                     txt: "anti-coagulation including NOAC"
                 }
-            ); 
+            );
             
             
             rxn_anticoag => eadv.[rxnc_b01aa,rxnc_b01af,rxnc_b01ae,rxnc_b01ab].dt.min().where(val=1);
@@ -762,7 +762,7 @@ BEGIN
                 {
                     txt: "anti-arrhythmic"
                 }
-            ); 
+            );
             
         
             
@@ -772,7 +772,7 @@ BEGIN
                 {
                     txt: "diuretics"
                 }
-            ); 
+            );
             
             rxn_diu_loop => eadv.[rxnc_c03c%].dt.min().where(val=1);
             
@@ -784,7 +784,7 @@ BEGIN
                 {
                     txt: "lipid lowering"
                 }
-            ); 
+            );
             
             rxn_statin => eadv.[rxnc_c10aa,rxnc_c10bx,rxnc_c10ba].dt.min().where(val=1);
             
@@ -927,7 +927,7 @@ BEGIN
                     txt: "Risk factor assessment for CKD",
                     cite: "at_risk_ckd_ref1, at_risk_ckd_ref2, at_risk_ckd_ref3"
                 }
-            ); 
+            );
         
         
         

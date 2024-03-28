@@ -92,7 +92,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine Fistula intervention",
-                is_active:2            
+                is_active:2
                 
             }
         );
@@ -191,7 +191,7 @@ BEGIN
         
         ex_wt : {bw_dt > ibw_dt => bw_val - ibw_val};
         
-        dx => eadv.[psi_hd_param_dx]._.lastdv();        
+        dx => eadv.[psi_hd_param_dx]._.lastdv();
         
         mode_hdf : {mode_val in (20,22)=>1},{=>0};
         

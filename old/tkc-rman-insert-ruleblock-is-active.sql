@@ -26,7 +26,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess if active",                
+                description: "Ruleblock to assess if active",
                 is_active:2
                 
             }

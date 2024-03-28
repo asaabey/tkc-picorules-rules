@@ -2,6 +2,7 @@ from genericpath import isfile
 import os
 import re
 import json
+import textwrap
 from typing import Dict, List
 from dataclasses import dataclass, asdict
 from collections import Counter
@@ -98,23 +99,26 @@ def processfiles():
                     )
 
                     for idx, file_bid in enumerate(file_bids):
-                        fb = "        " + file_blockbodies[idx].strip()
-                        
-                        newlines:list[str] = list()
-                        lines = fb.splitlines()
-                        
-                        occurence_count = Counter([spaces for spaces in re.findall("^( *)", fb, flags=re.MULTILINE)])
-                        probable_indent = len(occurence_count.most_common(1)[0][0])
+                        if 1==1:
+                            fb = textwrap.dedent(file_blockbodies[idx]).strip("\n")
+                        else:
+                            fb = "        " + file_blockbodies[idx].strip()
+                            
+                            newlines:list[str] = list()
+                            lines = fb.splitlines()
+                            
+                            occurence_count = Counter([spaces for spaces in re.findall("^( *)", fb, flags=re.MULTILINE)])
+                            probable_indent = len(occurence_count.most_common(1)[0][0])
 
-                        for line in lines:
-                            #un-indent
-                            if should_unindent:
-                                line = re.sub(f"^ {{0,{probable_indent}}}", "", line)
-                                line = line.rstrip(' ')
+                            for line in lines:
+                                #un-indent
+                                if should_unindent:
+                                    line = re.sub(f"^ {{0,{probable_indent}}}", "", line)
+                                    line = line.rstrip(' ')
 
-                            newlines.append(line)
-                        
-                        fb = "\n".join(newlines)
+                                newlines.append(line)
+                            
+                            fb = "\n".join(newlines)
                         
                         if should_replace_rbid:
                             fb = fb.replace(BLOCK_PH, file_bid)

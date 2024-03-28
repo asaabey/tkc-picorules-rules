@@ -70,7 +70,7 @@ BEGIN
         ortho_amputation: { amp_fd!? or amp_ld!? => 1 },{=>0};
         
         #define_attribute(ortho_amputation,
-            { 
+            {
                 label: "Presence of amputation",
                 is_reportable:1,
                 type:2

@@ -25,7 +25,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Algorithm to assess hypertension",                
+                description: "Algorithm to assess hypertension",
                 is_active:2
                 
             }
@@ -220,7 +220,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess hypertension pharmacology recommendations",                
+                description: "Ruleblock to assess hypertension pharmacology recommendations",
                 is_active:0
                 
                 
@@ -317,7 +317,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to assess blood pressure control ",                
+                description: "Ruleblock to assess blood pressure control ",
                 is_active:2
                 
                 
@@ -349,30 +349,30 @@ BEGIN
         
         dbp => eadv.obs_bp_systolic._.lastdv().where(dt>=sysdate-730);
         
-        sbp_mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365); 
+        sbp_mu_1 => eadv.obs_bp_systolic.val.avg().where(dt>=sysdate-365);
         
-        sbp_med_1 => eadv.obs_bp_systolic.val.median().where(dt>=sysdate-365); 
-        
-        
-        
-        sbp_max_1 => eadv.obs_bp_systolic.val.max().where(dt>=sysdate-365); 
-        
-        sbp_min_1 => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-365); 
-        
-        
-        dbp_mu_1 => eadv.obs_bp_diastolic.val.avg().where(dt>=sysdate-365); 
-        
-        dbp_med_1 => eadv.obs_bp_diastolic.val.median().where(dt>=sysdate-365); 
+        sbp_med_1 => eadv.obs_bp_systolic.val.median().where(dt>=sysdate-365);
         
         
         
-        dbp_max_1 => eadv.obs_bp_diastolic.val.max().where(dt>=sysdate-365); 
+        sbp_max_1 => eadv.obs_bp_systolic.val.max().where(dt>=sysdate-365);
         
-        dbp_min_1 => eadv.obs_bp_diastolic.val.min().where(dt>=sysdate-365); 
+        sbp_min_1 => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-365);
+        
+        
+        dbp_mu_1 => eadv.obs_bp_diastolic.val.avg().where(dt>=sysdate-365);
+        
+        dbp_med_1 => eadv.obs_bp_diastolic.val.median().where(dt>=sysdate-365);
         
         
         
-        n_1 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-365); 
+        dbp_max_1 => eadv.obs_bp_diastolic.val.max().where(dt>=sysdate-365);
+        
+        dbp_min_1 => eadv.obs_bp_diastolic.val.min().where(dt>=sysdate-365);
+        
+        
+        
+        n_1 => eadv.obs_bp_systolic.val.count().where(dt>=sysdate-365);
         
         opt_1_n => eadv.obs_bp_systolic.val.count().where(val<sbp_target_max and val>=sbp_target_min and dt>=sysdate-365);
         
@@ -392,7 +392,7 @@ BEGIN
         
         [[rb_id]] : {coalesce(n_1,0)>0 =>1},{=>0};
         
-        #define_attribute(sbp_mu_1, 
+        #define_attribute(sbp_mu_1,
             {
                 label: "Mean systolic bp over 1 year",
                 is_reportable:1,

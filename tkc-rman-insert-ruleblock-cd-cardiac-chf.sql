@@ -53,7 +53,7 @@ BEGIN
         
         rx_arni : {rx_arni_ld!? =>1},{=>0};
         
-        #define_attribute(rx_arni,{ 
+        #define_attribute(rx_arni,{
               label: "prescribed ARNI",
               type: 2,
               is_reportable: 1
@@ -68,26 +68,26 @@ BEGIN
         [[rb_id]] : {chf=1 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "presence of CHF",
                 type : 2,
                 is_reportable:1
             }
         );
         
-        #define_attribute(dcm,{ 
+        #define_attribute(dcm,{
                 label: "presence of dilated cardiomyopathy",
                 type :12,
                 is_reportable:1
         });
         
-        #define_attribute(hocm,{ 
+        #define_attribute(hocm,{
                 label: "presence of hypertrophic cardiomyopathy",
                 type : 12,
                 is_reportable:1
         });
         
-        #define_attribute(rcm,{ 
+        #define_attribute(rcm,{
                 label: "presence of restrictive cardiomyopathy",
                 type : 12,
                 is_reportable:1

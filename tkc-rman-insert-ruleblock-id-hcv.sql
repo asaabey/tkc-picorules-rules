@@ -37,7 +37,7 @@ BEGIN
         [[rb_id]] : { coalesce(icpc_code,icd_code)!? => 1 },{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of Chronic Hepatitis C",
                 is_reportable:1,
                 type:2

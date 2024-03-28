@@ -39,7 +39,7 @@ BEGIN
         
         op_att => eadv.[enc_op_%].att.last();
         
-        [[rb_id]] : { op_ld!? => 1 },{=>0};    
+        [[rb_id]] : { op_ld!? => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],

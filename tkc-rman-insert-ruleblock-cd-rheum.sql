@@ -48,7 +48,7 @@ BEGIN
         [[rb_id]] : { sle_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of SLE",
                 is_reportable:1,
                 type:2
@@ -106,7 +106,7 @@ BEGIN
         [[rb_id]] : { ra_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of Rheumatoid arthritis",
                 is_reportable:1,
                 type:2
@@ -158,7 +158,7 @@ BEGIN
         [[rb_id]] : { aps_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of Antiphosphlipid syndrome",
                 is_reportable:1,
                 type:2
@@ -212,7 +212,7 @@ BEGIN
         [[rb_id]] : { coalesce(icd_fd,icpc_fd,rxnc_m04aa_fd)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of Gout",
                 is_reportable:1,
                 type:2

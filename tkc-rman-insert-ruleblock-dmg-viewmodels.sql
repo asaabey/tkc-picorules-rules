@@ -30,9 +30,9 @@ BEGIN
                 
             }
         );
-                
         
-                
+        
+        
         loc_def => rout_dmg_loc.loc_def.val.bind();
         
         loc_mode_n => rout_dmg_loc.loc_mode_n.val.bind();
@@ -100,9 +100,9 @@ BEGIN
         
         preg_1y_f => rout_pregnancy.preg_1y_f.val.bind();
         
-        [[rb_id]] : { .=> dmg_source};    
+        [[rb_id]] : { .=> dmg_source};
         
-       #define_attribute(
+        #define_attribute(
             [[rb_id]],
             {
                 label:"Demographic phc source",
@@ -166,7 +166,7 @@ BEGIN
                 is_reportable:1
             }
         );
-                
+        
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     

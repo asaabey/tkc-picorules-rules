@@ -23,27 +23,27 @@ BEGIN
                 
         sp => rout_cd_hep_b_sero.hbv_phase.val.bind();
         
-        vl_val => rout_cd_hep_b_sero.vl_val.val.bind(); 
+        vl_val => rout_cd_hep_b_sero.vl_val.val.bind();
         
-        vl_dt => rout_cd_hep_b_sero.vl_dt.val.bind(); 
+        vl_dt => rout_cd_hep_b_sero.vl_dt.val.bind();
         
         
-                
+        
         /* cd_hepb_coded */
-                
-        cs => rout_cd_hepb_coded.hepb_status.val.bind();
-                
-        rx => rout_cd_hepb_coded.rx_av_ld.val.bind();
-                
-        ck : {. => (coalesce(cs,0) * 1000) + (coalesce(ss,0) * 100) + coalesce(sp,0)}; 
         
-        rx_entecavir => rout_rx_av_nrti.entecavir.val.bind(); 
+        cs => rout_cd_hepb_coded.hepb_status.val.bind();
+        
+        rx => rout_cd_hepb_coded.rx_av_ld.val.bind();
+        
+        ck : {. => (coalesce(cs,0) * 1000) + (coalesce(ss,0) * 100) + coalesce(sp,0)};
+        
+        rx_entecavir => rout_rx_av_nrti.entecavir.val.bind();
                 
-        rx_tenofovir => rout_rx_av_nrti.tenofovir.val.bind(); 
+        rx_tenofovir => rout_rx_av_nrti.tenofovir.val.bind();
                 
-        rx_lamivudine => rout_rx_av_nrti.lamivudine.val.bind(); 
+        rx_lamivudine => rout_rx_av_nrti.lamivudine.val.bind();
                 
-        rx_adefovir => rout_rx_av_nrti.adefovir.val.bind(); 
+        rx_adefovir => rout_rx_av_nrti.adefovir.val.bind();
                 
         rx_av : { rx_entecavir!? => 1},{ rx_tenofovir!? => 2},{ rx_lamivudine!? => 3},{ rx_adefovir!? => 4};
                 
@@ -55,7 +55,7 @@ BEGIN
                           
         c_s_cngr_lbl : { c_s_cngr=1000 => `Coded and Seropositive`},{ c_s_cngr=1010 => `Coded but Seronegative`},{ c_s_cngr=1011 => `Not Coded but Seropositive`};
                 
-        chb_flag : {c_s_cngr in (1000,1010,1011)=>1},{=>0}; 
+        chb_flag : {c_s_cngr in (1000,1010,1011)=>1},{=>0};
         cd_hepb_master : {coalesce(ss, sp )!? or cs>1 =>1};
         
         chb_imm_tol_flg : {sp=1 => 1};

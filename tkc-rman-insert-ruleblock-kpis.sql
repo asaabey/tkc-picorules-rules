@@ -47,14 +47,14 @@ BEGIN
 
         total_dc_n => eadv.[icd_%].dt.distinct_count(0).where(dt > sysdate-365);
         #define_attribute(total_dc_n,
-            { 
+            {
                 label: "The total number of discharges."
             }
         );
 
         z491_dc_n => eadv.[icd_z49_1].dt.distinct_count(0).where(dt > sysdate-365);
         #define_attribute(z491_dc_n,
-            { 
+            {
                 label: "The number of discharges with Z49 icd code as diagnosis."
             }
         );
@@ -62,7 +62,7 @@ BEGIN
         [[rb_id]] : {. =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a placeholder variable, useful info stored in other variables in this block"
             }
         );

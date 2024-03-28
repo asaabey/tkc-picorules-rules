@@ -130,7 +130,7 @@ BEGIN
         
         /* fix201022 if on RRT phc will default to EDW */
         
-        dmg_source : {rrt>0 => 900},{ phc_1 > 0 => phc_1 },{=>999};    
+        dmg_source : {rrt>0 => 900},{ phc_1 > 0 => phc_1 },{=>999};
         
         
        

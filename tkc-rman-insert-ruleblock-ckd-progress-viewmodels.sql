@@ -69,11 +69,11 @@ BEGIN
         
         dbp_target_max => rout_cd_htn_bp_control.dbp_target_max.val.bind();
         
-        sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind(); 
+        sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind();
         
-        sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind(); 
+        sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind();
         
-        dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind(); 
+        dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind();
         
         dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
         
@@ -125,7 +125,7 @@ BEGIN
         #define_attribute(edu_init,{label:"CKD CKD Education Initial",is_reportable:1,type:12});
         #define_attribute(edu_rv,{label:"CKD CKD Education Review",is_reportable:1,type:12});
         
-        [[rb_id]] : { ckd>0 => 1};    
+        [[rb_id]] : { ckd>0 => 1};
         
        
                 

@@ -47,7 +47,7 @@ BEGIN
         [[rb_id]] : { code_ld!? and multi=1 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of recurrent soft tissue infection",
                 is_reportable:1,
                 type:2
@@ -103,7 +103,7 @@ BEGIN
         [[rb_id]] : { coalesce(cap_viral_ld, cap_strep_ld,cap_hi_ld,cap_nos_ld,cap_mel_ld)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of respiratory infection requiring hospitalization",
                 is_reportable:1,
                 type:2
@@ -111,7 +111,7 @@ BEGIN
         );
         
         #define_attribute(cap_crypt ,
-            { 
+            {
                 label: "Presence of cryptococcal infection",
                 is_reportable:1,
                 type:2

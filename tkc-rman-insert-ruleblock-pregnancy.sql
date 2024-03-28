@@ -41,7 +41,7 @@ BEGIN
         
         partum_lscs_n => eadv.[icd_o82].dt.distinct_count();
         
-        us_2_ld => eadv.[ris_img_uspreg%].dt.last().where(dt < us_ld - 304); 
+        us_2_ld => eadv.[ris_img_uspreg%].dt.last().where(dt < us_ld - 304);
         
         preg_1y_f : { coalesce(us_ld,gravid_icpc_ld, partum_ld)> sysdate-365 =>1},{=>0};
         

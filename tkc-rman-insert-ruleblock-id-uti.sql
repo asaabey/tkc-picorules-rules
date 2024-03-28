@@ -40,7 +40,7 @@ BEGIN
         [[rb_id]] : { uti_ld -uti_fd >90 or uti_rec_icpc_ld!? => 1 },{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of recurrent uti",
                 is_reportable:1,
                 type:2

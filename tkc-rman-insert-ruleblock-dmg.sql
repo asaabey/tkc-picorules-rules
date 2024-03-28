@@ -57,7 +57,7 @@ BEGIN
         st_rman_rb : {. => 2010};
         
         st_rman_rb_err : {. => 2014};
-        [[rb_id]] : { 1=1 => 1},{=>0};  
+        [[rb_id]] : { 1=1 => 1},{=>0};
 
         #define_attribute(
             age,
@@ -193,13 +193,13 @@ BEGIN
 --        
 --        last_t => eadv.dmg_location._.lastdv().where(substr(val,-1)<>1);
 --        
---        loc_last_val : {.=> to_number(substr(last_val,4))};       
+--        loc_last_val : {.=> to_number(substr(last_val,4))};
 --        
---        loc_last_t_val : {.=> to_number(substr(last_t_val,4))};  
+--        loc_last_t_val : {.=> to_number(substr(last_t_val,4))};
 --        
 --        last_1 => eadv.dmg_location._.lastdv(1).where(substr(val,-1)=1);
 --        
---        loc_last_1_val : {.=> to_number(substr(last_1_val,4))};       
+--        loc_last_1_val : {.=> to_number(substr(last_1_val,4))};
 --        
 --        loc_n => eadv.dmg_location.val.count().where(substr(val,-1)=1);
 --        
@@ -209,7 +209,7 @@ BEGIN
 --
 --        loc_def : {loc_last_val=loc_last_1_val and last_dt-last_1_dt>90 => loc_last_val},{=> loc_mode_def};
 --
---        loc_def_alt : {loc_def? =>loc_last_t_val};      
+--        loc_def_alt : {loc_def? =>loc_last_t_val};
 --        
 --        loc_null : {coalesce(loc_def,loc_def_alt)?=>1},{=>0};
 --        
@@ -230,11 +230,11 @@ BEGIN
 --       
 --        episode_single : { loc_n=1 => 1},{=>0};
 --        
---        loc_single : { mode_pct=1 =>1},{=>0}; 
+--        loc_single : { mode_pct=1 =>1},{=>0};
 --        
 --        
 --        
---        [[rb_id]] : { coalesce(loc_def,0)>0 =>loc_def },{ coalesce(loc_def_alt,0)>0 => loc_def_alt},{=>0};    
+--        [[rb_id]] : { coalesce(loc_def,0)>0 =>loc_def },{ coalesce(loc_def_alt,0)>0 => loc_def_alt},{=>0};
 --        
 --        
 --        
@@ -360,7 +360,7 @@ BEGIN
 --        
 --        tkc_provider : { coalesce(loc_region,0)=1 or phc_1 in(36,37,38,39,41,42) =>1},{=>2};
 --        
---        [[rb_id]] : { phc_1 > 0 => phc_1 },{=>999};    
+--        [[rb_id]] : { phc_1 > 0 => phc_1 },{=>999};
 --        
 --        
 --       
@@ -400,7 +400,7 @@ BEGIN
         
         nhr : { mbs731!? => 1},{=>0};
         
-        [[rb_id]] : { nhr=1 => 1 },{=>0};    
+        [[rb_id]] : { nhr=1 => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],
@@ -445,7 +445,7 @@ BEGIN
         
         alt_eid_last_1 => eadv.dmg_eid_alt.val.last(1);
 
-        [[rb_id]] : { alt_eid_last!? => 1 },{=>0};    
+        [[rb_id]] : { alt_eid_last!? => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],
@@ -490,7 +490,7 @@ BEGIN
          
         hrn_last => eadv.dmg_hrn.val.last();
 
-        [[rb_id]] : { hrn_last!? => 1 },{=>0};    
+        [[rb_id]] : { hrn_last!? => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],
@@ -526,7 +526,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to assess TKC user interaction",
-                is_active:2                
+                is_active:2
             }
         );
          
@@ -534,7 +534,7 @@ BEGIN
         
         tag_sys_pr => eadv.[sys_record_partial]._.lastdv();
         
-        [[rb_id]] : { coalesce(corr_ld,tag_sys_pr_dt)!? => 1 },{=>0};    
+        [[rb_id]] : { coalesce(corr_ld,tag_sys_pr_dt)!? => 1 },{=>0};
         
         #define_attribute(
             tag_sys_pr_dt,

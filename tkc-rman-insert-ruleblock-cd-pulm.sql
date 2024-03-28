@@ -39,7 +39,7 @@ BEGIN
         [[rb_id]] : { greatest(copd)>0 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of COPD"
             }
         );

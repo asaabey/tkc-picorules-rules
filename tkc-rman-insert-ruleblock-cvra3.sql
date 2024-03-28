@@ -23,7 +23,7 @@ BEGIN
         /* Ruleblock to assess CVRA risk based on Aus Predict1*/
         
         #define_ruleblock(cvra_predict1_aus,{
-                description: "Ruleblock to assess CVRA risk based on Aus Predict1",            
+                description: "Ruleblock to assess CVRA risk based on Aus Predict1",
                 is_active:0
                 
         });

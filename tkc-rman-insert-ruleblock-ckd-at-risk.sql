@@ -25,7 +25,7 @@ BEGIN
         
         #define_ruleblock(at_risk,
             {
-                description: "Ruleblock to assess at_risk",                
+                description: "Ruleblock to assess at_risk",
                 is_active:2
                 
             }
@@ -36,7 +36,7 @@ BEGIN
                     txt: "Risk factor assessment for CKD",
                     cite: "at_risk_ckd_ref1, at_risk_ckd_ref2, at_risk_ckd_ref3"
                 }
-            ); 
+            );
         
         ld => eadv.[icd_%,icpc_%,lab_%,rxnc_%,obs_%,mbs_%].dt.max();
         

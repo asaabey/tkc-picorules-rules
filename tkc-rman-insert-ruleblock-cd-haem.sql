@@ -59,7 +59,7 @@ BEGIN
         [[rb_id]] : { low_cat>0 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of haematological disease",
                 is_reportable:1,
                 type:2

@@ -21,7 +21,7 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-    
+        
         /* Rule block to generate rrt panel view model */
         
         #define_ruleblock(rrt_panel_vm,
@@ -325,7 +325,7 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
         
-        enc_ld => rout_engmnt_renal.enc_ld.val.bind();      
+        enc_ld => rout_engmnt_renal.enc_ld.val.bind();
                 
         ipa_sep_ld => rout_ipa_sep.icd_ld.val.bind();
         
@@ -335,21 +335,21 @@ BEGIN
         
         ibw_dt  => rout_rrt_hd_param.ibw_dt.val.bind();
         
-        sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind(); 
+        sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind();
         
         dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind();
         
-        sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind(); 
+        sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind();
         
         spktv => rout_rrt_hd_adequacy.spktv.val.bind();
         
-        hours => rout_rrt_hd_param.hours_val.val.bind(); 
+        hours => rout_rrt_hd_param.hours_val.val.bind();
         
             
         
 
         
-        [[rb_id]] : { rrt in (1,3) => 1};    
+        [[rb_id]] : { rrt in (1,3) => 1};
         
        
                 

@@ -35,7 +35,7 @@ BEGIN
         cd_pulm_bt : { bt_fd!? =>1},{=>0};
         
         #define_attribute(cd_pulm_bt,
-            { 
+            {
                 label: "Presence of Bronchiectasis"
             }
         );

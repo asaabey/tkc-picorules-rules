@@ -60,7 +60,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg4410._.lastdv();
         
@@ -74,13 +74,13 @@ BEGIN
             {
                 txt:"Exclude previously diagnosed nephrotic and if recent renal encounters"
             }
-        );  
+        );
         
         
         
         dx_nephrotic => eadv.[icd_n04%].dt.count(0);
         
-                
+        
         ref_ren => rout_engmnt_renal.ref_renal.val.bind();
         
         enc_ren => rout_engmnt_renal.enc_renal.val.bind();
@@ -102,7 +102,7 @@ BEGIN
         uacr2 => eadv.lab_ua_acr.val.last(1).where(dt>sysdate-365);
         
         #doc(,{
-                txt:"Use delta of log transformed uacr" 
+                txt:"Use delta of log transformed uacr"
         });
        
         uacr_log_delta : {uacr1>0 and uacr2>0 => round(log(10,uacr1)-log(10,uacr2),1)};
@@ -177,7 +177,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg4420._.lastdv();
         
@@ -240,7 +240,7 @@ BEGIN
             }
         );
         
-        /*  Urine analysis */        
+        /*  Urine analysis */
         
         ua_rbc => eadv.lab_ua_rbc.val.last().where(dt>sysdate-365);
         
@@ -257,10 +257,10 @@ BEGIN
         
         
         t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
-                    {ua_rbc>100 and ua_leu<40 => 1},    
+                    {ua_rbc>100 and ua_leu<40 => 1},
                     {=>0};
         
-        [[rb_id]] : { t4420_code >=2 and ex_flag=0 => 1},{=>0};            
+        [[rb_id]] : { t4420_code >=2 and ex_flag=0 => 1},{=>0};
         
         #define_attribute(
             [[rb_id]],
@@ -304,7 +304,7 @@ BEGIN
         
         dod => rout_dmg.dod.val.bind();
         
-        rrt => rout_rrt.rrt.val.bind(); 
+        rrt => rout_rrt.rrt.val.bind();
         
         ckd => rout_ckd.ckd.val.bind();
         
@@ -318,31 +318,31 @@ BEGIN
 
 
 
-        cr_n => eadv.lab_bld_creatinine.dt.count(); 
-        cr_fd => eadv.lab_bld_creatinine.dt.min(); 
-        cr_ld => eadv.lab_bld_creatinine.dt.max(); 
+        cr_n => eadv.lab_bld_creatinine.dt.count();
+        cr_fd => eadv.lab_bld_creatinine.dt.min();
+        cr_ld => eadv.lab_bld_creatinine.dt.max();
         
         egfr_base => eadv.lab_bld_egfr_c.val.lastdv().where(dt<cr_ld-90 and dt>cr_ld-365);
         
-        cr_span_days : {1=1 => cr_ld-cr_fd}; 
-        cr_tail_days : {1=1 => round(sysdate-cr_ld,0)}; 
+        cr_span_days : {1=1 => cr_ld-cr_fd};
+        cr_tail_days : {1=1 => round(sysdate-cr_ld,0)};
         
         #doc(,{
                 txt:"Minima Maxima and last"
         });
         
         
-        cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365); 
-        cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365); 
+        cr_lv => eadv.lab_bld_creatinine.val.last().where(dt>sysdate-365);
+        cr_max_1y => eadv.lab_bld_creatinine.val.max().where(dt>sysdate-365);
         cr_min_1y_real => eadv.lab_bld_creatinine.val.min().where(dt>sysdate-365);
         
         #doc(,{
                 txt:"adjust creatinine for unusually low values due to error"
-        }); 
+        });
         
-        cr_median_1y => eadv.lab_bld_creatinine.val.median().where(dt<cr_ld-90);  
+        cr_median_1y => eadv.lab_bld_creatinine.val.median().where(dt<cr_ld-90);
         
-        cr_min_1y : { cr_min_1y_real > 40 => cr_min_1y_real},{=> cr_median_1y};  
+        cr_min_1y : { cr_min_1y_real > 40 => cr_min_1y_real},{=> cr_median_1y};
         
         #doc(,
             {
@@ -351,7 +351,7 @@ BEGIN
         );
         
         
-        cr_max_ld_1y => eadv.lab_bld_creatinine.dt.max().where(val=cr_max_1y and dt>sysdate-365); 
+        cr_max_ld_1y => eadv.lab_bld_creatinine.dt.max().where(val=cr_max_1y and dt>sysdate-365);
         win_lb : {1=1 => cr_max_ld_1y-30 };
         win_ub : {1=1 => cr_max_ld_1y+30 };
         
@@ -394,9 +394,9 @@ BEGIN
         
         
         
-        akin_stage : {cr_base_max_1y_qt>3 => 3 }, 
-                     {cr_base_max_1y_qt>2 => 2 }, 
-                     {cr_base_max_1y_qt>1.5 => 1 }, 
+        akin_stage : {cr_base_max_1y_qt>3 => 3 },
+                     {cr_base_max_1y_qt>2 => 2 },
+                     {cr_base_max_1y_qt>1.5 => 1 },
                      {=>0};
         
         #doc(,
@@ -415,13 +415,13 @@ BEGIN
             {
                 txt:"AKI resolution to baseline"
             }
-        );  
+        );
         
 
         
         aki_outcome : {akin_stage>=1 and cr_max_lv_1y_qt>=1 and cr_max_lv_1y_qt<1.2 => 3 },
                       {akin_stage>=1 and cr_max_lv_1y_qt>=1.2 and cr_max_lv_1y_qt<1.7 => 2},
-                      {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};  
+                      {akin_stage>=1 and cr_max_lv_1y_qt>=1.7 => 1};
         
         ex_flag : {dod!? or rrt>0 or ckd>4 or csu_act_dt!? or dmg_source=999 => 1},{=>0};
         
@@ -548,7 +548,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg4610._.lastdv();
         
@@ -556,8 +556,8 @@ BEGIN
         
         ckd_stage => rout_ckd.ckd_stage.val.bind();
         
-        cga_a_val => rout_ckd.cga_a_val.val.bind();               
-               
+        cga_a_val => rout_ckd.cga_a_val.val.bind();
+        
         #doc(,{
                 txt:"Get last l-1 and maximum where max is earlier than l-1"
         });
@@ -572,7 +572,7 @@ BEGIN
                 txt:"Calc slope from max to last"
         });
         
-        eb : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};  
+        eb : {egfr_l_dt > egfr_max_dt => round((egfr_l_val-egfr_max_val)/((egfr_l_dt-egfr_max_dt)/365),2)};
         
         #doc(,{
                 txt:"Calc l and l-1 ratio to establish steady within 6 months accepting 20pct variance"
@@ -621,9 +621,9 @@ BEGIN
         ex_flag : {dod!? or enc_ren=1 or ref_ren=1  or dmg_source=0 or age>69 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
           
         [[rb_id]] : {
-                        ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh 
-                        and egfr_l_dt - egfr_max_dt >180 
-                        and egfr_l_val<80 and egfr_max_val is not null 
+                        ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh
+                        and egfr_l_dt - egfr_max_dt >180
+                        and egfr_l_val<80 and egfr_max_val is not null
                         and egfr_ss=1
                         and cga_a_val>3
                         and ex_flag=0 => 1
@@ -639,7 +639,7 @@ BEGIN
                     type:2,
                     priority:1
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -694,7 +694,7 @@ BEGIN
           
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg4620._.lastdv();
         
@@ -721,7 +721,7 @@ BEGIN
                     type:2,
                     priority:1
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -752,7 +752,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.[csu_action_tg4720]._.lastdv();
         
@@ -787,7 +787,7 @@ BEGIN
                     type:2,
                     priority:3
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -817,7 +817,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.[csu_action_tg4722]._.lastdv();
         
@@ -852,7 +852,7 @@ BEGIN
                     type:2,
                     priority:3
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -886,7 +886,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg4660._.lastdv();
         
@@ -925,7 +925,7 @@ BEGIN
                     is_trigger:1,
                     type:2
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -957,7 +957,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg2610._.lastdv();
         
@@ -1029,7 +1029,7 @@ BEGIN
                     type:2,
                     priority:2
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -1062,7 +1062,7 @@ BEGIN
         
         #doc(,{
                 txt:"previous CSU action and assumes that the trigger will never fire again"
-        });  
+        });
         
         csu_act => eadv.csu_action_tg4810._.lastdv();
         
@@ -1095,7 +1095,7 @@ BEGIN
                     type:2,
                     priority:2
                 }
-            ); 
+            );
 
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -1152,7 +1152,7 @@ BEGIN
                     type:2,
                     priority:1
                 }
-            ); 
+            );
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -1209,7 +1209,7 @@ BEGIN
                     type:2,
                     priority:1
                 }
-            ); 
+            );
     ';
 
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

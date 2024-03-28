@@ -36,7 +36,7 @@ BEGIN
         [[rb_id]] : { op_enc_ld!? => 1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Attendance at oncology clinic",
                 is_reportable:1,
                 type:2
@@ -100,7 +100,7 @@ BEGIN
         [[rb_id]] : { any_met_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of metastatic carcinoma",
                 is_reportable:1,
                 type:2
@@ -168,7 +168,7 @@ BEGIN
         ca_solid : { any_ca=1 or ca_mets=1 => 1},{=>0};
         
         #define_attribute(ca_solid,
-            { 
+            {
                 label: "Presence of solid organ carcinoma",
                 is_reportable:1,
                 type:2
@@ -219,7 +219,7 @@ BEGIN
                 {
                     txt:"Aromatase inhibitor or anti-oestrogen therapy"
                 }
-        );  
+        );
         
         rxnc_l02bg => eadv.rxnc_l02bg.dt.min().where(val=1);
         
@@ -228,7 +228,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of breast carcinoma",
                 is_reportable:1,
                 type:2
@@ -280,7 +280,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of prostate carcinoma",
                 is_reportable:1,
                 type:2
@@ -331,7 +331,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of Renal cell carcinoma RCC",
                 is_reportable:1,
                 type:2
@@ -381,7 +381,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of colorectal carcinoma",
                 is_reportable:1,
                 type:2
@@ -431,7 +431,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of lung carcinoma",
                 is_reportable:1,
                 type:2
@@ -482,7 +482,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of thyroid carcinoma",
                 is_reportable:1,
                 type:2
@@ -524,14 +524,14 @@ BEGIN
             }
         );
         
-        icd_fd => eadv.[icd_c54_1].dt.first();                
+        icd_fd => eadv.[icd_c54_1].dt.first();
         
         code_fd : { . => least_date(icd_fd)};
       
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of endometrial carcinoma",
                 is_reportable:1,
                 type:2
@@ -573,7 +573,7 @@ BEGIN
             }
         );
         
-        icd_fd => eadv.[icd_c56%].dt.first();  
+        icd_fd => eadv.[icd_c56%].dt.first();
         
         icpc_fd => eadv.[icpc_x77006].dt.first();
         
@@ -582,7 +582,7 @@ BEGIN
         ca_ovarian : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of ovarian carcinoma",
                 is_reportable:1,
                 type:2
@@ -625,7 +625,7 @@ BEGIN
         );
         
         
-        icd_fd => eadv.[icd_c43%].dt.first();  
+        icd_fd => eadv.[icd_c43%].dt.first();
         
         icpc_fd => eadv.[icpc_s77003].dt.first();
         
@@ -634,7 +634,7 @@ BEGIN
         ca_skin_melanoma : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of melanoma",
                 is_reportable:1,
                 type:2
@@ -682,7 +682,7 @@ BEGIN
         ca_misc : { ca_att!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of misc carcinoma",
                 is_reportable: 1,
                 type: 2

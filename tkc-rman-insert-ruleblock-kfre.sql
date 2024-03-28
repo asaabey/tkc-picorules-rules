@@ -186,7 +186,7 @@ BEGIN
         
         age : { dob< sysdate => (sysdate-dob)/365.25};
         
-        [[rb_id]] : { pcd_dt is not null =>1},{=>0};       
+        [[rb_id]] : { pcd_dt is not null =>1},{=>0};
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);

@@ -45,7 +45,7 @@ BEGIN
         [[rb_id]] : {. =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a test variable uics"
             }
         );

@@ -37,7 +37,7 @@ BEGIN
         [[rb_id]] : { coalesce(tb_code,ltb_code)!? => 1 },{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of tuberculosis",
                 is_reportable:1,
                 type:2

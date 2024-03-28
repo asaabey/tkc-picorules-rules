@@ -78,7 +78,7 @@ BEGIN
                 { age between 70 and 79 => 1},
                 { age>=80 =>2};
         
-        w_cardiac : { greatest(cad, vhd,htn)>0=>5},{=>0};   
+        w_cardiac : { greatest(cad, vhd,htn)>0=>5},{=>0};
         
         w_pulm : { pulm=1 =>3},{=>0};
         
@@ -94,8 +94,8 @@ BEGIN
         
         w_obesity : { obesity=1 =>-1},{=>0};
         
-        pmp_sum : {.=> w_inpt + w_sepsis + w_poor_func + w_ca_diss + w_age 
-            + w_cardiac + w_pulm + w_renal + w_steroids 
+        pmp_sum : {.=> w_inpt + w_sepsis + w_poor_func + w_ca_diss + w_age
+            + w_cardiac + w_pulm + w_renal + w_steroids
             + w_bleeding + w_dnr + w_low + w_obesity};
         
         pmp_score : { pmp_sum  between -1 and 5 => 0.1},
@@ -109,7 +109,7 @@ BEGIN
         [[rb_id]] : { pmp_score >0 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "PMP score"
             }
         );

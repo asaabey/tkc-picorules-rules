@@ -53,7 +53,7 @@ BEGIN
         
         hd_z49_1y_n => eadv.icd_z49_1.dt.count(0).where(dt>sysdate-365);
         
-        hd_dt => eadv.icd_z49_1.dt.max(1900); 
+        hd_dt => eadv.icd_z49_1.dt.max(1900);
         
         hd_dt_min => eadv.icd_z49_1.dt.min();
         
@@ -127,7 +127,7 @@ BEGIN
         
         asm_viol_30 : {nvl(egfr_30_qt,1)>1.2 or nvl(egfr_30_qt,1)<0.8  => 1},{=> 0};
         
-        asm_viol_ex : {asm_viol_30=1 =>0},{=>1};       
+        asm_viol_ex : {asm_viol_30=1 =>0},{=>1};
                
         #doc(,
             {
@@ -159,7 +159,7 @@ BEGIN
         
         acr_l => eadv.lab_ua_acr.val.lastdv().where(dt > sysdate - 365);
         
-        acr_l1 => eadv.lab_ua_acr.val.lastdv().where(dt < acr_l_dt-30 and dt > sysdate - 730);    
+        acr_l1 => eadv.lab_ua_acr.val.lastdv().where(dt < acr_l_dt-30 and dt > sysdate - 730);
         
         a_pers : {acr_l_val>3 and acr_l1_val>3 => 1},{=>0};
         
@@ -180,8 +180,8 @@ BEGIN
                 {acr_l_val>300 => 4},{=>0};
         
         
-       
-        avf => eadv.caresys_3450901.dt.max();        
+        
+        avf => eadv.caresys_3450901.dt.max();
         
         ckd :{g_l_val=1 and a_l_val>1 and ckd_ex_flag=0=> 1},
                 {g_l_val=2 and a_l_val>1 and ckd_ex_flag=0 => 2},
@@ -190,11 +190,11 @@ BEGIN
         
         dx_ckd0_  => eadv.[icpc_u99035,icpc_u99036,icpc_u99037,icpc_u99043,icpc_u99044,icpc_u99038,icpc_u99039,icpc_u88j91,icpc_u88j92,icpc_u88j93,icpc_u88j94,icpc_u88j95,icpc_u88j96].val.last();
         
-        dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};            
+        dx_ckd : { 1=1 => nvl(dx_ckd0_,0)};
         
         dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
         
-       
+        
         
         
         
@@ -295,7 +295,7 @@ BEGIN
         
         
         
-        screen_egfr : { egfr_1y_n>0 =>1 },{ => 0}; 
+        screen_egfr : { egfr_1y_n>0 =>1 },{ => 0};
         
         screen_uacr : { uacr_1y_n>0 =>1 },{ => 0};
         
@@ -315,7 +315,7 @@ BEGIN
         [[rb_id]] : {1=1 =>1};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "This is a test variable uics"
             }
         );

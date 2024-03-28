@@ -37,7 +37,7 @@ BEGIN
         
         rrt => rout_rrt.rrt.val.bind();
                
-        ckd => rout_ckd.ckd.val.bind();       
+        ckd => rout_ckd.ckd.val.bind();
         
         #doc(,
             {
@@ -211,7 +211,7 @@ BEGIN
             }
         );
         
-        bxk : { ris_bxk_ld!? =>1},{=>0};  
+        bxk : { ris_bxk_ld!? =>1},{=>0};
         
         bxk_null : { ris_bxk_ld?  =>1},{=>0};
         
@@ -254,7 +254,7 @@ BEGIN
         #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to determine CKD complications",
-                is_active:2                
+                is_active:2
             }
         );
                 
@@ -263,9 +263,9 @@ BEGIN
                 txt:"Complications including Hb low, metabolic bone, and electrolyte disturbances",
                 cite : "ckd_complications_ref1, ckd_complications_ref2"
             }
-        );        
+        );
         
-        ckd => rout_ckd.ckd.val.bind(); 
+        ckd => rout_ckd.ckd.val.bind();
         
         #doc(,
             {
@@ -351,7 +351,7 @@ BEGIN
         );
         
         
-        k_high : {k_val>=6 =>1},{=>0};      
+        k_high : {k_val>=6 =>1},{=>0};
         
         #doc(,
             {
@@ -607,7 +607,7 @@ BEGIN
         
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Existing coded ckd diagnoses"
             }
         );
@@ -640,7 +640,7 @@ BEGIN
           #define_ruleblock([[rb_id]],
             {
                 description: "Rule block to Calculate egfr metrics",
-                is_active:2                
+                is_active:2
             }
         );
         
@@ -900,7 +900,7 @@ BEGIN
             }
         );
         
-       #doc(,
+        #doc(,
             {
                 txt : "Access formation"
             }
@@ -908,16 +908,16 @@ BEGIN
         
         avf_proc => eadv.[caresys_3450901,caresys_3451200,caresys_3451800].dt.max();
         
-        avf_icpc => eadv.icpc_k99049.dt.max();        
-                
-        avf_icd => eadv.icd_z49_0.dt.max();        
+        avf_icpc => eadv.icpc_k99049.dt.max();
+        
+        avf_icd => eadv.icd_z49_0.dt.max();
         
         avf : { coalesce(avf_proc,avf_icd,avf_icpc)!?  =>1},{=>0};
         
         avf_dt : { coalesce(avf_proc,avf_icd,avf_icpc)!? => least_date(avf_proc,avf_icd,avf_icpc)};
         
         [[rb_id]] :{ .=> avf};
-                
+        
         #define_attribute(
             avf,
             {
@@ -927,7 +927,7 @@ BEGIN
             }
         );
 
-            
+        
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -961,7 +961,7 @@ BEGIN
                 txt : "Referral from primary care for renal"
         });
         
-        ref_ren_n => eadv.[ref_nephrologist,icpc_u67004].dt.count();       
+        ref_ren_n => eadv.[ref_nephrologist,icpc_u67004].dt.count();
         ref_ren_ld => eadv.[ref_nephrologist,icpc_u67004].dt.max();
         
         ref_renal : { coalesce(ref_ren_n,0)>0 =>1},{=>0};
@@ -1021,7 +1021,7 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-    
+        
         /* Rule block to assess careplan */
         
           #define_ruleblock([[rb_id]],
@@ -1032,7 +1032,7 @@ BEGIN
             }
         );
         
-       #doc(,
+        #doc(,
             {
                 txt : "Gather careplan info and extract CKD specific component"
             }
@@ -1099,11 +1099,11 @@ BEGIN
             }
         );
         
-       rrt => rout_rrt.rrt.val.bind();
+        rrt => rout_rrt.rrt.val.bind();
        
-       hd_131_n => rout_rrt.hd_131_n.val.bind();
+        hd_131_n => rout_rrt.hd_131_n.val.bind();
        
-       #doc(,{
+        #doc(,{
                 txt : "Gather egfr metrics "
         });
         
@@ -1255,7 +1255,7 @@ BEGIN
         );
         
                 
-        ckd_stage_1 : { ckd=1 => 1},{=>0}; 
+        ckd_stage_1 : { ckd=1 => 1},{=>0};
         
         ckd_stage_2 : { ckd=2 => 1},{=>0};
         

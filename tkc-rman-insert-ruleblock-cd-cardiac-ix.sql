@@ -49,7 +49,7 @@ BEGIN
         cd_cardiac_ix : {coalesce(echo_ld,cardang_ld)!? =>1},{=>0};
         
         #define_attribute(cd_cardiac_ix,
-            { 
+            {
                 label: "presence of cardiac investigations",
                 type : 2,
                 is_reportable:1

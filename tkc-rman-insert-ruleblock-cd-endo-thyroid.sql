@@ -45,7 +45,7 @@ BEGIN
         [[rb_id]] : { coalesce(code_fd,rx_h03aa_ld)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of hypothyroidism"
             }
         );

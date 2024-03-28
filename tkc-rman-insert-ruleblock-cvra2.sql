@@ -25,7 +25,7 @@ BEGIN
         
         #define_ruleblock([[rb_id]],
             {
-                description: "Ruleblock to apply Framingham equations",            
+                description: "Ruleblock to apply Framingham equations",
                 is_active:2
                 
             }
@@ -125,7 +125,7 @@ BEGIN
 
         ln_zero_ex1 : { nvl(least(age,tc,hdl,sbp),0)=0 => 1},{=>0};
         
-        risk_5_chd : {risk_high_ovr=0 and ln_zero_ex1=0 => 
+        risk_5_chd : {risk_high_ovr=0 and ln_zero_ex1=0 =>
             round(100*(1-EXP(-EXP((LN(5)-(15.5305+(28.4441*(1-male))+(-1.4792*LN(age))+(0*LN(age)*LN(age))+
             (-14.4588*LN(age)*(1-male))+(1.8515*LN(age)*LN(age)*(1-male))+(-0.9119*LN(sbp))+(-0.2767*smoke)+(-0.7181*LN(tc/hdl))+
             (-0.1759*1)+(-0.1999*1*(1-male))+(-0.5865*0)+(0*0*male)))/(EXP(0.9145)*EXP(-0.2784*(15.5305+(28.4441*(1-male))+
@@ -159,11 +159,11 @@ BEGIN
                 type:2,
                 is_reportable:1
             }
-        );    
+        );
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
-    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);  
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
 
     

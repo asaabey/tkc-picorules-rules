@@ -37,7 +37,7 @@ BEGIN
         [[rb_id]] : { coalesce(pelvic_frac,0)>0 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of fracture",
                 is_reportable:1,
                 type:2

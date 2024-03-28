@@ -39,7 +39,7 @@ BEGIN
         cd_pulm_copd : { greatest(copd)>0 =>1},{=>0};
         
         #define_attribute(cd_pulm_copd,
-            { 
+            {
                 label: "Presence of COPD"
             }
         );

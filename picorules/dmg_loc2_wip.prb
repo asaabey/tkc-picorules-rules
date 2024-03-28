@@ -24,7 +24,7 @@ Key index
 
 #doc(,{
             txt:"most likely location is calculated based on frequent location of services in order of merit
-                 1. rural primary care location
+                 1. rural primary care location 
                  2. any primary care loction
                  3. Tennat Creek or Katherine Hospital
                  4. Darwin or Alice Springs hospitals"
@@ -36,9 +36,9 @@ Key index
 });
 
 
-first_remote => eadv.[mbs_715].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) );
-frequent_remote_2y => eadv.[mbs_%].loc.stats_mode().where(  (dt>sysdate-740)     and (substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`)) );
-frequent_remote_alltime => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) );
+first_remote => eadv.[mbs_715].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
+frequent_remote_2y => eadv.[mbs_%].loc.stats_mode().where(  (dt>sysdate-740)     and (substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`)) ); 
+frequent_remote_alltime => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
 
 remote_ph_location : { . => to_number(substr(coalesce(first_remote, frequent_remote_2y, frequent_remote_alltime),-12))};
 
@@ -62,7 +62,7 @@ any_ph_location  : {.=>  to_number(substr(coalesce(frequent_ph_2y,frequent_ph_al
 
 rural_hospital_enc_n => eadv.[enc_%].dt.distinct_count().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`));
 rural_hospital_icd_n => eadv.[icd_%].dt.distinct_count().where((att <> `icd_z49_1`) and (substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`)));
-rural_hospital_enc_loc  => eadv.[enc_%].loc.stats_mode().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`));
+rural_hospital_enc_loc  => eadv.[enc_%].loc.stats_mode().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`)); 
 rural_hospital_icd_loc  => eadv.[icd_%].loc.stats_mode().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`));
 
 rural_hospital_enc : { rural_hospital_enc_n > 1 => rural_hospital_enc_loc};
@@ -75,8 +75,8 @@ rural_hospital_location  : {.=>  to_number(substr(coalesce(rural_hospital_enc,ru
 });
 
 
-tertiary_enc_loc => eadv.[enc_%].loc.stats_mode();
-tertiary_icd_loc => eadv.[icd_%].loc.stats_mode();
+tertiary_enc_loc => eadv.[enc_%].loc.stats_mode(); 
+tertiary_icd_loc => eadv.[icd_%].loc.stats_mode(); 
 
 
 any_hospital_location  : {.=>  to_number(substr(coalesce(tertiary_enc_loc,tertiary_icd_loc),-12))};

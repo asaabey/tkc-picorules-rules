@@ -35,7 +35,7 @@ BEGIN
         [[rb_id]] : { covid19_icpc!? => 1 },{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of covid19 infection",
                 is_reportable:1,
                 type:2

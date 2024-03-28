@@ -59,7 +59,7 @@ BEGIN
             }
         );
         
-        code_schiz_dt => eadv.[icd_f40%,icpc_p72%].dt.min();        
+        code_schiz_dt => eadv.[icd_f40%,icpc_p72%].dt.min();
         
         rx_n05a_dt => eadv.[rxnc_n05a%].dt.max().where(val=1);
         
@@ -72,7 +72,7 @@ BEGIN
         );
         code_epil_dt => eadv.[icd_g40%,icpc_n88%].dt.min();
         
-        /* 
+        /*
         pregabalin captured as antiepileptic although correct , inapp
         rx_n03_dt => eadv.[rxnc_n03%].dt.max().where(val=1);
         */
@@ -95,13 +95,13 @@ BEGIN
         [[rb_id]] : { greatest(md,epil,pd,schiz)>0 =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of CNS disorder"
             }
         );
         
         #define_attribute(dem,
-            { 
+            {
                 label: "Presence of Dementia",
                 is_reportable:1,
                 type:2
@@ -109,7 +109,7 @@ BEGIN
         );
         
         #define_attribute(epil,
-            { 
+            {
                 label: "Presence of Epilepsy",
                 is_reportable:1,
                 type:2
@@ -117,7 +117,7 @@ BEGIN
         );
         
         #define_attribute(pd,
-            { 
+            {
                 label: "Presence of Parkinsons disease",
                 is_reportable:1,
                 type:2

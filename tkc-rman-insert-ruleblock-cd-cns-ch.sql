@@ -59,7 +59,7 @@ BEGIN
         
         
         #define_attribute(sdh,
-            { 
+            {
                 label: "Presence of Subdural Haemorrhage",
                 is_reportable:1,
                 type:2
@@ -67,7 +67,7 @@ BEGIN
         );
         
         #define_attribute(ich,
-            { 
+            {
                 label: "Presence of Intracerebral Haemorrhage",
                 is_reportable:1,
                 type:2
@@ -75,7 +75,7 @@ BEGIN
         );
         
         #define_attribute(ech,
-            { 
+            {
                 label: "Presence of Extradural Haemorrhage",
                 is_reportable:1,
                 type:2

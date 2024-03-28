@@ -49,7 +49,7 @@ BEGIN
         [[rb_id]] : { any_met_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of metastatic carcinoma",
                 is_reportable:1,
                 type:2
@@ -108,7 +108,7 @@ BEGIN
         [[rb_id]] : { any_ca=1 or ca_mets=1 => 1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of solid organ carcinoma",
                 is_reportable:1,
                 type:2
@@ -159,7 +159,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of breast carcinoma",
                 is_reportable:1,
                 type:2
@@ -211,7 +211,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of prostate carcinoma",
                 is_reportable:1,
                 type:2
@@ -262,7 +262,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of Renal cell carcinoma RCC",
                 is_reportable:1,
                 type:2
@@ -312,7 +312,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of colorectal carcinoma",
                 is_reportable:1,
                 type:2
@@ -362,7 +362,7 @@ BEGIN
         [[rb_id]] : { code_fd!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of lung carcinoma",
                 is_reportable:1,
                 type:2

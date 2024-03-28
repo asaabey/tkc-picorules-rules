@@ -48,7 +48,7 @@ BEGIN
         [[rb_id]] : { coalesce(gpa_fd,gca_fd,mpo_fd,tak_fd)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
-            { 
+            {
                 label: "Presence of vasculitis",
                 is_reportable:1,
                 type:2
