@@ -2,18 +2,18 @@
 <h1>Renal Transplant (CA)</h1>
 <br />
 <h2> Transplant Introduction </h2>
-<video width="550" height="380" src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/9/The%20Kidney%20Stories%20-%20transplant%20book%201_CA_Transplant%20Introduction.mp4" controls ></video>
+<video width="550" height="380" src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/4fed3364-1260-40ee-95f5-3f196cedaf5b/content" controls ></video>
 <br />
 <br />
 <h2> Transplant Tests </h2>
 <video width="550" height="380"
-src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/10/The%20Kidney%20Stories%20-%20transplant%20book%202_CA_Kidney%20Transplant%20Tests.mp4" controls ></video>
+src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/4eb8980b-7271-4ece-bf1c-14a017c4d0a5/content" controls ></video>
 <br />
 <br />
 <h2> Transplant Surgery </h2>
-<video width="550" height="380" src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/11/The%20Kidney%20Stories%20-%20transplant%20book%203_CA_Transplant%20Surgery.mp4" controls ></video>
+<video width="550" height="380" src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/a67954e4-7ee5-4b78-a19a-08f19c725e9f/content" controls ></video>
 <br />
 <br />
 <h2> Life After Transplant </h2>
-<video width="550" height="380" src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/12/The%20Kidney%20Stories%20-%20transplant%20book%204_CA_Life%20After%20Transplant.mp4" controls ></video>
+<video width="550" height="380" src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/2ed5be1b-55da-4106-a9ec-f8679c1c90be/content" controls ></video>
 <br />

@@ -2,4 +2,4 @@
 <p>
 The picture shows what happens to your kidneys when your blood numbers start to drop
 </p>
-<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/6/The%20Kidney%20Stories%20-%20The%20work%20of%20your%20Kidneys.mp4" controls ></video>
+<video src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/9f6fe31a-b631-4566-a486-5e5724ab7714/content" controls ></video>

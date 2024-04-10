@@ -2,11 +2,11 @@
 <h1>Treatment Options</h1>
 <br />
 <h2>Peritoneal Dialysis</h2>
-<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/5/The%20Kidney%20Stories%20-%20Peritoneal%20Dialysis.mp4" controls ></video>
+<video src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/95a84263-35b6-4b00-bdb9-dd8ba7a15354/content" controls ></video>
 <h2>Haemodialysis</h2>
 <br />
-<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/2/The%20Kidney%20Stories%20-%20Haemodialysis.mp4" controls ></video>
+<video src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/e3e6f0e5-f1c3-4fd5-8fd3-ec0b602509e0/content" controls ></video>
 <br />
 <h2>Palliative Care</h2>
 <br />
-<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/12524/4/The%20Kidney%20Stories%20-%20Palliative%20Care.mp4" controls ></video>
+<video src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/25441011-fc1f-45a6-b1ba-34c35e468214/content" controls ></video>
