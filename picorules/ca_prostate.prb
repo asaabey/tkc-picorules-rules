@@ -8,9 +8,9 @@
     }
 );
 
-icd_fd => eadv.icd_c61.dt.first();
+icd_fd => eadv.[icd_c61%].dt.first();
 
-icpc_fd => eadv.[icpc_y7700%].dt.first();
+icpc_fd => eadv.[icpc_y77%].dt.first();
 
 code_fd : { . => least_date(icd_fd,icpc_fd)};
 

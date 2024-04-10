@@ -249,7 +249,7 @@ BEGIN
         
         dm_incd : { dm_fd > sysdate - 365 => 1},{=>0};
         
-        htn_icd_fd => eadv.[icd_i10_%,icd_i15_%].dt.min();
+        htn_icd_fd => eadv.[icd_i10%,icd_i15%].dt.min();
         
         htn_icpc_fd => eadv.[icpc_k85%,icpc_k86%,icpc_k87%].dt.min();
 

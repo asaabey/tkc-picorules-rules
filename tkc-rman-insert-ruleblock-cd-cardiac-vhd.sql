@@ -59,9 +59,9 @@ BEGIN
         
         
         
-        mv_s_dt => eadv.[icd_i05_0,icd_i05_2,icd_34_2,icpc_k73006, icpc_k83007,icpc_k71005].dt.min();
+        mv_s_dt => eadv.[icd_i05_0,icd_i05_2,icd_i34_2,icpc_k73006, icpc_k83007,icpc_k71005].dt.min();
         
-        mv_i_dt => eadv.[icd_i05_1,icd_i05_2,icd_34_0,icpc_k83004].dt.min();
+        mv_i_dt => eadv.[icd_i05_1,icd_i05_2,icd_i34_0,icpc_k83004].dt.min();
         
         mv_r_dt => eadv.[icpc_k54009].dt.min();
         
@@ -80,9 +80,9 @@ BEGIN
         );
         
         
-        av_s_dt => eadv.[icd_i06_0,icd_35_0, icpc_k83006,icpc_k71008].dt.min();
+        av_s_dt => eadv.[icd_i06_0,icd_i35_0, icpc_k83006,icpc_k71008].dt.min();
         
-        av_i_dt => eadv.[icd_i06_1,icd_35_1,icpc_k83004].dt.min();
+        av_i_dt => eadv.[icd_i06_1,icd_i35_1,icpc_k83004].dt.min();
         
         av_r_dt => eadv.[icpc_k54005].dt.min();
         
@@ -100,9 +100,9 @@ BEGIN
             }
         );
         
-        tv_s_dt => eadv.[icd_i07_0,icd_36_0].dt.min();
+        tv_s_dt => eadv.[icd_i07_0,icd_i36_0].dt.min();
         
-        tv_i_dt => eadv.[icd_i07_1,icd_36_1,icpc_k83012].dt.min();
+        tv_i_dt => eadv.[icd_i07_1,icd_i36_1,icpc_k83012].dt.min();
         
         tv_r_dt => eadv.[icpc_k54019].dt.min();
         
@@ -269,7 +269,7 @@ BEGIN
                 }
         );
             
-        af_icd => eadv.[icd_i48_%].dt.min();
+        af_icd => eadv.[icd_i48%].dt.min();
             
         af_icpc => eadv.[icpc_k78%].dt.min();
             

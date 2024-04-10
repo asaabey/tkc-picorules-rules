@@ -19,7 +19,7 @@ gender => eadv.dmg_gender.val.last();
         }
 );
 
-af_icd => eadv.[icd_i48_%].dt.min();
+af_icd => eadv.[icd_i48%].dt.min();
 
 af_icpc => eadv.[icpc_k78%].dt.min();
 

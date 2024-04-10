@@ -8,11 +8,11 @@
     }
 );
 
-cap_viral_ld => eadv.[icd_j09,icd_j10,icd_j11,icd_j12].dt.max();
+cap_viral_ld => eadv.[icd_j09%,icd_j10%,icd_j11%,icd_j12%].dt.max();
 
-cap_strep_ld => eadv.icd_j13.dt.max();
+cap_strep_ld => eadv.[icd_j13%].dt.max();
 
-cap_hi_ld => eadv.icd_j14.dt.max();
+cap_hi_ld => eadv.[icd_j14%].dt.max();
 
 cap_nos_ld => eadv.[icd_j18%].dt.max();
 

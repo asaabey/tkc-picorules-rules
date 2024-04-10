@@ -56,7 +56,7 @@ BEGIN
        
        pth_qt: { coalesce(pth2_val,0)>0 and coalesce(pth1_val,0)>0 => round(pth2_val - pth1_val/pth2_val,2)};
        
-       cinacalcet_ld => eadv.rxnc_hb05bx.dt.last().where(val=1);
+       cinacalcet_ld => eadv.rxnc_h05bx.dt.last().where(val=1);
        
        
        calcitriol_ld => eadv.rxnc_a11cc.dt.last().where(val=1);

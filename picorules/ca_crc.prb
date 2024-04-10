@@ -8,7 +8,7 @@
     }
 );
 
-icd_fd => eadv.[icd_c18%,icd_c19,icd_c20].dt.first();
+icd_fd => eadv.[icd_c18%,icd_c19%,icd_c20%].dt.first();
 
 icpc_fd => eadv.[icpc_d75%].dt.first();
 

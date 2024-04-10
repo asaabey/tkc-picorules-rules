@@ -84,17 +84,17 @@ BEGIN
         
         adr_met_fd => eadv.icd_c79_7.dt.first();
         
-        liver_met_fd => eadv.icd_78_7.dt.first();
+        liver_met_fd => eadv.icd_c78_7.dt.first();
         
-        lung_met_fd => eadv.icd_78_0.dt.first();
+        lung_met_fd => eadv.icd_c78_0.dt.first();
         
-        perit_met_fd => eadv.icd_78_6.dt.first();
+        perit_met_fd => eadv.icd_c78_6.dt.first();
         
-        nodal_met_fd => eadv.[icd_77%].dt.first();
+        nodal_met_fd => eadv.[icd_c77%].dt.first();
         
-        nos_met_fd => eadv.[icd_c79_%,icd_c78_%,icpc_a79009].dt.first();
+        nos_met_fd => eadv.[icd_c79%,icd_c78%,icpc_a79009].dt.first();
         
-        any_met_fd => eadv.[icd_c77_%,icd_c78_%,icd_c79_%,icpc_a79009].dt.first();
+        any_met_fd => eadv.[icd_c77%,icd_c78%,icd_c79%,icpc_a79009].dt.first();
         
         
         [[rb_id]] : { any_met_fd!? =>1},{=>0};
@@ -270,9 +270,9 @@ BEGIN
             }
         );
         
-        icd_fd => eadv.icd_c61.dt.first();
+        icd_fd => eadv.[icd_c61%].dt.first();
                 
-        icpc_fd => eadv.[icpc_y7700%].dt.first();
+        icpc_fd => eadv.[icpc_y77%].dt.first();
         
         code_fd : { . => least_date(icd_fd,icpc_fd)};
         
@@ -322,7 +322,7 @@ BEGIN
         );
         
         
-        icd_fd => eadv.icd_c64.dt.first();
+        icd_fd => eadv.[icd_c64%].dt.first();
                 
         icpc_fd => eadv.[icpc_u75003].dt.first();
         
@@ -372,7 +372,7 @@ BEGIN
             }
         );
         
-        icd_fd => eadv.[icd_c18%,icd_c19,icd_c20].dt.first();
+        icd_fd => eadv.[icd_c18%,icd_c19%,icd_c20%].dt.first();
                 
         icpc_fd => eadv.[icpc_d75%].dt.first();
         

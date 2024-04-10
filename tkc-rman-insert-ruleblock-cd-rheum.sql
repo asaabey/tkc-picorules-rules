@@ -30,7 +30,7 @@ BEGIN
             }
         );
         
-        icd_fd => eadv.[icd_m32_%].dt.min();
+        icd_fd => eadv.[icd_m32%].dt.min();
         
         icpc_fd => eadv.[icpc_l99056,icpc_l99065].dt.min();
         

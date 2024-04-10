@@ -46,7 +46,7 @@ BEGIN
         
         pe_multi : { pe_ld - pe_fd > 90 =>1},{=>0};
         
-        dvt_fd => eadv.[icd_i82_2,icd_i82_3,icd_82_9].dt.min();
+        dvt_fd => eadv.[icd_i82_2,icd_i82_3,icd_i82_9].dt.min();
         
         svt_fd => eadv.[icd_i82_8].dt.min();
         

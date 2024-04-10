@@ -122,7 +122,7 @@ BEGIN
         
         htn_fd_yr : { htn_fd!? => to_char(htn_fd,`YYYY`) };
         
-        htn_type_2 => eadv.[icd_i15_%].dt.count(0);
+        htn_type_2 => eadv.[icd_i15%].dt.count(0);
         
         htn_from_obs : { htn_fd_obs<htn_fd_code =>1},{htn_fd_obs!? and htn_fd_code? =>1},{=>0};
         

@@ -35,7 +35,7 @@ BEGIN
                 txt:"Subdural Haematoma(SDH)"
         });
         
-        code_sdh_fd => eadv.[icpc_n80001,icpc_n80004,icd_62_0].dt.min();
+        code_sdh_fd => eadv.[icpc_n80001,icpc_n80004,icd_i62_0].dt.min();
         
         sdh : {code_sdh_fd!?=>1},{=>0};
         
@@ -43,7 +43,7 @@ BEGIN
                 txt:"Intracerebral Haemorrhage(ICH)"
         });
         
-        code_ich_fd => eadv.[icpc_n80008,icpc_n80015,icd_61_%].dt.min();
+        code_ich_fd => eadv.[icpc_n80008,icpc_n80015,icd_i61%].dt.min();
         
         ich : {code_ich_fd!?=>1},{=>0};
         
@@ -51,11 +51,11 @@ BEGIN
                 txt:"Extradural Haemorrhage(ICH)"
         });
         
-        code_ech_fd => eadv.[icpc_n80010,icd_62_1].dt.min();
+        code_ech_fd => eadv.[icpc_n80010,icd_i62_1].dt.min();
         
         ech : {code_ech_fd!?=>1},{=>0};
         
-        cd_cns_ch : { coalesce(code_sdh_fd,code_ich_fd, code_ech_fd)!? => 1},{=>0};
+        cd_cns_ch : { coalesce(code_sdh_fd,code_ich_fd,code_ech_fd)!? => 1},{=>0};
         
         
         #define_attribute(sdh,

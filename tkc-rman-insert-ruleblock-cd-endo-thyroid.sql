@@ -34,7 +34,7 @@ BEGIN
         
         rx_induced_fd => eadv.[icd_e03_2,icpc_t86008].dt.min();
         
-        post_mx_fd => eadv.[icd_89%,icpc_t86005,icpc_t86006].dt.min();
+        post_mx_fd => eadv.[icd_e89%,icpc_t86005,icpc_t86006].dt.min();
         
         nos_fd => eadv.[icpc_t86009,icpc_t86003,icd_e03_5,icd_e03_8,icd_e03_9].dt.min();
         

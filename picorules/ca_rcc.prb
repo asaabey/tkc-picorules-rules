@@ -9,7 +9,7 @@
 );
 
 
-icd_fd => eadv.icd_c64.dt.first();
+icd_fd => eadv.[icd_c64%].dt.first();
 
 icpc_fd => eadv.[icpc_u75003].dt.first();
 

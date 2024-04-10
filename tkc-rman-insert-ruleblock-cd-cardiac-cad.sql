@@ -97,7 +97,7 @@ BEGIN
             }
         );
 
-        ami_i23 => eadv.[icd_i23].dt.max();
+        ami_i23 => eadv.[icd_i23%].dt.max();
 
         ami : { coalesce(stemi_fd,nstemi_fd,stemi_ld,nstemi_ld,ami_i23)!? => 1},{=>0};
 
@@ -206,7 +206,7 @@ BEGIN
 
         rxn_statin => eadv.[rxnc_c10aa,rxnc_c10bx,rxnc_c10ba].dt.min().where(val=1);
 
-        rxn_c10_ax => eadv.rxnc_c10_ax.dt.min().where(val=1);
+        rxn_c10_ax => eadv.rxnc_c10ax.dt.min().where(val=1);
 
         rxn : {coalesce(rxn_ap,rxn_anticoag,rxn_bb,rxn_raas,rxn_statin,rxn_c10_ax)!? =>1};
 

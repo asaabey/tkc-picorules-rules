@@ -35,7 +35,7 @@ BEGIN
                 }
             );
             
-        chf_code => eadv.[icd_i50_%,icpc_k77%].dt.min();
+        chf_code => eadv.[icd_i50%,icpc_k77%].dt.min();
         
         dcm => eadv.[icd_i42_0].dt.min();
         
@@ -45,7 +45,7 @@ BEGIN
         
         ethocm => eadv.[icd_i42_6].dt.min();
         
-        noscm => eadv.[icd_i42_8,icd_42_9,icpc_k84041].dt.min();
+        noscm => eadv.[icd_i42_8,icd_i42_9,icpc_k84041].dt.min();
         
         echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
 

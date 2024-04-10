@@ -36,7 +36,7 @@ BEGIN
         
         icd_n => eadv.[icd_l0%].dt.count();
         
-        icpc_ld => eadv.[icpc_s10%,icpc_76%].dt.max();
+        icpc_ld => eadv.[icpc_s10%,icpc_s76%].dt.max();
         
         code_ld : { . => greatest_date(icd_ld,icpc_ld)};
         
@@ -86,11 +86,11 @@ BEGIN
             }
         );
         
-        cap_viral_ld => eadv.[icd_j09,icd_j10,icd_j11,icd_j12].dt.max();
+        cap_viral_ld => eadv.[icd_j09%,icd_j10%,icd_j11%,icd_j12%].dt.max();
         
-        cap_strep_ld => eadv.icd_j13.dt.max();
+        cap_strep_ld => eadv.[icd_j13%].dt.max();
         
-        cap_hi_ld => eadv.icd_j14.dt.max();
+        cap_hi_ld => eadv.[icd_j14%].dt.max();
         
         cap_nos_ld => eadv.[icd_j18%].dt.max();
         

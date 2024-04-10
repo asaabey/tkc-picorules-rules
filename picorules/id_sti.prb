@@ -14,7 +14,7 @@ icd_ld => eadv.[icd_l0%].dt.max();
 
 icd_n => eadv.[icd_l0%].dt.count();
 
-icpc_ld => eadv.[icpc_s10%,icpc_76%].dt.max();
+icpc_ld => eadv.[icpc_s10%,icpc_s76%].dt.max();
 
 code_ld : { . => greatest_date(icd_ld,icpc_ld)};
 

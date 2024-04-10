@@ -33,13 +33,13 @@ BEGIN
         
         gravid_icpc_ld => eadv.[icpc_w05%,icpc_w17%,icpc_w18%,icpc_w29%,icpc_w70%,icpc_w78%,icpc_w84%,icpc_w85%, icd_o24%].dt.last();
         
-        partum_ld => eadv.[icd_z37_%,icd_o82].dt.last();
+        partum_ld => eadv.[icd_z37%,icd_o82%].dt.last();
         
-        partum_n => eadv.[icd_z37_%,icd_o82].dt.distinct_count();
+        partum_n => eadv.[icd_z37%,icd_o82%].dt.distinct_count();
         
-        partum_lscs_ld => eadv.[icd_o82].dt.last();
+        partum_lscs_ld => eadv.[icd_o82%].dt.last();
         
-        partum_lscs_n => eadv.[icd_o82].dt.distinct_count();
+        partum_lscs_n => eadv.[icd_o82%].dt.distinct_count();
         
         us_2_ld => eadv.[ris_img_uspreg%].dt.last().where(dt < us_ld - 304);
         

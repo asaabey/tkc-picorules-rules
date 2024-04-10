@@ -30,7 +30,7 @@ BEGIN
             }
         );
         
-        tb_code => eadv.[icpc_a700%,icd_m49%,icd_j65].dt.min();
+        tb_code => eadv.[icpc_a700%,icd_m49%,icd_j65%].dt.min();
         
         ltb_code => eadv.[icpc_a70j99].dt.min();
                 
