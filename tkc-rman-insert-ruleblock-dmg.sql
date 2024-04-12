@@ -477,32 +477,30 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-    
         /* Algorithm to assess HRN */
-        
+
         #define_ruleblock([[rb_id]],
             {
                 description: "Algorithm to assess HRN",
                 is_active:2
-                
+
             }
         );
-         
-        hrn_last => eadv.dmg_hrn.val.last();
 
-        [[rb_id]] : { hrn_last!? => 1 },{=>0};
-        
+        hrn_last_val_ => eadv.dmg_hrn.val.last();
+
+        hrn_last : { . => substr(`00000000` + to_char(hrn_last_val_), -7) };
+
+        [[rb_id]] : { hrn_last_val_!? => 1 },{=>0};
+
         #define_attribute(
-            [[rb_id]],
+            hrn_last,
             {
                 label:"Last HRN",
-                type:2,
+                type:1,
                 is_reportable:0
             }
         );
-        
-        
-                
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     

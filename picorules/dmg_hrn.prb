@@ -8,15 +8,17 @@
     }
 );
 
-hrn_last => eadv.dmg_hrn.val.last();
+hrn_last_val_ => eadv.dmg_hrn.val.last();
 
-dmg_hrn : { hrn_last!? => 1 },{=>0};
+hrn_last : { . => substr(`00000000` + to_char(hrn_last_val_), -7) };
+
+dmg_hrn : { hrn_last_val_!? => 1 },{=>0};
 
 #define_attribute(
-    dmg_hrn,
+    hrn_last,
     {
         label:"Last HRN",
-        type:2,
+        type:1,
         is_reportable:0
     }
 );
