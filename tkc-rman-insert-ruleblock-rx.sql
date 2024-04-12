@@ -92,43 +92,46 @@ BEGIN
 
     rb.picoruleblock := '
         /* Rx: Nucleoside and nucleotide reverse transcriptase inhibitors */
-        
+
         #define_ruleblock(rx_av_nrti,{
-            description: "Rx: Nucleoside and nucleotide reverse transcriptase inhibitor",
+            description: "Rx: Nucleoside and nucleotide reverse transcriptase inhibitors",
             is_active:2
         });
-        
+
         /*
-        Entecavir 0.5 MG (RXCUI: 485432),
-        Entecavir 1 MG (RXCUI: 485435),
-        Tenofovir Disoproxil Fumarate 300 MG (RXCUI: 393334),
-        Tenofovir Alafenamide 25 MG (RXCUI: 1741729),
-        Lamivudine 150mg (RXCUI: 316127),
-        Lamivudine 100mg (RXCUI: 317397), and
-        Adefovir Dipivoxil 10 MG (RXCUI: 881340).
+        +--------------------------------------+---------+
+        |       Clinical Drug Component        |  RXCUI  |
+        +--------------------------------------+---------+
+        | Entecavir 0.5 MG                     |  485432 |
+        | Entecavir 1 MG                       |  485435 |
+        | Tenofovir Disoproxil Fumarate 300 MG |  393334 |
+        | Tenofovir Alafenamide 25 MG          | 1741729 |
+        | Lamivudine 150mg                     |  316127 |
+        | Lamivudine 100mg                     |  317397 |
+        | Adefovir Dipivoxil 10 MG             |  881340 |
+        +--------------------------------------+---------+
         */
-        
-        
+
         entecavir_0_5 => eadv.[rxn_cui_485432].dt.last();
         entecavir_1_0 => eadv.[rxn_cui_485435].dt.last();
-        
+
         entecavir : { coalesce(entecavir_0_5,entecavir_1_0)!? =>1};
-        
+
         tenofovir_dpf_300 => eadv.[rxn_cui_393334].dt.last();
         tenofovir_alf_25 => eadv.[rxn_cui_1741729].dt.last();
-        
+
         tenofovir : { coalesce(tenofovir_dpf_300,tenofovir_alf_25)!? =>1};
-        
+
         lamivudine_100 => eadv.[rxn_cui_317397].dt.last();
         lamivudine_150 => eadv.[rxn_cui_316127].dt.last();
-        
+
         lamivudine : { coalesce(lamivudine_100,lamivudine_150)!? => 1};
-        
+
         adefovir_dip => eadv.[rxn_cui_881340].dt.last();
-        
+
         adefovir : { adefovir_dip!? =>1};
-        
-        rx_av_nrti : { coalesce(entecavir,tenofovir,lamivudine,adefovir )!? =>1},{=>0};
+
+        rx_av_nrti : { coalesce(entecavir,tenofovir,lamivudine,adefovir)!? => 1 },{=>0};
     ';
     rb.picoruleblock := replace(rb.picoruleblock, '[[rb_id]]', rb.blockid);
     rb.picoruleblock := rman_pckg.sanitise_clob(rb.picoruleblock);

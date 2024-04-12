@@ -1,20 +1,23 @@
 /* Rx: Nucleoside and nucleotide reverse transcriptase inhibitors */
 
 #define_ruleblock(rx_av_nrti,{
-    description: "Rx: Nucleoside and nucleotide reverse transcriptase inhibitor",
+    description: "Rx: Nucleoside and nucleotide reverse transcriptase inhibitors",
     is_active:2
 });
 
 /*
-Entecavir 0.5 MG (RXCUI: 485432),
-Entecavir 1 MG (RXCUI: 485435),
-Tenofovir Disoproxil Fumarate 300 MG (RXCUI: 393334),
-Tenofovir Alafenamide 25 MG (RXCUI: 1741729),
-Lamivudine 150mg (RXCUI: 316127),
-Lamivudine 100mg (RXCUI: 317397), and
-Adefovir Dipivoxil 10 MG (RXCUI: 881340).
++--------------------------------------+---------+
+|       Clinical Drug Component        |  RXCUI  |
++--------------------------------------+---------+
+| Entecavir 0.5 MG                     |  485432 |
+| Entecavir 1 MG                       |  485435 |
+| Tenofovir Disoproxil Fumarate 300 MG |  393334 |
+| Tenofovir Alafenamide 25 MG          | 1741729 |
+| Lamivudine 150mg                     |  316127 |
+| Lamivudine 100mg                     |  317397 |
+| Adefovir Dipivoxil 10 MG             |  881340 |
++--------------------------------------+---------+
 */
-
 
 entecavir_0_5 => eadv.[rxn_cui_485432].dt.last();
 entecavir_1_0 => eadv.[rxn_cui_485435].dt.last();
@@ -35,4 +38,4 @@ adefovir_dip => eadv.[rxn_cui_881340].dt.last();
 
 adefovir : { adefovir_dip!? =>1};
 
-rx_av_nrti : { coalesce(entecavir,tenofovir,lamivudine,adefovir )!? =>1},{=>0};
+rx_av_nrti : { coalesce(entecavir,tenofovir,lamivudine,adefovir)!? => 1 },{=>0};
