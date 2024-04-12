@@ -17,8 +17,8 @@ class PicoRuleDTO:
     def as_jsonable(self) -> Dict:
         return asdict(self)
 
-BLOCKID_RGX = r"(?:rb\.blockid\s{0,}\:=\s{0,}\')(.*)(?:\')"
-BLOCKBODY_RGX = r"(?:rb\.picoruleblock\s{0,}\:=\s{0,}\')([^\']*)(?:\')"
+BLOCKID_RGX = r"(?:rb\.blockid\s{0,}\:=\s{0,}\')([^\']*)(?:\')"
+BLOCKBODY_RGX = r"(?:rb\.picoruleblock\s{0,}\:=\s{0,}\')(.*?)(?:\';)"
 BLOCK_PH = "[[rb_id]]"
 BLOCK_MATURITY_LEVEL = r"(?:is_active\s{0,}\:\s{0,})(0|1|2)"
 
@@ -48,7 +48,7 @@ file_list = []
 
 def matchrgx(rgx: str, txt: str):
 
-    return re.findall(rgx, txt)
+    return re.findall(rgx, txt, flags=re.IGNORECASE | re.DOTALL)
 
 
 def readfile(f):
@@ -99,10 +99,13 @@ def processfiles():
                     )
 
                     for idx, file_bid in enumerate(file_bids):
+                        block_body = file_blockbodies[idx]
+                        block_body = block_body.replace("''", "'") # unescape single quotes
+                        
                         if 1==1:
-                            fb = textwrap.dedent(file_blockbodies[idx]).strip("\n")
+                            fb = textwrap.dedent(block_body).strip("\n")
                         else:
-                            fb = "        " + file_blockbodies[idx].strip()
+                            fb = "        " + block_body.strip()
                             
                             newlines:list[str] = list()
                             lines = fb.splitlines()
