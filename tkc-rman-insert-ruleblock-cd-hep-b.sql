@@ -27,7 +27,7 @@ BEGIN
         });
 
         /*
-        =--------------------------------------------------------------------------------------------------+
+        +--------------------------------------------------------------------------------------------------+
         | ICPC-2 Term Codes where the description contains "Hepatitis B"                                   |
         +---------------+-------------+--------+-----------+--------------------------------+--------+-----+
         | EadvAttribute |  CodeType   |  Code  | Collected |          Description           | Status | CHB |
@@ -81,7 +81,16 @@ BEGIN
                                 icpc_d72010,
                                 icpc_d72012].att.last();
 
-        hepb_icpc_code_ld => eadv.[icpc_%].dt.last().where(att=hepb_icpc_code);
+        hepb_icpc_code_ld => eadv.[icpc_d72j92,
+                                   icpc_d72j93,
+                                   icpc_d72j94,
+                                   icpc_d72j95,
+                                   icpc_d72j96,
+                                   icpc_d72j97,
+                                   icpc_d72j99,
+                                   icpc_d72003,
+                                   icpc_d72010,
+                                   icpc_d72012].dt.last().where(att=hepb_icpc_code);
 
 
         /* ICD Coding is not currently taken into consideration */
@@ -89,7 +98,9 @@ BEGIN
                                icd_b18_0,
                                icd_b18_1].att.last();
 
-        hepb_icd_code_ld => eadv.[icd_%].dt.last().where(att=hepb_icd_code);
+        hepb_icd_code_ld => eadv.[icd_b17_0,
+                                  icd_b18_0,
+                                  icd_b18_1].dt.last().where(att=hepb_icd_code);
 
 
         hepb_status : { hepb_icpc_code = `icpc_d72j94` => 20 },
