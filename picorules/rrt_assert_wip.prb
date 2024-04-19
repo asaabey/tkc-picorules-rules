@@ -60,7 +60,7 @@ pd_any_stage : { pd_dt!?  =>1 },{=>0};
 homed_any_stage : { homedx_dt!?  =>1 },{=>0};
 hd_any_stage : { hd_dt!?  =>1 },{=>0};
 hd_30plus  : { hd_dt!? and hd_z49_n > 29 =>1},{=>0};
-hd_120days : { hd_dt!? and hd_dt > sysdate-150 =>1},{=>0};
+hd_120days : { hd_dt!? and hd_dt > sysdate-70 =>1},{=>0};
 
 
 rrt_assert : { rrt > 0 => ( tx_any_stage * 100000) + (pd_any_stage  * 10000) + (homed_any_stage * 1000) + (hd_any_stage * 100) + (hd_30plus * 10) + (hd_120days * 1 ) },{=>0};

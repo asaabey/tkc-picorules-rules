@@ -1,6 +1,6 @@
 /* Algorithm to assess demographics */
 
-#define_ruleblock(dmg_loc2_wip,
+#define_ruleblock(dmg_loc3_wip,
     {
         description: "(work in progress at 2024 03 14) - Algorithm to assess possible location of origin for clients ",
         is_active: 2,
@@ -38,9 +38,10 @@ Key index
 
 first_remote => eadv.[mbs_715].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
 frequent_remote_2y => eadv.[mbs_%].loc.stats_mode().where(  (dt>sysdate-740)     and (substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`)) ); 
-frequent_remote_alltime => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
+frequent_remote_alltime1 => eadv.[mbs_%].loc.stats_mode().where( (substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`)) And (att not in (`mbs_13105`)  ) ); 
+frequent_remote_alltime2 => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
 
-remote_ph_location : { . => to_number(substr(coalesce(first_remote, frequent_remote_2y, frequent_remote_alltime),-12))};
+remote_ph_location : { . => to_number(substr(coalesce( frequent_remote_alltime1,frequent_remote_alltime2 ),-12))};
 
 #doc(,{
             txt:"Any primary health location, including in major centres such as Darwin, Katherine, Alice Springs and T/CK. Location code after stripping parity and source code. Based on primary health visit, over last 2ys and full timeline"
@@ -48,12 +49,12 @@ remote_ph_location : { . => to_number(substr(coalesce(first_remote, frequent_rem
 
 
 frequent_ph_2y     =>   eadv.[mbs_%].loc.stats_mode().where(  (dt>sysdate-740) and (substr(loc,8,5) not in (`00000`)));
-frequent_ph_alltime  =>   eadv.[mbs_%].loc.stats_mode().where(  substr(loc,8,5) not in (`00000`));
+frequent_ph_alltime1  =>   eadv.[mbs_%].loc.stats_mode().where(  (substr(loc,8,5) not in (`00000`) And (att not in (`mbs_13105`)  ) )           );
+frequent_ph_alltime2  =>   eadv.[mbs_%].loc.stats_mode().where(  substr(loc,8,5) not in (`00000`));
 
 
 
-
-any_ph_location  : {.=>  to_number(substr(coalesce(frequent_ph_2y,frequent_ph_alltime),-12))};
+any_ph_location  : {.=>  to_number(substr(coalesce(frequent_ph_alltime1,frequent_ph_alltime2),-12))};
 
 #doc(,{
 	txt:"Tertiary health location Katherine and T/CK. Location code after stripping parity and source code. Based on minimum number of services received in Katherine or Tennant Creek. Outpatient Clinic given more weight than hospital admissions"
@@ -95,7 +96,7 @@ possible_origin_location_1 : { . => coalesce(
 		};
 
 
-dmg_loc2_wip : { possible_origin_location_1!? => 1 }, { => 0 };
+dmg_loc3_wip : { possible_origin_location_1!? => 1 }, { => 0 };
 
 possible_origin_location : { . => coalesce(possible_origin_location_1, 700000000000) };
 
@@ -103,11 +104,9 @@ possible_origin_location : { . => coalesce(possible_origin_location_1, 700000000
 #doc(,{
 	txt:"Locality of latest service of type MBS Ite, Outpatient Clinic Encounter or Hospital Admission coding"
 });
+ latest_locality_1_ => eadv.[mbs_%,enc_%,icd_%].loc.last();
 
-latest_locality1 => eadv.[mbs_%,enc_%,icd_%].loc.last();
-latest_locality : {.=> to_number(substr(latest_locality1,-12))};
-
-
+ latest_locality : {.=>  to_number(substr(latest_locality_1_,-12))};
 
 #define_attribute(
     possible_origin_location,
