@@ -77,7 +77,7 @@ BEGIN
         
         edu_rv => eadv.enc_op_renal_edu.dt.max().where(val=32);
         
-        edu_n => eadv.enc_op_renal_edu.dt.count().where(val=31 or val=32);
+        edu_n => eadv.enc_op_renal_edu.dt.count().where((val=31 or val=32));
         
         
         dietn => eadv.enc_op_renal_edu.dt.max().where(val=61);
