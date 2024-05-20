@@ -25,13 +25,10 @@ BEGIN
     
         /* Algorithm to assess cardiac disease  */
         
-        #define_ruleblock([[rb_id]],
-        {
+        #define_ruleblock([[rb_id]], {
             description: "Algorithm to assess cardiac disease",
             is_active:2
-            
-        }
-        );
+        });
         
         
         #doc(,
@@ -115,7 +112,7 @@ BEGIN
         tv : { greatest(tv_s,tv_i,tv_r)>0 => 1},{=>0};
         
         
-         #doc(,
+        #doc(,
             {
                 txt:" infective endocarditis"
             }
@@ -156,80 +153,80 @@ BEGIN
         #define_attribute(
         [[rb_id]],
             {
-                label:"Valvular heart disease",
-                desc:"Presence of Valvular heart disease",
-                is_reportable:1,
-                type:2
+                label: "Valvular heart disease",
+                desc: "Presence of Valvular heart disease",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
         mv_s,
             {
-                label:"Mitral valve stenosis",
-                desc:"Presence of Mitral valve stenosis",
-                is_reportable:1,
-                type:2
+                label: "Mitral valve stenosis",
+                desc: "Presence of Mitral valve stenosis",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
         mv_i,
             {
-                label:"Mitral valve insufficiency",
-                desc:"Presence of Mitral valve insufficiency or regurgitation",
-                is_reportable:1,
-                type:2
+                label: "Mitral valve insufficiency",
+                desc: "Presence of Mitral valve insufficiency or regurgitation",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
         mv_r,
             {
-                label:"Mitral valve replacement",
-                desc:"Presence of Mitral valve replacement",
-                is_reportable:1,
-                type:2
+                label: "Mitral valve replacement",
+                desc: "Presence of Mitral valve replacement",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
         av_s,
             {
-                label:"Aortic valve stenosis",
-                desc:"Presence of Aortic valve stenosis",
-                is_reportable:1,
-                type:2
+                label: "Aortic valve stenosis",
+                desc: "Presence of Aortic valve stenosis",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
         av_i,
             {
-                label:"Aortic valve insufficiency",
-                desc:"Presence of Aortic valve insufficiency or regurgitation",
-                is_reportable:1,
-                type:2
+                label: "Aortic valve insufficiency",
+                desc: "Presence of Aortic valve insufficiency or regurgitation",
+                is_reportable: 1,
+                type: 2
             }
         );
         
         #define_attribute(
         av_r,
             {
-                label:"Aortic valve replacement",
-                desc:"Presence of Aortic valve replacement",
-                is_reportable:1,
-                type:2
+                label: "Aortic valve replacement",
+                desc: "Presence of Aortic valve replacement",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
         rhd_aet,
             {
-                label:"Rheumatic heart disease",
-                desc:"Presence of Rheumatic heart disease",
-                is_reportable:1,
-                type:2
+                label: "Rheumatic heart disease",
+                desc: "Presence of Rheumatic heart disease",
+                is_reportable: 1,
+                type: 2
             }
         );
         
@@ -333,9 +330,9 @@ BEGIN
         #define_attribute([[rb_id]],
             {
                 label: "Presence of AF",
-                desc:"Presence of AF",
-                is_reportable:1,
-                type:2
+                desc: "Presence of AF",
+                is_reportable: 1,
+                type: 1001
                 
             }
         );
@@ -343,9 +340,9 @@ BEGIN
         #define_attribute(nv_af,
             {
                 label: "Presence of Non-Valvular AF",
-                desc:"Presence of Non-Valvular AF",
-                is_reportable:1,
-                type:2
+                desc: "Presence of Non-Valvular AF",
+                is_reportable: 1,
+                type: 1001
                 
             }
         );
@@ -374,13 +371,10 @@ BEGIN
         
         /* Algorithm to assess rheumatic heart disease  */
         
-        #define_ruleblock([[rb_id]],
-        {
+        #define_ruleblock([[rb_id]], {
             description: "Algorithm to assess rheumatic heart disease",
             is_active:2
-            
-        }
-        );
+        });
         
         #doc(,
             {
@@ -401,8 +395,8 @@ BEGIN
             {
                 label:"rheumatic heart disease",
                 desc:"Presence of rheumatic heart disease",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 2
             }
         );
         

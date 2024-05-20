@@ -40,12 +40,12 @@ BEGIN
         
         
         
-        [[rb_id]] : {coalesce(ppm_fd,defib_fd)!? =>1},{=>0};
+        [[rb_id]] : {coalesce(ppm_fd, defib_fd)!? =>1},{=>0};
         
         #define_attribute([[rb_id]],
             {
-                label: "presence of cardiac device",
-                type : 2,
+                label: "Presence of cardiac device",
+                type : 1001,
                 is_reportable:1
             }
         );

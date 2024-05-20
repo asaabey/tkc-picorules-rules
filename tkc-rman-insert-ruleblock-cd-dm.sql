@@ -233,30 +233,30 @@ BEGIN
         #define_attribute(
             dm,
             {
-                label:"Diabetes",
-                desc:"Presence of Type 2/1 Diabetes mellitus",
-                is_reportable:1,
-                type:2
+                label: "Diabetes",
+                desc: "Presence of Type 2/1 Diabetes mellitus",
+                is_reportable: 1,
+                type: 2
             }
         );
         
         #define_attribute(
             dm_prev,
             {
-                label:"Prevalent Diabetes Mellitus",
-                desc:"Presence of Type 2/1 Diabetes mellitus",
-                is_reportable:1,
-                type:2
+                label: "Prevalent Diabetes Mellitus",
+                desc: "Presence of Type 2/1 Diabetes mellitus",
+                is_reportable: 1,
+                type: 2
             }
         );
         
         #define_attribute(
             dm_incd,
             {
-                label:"Incident Diabetes Mellitus",
-                desc:"Presence of Type 2/1 Diabetes mellitus",
-                is_reportable:1,
-                type:2
+                label: "Incident Diabetes Mellitus",
+                desc: "Presence of Type 2/1 Diabetes mellitus",
+                is_reportable: 1,
+                type: 2
             }
         );
         
@@ -264,10 +264,9 @@ BEGIN
         #define_attribute(
             dm_dx_uncoded,
             {
-                label:"Absent ICPC2+ coding indicating Diabetes Mellitus",
-                desc:"",
-                is_reportable:1,
-                type:2
+                label: "Absent ICPC2+ coding indicating Diabetes Mellitus",
+                is_reportable: 1,
+                type: 1001
             }
         );
     ';
@@ -388,34 +387,34 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Diabetic complications",
-                desc:"Presence of Diabetic complications",
-                is_reportable:1,
-                type:2
+                label: "Diabetic complications",
+                desc: "Presence of Diabetic complications",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(dm_foot_ulc,
             {
-                label:"Diabetic foot ulcer __b__",
-                is_reportable:1,
-                type:2
+                label: "Diabetic foot ulcer",
+                is_reportable: 1,
+                type: 2
             }
         );
         
         #define_attribute(dm_micvas_retino,
             {
-                label:"Diabetic retinopathy __b__",
-                is_reportable:1,
-                type:2
+                label: "Diabetic retinopathy",
+                is_reportable: 1,
+                type: 2
             }
         );
         
         #define_attribute(dm_micvas_neuro,
             {
-                label:"Diabetic neuropathy __b__",
-                is_reportable:1,
-                type:2
+                label: "Diabetic neuropathy",
+                is_reportable: 1,
+                type: 2
             }
         );
 
@@ -629,17 +628,17 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Diabetes management plan __b__",
-                desc:"Diabetic management",
-                is_reportable:1,
-                type:2
+                label: "Diabetes management plan",
+                desc: "Diabetic management",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
             rv_pod_ld,
             {
-                label:"Diabetes mx last podiatry review date __t__",
+                label:"Diabetes mx last podiatry review date",
                 is_reportable:1,
                 type:12
             }
@@ -648,7 +647,7 @@ BEGIN
         #define_attribute(
              rv_edu_ld,
             {
-                 label:"Diabetes mx last diabetic educator review date __t__",
+                 label:"Diabetes mx last diabetic educator review date",
                  is_reportable:1,
                  type:12
             }
@@ -657,7 +656,7 @@ BEGIN
         #define_attribute(
              cp_dm_ld,
             {
-                 label:"Diabetes mx last careplan",
+                 label:"Diabetes mx last careplan date",
                  is_reportable:1,
                  type:12
             }
@@ -755,16 +754,6 @@ BEGIN
 
         glp1_3y : {glp1_3y_dt!? => 1},{=>0};
 
-        #define_attribute(ins_long_f,{label:"Diabetes long acting insulin __b__",is_reportable:1,type:2});
-        #define_attribute(ins_int_f,{label:"Diabetes intermediate acting insulin __b__",is_reportable:1,type:2});
-        #define_attribute(ins_mix_f,{label:"Diabetes mixed insulin __b__",is_reportable:1,type:2});
-        #define_attribute(ins_short_f,{label:"Diabetes short acting insulin __b__",is_reportable:1,type:2});
-        #define_attribute(bg_f,{label:"Diabetes biguanides __b__",is_reportable:1,type:2});
-        #define_attribute(su_f,{label:"Diabetes sulphonylurea __b__",is_reportable:1,type:2});
-        #define_attribute(glp1_f,{label:"Diabetes GLP1a __b__",is_reportable:1,type:2});
-        #define_attribute(sglt2_f,{label:"Diabetes SGLT2i __b__",is_reportable:1,type:2});
-        #define_attribute(glp1_3y,{label:"Diabetes GLP1a use in 3 years __b__",is_reportable:1,type:2});
-
         #doc(,{
                 txt:"Derive contraindications"
         });
@@ -779,6 +768,60 @@ BEGIN
         
         [[rb_id]] : {dm=1 => 1},{=>0};
         
+        
+        #define_attribute(ins_long_f, {
+            label: "Diabetes long acting insulin",
+            is_reportable: 1,
+            type: 1001
+        });
+
+        #define_attribute(ins_int_f, {
+            label: "Diabetes intermediate acting insulin",
+            is_reportable: 1,
+            type: 1001
+        });
+
+        #define_attribute(ins_mix_f, {
+            label: "Diabetes mixed insulin",
+            is_reportable: 1,
+            type: 1001
+        });
+
+        #define_attribute(ins_short_f, {
+            label: "Diabetes short acting insulin",
+            is_reportable: 1,
+            type: 1001
+        });
+
+        #define_attribute(bg_f, {
+            label: "Diabetes biguanides",
+            is_reportable: 1,
+            type: 1001
+        });
+
+        #define_attribute(su_f, {
+            label: "Diabetes sulphonylurea",
+            is_reportable: 1,
+            type: 1001
+        });
+
+        #define_attribute(glp1_f, {
+            label: "Diabetes GLP1a",
+            is_reportable: 1,
+            type: 2
+        });
+
+        #define_attribute(sglt2_f, {
+            label: "Diabetes SGLT2i",
+            is_reportable: 1,
+            type: 2
+        });
+
+        #define_attribute(glp1_3y, {
+            label: "Diabetes GLP1a use in 3 years",
+            is_reportable: 1,
+            type: 1001
+        });
         
     ';
     

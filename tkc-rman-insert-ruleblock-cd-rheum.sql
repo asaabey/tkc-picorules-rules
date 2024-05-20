@@ -109,7 +109,7 @@ BEGIN
             {
                 label: "Presence of Rheumatoid arthritis",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -161,7 +161,7 @@ BEGIN
             {
                 label: "Presence of Antiphosphlipid syndrome",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         

@@ -36,7 +36,9 @@ BEGIN
         
         vax_md => eadv.vacc_covid_moderna._.lastdv();
         
-        vax => eadv.[vacc_covid_moderna,vacc_covid_astrazeneca,vacc_covid_comirnaty]._.maxldv();
+        vax => eadv.[vacc_covid_moderna,
+                     vacc_covid_astrazeneca,
+                     vacc_covid_comirnaty]._.maxldv();
         
         [[rb_id]] : { coalesce(vax_pf_dt, vax_az_dt, vax_md_dt)!? => 1},{=>0};
         
@@ -44,8 +46,8 @@ BEGIN
         #define_attribute(
             [[rb_id]],{
                 label:"Covid 19 Vaccination",
-                type:2,
-                is_reportable:0
+                is_reportable:0,
+                type:1001
         });
        
         

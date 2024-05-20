@@ -91,7 +91,7 @@ BEGIN
         #define_attribute(cd_hepb,
             {
                 label: "Chronic Hepatitis B",
-                type: 2,
+                type: 1001,
                 is_reportable: 1
             }
         );

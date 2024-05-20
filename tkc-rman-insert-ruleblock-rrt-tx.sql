@@ -81,7 +81,7 @@ BEGIN
             [[rb_id]],{
                 label:"Graft function known and therapy",
                 is_reportable:1,
-                type:2
+                type:1001
         });
         #define_attribute(
             cr_last_val,{

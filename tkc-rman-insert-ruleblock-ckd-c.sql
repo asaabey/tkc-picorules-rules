@@ -87,9 +87,9 @@ BEGIN
                [[rb_id]],
                {
                    label:"Glomerulonephritis GN Acute or Chronic",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
-                   type:2
+                   type:1001
                }
         );
         
@@ -97,27 +97,27 @@ BEGIN
                gn_chronic,
                {
                    label:"Glomerulonephritis GN Chronic",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
-                   type:2
+                   type:1001
                }
         );
         #define_attribute(
                gn_nephritic,
                {
                    label:"Glomerulonephritis GN Nephritic",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
-                   type:2
+                   type:1001
                }
         );
         #define_attribute(
                gn_nephrotic,
                {
                    label:"Glomerulonephritis GN Nephrotic",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
-                   type:2
+                   type:1001
                }
         );
     ';
@@ -136,7 +136,7 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-           /* Rule block to determine coded tubulointerstitial disease */
+        /* Rule block to determine coded tubulointerstitial disease */
         
         
         #define_ruleblock([[rb_id]],
@@ -182,9 +182,9 @@ BEGIN
                [[rb_id]],
                {
                    label:"Renal Tubulo-interstitial disease Chronic",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
-                   type:2
+                   type:1001
                }
         );
         
@@ -205,8 +205,7 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-           /* Rule block to determine coded conditions leading to reduced nephron mass */
-        
+        /* Rule block to determine coded conditions leading to reduced nephron mass */
         
         #define_ruleblock([[rb_id]],
                {
@@ -255,9 +254,9 @@ BEGIN
                [[rb_id]],
                {
                    label:"Renal structural anatomical anomaly",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
-                   type:2
+                   type:1001
                }
         );
         
@@ -265,7 +264,7 @@ BEGIN
                apkd,
                {
                    label:"Adult polycystic kidney disease",
-                   desc:"Integer [0-1] if found ",
+                   desc:"Integer [0-1] if found",
                    is_reportable:1,
                    type:2
                }
@@ -547,7 +546,7 @@ BEGIN
                    label:"CKD cause",
                    desc:"Integer [0-1] if CKD aetiology found ",
                    is_reportable:0,
-                   type:2
+                   type:1001
                }
         );
     ';

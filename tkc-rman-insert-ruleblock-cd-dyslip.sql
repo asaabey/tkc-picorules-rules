@@ -96,30 +96,30 @@ BEGIN
         #define_attribute(
             fhc_prob4,
             {
-                label:"Definitive Familial Hypercholesterolaemia based on modified DLS",
-                desc:"Definitive Familial Hypercholesterolaemia based on modified DLS",
-                is_reportable:1,
-                type:2
+                label: "Definitive Familial Hypercholesterolaemia based on modified DLS",
+                desc: "Definitive Familial Hypercholesterolaemia based on modified DLS",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
             fhc_prob3,
             {
-                label:"Probable Familial Hypercholesterolaemia based on modified DLS",
-                desc:"Probable Familial Hypercholesterolaemia based on modified DLS",
-                is_reportable:1,
-                type:2
+                label: "Probable Familial Hypercholesterolaemia based on modified DLS",
+                desc: "Probable Familial Hypercholesterolaemia based on modified DLS",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(
             fhc_prob2,
             {
-                label:"Possible Familial Hypercholesterolaemia based on modified DLS",
-                desc:"Possible Familial Hypercholesterolaemia based on modified DLS",
-                is_reportable:1,
-                type:2
+                label: "Possible Familial Hypercholesterolaemia based on modified DLS",
+                desc: "Possible Familial Hypercholesterolaemia based on modified DLS",
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -136,10 +136,10 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Hypercholesterolaemia",
-                desc:"Presence of Hypercholesterolaemia",
-                is_reportable:1,
-                type:2
+                label: "Hypercholesterolaemia",
+                desc: "Presence of Hypercholesterolaemia",
+                is_reportable: 1,
+                type: 2
             }
         );
         

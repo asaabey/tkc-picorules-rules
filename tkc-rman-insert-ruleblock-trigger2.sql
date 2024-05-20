@@ -502,7 +502,7 @@ BEGIN
                     desc:"Integer [0-1] if meets criteria ",
                     is_reportable:1,
                     is_trigger:1,
-                    type:2,
+                    type:1001,
                     priority:1
                 }
             );

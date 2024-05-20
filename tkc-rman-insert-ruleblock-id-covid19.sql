@@ -38,7 +38,7 @@ BEGIN
             {
                 label: "Presence of covid19 infection",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         

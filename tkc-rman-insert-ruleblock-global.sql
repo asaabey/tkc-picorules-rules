@@ -37,7 +37,7 @@ BEGIN
                     label:"Visible in TKC app",
                     is_reportable:1,
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
     ';

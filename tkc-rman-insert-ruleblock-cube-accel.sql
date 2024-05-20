@@ -200,7 +200,7 @@ BEGIN
         
         assert_level : {. => 100000 + ckd_pers*10000 + asm_viol_ex*1000 + ckd_prog*100};
 
-        [[rb_id]] : { . => 1};
+        [[rb_id]] : { . => 1 },{ => 0 };
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
@@ -312,7 +312,7 @@ BEGIN
         mbs_723 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
         
         mbs_flag : { . => coalesce(mbs_715,mbs_721,mbs_723)};
-        [[rb_id]] : {1=1 =>1};
+        [[rb_id]] : { . => 1 },{ => 0 };
         
         #define_attribute([[rb_id]],
             {

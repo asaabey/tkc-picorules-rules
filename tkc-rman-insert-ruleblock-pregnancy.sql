@@ -54,8 +54,8 @@ BEGIN
         #define_attribute(
             [[rb_id]],{
                 label:"Pregnancy",
-                type:2,
-                is_reportable:0
+                is_reportable:0,
+                type:1001
         });
         
         

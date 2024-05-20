@@ -31,9 +31,9 @@ BEGIN
         
         icu_vent_los => eadv.adm_icu_vent_los._.lastdv();
         
-        vent_ld => eadv.[caresys_1387900,caresys_1388200,caresys_1388201,caresys_1388202].dt.last();
+        vent_ld => eadv.[caresys_1387900, caresys_1388200, caresys_1388201, caresys_1388202].dt.last();
         
-        vent_fd => eadv.[caresys_1387900,caresys_1388200,caresys_1388201,caresys_1388202].dt.last();
+        vent_fd => eadv.[caresys_1387900, caresys_1388200, caresys_1388201, caresys_1388202].dt.last();
         
         icu_los => eadv.adm_icu._.lastdv();
         
@@ -41,29 +41,26 @@ BEGIN
         
         icu_max_los => eadv.adm_icu._.maxldv();
         
-        cvvhf_ld => eadv.[caresys_1310004,caresys_1310002].dt.last();
+        cvvhf_ld => eadv.[caresys_1310004, caresys_1310002].dt.last();
         
-        cvvhf_fd => eadv.[caresys_1310004,caresys_1310002].dt.first();
+        cvvhf_fd => eadv.[caresys_1310004, caresys_1310002].dt.first();
         
-        dt_diff : { icu_los_val<icu_max_los_val=>1},{=>0};
+        dt_diff : { icu_los_val<icu_max_los_val => 1},{=>0};
         
-        icu_ld : {.=> greatest_date(cvvhf_ld,vent_ld)};
+        icu_ld : {.=> greatest_date(cvvhf_ld, vent_ld)};
         
-        icu_fd : {.=> least_date(cvvhf_fd,vent_fd)};
+        icu_fd : {.=> least_date(cvvhf_fd, vent_fd)};
         
-        [[rb_id]] : { coalesce(icu_vent_los_dt,icu_los_dt,cvvhf_ld,vent_ld)!? => 1 },{=>0};
+        [[rb_id]] : { coalesce(icu_vent_los_dt, icu_los_dt, cvvhf_ld, vent_ld)!? => 1 },{=>0};
         
         #define_attribute(
             [[rb_id]],
             {
                 label:"Inpatient activity for ICU admissions",
-                type:2,
-                is_reportable:0
+                is_reportable:0,
+                type:1001
             }
         );
-        
-        
-                
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     
@@ -106,8 +103,8 @@ BEGIN
             [[rb_id]],
             {
                 label:"Inpatient activity",
-                type:2,
-                is_reportable:0
+                is_reportable:0,
+                type:1001
             }
         );
         

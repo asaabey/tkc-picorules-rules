@@ -373,7 +373,7 @@ BEGIN
                 label:"CKD complication present",
                 desc:"Integer [0-1] if CKD current complication present",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -382,7 +382,7 @@ BEGIN
             {
                 label:"Hyperphosphataemia due to CKD",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         #define_attribute(
@@ -390,7 +390,7 @@ BEGIN
             {
                 label:"Likely secondary hyperparathyroidism due to CKD",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         #define_attribute(
@@ -398,7 +398,7 @@ BEGIN
             {
                 label:"Hypoalbuminaemia in CKD",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -407,7 +407,7 @@ BEGIN
             {
                 label:"Hyperkalaemia in CKD",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -416,7 +416,7 @@ BEGIN
             {
                 label:"Anaemia in CKD without ESA",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
      
@@ -946,19 +946,15 @@ BEGIN
     DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
     rb.picoruleblock:='
-    
         /* Rule block to assess encounters with renal */
         
-          #define_ruleblock([[rb_id]],
-            {
-                description: "Rule block to assess encounters with renal",
-                is_active:2
-                
-            }
-        );
+        #define_ruleblock([[rb_id]], {
+            description: "Rule block to assess encounters with renal",
+            is_active:2
+        });
         
-        #doc(,{
-                txt : "Referral from primary care for renal"
+        #doc(, {
+            txt : "Referral from primary care for renal"
         });
         
         ref_ren_n => eadv.[ref_nephrologist,icpc_u67004].dt.count();
@@ -966,44 +962,33 @@ BEGIN
         
         ref_renal : { coalesce(ref_ren_n,0)>0 =>1},{=>0};
         
-        #doc(,{
-                txt : " Encounters with specialist services"
+        #doc(, {
+            txt : "Encounters with specialist services"
         });
         
-        enc_n => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep,enc_op_renal_edu].dt.count();
-        enc_ld => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep,enc_op_renal_edu].dt.max();
-        enc_fd => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep,enc_op_renal_edu].dt.min();
-
-        enc_ld_1y => eadv.[enc_op_ren_%,enc_op_rdu_%,enc_op_med_rlp,enc_op_med_rac,enc_op_med_nep,enc_op_renal_edu].dt.max().where(dt>sysdate-365);
+        enc_n     => eadv.[enc_op_ren_%, enc_op_rdu_%, enc_op_med_rlp, enc_op_med_rac, enc_op_med_nep, enc_op_renal_edu].dt.count();
+        enc_ld    => eadv.[enc_op_ren_%, enc_op_rdu_%, enc_op_med_rlp, enc_op_med_rac, enc_op_med_nep, enc_op_renal_edu].dt.max();
+        enc_fd    => eadv.[enc_op_ren_%, enc_op_rdu_%, enc_op_med_rlp, enc_op_med_rac, enc_op_med_nep, enc_op_renal_edu].dt.min();
+        enc_ld_1y => eadv.[enc_op_ren_%, enc_op_rdu_%, enc_op_med_rlp, enc_op_med_rac, enc_op_med_nep, enc_op_renal_edu].dt.max().where(dt>sysdate-365);
         
         enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
-        
         enc_renal_1y :  {enc_ld_1y!? =>1},{=>0};
-        
         enc_null : { coalesce(enc_n,0)=0 =>1},{=>0};
-        
         
         [[rb_id]] : { ref_renal>0 or enc_renal>0 => 1},{=>0};
         
+        #define_attribute(enc_renal, {
+            label:"Encounter with renal services",
+            is_reportable:1,
+            type:2
+        });
         
-         #define_attribute(
-            enc_renal,
-            {
-                label:"Encounter with renal services",
-                is_reportable:1,
-                type:2
-            }
-        );
-        #define_attribute(
-            ref_renal,
-            {
-                label:"Renal referral from primary care",
-                is_reportable:1,
-                type:2
-            }
-        );
+        #define_attribute(ref_renal, {
+            label:"Renal referral from primary care",
+            is_reportable:1,
+            type:1001
+        });
         
-            
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
@@ -1408,7 +1393,7 @@ BEGIN
                 label:"Difference between coded and calculated",
                 desc:"Algebraic difference between numeric stages ",
                 is_reportable:0,
-                type:2
+                type:1001
             }
         );
         
@@ -1457,7 +1442,7 @@ BEGIN
                 label:"Misclassifcation occured",
                 desc:"Integer [0-1]",
                 is_reportable:0,
-                type:2
+                type:1001
             }
         );
         

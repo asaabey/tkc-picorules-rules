@@ -59,8 +59,8 @@ BEGIN
         #define_attribute(cd_cirrhosis,
             {
                 label: "Presence of Cirrhosis",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 2
             }
         );
         

@@ -62,7 +62,7 @@ BEGIN
             {
                 label: "Presence of haematological disease",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         

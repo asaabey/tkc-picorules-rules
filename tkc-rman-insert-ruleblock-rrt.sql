@@ -91,7 +91,7 @@ BEGIN
         tx_dt_icd => eadv.icd_z94_0.dt.min();
         
         #doc(,{
-            txt : "Handling muliparity based on intervening hd "
+            txt : "Handling multiparity based on intervening hd "
         } );
         
         tx_dt_icd_last => eadv.icd_z94_0.dt.max();
@@ -319,7 +319,7 @@ BEGIN
             {
                 label:"Incident Haemodialysis",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -328,7 +328,7 @@ BEGIN
             {
                 label:"Incident Peritoneal dialysis",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -337,7 +337,7 @@ BEGIN
             {
                 label:"Incident Peritoneal or haemodialysis",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -346,7 +346,7 @@ BEGIN
             {
                 label:"Renal transplant multi-parity",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
     ';

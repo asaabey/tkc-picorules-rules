@@ -30,20 +30,20 @@ BEGIN
             }
         );
         
-        uti_fd => eadv.[icd_n39%, icd_n30%,icpc_u71%].dt.min();
+        uti_fd => eadv.[icd_n39%, icd_n30%, icpc_u71%].dt.min();
         
-        uti_ld => eadv.[icd_n39%, icd_n30%,icpc_u71%].dt.max();
+        uti_ld => eadv.[icd_n39%, icd_n30%, icpc_u71%].dt.max();
         
-        uti_rec_icpc_ld => eadv.[icpc_u71015,icpc_u71014].dt.max();
+        uti_rec_icpc_ld => eadv.[icpc_u71015, icpc_u71014].dt.max();
         
         
-        [[rb_id]] : { uti_ld -uti_fd >90 or uti_rec_icpc_ld!? => 1 },{=>0};
+        [[rb_id]] : { uti_ld - uti_fd > 90 or uti_rec_icpc_ld!? => 1 },{=>0};
         
         #define_attribute([[rb_id]],
             {
                 label: "Presence of recurrent uti",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         

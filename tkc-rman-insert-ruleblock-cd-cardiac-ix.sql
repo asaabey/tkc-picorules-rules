@@ -51,8 +51,8 @@ BEGIN
         #define_attribute(cd_cardiac_ix,
             {
                 label: "presence of cardiac investigations",
-                type : 2,
-                is_reportable:1
+                type: 1001,
+                is_reportable: 1
             }
         );
 

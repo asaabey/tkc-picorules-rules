@@ -57,21 +57,21 @@ BEGIN
         st_rman_rb : {. => 2010};
         
         st_rman_rb_err : {. => 2014};
-        [[rb_id]] : { 1=1 => 1},{=>0};
+        [[rb_id]] : { . => 1 },{ => 0 };
 
         #define_attribute(
             age,
             {
-                label:"Demography Age",
-                type:2,
-                is_reportable:1
+                label:"Demography: Age",
+                is_reportable:1,
+                type:2
             }
         );
         
         #define_attribute(
             female,
             {
-                label:"Demography Female Gender __b__",
+                label:"Demography: Female Gender",
                 is_reportable:1,
                 type:2
             }
@@ -80,52 +80,52 @@ BEGIN
         #define_attribute(
             dob,
             {
-                label:"Demography Date of birth __t__",
-                type:12,
-                is_reportable:1
+                label:"Demography: Date of birth",
+                is_reportable:1,
+                type:12
             }
         );
         
         #define_attribute(
             dod,
             {
-                label:"Demography Date of death",
-                type:12,
-                is_reportable:1
+                label:"Demography: Date of death",
+                is_reportable:1,
+                type:12
             }
         );
         
         #define_attribute(
             gender,
             {
-                label:"Gender [male=1 female=0]",
-                type:2,
-                is_reportable:1
+                label:"Demography: Gender [male=1 female=0]",
+                is_reportable:1,
+                type:2
             }
         );
         
         #define_attribute(
             alive,
             {
-                label:"Demography Alive with absent DOD",
-                type:2,
-                is_reportable:1
+                label:"Demography: Alive with absent DOD",
+                is_reportable:1,
+                type:2
             }
         );
         #define_attribute(
             eth_aboriginal,
             {
-                label:"Demography Aboriginal Ethnicity",
-                type:2,
-                is_reportable:1
+                label:"Demography: Aboriginal Ethnicity",
+                is_reportable:1,
+                type:2
             }
         );
         #define_attribute(
             eth_tsi,
             {
-                label:"Demography Torres Strait Islander Ethnicity",
-                type:2,
-                is_reportable:1
+                label:"Demography: Torres Strait Islander Ethnicity",
+                is_reportable:1,
+                type:2
             }
         );
     ';
@@ -406,8 +406,8 @@ BEGIN
             [[rb_id]],
             {
                 label:"Nursing home resident",
-                type:2,
-                is_reportable:1
+                is_reportable:1,
+                type:1001
             }
         );
         
@@ -450,9 +450,9 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Potential duplicate client",
-                type:2,
-                is_reportable:1
+                label:"Demography: Potential duplicate client",
+                is_reportable:1,
+                type:1001
             }
         );
         

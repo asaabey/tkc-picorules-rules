@@ -25,13 +25,10 @@ BEGIN
     
         /* Algorithm to assess VTE  */
         
-        #define_ruleblock([[rb_id]],
-        {
+        #define_ruleblock([[rb_id]], {
             description: "Algorithm to assess VTE",
             is_active:2
-            
-        }
-        );
+        });
         
         
         #doc(,{
@@ -68,10 +65,10 @@ BEGIN
         #define_attribute(
         [[rb_id]],
             {
-                label:"VTE",
-                desc:"Venous-thrombo embolism",
-                is_reportable:1,
-                type:2
+                label: "VTE",
+                desc: "Venous-thrombo embolism",
+                is_reportable: 1,
+                type: 1001
             }
         );
         

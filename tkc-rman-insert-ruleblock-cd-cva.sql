@@ -48,10 +48,10 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Stroke",
-                desc:"Presence of haemorrhagic or thromboembolic stroke",
-                is_reportable:1,
-                type:2
+                label: "Stroke",
+                desc: "Presence of haemorrhagic or thromboembolic stroke",
+                is_reportable: 1,
+                type: 2
             }
         );
 

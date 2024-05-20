@@ -29,8 +29,6 @@ BEGIN
             }
         );
         
-        
-        
         op_ld => eadv.[enc_op_%].dt.last();
         
         op_n => eadv.[enc_op_%].dt.distinct_count();
@@ -44,14 +42,11 @@ BEGIN
         #define_attribute(
             [[rb_id]],
             {
-                label:"Inpatient activity",
-                type:2,
-                is_reportable:0
+                label:"Outpatient activity",
+                is_reportable:0,
+                type:1001
             }
         );
-        
-        
-                
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
     

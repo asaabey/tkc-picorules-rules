@@ -40,7 +40,7 @@ BEGIN
             {
                 label: "Presence of fracture",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         

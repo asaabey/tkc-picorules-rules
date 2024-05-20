@@ -59,13 +59,8 @@ BEGIN
             }
         );
 
-        [[rb_id]] : {. =>1};
+        [[rb_id]] : { . => 1 },{ => 0 };
         
-        #define_attribute([[rb_id]],
-            {
-                label: "This is a placeholder variable, useful info stored in other variables in this block"
-            }
-        );
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

@@ -23,13 +23,10 @@ BEGIN
     
         /* Algorithm to assess cardiac medication  */
         
-        #define_ruleblock([[rb_id]],
-        {
+        #define_ruleblock([[rb_id]], {
             description: "Algorithm to assess cardiac medication",
             is_active:2
-            
-        }
-        );
+        });
         
         
         #doc(,
@@ -99,8 +96,8 @@ BEGIN
             {
                 label:"Rx cardiac meds",
                 desc:"Presence of cardiac",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -124,13 +121,10 @@ BEGIN
         
         /* Algorithm to assess cardiac encounters  */
         
-        #define_ruleblock([[rb_id]],
-        {
+        #define_ruleblock([[rb_id]], {
             description: "Algorithm to assess cardiac encounters",
-            is_active:2
-            
-        }
-        );
+            is_active: 2
+        });
         
         car_enc_f_dt => eadv.[enc_op_car_%].dt.first();
         
@@ -138,16 +132,12 @@ BEGIN
         
         [[rb_id]] : {car_enc_l_dt!? => 1},{=>0};
         
-        
-        #define_attribute(
-        [[rb_id]],
-            {
-                label:"cardiac outpatient encounter",
-                desc:"Presence of cardiac outpatient encounter",
-                is_reportable:1,
-                type:2
-            }
-        );
+        #define_attribute([[rb_id]], {
+            label: "cardiac outpatient encounter",
+            desc: "Presence of cardiac outpatient encounter",
+            is_reportable: 1,
+            type: 1001
+        });
         
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

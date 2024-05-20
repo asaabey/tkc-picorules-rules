@@ -50,19 +50,19 @@ BEGIN
         #define_attribute(
             [[rb_id]],{
                 label:"Major abdominal colorectal surgery",
-                type:2,
+                type:1001,
                 is_reportable:0
         });
         #define_attribute(
             hemi,{
                 label:"Left or Right Hemicolectomy",
-                type:2,
+                type:1001,
                 is_reportable:1
         });
         #define_attribute(
             ar,{
                 label:"Anterior Resection",
-                type:2,
+                type:1001,
                 is_reportable:1
         });
         

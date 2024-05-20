@@ -20,11 +20,11 @@ BEGIN
     
     rb.picoruleblock:='
     
-        /*  This is a algorithm to identify cns  */
+        /*  This is a algorithm to identify CNS disorders */
         
         #define_ruleblock([[rb_id]],
             {
-                description: "This is a algorithm to identify cns",
+                description: "This is a algorithm to identify CNS disorders",
                 is_active:2
 
                 
@@ -103,24 +103,24 @@ BEGIN
         #define_attribute(dem,
             {
                 label: "Presence of Dementia",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(epil,
             {
                 label: "Presence of Epilepsy",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
         #define_attribute(pd,
             {
                 label: "Presence of Parkinsons disease",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
     ';

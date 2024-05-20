@@ -172,12 +172,12 @@ BEGIN
                    {=>0};
         */
 
-        cd_hepb_master : { coalesce(ss, sp, cs)!? => 1};
+        cd_hepb_master : { coalesce(ss, sp, cs)!? => 1},{ => 0 };
 
-        chb_imm_tol_flg : { sp = 1 => 1 };
-        chb_imm_clr_flg : { sp = 2 => 1 };
-        chb_imm_ctr_flg : { sp = 3 => 1 };
-        chb_imm_esc_flg : { sp = 4 => 1 };
+        chb_imm_tol_flg : { sp = 1 => 1 },{ => 0 };
+        chb_imm_clr_flg : { sp = 2 => 1 },{ => 0 };
+        chb_imm_ctr_flg : { sp = 3 => 1 },{ => 0 };
+        chb_imm_esc_flg : { sp = 4 => 1 },{ => 0 };
 
 
         chb_imm_lbl => rout_cd_hep_b_sero.hbv_phase_lbl.val.bind();

@@ -23,13 +23,10 @@ BEGIN
         
         /* Algorithm to assess cardiac disease  */
         
-        #define_ruleblock(cd_cardiac_cad,
-        {
+        #define_ruleblock(cd_cardiac_cad, {
             description: "Algorithm to assess cardiac disease",
             is_active:2
-
-        }
-        );
+        });
 
 
 
@@ -78,9 +75,9 @@ BEGIN
 
         nstemi_ld => eadv.[icpc_k75016,icd_i21_4,icd_i22_2].dt.max().where(dt > nstemi_fd);
 
-        stemi_ld => eadv.[icpc_k75015,icd_i21_0,icd_i21_1,icd_i21_2,icd_i21_3,icd_i22_0,icd_i22_1,icd_i22_8,icd_i22_9].dt.max().where(dt > stemi_fd);
+        stemi_ld => eadv.[icpc_k75015, icd_i21_0, icd_i21_1, icd_i21_2, icd_i21_3, icd_i22_0, icd_i22_1, icd_i22_8, icd_i22_9].dt.max().where(dt > stemi_fd);
 
-        ami_icd_null : {coalesce(stemi_fd_icd,nstemi_fd_icd)? => 1};
+        ami_icd_null : {coalesce(stemi_fd_icd,nstemi_fd_icd)? => 1},{ => 0};
 
         #doc(,
             {
@@ -208,7 +205,7 @@ BEGIN
 
         rxn_c10_ax => eadv.rxnc_c10ax.dt.min().where(val=1);
 
-        rxn : {coalesce(rxn_ap,rxn_anticoag,rxn_bb,rxn_raas,rxn_statin,rxn_c10_ax)!? =>1};
+        rxn : {coalesce(rxn_ap,rxn_anticoag,rxn_bb,rxn_raas,rxn_statin,rxn_c10_ax)!? =>1},{ => 0};
 
         #doc(,
             {
@@ -230,8 +227,8 @@ BEGIN
             {
                 label:"Coronary artery disease",
                 desc:"Presence of Coronary artery disease",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 2
             }
         );
 

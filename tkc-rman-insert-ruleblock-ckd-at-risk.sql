@@ -161,7 +161,7 @@ BEGIN
                     label:"At risk for CKD",
                     is_reportable:1,
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
         #define_attribute(ckd,{
@@ -179,33 +179,33 @@ BEGIN
         #define_attribute(dm,{
                     label:"Presence of Diabetes",
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
         
         #define_attribute(htn,{
                     label:"Presence of Hypertension",
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
         #define_attribute(cvd,{
                     label:"Presence of Cardiovascular disease",
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
         
         #define_attribute(obesity,{
                     label:"Presence of Obesity",
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
         #define_attribute(aki,{
                     label:"Presence of AKI",
                     is_bi_obj:1,
-                    type:2
+                    type:1001
         });
         
         
@@ -245,7 +245,7 @@ BEGIN
         #define_attribute(
             screen_egfr,
                 {
-                    label:"screened by egfr within last 1y",
+                    label:"Screened by egfr within last 1y",
                     is_reportable:1,
                     is_bi_obj:1,
                     type:2
@@ -255,7 +255,7 @@ BEGIN
         #define_attribute(
             screen_acr,
                 {
-                    label:"screened by uACR within last 1y",
+                    label:"Screened by uACR within last 1y",
                     is_reportable:1,
                     is_bi_obj:1,
                     type:2
@@ -265,17 +265,17 @@ BEGIN
         #define_attribute(
             screen_bp,
                 {
-                    label:"screened by blood pressure within last 1y",
+                    label:"Screened by blood pressure within last 1y",
                     is_reportable:1,
                     is_bi_obj:1,
-                    type:2
+                    type:1001
                 }
         );
         
         #define_attribute(
             screen_hba1c,
                 {
-                    label:"screened by HbA1c within last 1y",
+                    label:"Screened by HbA1c within last 1y",
                     is_reportable:1,
                     is_bi_obj:1,
                     type:2
@@ -285,7 +285,7 @@ BEGIN
         #define_attribute(
             screen_3,
                 {
-                    label:"screened by blood pressure uACR and eGFR within last 1y as per recommendations",
+                    label:"Screened by blood pressure uACR and eGFR within last 1y as per recommendations",
                     is_reportable:1,
                     is_bi_obj:1,
                     type:2

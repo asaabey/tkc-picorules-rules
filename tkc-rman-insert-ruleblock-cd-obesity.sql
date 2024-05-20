@@ -133,7 +133,7 @@ BEGIN
         
         #doc(,
                 {
-                    txt: "Loss of weight as a pct atleast 6 m apart"
+                    txt: "Loss of weight as a pct at least 6m apart"
                 }
             );
         
@@ -146,7 +146,7 @@ BEGIN
                 {
                     label:"Loss of weight",
                     is_reportable:1,
-                    type:2
+                    type:1001
                 }
         );
         

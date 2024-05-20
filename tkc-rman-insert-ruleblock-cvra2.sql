@@ -156,8 +156,8 @@ BEGIN
             [[rb_id]],
             {
                 label:"High CVRA",
-                type:2,
-                is_reportable:1
+                is_reportable:1,
+                type:2
             }
         );
     ';

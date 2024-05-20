@@ -143,7 +143,7 @@ BEGIN
             {
                 label:"AV fistuloplasty",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         

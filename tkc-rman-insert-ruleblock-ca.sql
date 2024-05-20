@@ -39,7 +39,7 @@ BEGIN
             {
                 label: "Attendance at oncology clinic",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -102,8 +102,8 @@ BEGIN
         #define_attribute([[rb_id]],
             {
                 label: "Presence of metastatic carcinoma",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -144,7 +144,6 @@ BEGIN
         
         ca_mets => rout_ca_mets.ca_mets.val.bind();
         
-        
         ca_breast_fd => rout_ca_breast.code_fd.val.bind();
         
         ca_prostate_fd => rout_ca_prostate.code_fd.val.bind();
@@ -161,7 +160,7 @@ BEGIN
         
         ca_ovarian_fd => rout_ca_ovarian.code_fd.val.bind();
         
-        any_ca : { coalesce(ca_breast_fd,ca_prostate_fd,ca_rcc_fd,ca_crc_fd,ca_lung_fd,ca_thyroid_fd, ca_ovarian_fd, ca_endometrial_fd)!? => 1},{=>0};
+        any_ca : { coalesce(ca_breast_fd, ca_prostate_fd, ca_rcc_fd, ca_crc_fd, ca_lung_fd, ca_thyroid_fd, ca_ovarian_fd, ca_endometrial_fd)!? => 1},{=>0};
         
         op_enc_ld => rout_ca_careplan.op_enc_ld.val.bind();
         
@@ -170,8 +169,8 @@ BEGIN
         #define_attribute(ca_solid,
             {
                 label: "Presence of solid organ carcinoma",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -231,7 +230,7 @@ BEGIN
             {
                 label: "Presence of breast carcinoma",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -283,7 +282,7 @@ BEGIN
             {
                 label: "Presence of prostate carcinoma",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -333,8 +332,8 @@ BEGIN
         #define_attribute([[rb_id]],
             {
                 label: "Presence of Renal cell carcinoma RCC",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -384,7 +383,7 @@ BEGIN
             {
                 label: "Presence of colorectal carcinoma",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -433,8 +432,8 @@ BEGIN
         #define_attribute([[rb_id]],
             {
                 label: "Presence of lung carcinoma",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -484,8 +483,8 @@ BEGIN
         #define_attribute([[rb_id]],
             {
                 label: "Presence of thyroid carcinoma",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -534,7 +533,7 @@ BEGIN
             {
                 label: "Presence of endometrial carcinoma",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -585,7 +584,7 @@ BEGIN
             {
                 label: "Presence of ovarian carcinoma",
                 is_reportable:1,
-                type:2
+                type:1001
             }
         );
         
@@ -636,8 +635,8 @@ BEGIN
         #define_attribute([[rb_id]],
             {
                 label: "Presence of melanoma",
-                is_reportable:1,
-                type:2
+                is_reportable: 1,
+                type: 1001
             }
         );
         
@@ -685,7 +684,7 @@ BEGIN
             {
                 label: "Presence of misc carcinoma",
                 is_reportable: 1,
-                type: 2
+                type: 1001
             }
         );
         
