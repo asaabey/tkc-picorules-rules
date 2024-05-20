@@ -1,0 +1,15 @@
+    <div class="alert alert-warning" role="alert">
+        <h5>
+<?xml version="1.0" ?><svg fill="none" height="24" stroke-width="1.5" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7V9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 13.01L12.01 12.9989" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20.2895V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V15C21 16.1046 20.1046 17 19 17H7.96125C7.35368 17 6.77906 17.2762 6.39951 17.7506L4.06852 20.6643C3.71421 21.1072 3 20.8567 3 20.2895Z" stroke="currentColor" stroke-width="1.5"/></svg>
+        Alert: Potentially untreated CKD (Trigger 4630)
+        </h5>
+
+        {% if tg4630.recm==11 %} Likely will benefit from RAAS blockade, followed by SGLT2i and nsMRA {% endif %}
+        {% if tg4630.recm==12 %} Likely will benefit from SGLT2i followed by nsMRA on top of maximised RAAS blockade{% endif %}        
+        {% if tg4630.recm==13 %} Likely will benefit from from nsMRA on top of existing maximised RAAS blockade and SGLT2i {% endif %}
+        {% if tg4630.recm==21 %} Likely will benefit from RAAS blockade, followed by SGLT2i (Non-diabetic indication){% endif %}
+        {% if tg4630.recm==22 %} Likely will benefit from SGLT2i on top of maximised RAAS blockade (Non-diabetic indication){% endif %}
+  <br />
+  <i>[ SGLTi : Sodium glucose co-transporter inhibitor; RAAS : Renin-Angiotensin-Aldosterone; nsMRA : Non-steroidal Mineralocorticoid receptor antagonist ]</i>
+    </div>
+    

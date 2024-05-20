@@ -1215,7 +1215,101 @@ BEGIN
     rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
     INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
     -- END OF RULEBLOCK --
+
+
+    -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='tg4630';
+   
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
     
+    rb.picoruleblock:='
+        /*  Algorithm to detect albuminuria pharmacotherapy   */
+         #define_ruleblock(tg4630,
+            {
+                description: " Algorithm to detect albuminuria pharmacotherapy",
+                is_active:2
+            }
+        );
+
+        dod => rout_dmg.dod.val.bind();
+
+        #doc(,{
+                txt:"previous CSU action and assumes that the trigger will never fire again"
+        });
+
+        csu_act => eadv.csu_action_tg4630._.lastdv();
+
+        dmg_source => rout_dmg_source.dmg_source.val.bind();
+
+        dm => rout_cd_dm_dx.dm.val.bind();
+
+
+        cga_a => rout_ckd.cga_a_val.val.bind();
+
+        cga_g => rout_ckd.ckd.val.bind();
+
+        acr_outdt => rout_ckd.acr_outdated.val.bind();
+
+        egfr_outdt => rout_ckd.egfr_outdated.val.bind();
+
+        res_outdt : { greatest(acr_outdt,egfr_outdt)>0 =>1},{=>0};
+
+        ckd_met : { cga_a <5 and cga_g >=2 and res_outdt=0 =>1},{=>0};
+
+
+
+        raas => eadv.[rxnc_c09aa,rxnc_c09ca].dt.min().where(val=1);
+
+        sglt2i => eadv.[rxnc_a10bk].dt.min().where(val=1);
+
+        nsmra =>eadv.[rxn_cui_2562812,rxn_cui_2562823].dt.last();
+
+
+        sbp => eadv.obs_bp_systolic.val.lastdv();
+
+        k => eadv.lab_bld_potassium.val.lastdv();
+
+        sbp_safe : { sbp_val> 110 and sbp_dt>sysdate-365 =>1},{=>0};
+
+        k_safe : { k_val< 5 and k_dt>sysdate-365 => 1},{=>0};
+
+
+        recm : { ckd_met=1 and dm=1 and raas? and sglt2i? and nsmra? => 11},
+        	{ ckd_met=1 and dm=1  and raas!? and sglt2i? and nsmra? => 12},
+        	{ ckd_met=1 and dm=1 and raas!? and sglt2i!? and nsmra? => 13},
+                { ckd_met=1 and dm=0 and raas? and sglt2i? => 21},
+        	{ ckd_met=1 and dm=0 and raas!? and sglt2i? => 22};
+
+
+
+        ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
+
+        #doc(,
+            {
+                txt:"Chronic diseases include ckd, dm, possibly not on treatment",
+                cite: "tg2610_ref1, tg2610_ref2"
+            }
+        );
+
+        tg4630 : { recm!? and ex_flag=0 => 1},{=>0};
+
+        #define_attribute(
+                tg4630 ,
+                {
+                    label:"Alert:Potentially untreated proteinuric CKD",
+                    desc:"Integer [0-1] if meets criteria ",
+                    is_reportable:1,
+                    is_trigger:1,
+                    type:2,
+                    priority:2
+                }
+            );
+    ';
+
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+    -- END OF RULEBLOCK --
 END;
 
 
