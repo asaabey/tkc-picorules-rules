@@ -1,6 +1,6 @@
 /* Algorithm to assess VTE  */
 
-#define_ruleblock(cd_cardiac_vte, {
+#define_ruleblock([[rb_id]], {
     description: "Algorithm to assess VTE",
     is_active:2
 });
@@ -34,11 +34,11 @@ rxn_anticoag_dt => eadv.[rxnc_b01aa,rxnc_b01af,rxnc_b01ae,rxnc_b01ab].dt.min().w
 rxn_anticoag : { rxn_anticoag_dt!? => 1},{=>0};
 
 
-cd_cardiac_vte : { coalesce(pe_fd,dvt_fd,budd_chiari_fd,svt_fd)!? =>1},{=>0};
+[[rb_id]] : { coalesce(pe_fd,dvt_fd,budd_chiari_fd,svt_fd)!? =>1},{=>0};
 
 
 #define_attribute(
-cd_cardiac_vte,
+[[rb_id]],
     {
         label: "VTE",
         desc: "Venous-thrombo embolism",

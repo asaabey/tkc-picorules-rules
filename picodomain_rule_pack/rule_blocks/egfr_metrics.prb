@@ -1,7 +1,7 @@
 /* Algorithm to compute egfr metrics  */
 
 
- #define_ruleblock(egfr_metrics,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to derive egfr metrics",
 
@@ -147,4 +147,4 @@ mspan : { egfr_n>0 => round((egfr_rn_dt-egfr_r1_dt)/365.25,0)};
 n_avg : { mspan>0 => round(egfr_n/mspan,1)};
 
 
-egfr_metrics : {egfr_n>2 =>1},{=>0};
+[[rb_id]] : {egfr_n>2 =>1},{=>0};

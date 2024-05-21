@@ -1,6 +1,6 @@
 /* Rule block to determine coded conditions leading to reduced nephron mass */
 
-#define_ruleblock(ckd_c_rnm,
+#define_ruleblock([[rb_id]],
        {
            description: "Rule block to determine coded conditions leading to reduced nephron mass",
            is_active:2
@@ -41,10 +41,10 @@ c_z90_5 => eadv.[icd_z90_5,icpc_u52012,icpc_u52006].dt.min();
 
 apkd : { c_q61_2!? => 1},{=>0};
 
-ckd_c_rnm : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 },{=>0};
+[[rb_id]] : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 },{=>0};
 
 #define_attribute(
-       ckd_c_rnm,
+       [[rb_id]],
        {
            label:"Renal structural anatomical anomaly",
            desc:"Integer [0-1] if found",

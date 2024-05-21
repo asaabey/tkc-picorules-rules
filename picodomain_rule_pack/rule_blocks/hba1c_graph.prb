@@ -1,7 +1,7 @@
 /* Algorithm to plot hba1c graph  */
 
 
- #define_ruleblock(hba1c_graph,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot hba1c graph",
 
@@ -61,4 +61,4 @@ line_target_upper_y : {hba1c_graph_y_min< hba1c_target_max and hba1c_graph_y_max
 
 
 
-hba1c_graph : { dm=1 and hba1c_n>3 and dspan>365 =>1},{=>0};
+[[rb_id]] : { dm=1 and hba1c_n>3 and dspan>365 =>1},{=>0};

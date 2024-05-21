@@ -1,6 +1,6 @@
 /* Algorithm to detect nephrotic syndrome */
 
- #define_ruleblock(tg4410,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to detect nephrotic syndrome",
         is_active:2
@@ -102,10 +102,10 @@ high_chol : {nvl(chol1,0)>7=>1},{=>0};
 
 
 
-tg4410 : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 },{=>0};
+[[rb_id]] : {ex_flag=0 and uacr1>300 and uacr2>300 and uacr_log_delta>-0.1 => 1 },{=>0};
 
 #define_attribute(
-    tg4410,
+    [[rb_id]],
     {
         label:"Alert:Nephrotic range proteinuria in the absence of diabetes",
         desc:"Integer [0-1] if meets criteria ",

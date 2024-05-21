@@ -1,6 +1,6 @@
 /*  Ruleblock for PCD Traffic light report */
 
-#define_ruleblock(pcd,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess PCD Traffic light report",
 
@@ -72,4 +72,4 @@ cvra12m : { cvra_dt < sysdate-365 =>1},{=>0};
 
 age : { dob< sysdate => (sysdate-dob)/365.25};
 
-pcd : { pcd_dt is not null =>1},{=>0};
+[[rb_id]] : { pcd_dt is not null =>1},{=>0};

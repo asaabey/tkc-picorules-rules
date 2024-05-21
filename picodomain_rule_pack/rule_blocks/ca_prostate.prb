@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify prostate carcinoma  */
 
-#define_ruleblock(ca_prostate,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify prostate carcinoma",
         is_active:2
@@ -15,9 +15,9 @@ icpc_fd => eadv.[icpc_y77%].dt.first();
 code_fd : { . => least_date(icd_fd,icpc_fd)};
 
 
-ca_prostate : { code_fd!? =>1},{=>0};
+[[rb_id]] : { code_fd!? =>1},{=>0};
 
-#define_attribute(ca_prostate,
+#define_attribute([[rb_id]],
     {
         label: "Presence of prostate carcinoma",
         is_reportable:1,

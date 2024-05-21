@@ -1,6 +1,6 @@
 /*  This is a algorithm to apply ACS NSQIP */
 
-#define_ruleblock(periop_nsqip,
+#define_ruleblock([[rb_id]],
     {
         description: "algorithm to apply ACS NSQIP ",
 
@@ -84,9 +84,9 @@ pmp_score : { pmp_sum  between -1 and 5 => 0.1},
             { pmp_sum  between 26 and 30 => 40};
 
 
-periop_nsqip : { pmp_score >0 =>1},{=>0};
+[[rb_id]] : { pmp_score >0 =>1},{=>0};
 
-#define_attribute(periop_nsqip,
+#define_attribute([[rb_id]],
     {
         label: "PMP score"
     }

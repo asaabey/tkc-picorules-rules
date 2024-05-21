@@ -1,6 +1,6 @@
 /*  CHF  */
 
-#define_ruleblock(cd_cardiac_chf,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a assess CHF",
         is_active:2
@@ -60,9 +60,9 @@ echo_rep => eadv.[ntc_rep_tte]._.lastdv();
 
 chf : {coalesce(chf_code_fd, dcm_fd, hocm_fd, rcm_fd, ethocm_fd, noscm_fd, rx_arni_fd)!? =>1},{=>0};
 
-cd_cardiac_chf : {chf=1 =>1},{=>0};
+[[rb_id]] : {chf=1 =>1},{=>0};
 
-#define_attribute(cd_cardiac_chf,
+#define_attribute([[rb_id]],
     {
         label: "Presence of CHF",
         type: 2,

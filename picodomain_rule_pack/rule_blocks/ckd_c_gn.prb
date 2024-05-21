@@ -1,7 +1,7 @@
    /* Rule block to determine coded glomerulonephritis */
 
 
-#define_ruleblock(ckd_c_gn,
+#define_ruleblock([[rb_id]],
        {
            description: "Rule block to determine CKD by cause",
            is_active:2
@@ -59,11 +59,11 @@ gn_nephrotic : { coalesce(c_n04,c_n06)!? =>1},{=>0};
 gn_chronic : {coalesce(c_n01,c_n02,c_n03,c_n05,c_n06,c_n07,c_n08,c_u88,c_m3214)!? => 1},{=>0};
 
 
-ckd_c_gn : { . => gn};
+[[rb_id]] : { . => gn};
 
 
 #define_attribute(
-       ckd_c_gn,
+       [[rb_id]],
        {
            label:"Glomerulonephritis GN Acute or Chronic",
            desc:"Integer [0-1] if found",

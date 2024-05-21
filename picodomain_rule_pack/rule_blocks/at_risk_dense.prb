@@ -1,6 +1,6 @@
 /*  Test  */
 
-#define_ruleblock(at_risk_dense,
+#define_ruleblock([[rb_id]],
     {
         description: "This is the at_risk_dense algorithm",
         is_active:0
@@ -91,9 +91,9 @@ mbs_721 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
 mbs_723 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
 
 mbs_flag : { . => coalesce(mbs_715,mbs_721,mbs_723)};
-at_risk_dense : { . => 1 },{ => 0 };
+[[rb_id]] : { . => 1 },{ => 0 };
 
-#define_attribute(at_risk_dense,
+#define_attribute([[rb_id]],
     {
         label: "This is a test variable uics"
     }

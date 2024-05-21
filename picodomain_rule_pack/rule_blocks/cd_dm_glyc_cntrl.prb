@@ -1,6 +1,6 @@
 /* Ruleblock to assess diabetic glycaemic control*/
 
-#define_ruleblock(cd_dm_glyc_cntrl,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess diabetic glycaemic control",
         is_active:2

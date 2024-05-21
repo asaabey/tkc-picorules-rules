@@ -1,6 +1,6 @@
 /*  Algorithm to identify Rheumatoid Arthritis  */
 
-#define_ruleblock(cd_rheum_ra,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to identify Rheumatoid Arthritis",
         is_active:2
@@ -24,9 +24,9 @@ op_enc_ld => eadv.[enc_op_med_rhe].dt.max();
 
 ra_fd : { .=> least_date(icd_fd,icpc_fd)};
 
-cd_rheum_ra : { ra_fd!? =>1},{=>0};
+[[rb_id]] : { ra_fd!? =>1},{=>0};
 
-#define_attribute(cd_rheum_ra,
+#define_attribute([[rb_id]],
     {
         label: "Presence of Rheumatoid arthritis",
         is_reportable:1,

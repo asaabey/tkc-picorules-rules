@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify metastatic carcinoma  */
 
-#define_ruleblock(ca_mets,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify metastatic carcinoma",
         is_active:2
@@ -27,9 +27,9 @@ nos_met_fd => eadv.[icd_c79%,icd_c78%,icpc_a79009].dt.first();
 any_met_fd => eadv.[icd_c77%,icd_c78%,icd_c79%,icpc_a79009].dt.first();
 
 
-ca_mets : { any_met_fd!? =>1},{=>0};
+[[rb_id]] : { any_met_fd!? =>1},{=>0};
 
-#define_attribute(ca_mets,
+#define_attribute([[rb_id]],
     {
         label: "Presence of metastatic carcinoma",
         is_reportable: 1,

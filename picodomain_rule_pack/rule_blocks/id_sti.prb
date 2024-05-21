@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify soft tissue infection  */
 
-#define_ruleblock(id_sti,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify soft tissue infection",
         is_active:2
@@ -22,9 +22,9 @@ gap : { icd_fd!? => round((icd_ld-icd_fd)/365,1)};
 
 multi : { coalesce(icd_n,0)>1 and coalesce(gap,0)>1 =>1},{=>0};
 
-id_sti : { code_ld!? and multi=1 =>1},{=>0};
+[[rb_id]] : { code_ld!? and multi=1 =>1},{=>0};
 
-#define_attribute(id_sti,
+#define_attribute([[rb_id]],
     {
         label: "Presence of recurrent soft tissue infection",
         is_reportable:1,

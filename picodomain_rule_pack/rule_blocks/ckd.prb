@@ -1,6 +1,6 @@
 /* Rule block to stage CKD */
 
-  #define_ruleblock(ckd,
+  #define_ruleblock([[rb_id]],
     {
         description: "Rule block to stage CKD",
         is_active:2
@@ -143,7 +143,7 @@ ckd_stage :{ ckd_stage_val=1 => `1`},
 );
 
 
-ckd : {. => ckd_stage_val};
+[[rb_id]] : {. => ckd_stage_val};
 
 egfr_current : { egfr_l_dt > sysdate-730 =>1},{=>0};
 

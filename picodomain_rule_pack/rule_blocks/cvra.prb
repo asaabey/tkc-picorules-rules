@@ -1,6 +1,6 @@
 /* Ruleblock to apply Framingham equations*/
 
-#define_ruleblock(cvra,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to apply Framingham equations",
         is_active:2
@@ -127,10 +127,10 @@ cvra_cat :  {risk_high_ovr=1 => 3},
 
 cvra_dx_uncoded : {cvra_cat=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
 
-cvra :  { cvra_cat>2 => 1},{=>0};
+[[rb_id]] :  { cvra_cat>2 => 1},{=>0};
 
 #define_attribute(
-    cvra,
+    [[rb_id]],
     {
         label:"High CVRA",
         is_reportable:1,

@@ -1,6 +1,6 @@
 /* Ruleblock to assess hypertension pharmacology recommendations */
 
-#define_ruleblock(cd_htn_rcm,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess hypertension pharmacology recommendations",
         is_active:0
@@ -65,7 +65,7 @@ rx_line : { greatest(acei,arb,ccb,bb,c02,thiaz,loop,mrb)=0 =>0},
     }
 );
 
-cd_htn_rcm :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
+[[rb_id]] :   { htn=1 and bpc>1 and raas=0 and k_state<3 => 11 },
             { htn=1 and bpc>1 and raas=0 and k_state=3 and ccb=0 => 12 },
             { htn=1 and bpc>1 and raas=1 and ccb=0 => 22 },
             { htn=1 and bpc>1 and raas=1 and ccb=1 and thiaz=0 and k_state>1 => 33 },

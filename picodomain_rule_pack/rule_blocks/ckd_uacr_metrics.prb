@@ -1,6 +1,6 @@
 /* Rule block to Calculate uacr metrics */
 
-  #define_ruleblock(ckd_uacr_metrics,
+  #define_ruleblock([[rb_id]],
     {
         description: "Rule block to Calculate uacr metrics",
         is_active:2
@@ -74,7 +74,7 @@ acr_nom_crit : { a_asm_viol_ex=1 and (acr_past_pers_flag=1 or acr_past_singular_
 });
 
 
-ckd_uacr_metrics: {acr_l_val<3 => 1},
+[[rb_id]]: {acr_l_val<3 => 1},
         {acr_l_val<30 AND acr_l_val>=3 => 2},
         {acr_l_val<300 AND acr_l_val>=30 => 3},
         {acr_l_val>300 => 4},{=>0};

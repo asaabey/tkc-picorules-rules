@@ -1,7 +1,7 @@
 /* Algorithm to plot hb graph  */
 
 
- #define_ruleblock(hb_graph,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot hb graph",
 
@@ -48,4 +48,4 @@ line_lower_y : {. => (hb_graph_y_max-hb_graph_y_min) * hb_graph_y_scale};
 line_target_upper_y : {hb_graph_y_min< hb_target_max and hb_graph_y_max> hb_target_max => (hb_graph_y_max-10) * hb_graph_y_scale};
 
 
-hb_graph : { rrt=1 and hb_n>3 =>1},{=>0};
+[[rb_id]] : { rrt=1 and hb_n>3 =>1},{=>0};

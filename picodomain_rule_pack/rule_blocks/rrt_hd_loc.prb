@@ -1,6 +1,6 @@
 /* Rule block to count RRT presentations */
 
-#define_ruleblock(rrt_hd_loc,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to count RRT HD presentations",
         is_active:0,
@@ -59,9 +59,9 @@ loc_mode_1m_txt : {loc_mode_1m = 111711800010132  => `CA-GAP`},
             {loc_all_1m_n > 0=>`UNDETERMINED`}
             ;
 
-rrt_hd_loc => eadv.[caresys_1310000,caresys_1310004, icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].loc.last();
+[[rb_id]] => eadv.[caresys_1310000,caresys_1310004, icpc_u59001,icpc_u59008,icd_z49_1,mbs_13105].loc.last();
 
-#define_attribute(rrt_hd_loc,
+#define_attribute([[rb_id]],
     {
         label:"Latest HD Loc",
         desc:"Location of latest haemodialysis",

@@ -1,7 +1,7 @@
 /* Algorithm to plot egfr graph 2 */
 
 
- #define_ruleblock(egfr_graph2,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot egfr graph 2",
 
@@ -81,4 +81,4 @@ mspan : { egfr_n>0 => round((egfr_l_dt-egfr_f_dt)/12,0)};
 
 
 
-egfr_graph2 : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};
+[[rb_id]] : {rrt=0 and egfr_graph_val is not null and egfr_n>2 and mspan>=3 =>1},{=>0};

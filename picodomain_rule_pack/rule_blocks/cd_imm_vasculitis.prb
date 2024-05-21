@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify vasculitic phenotypes  */
 
-#define_ruleblock(cd_imm_vasculitis,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify vasculitic phenotypes",
         is_active:2
@@ -23,9 +23,9 @@ rxn_h02ab => eadv.[rxnc_h02ab].dt.max().where(val=1);
 
 
 
-cd_imm_vasculitis : { coalesce(gpa_fd,gca_fd,mpo_fd,tak_fd)!? =>1},{=>0};
+[[rb_id]] : { coalesce(gpa_fd,gca_fd,mpo_fd,tak_fd)!? =>1},{=>0};
 
-#define_attribute(cd_imm_vasculitis,
+#define_attribute([[rb_id]],
     {
         label: "Presence of vasculitis",
         is_reportable:1,

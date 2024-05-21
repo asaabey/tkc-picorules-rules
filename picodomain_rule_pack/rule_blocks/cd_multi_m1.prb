@@ -1,6 +1,6 @@
 /*  Algorithm to define multi disease m1 level viewmodel  */
 
-#define_ruleblock(cd_multi_m1,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to define multi disease m1 level viewmodel",
         is_active:0
@@ -66,9 +66,9 @@ cd_pulm_bt_fd => rout_cd_pulm_bt.bt_fd.val.bind();
 
 cd_pulm_bt_yr : { cd_pulm_bt_fd!? => extract(year from cd_pulm_bt_fd)};
 
-cd_multi_m1 : { dm_type>0 =>1},{=>0};
+[[rb_id]] : { dm_type>0 =>1},{=>0};
 
-#define_attribute(cd_multi_m1,
+#define_attribute([[rb_id]],
     {
         label: "Multimorb M1",
         type:1001

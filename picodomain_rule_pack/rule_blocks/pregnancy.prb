@@ -1,6 +1,6 @@
 /* Algorithm to assess pregnancy */
 
-#define_ruleblock(pregnancy,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess pregnancy",
         is_active:2
@@ -28,10 +28,10 @@ preg_ld : { .=> greatest_date(us_ld,gravid_icpc_ld, partum_ld)};
 
 gdm_code_fd => eadv.[icd_o24%,icpc_w85001,icpc_w85002].dt.min();
 
-pregnancy : { coalesce(us_ld,gravid_icpc_ld,partum_ld,gdm_code_fd)!? => 1},{=>0};
+[[rb_id]] : { coalesce(us_ld,gravid_icpc_ld,partum_ld,gdm_code_fd)!? => 1},{=>0};
 
 #define_attribute(
-    pregnancy,{
+    [[rb_id]],{
         label:"Pregnancy",
         is_reportable:0,
         type:1001

@@ -1,6 +1,6 @@
 /* Algorithm to detect nephritic syndrome */
 
- #define_ruleblock(tg4420,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to detect nephritic syndrome",
 
@@ -104,10 +104,10 @@ t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
             {ua_rbc>100 and ua_leu<40 => 1},
             {=>0};
 
-tg4420 : { t4420_code >=2 and ex_flag=0 => 1},{=>0};
+[[rb_id]] : { t4420_code >=2 and ex_flag=0 => 1},{=>0};
 
 #define_attribute(
-    tg4420,
+    [[rb_id]],
     {
         label:"Alert:Possible nephritic syndrome",
         desc:"Integer [0-1] if meets criteria ",

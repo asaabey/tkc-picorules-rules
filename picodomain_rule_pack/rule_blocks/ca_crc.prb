@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify colorectal carcinoma  */
 
-#define_ruleblock(ca_crc,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify colorectal",
         is_active:2
@@ -14,9 +14,9 @@ icpc_fd => eadv.[icpc_d75%].dt.first();
 
 code_fd : { . => least_date(icd_fd,icpc_fd)};
 
-ca_crc : { code_fd!? =>1},{=>0};
+[[rb_id]] : { code_fd!? =>1},{=>0};
 
-#define_attribute(ca_crc,
+#define_attribute([[rb_id]],
     {
         label: "Presence of colorectal carcinoma",
         is_reportable:1,

@@ -1,6 +1,6 @@
 /* Algorithm to assess demographics */
 
-#define_ruleblock(dmg,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess demographics",
 
@@ -37,7 +37,7 @@ st_rman_init : {. => 1010};
 st_rman_rb : {. => 2010};
 
 st_rman_rb_err : {. => 2014};
-dmg : { . => 1 },{ => 0 };
+[[rb_id]] : { . => 1 },{ => 0 };
 
 #define_attribute(
     age,

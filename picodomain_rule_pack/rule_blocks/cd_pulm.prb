@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify pulmonary disease  */
 
-#define_ruleblock(cd_pulm,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify pulmonary disease",
         is_active:2
@@ -14,9 +14,9 @@ rx_r03_dt => eadv.[rxnc_r03%].dt.max().where(val=1);
 
 copd : {code_copd_dt!? or rx_r03_dt!?=> 1},{=>0};
 
-cd_pulm : { greatest(copd)>0 =>1},{=>0};
+[[rb_id]] : { greatest(copd)>0 =>1},{=>0};
 
-#define_attribute(cd_pulm,
+#define_attribute([[rb_id]],
     {
         label: "Presence of COPD"
     }

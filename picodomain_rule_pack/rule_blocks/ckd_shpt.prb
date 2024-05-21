@@ -1,6 +1,6 @@
  /* Rule block to assess for secondary hyperparathyroidism */
 
- #define_ruleblock(ckd_shpt,
+ #define_ruleblock([[rb_id]],
      {
          description: "Rule block to assess for secondary hyperparathyroidism",
          is_active:2,
@@ -41,4 +41,4 @@ calcitriol_ld => eadv.rxnc_a11cc.dt.last().where(val=1);
 phos_bind_ld => eadv.rxnc_v03ae.dt.last().where(val=1);
 
 
-ckd_shpt : { (rrt in(1,2,4) or ckd>4) and pth1_val!? => 1 },{=>0};
+[[rb_id]] : { (rrt in(1,2,4) or ckd>4) and pth1_val!? => 1 },{=>0};

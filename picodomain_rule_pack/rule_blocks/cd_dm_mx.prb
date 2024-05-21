@@ -1,6 +1,6 @@
 /* Ruleblock to assess diabetic management*/
 
-#define_ruleblock(cd_dm_mx,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess diabetic management",
         is_active:2
@@ -31,7 +31,7 @@ rv_edu_ld => eadv.mbs_10951.dt.max();
 cd_dm_mx : {dm=1 and (cp_dm>0 or coalesce(rv_pod_ld, rv_edu_ld)!?) => 1},{=>0};
 
 #define_attribute(
-    cd_dm_mx,
+    [[rb_id]],
     {
         label: "Diabetes management plan",
         desc: "Diabetic management",

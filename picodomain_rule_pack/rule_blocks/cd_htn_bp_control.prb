@@ -1,6 +1,6 @@
 /* Ruleblock to assess blood pressure control */
 
-#define_ruleblock(cd_htn_bp_control,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess blood pressure control ",
         is_active:2
@@ -75,7 +75,7 @@ sbp_min => eadv.obs_bp_systolic.val.min().where(dt>=sysdate-365);
 
 sbp_tir_1y : {coalesce(n_1,0)>0 => round(coalesce(opt_1_n,0)/n_1,2)*100 };
 
-cd_htn_bp_control : {coalesce(n_1,0)>0 =>1},{=>0};
+[[rb_id]] : {coalesce(n_1,0)>0 =>1},{=>0};
 
 #define_attribute(sbp_mu_1,
     {

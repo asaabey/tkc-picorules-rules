@@ -1,6 +1,6 @@
 /* Ruleblock to assess obesity  */
 
-#define_ruleblock(cd_obesity,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess obesity",
         is_active:2
@@ -51,12 +51,12 @@ bmi_class : { bmi_err=0 and bmi between 30 and 34.9 => 1},
         }
     );
 
-cd_obesity : { bmi>30 => 1 },{=>0};
+[[rb_id]] : { bmi>30 => 1 },{=>0};
 
 obs_dx_uncoded : {bmi>30 and greatest(obs_icd,obs_icpc)=0 =>1},{=>0};
 
 #define_attribute(
-    cd_obesity,
+    [[rb_id]],
         {
             label:"Obesity",
             desc:"Integer [0-1] if Obesity based on code and observation criteria",

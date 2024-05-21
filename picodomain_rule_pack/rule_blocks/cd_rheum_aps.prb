@@ -1,6 +1,6 @@
 /*  Algorithm to identify Antiphosphlipid syndrome  */
 
-#define_ruleblock(cd_rheum_aps,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to identify Antiphosphlipid syndrome",
         is_active:2
@@ -18,9 +18,9 @@ op_enc_ld => eadv.[enc_op_med_rhe].dt.max();
 
 aps_fd : { .=> least_date(icd_fd,icpc_fd)};
 
-cd_rheum_aps : { aps_fd!? =>1},{=>0};
+[[rb_id]] : { aps_fd!? =>1},{=>0};
 
-#define_attribute(cd_rheum_aps,
+#define_attribute([[rb_id]],
     {
         label: "Presence of Antiphosphlipid syndrome",
         is_reportable:1,

@@ -17,7 +17,7 @@ code_fd : { . => least_date(icd_fd,icpc_fd)};
 
 ca_skin_melanoma : { code_fd!? =>1},{=>0};
 
-#define_attribute(ca_skin_melanoma,
+#define_attribute([[rb_id]],
     {
         label: "Presence of melanoma",
         is_reportable: 1,

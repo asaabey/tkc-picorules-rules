@@ -1,6 +1,6 @@
 /*  Ruleblock to calculate KFRE */
 
-#define_ruleblock(kfre,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to calculate KFRE",
 
@@ -70,4 +70,4 @@ kfre4v_2yr : { kfre4v_ap =1 => round(1-power(0.9832,kfre4v_exp) ,2)};
 
 kfre4v_5yr : { kfre4v_ap =1 => round(1-power(0.9365,kfre4v_exp) ,2)};
 
-kfre : { . => kfre4v_ap};
+[[rb_id]] : { . => kfre4v_ap};

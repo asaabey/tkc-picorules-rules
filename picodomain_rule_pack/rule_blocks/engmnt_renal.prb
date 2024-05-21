@@ -1,6 +1,6 @@
 /* Rule block to assess encounters with renal */
 
-#define_ruleblock(engmnt_renal, {
+#define_ruleblock([[rb_id]], {
     description: "Rule block to assess encounters with renal",
     is_active:2
 });
@@ -27,7 +27,7 @@ enc_renal : { coalesce(enc_n,0)>0 =>1},{=>0};
 enc_renal_1y :  {enc_ld_1y!? =>1},{=>0};
 enc_null : { coalesce(enc_n,0)=0 =>1},{=>0};
 
-engmnt_renal : { ref_renal>0 or enc_renal>0 => 1},{=>0};
+[[rb_id]] : { ref_renal>0 or enc_renal>0 => 1},{=>0};
 
 #define_attribute(enc_renal, {
     label:"Encounter with renal services",

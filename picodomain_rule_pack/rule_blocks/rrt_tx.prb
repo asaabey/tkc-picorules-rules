@@ -1,6 +1,6 @@
 /* Rule block to determine Tx metrics*/
 
-#define_ruleblock(rrt_tx,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine Tx metrics",
         is_active:2
@@ -50,10 +50,10 @@ tac_c0 => eadv.lab_bld_tdm_tacrolimus._.lastdv();
 enc_d90 : { enc_op_ld > sysdate -90 => 1},{=>0};
 
 
-rrt_tx : { cr_min_val!? and rxn>0 =>1},{=>0};
+[[rb_id]] : { cr_min_val!? and rxn>0 =>1},{=>0};
 
 #define_attribute(
-    rrt_tx,{
+    [[rb_id]],{
         label:"Graft function known and therapy",
         is_reportable:1,
         type:1001

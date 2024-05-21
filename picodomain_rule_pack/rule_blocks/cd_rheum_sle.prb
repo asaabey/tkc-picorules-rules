@@ -1,6 +1,6 @@
 /*  Algorithm to identify SLE e-phenotype  */
 
-#define_ruleblock(cd_rheum_sle,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to identify SLE e-phenotype",
         is_active:2
@@ -23,9 +23,9 @@ c4 => eadv.[lab_bld_complement_c4]._.lastdv().where(dt > sysdate -365);
 
 sle_fd : { .=> least_date(icd_fd,icpc_fd)};
 
-cd_rheum_sle : { sle_fd!? =>1},{=>0};
+[[rb_id]] : { sle_fd!? =>1},{=>0};
 
-#define_attribute(cd_rheum_sle,
+#define_attribute([[rb_id]],
     {
         label: "Presence of SLE",
         is_reportable:1,

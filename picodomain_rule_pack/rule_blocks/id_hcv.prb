@@ -1,6 +1,6 @@
 /*  Algorithm to identify Chronic Hepatitis C  */
 
-#define_ruleblock(id_hcv,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to identify Chronic Hepatitis C",
         is_active:2
@@ -12,9 +12,9 @@ icpc_code => eadv.[icpc_d72008].dt.min();
 
 icd_code => eadv.[icd_b18_2%].dt.min();
 
-id_hcv : { coalesce(icpc_code,icd_code)!? => 1 },{=>0};
+[[rb_id]] : { coalesce(icpc_code,icd_code)!? => 1 },{=>0};
 
-#define_attribute(id_hcv,
+#define_attribute([[rb_id]],
     {
         label: "Presence of Chronic Hepatitis C",
         is_reportable:1,

@@ -1,6 +1,6 @@
 /*  Algorithm to detect detect untreated chronic disease   */
 
- #define_ruleblock(tg2610,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to detect untreated chronic disease",
 
@@ -74,10 +74,10 @@ ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
     }
 );
 
-tg2610 : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
+[[rb_id]] : { coalesce(ckd_untreat,dm_untreat)=1 and ex_flag=0 => 1},{=>0};
 
 #define_attribute(
-        tg2610,
+        [[rb_id]],
         {
             label:"Alert:Potentially untreated chronic disease",
             desc:"Integer [0-1] if meets criteria ",

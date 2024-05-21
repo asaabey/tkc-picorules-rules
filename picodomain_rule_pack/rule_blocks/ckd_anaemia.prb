@@ -1,6 +1,6 @@
 /* Rule block to determine CKD complications */
 
-#define_ruleblock(ckd_anaemia,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine CKD complications",
         is_active:2
@@ -104,4 +104,4 @@ esa_state : { esa_null=0 and esa_val=1 => 1},{ esa_null=0 and esa_val=0 => 2},{=
 
 
 
-ckd_anaemia : { rrt in(1,2,4) or ckd>4 => 1 },{=>0};
+[[rb_id]] : { rrt in(1,2,4) or ckd>4 => 1 },{=>0};

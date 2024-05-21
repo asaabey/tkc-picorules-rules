@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify lung carcinoma  */
 
-#define_ruleblock(ca_lung,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify lung carcinoma",
         is_active:2
@@ -14,9 +14,9 @@ icpc_fd => eadv.[icpc_r84%].dt.first();
 
 code_fd : { . => least_date(icd_fd,icpc_fd)};
 
-ca_lung : { code_fd!? =>1},{=>0};
+[[rb_id]] : { code_fd!? =>1},{=>0};
 
-#define_attribute(ca_lung,
+#define_attribute([[rb_id]],
     {
         label: "Presence of lung carcinoma",
         is_reportable: 1,

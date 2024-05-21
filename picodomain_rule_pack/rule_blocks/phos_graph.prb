@@ -1,7 +1,7 @@
 /* Algorithm to plot phosphate graph  */
 
 
- #define_ruleblock(phos_graph,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot phosphate graph",
         is_active:2
@@ -49,4 +49,4 @@ line_lower_y : {. => 100};
 line_target_upper_y : { phos_max_val > phos_target_max => (phos_max_val - phos_target_max) * phos_graph_y_scale },{ => 0 };
 
 line_target_lower_y : { phos_min_val < phos_target_min => (phos_target_min - phos_min_val) * phos_graph_y_scale },{ => phos_graph_canvas_y };
-phos_graph : { rrt in (1,2,4) and phos_n>3 =>1},{=>0};
+[[rb_id]] : { rrt in (1,2,4) and phos_n>3 =>1},{=>0};

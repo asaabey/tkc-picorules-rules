@@ -1,6 +1,6 @@
 /* Rule block to determine Haemodialysis adequacy*/
 
-#define_ruleblock(rrt_hd_adequacy,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine Haemodialysis adequacy",
         is_active:2
@@ -62,4 +62,4 @@ err_urr_flag : {urr<0.5 and rrt=1 =>1},{=>0};
 spktv : { coalesce(urr,0)>0 => round(ln(1-urr)*-1,2) };
 
 
-rrt_hd_adequacy : { rrt in (1,4) and urr!? =>1},{=>0};
+[[rb_id]] : { rrt in (1,4) and urr!? =>1},{=>0};

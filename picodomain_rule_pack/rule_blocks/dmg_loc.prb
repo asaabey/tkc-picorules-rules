@@ -1,6 +1,6 @@
 /* Algorithm to assess demographics */
 
-#define_ruleblock(dmg_loc,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess demographics",
         is_active:2

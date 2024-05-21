@@ -1,6 +1,6 @@
 /* Assemble CKD progress view model */
 
-#define_ruleblock(ckd_prog_vm,
+#define_ruleblock([[rb_id]],
     {
         description: "Assemble CKD progress view model",
         is_active:2
@@ -102,4 +102,4 @@ opa_sep_ld => rout_opa_sep.op_ld.val.bind();
 #define_attribute(edu_init,{label:"CKD CKD Education Initial",is_reportable:1,type:12});
 #define_attribute(edu_rv,{label:"CKD CKD Education Review",is_reportable:1,type:12});
 
-ckd_prog_vm : { ckd>0 => 1};
+[[rb_id]] : { ckd>0 => 1};

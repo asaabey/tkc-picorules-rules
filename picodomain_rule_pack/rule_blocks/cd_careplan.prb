@@ -1,6 +1,6 @@
 /*  Ruleblock to determine existing careplans*/
 
-#define_ruleblock(cd_careplan,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to determine existing careplans",
         is_active:2
@@ -32,4 +32,4 @@ cp_cvd : {cp_l_val!? => to_number(substr(to_char(cp_l_val),-7,1))},{=>0};
 
 cp_hicvr : {cp_l_val!? => to_number(substr(to_char(cp_l_val),-8,1))},{=>0};
 
-cd_careplan : {greatest(cp_cs,cp_ckd,cp_dm,cp_cvd,cp_hicvr)>0 => cp_cs};
+[[rb_id]] : {greatest(cp_cs,cp_ckd,cp_dm,cp_cvd,cp_hicvr)>0 => cp_cs};

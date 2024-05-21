@@ -1,6 +1,6 @@
 /* Ruleblock to assess core information entropy */
 
-#define_ruleblock(core_info_entropy,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess core information entropy",
 
@@ -78,12 +78,12 @@ is_study_cand1 : { lab_n>2 and obs_n>2 and is_active=1 =>1},{=>0};
 
 
 
-core_info_entropy : {. => sigma};
+[[rb_id]] : {. => sigma};
 
 
 
 #define_attribute(
-    core_info_entropy,
+    [[rb_id]],
     {
         label:"Core information entropy",
         desc:"Core information entropy",

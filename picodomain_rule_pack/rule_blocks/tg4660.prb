@@ -1,6 +1,6 @@
 /*  Algorithm medication safety concern in CKD   */
 
- #define_ruleblock(tg4660,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm medication safety concern in CKD ",
 
@@ -45,10 +45,10 @@ rx_nsaids => eadv.[rxnc_m01a%].dt.count(0).where(val=1);
 
 ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
 
-tg4660 : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
+[[rb_id]] : { ckd>3 and coalesce(dm_rxn_bg,dm_rxn_sglt2) is not null and rx_nsaids >0 and ex_flag=0 => 1},{=>0};
 
 #define_attribute(
-        tg4660,
+        [[rb_id]],
         {
             label:"Alert:Medication safety concern",
             desc:"Integer [0-1] if meets criteria ",

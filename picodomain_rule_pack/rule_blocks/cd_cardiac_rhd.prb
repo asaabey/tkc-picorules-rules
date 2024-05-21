@@ -1,6 +1,6 @@
 /* Algorithm to assess rheumatic heart disease  */
 
-#define_ruleblock(cd_cardiac_rhd, {
+#define_ruleblock([[rb_id]], {
     description: "Algorithm to assess rheumatic heart disease",
     is_active:2
 });
@@ -17,10 +17,10 @@ rhd_aet : {rhd_dt!? => 1},{=>0};
 
 echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
 
-cd_cardiac_rhd : {. => rhd_aet};
+[[rb_id]] : {. => rhd_aet};
 
 #define_attribute(
-cd_cardiac_rhd,
+[[rb_id]],
     {
         label:"rheumatic heart disease",
         desc:"Presence of rheumatic heart disease",

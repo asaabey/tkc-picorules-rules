@@ -1,6 +1,6 @@
 /* Rule block to stage CKD */
 
-  #define_ruleblock(ckd_access,
+  #define_ruleblock([[rb_id]],
     {
         description: "Rule block to stage CKD",
         is_active:2
@@ -24,7 +24,7 @@ avf : { coalesce(avf_proc,avf_icd,avf_icpc)!?  =>1},{=>0};
 
 avf_dt : { coalesce(avf_proc,avf_icd,avf_icpc)!? => least_date(avf_proc,avf_icd,avf_icpc)};
 
-ckd_access :{ .=> avf};
+[[rb_id]] :{ .=> avf};
 
 #define_attribute(
     avf,

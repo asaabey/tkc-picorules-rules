@@ -1,6 +1,6 @@
 /* Rule block to determine diagnostics */
 
-#define_ruleblock(ckd_diagnostics,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine diagnostics",
         is_active:2
@@ -102,7 +102,7 @@ canddt_gn_wu : {canddt=1 =>1},{=>0};
 
 canddt_bx : {canddt=1 =>1},{=>0};
 
-ckd_diagnostics : {greatest(canddt_gn_wu,canddt_bx)>0 and ckd>0 => 1},{=>0};
+[[rb_id]] : {greatest(canddt_gn_wu,canddt_bx)>0 and ckd>0 => 1},{=>0};
 
 #define_attribute(
     bxk,

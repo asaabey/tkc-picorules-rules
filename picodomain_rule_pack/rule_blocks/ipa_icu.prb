@@ -1,6 +1,6 @@
 /* Algorithm to assess Inpatient activity for ICU admissions */
 
-#define_ruleblock(ipa_icu,
+#define_ruleblock([[rb_id]],
     {
         description: "Inpatient activity for ICU admissions",
         is_active:2
@@ -30,10 +30,10 @@ icu_ld : {.=> greatest_date(cvvhf_ld, vent_ld)};
 
 icu_fd : {.=> least_date(cvvhf_fd, vent_fd)};
 
-ipa_icu : { coalesce(icu_vent_los_dt, icu_los_dt, cvvhf_ld, vent_ld)!? => 1 },{=>0};
+[[rb_id]] : { coalesce(icu_vent_los_dt, icu_los_dt, cvvhf_ld, vent_ld)!? => 1 },{=>0};
 
 #define_attribute(
-    ipa_icu,
+    [[rb_id]],
     {
         label:"Inpatient activity for ICU admissions",
         is_reportable:0,

@@ -1,6 +1,6 @@
 /*  Algorithm to detect high haemoglobin while on ESA  */
 
- #define_ruleblock(tg4810,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to detect high haemoglobin while on ESA",
 
@@ -34,10 +34,10 @@ ex_flag : {dod!? or csu_act_dt!? or dmg_source=999=> 1},{=>0};
     }
 );
 
-tg4810 : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
+[[rb_id]] : { hb_i_val>130 and esa_dt is not null and hb_i1_val<hb_i_val and esa_dt < hb_i_dt and ex_flag=0 => 1},{=>0};
 
 #define_attribute(
-        tg4810,
+        [[rb_id]],
         {
             label:"Alert: High Hb associated with ESA therapy",
             desc:"Integer [0-1] if meets criteria ",

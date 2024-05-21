@@ -1,6 +1,6 @@
 /* Ruleblock to recommend diabetic pharmacotherapy*/
 
-#define_ruleblock(cd_dm_rx_rcm,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to recommend diabetic pharmacotherapy",
         is_active:2
@@ -83,7 +83,7 @@ panc_dt => eadv.[icpc_d99058,icpc_d99043,icd_k86%,icd_k85%].dt.max();
 
 
 
-cd_dm_rx_rcm : {dm=1 => 1},{=>0};
+[[rb_id]] : {dm=1 => 1},{=>0};
 
 
 #define_attribute(ins_long_f, {

@@ -1,6 +1,6 @@
 /* Rule block to determine journey of CKD */
 
- #define_ruleblock(ckd_journey,
+ #define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine journey of CKD",
         is_active:2
@@ -66,10 +66,10 @@ sw => eadv.enc_op_renal_edu.dt.max().where(val=51);
 
 enc_multi : { nvl(enc_n,0)>1 =>1},{=>0};
 
-ckd_journey : { coalesce(edu_init, edu_rv,enc_fd)!? and rrt=0 => 1},{=>0};
+[[rb_id]] : { coalesce(edu_init, edu_rv,enc_fd)!? and rrt=0 => 1},{=>0};
 
 #define_attribute(
-    ckd_journey,
+    [[rb_id]],
     {
         label:"Renal services interaction",
         desc:"Integer [0-1] if Renal services interaction found",

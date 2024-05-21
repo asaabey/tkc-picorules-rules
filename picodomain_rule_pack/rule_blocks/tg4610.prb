@@ -1,6 +1,6 @@
 /*  Algorithm to generate CKD2 or 3, rapid progression (20% decline per annum)   */
 
- #define_ruleblock(tg4610,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to generate CKD2 or 3 rapid progression 20% decline per annum ",
 
@@ -95,7 +95,7 @@ enc_ren => rout_engmnt_renal.enc_renal.val.bind();
 );
 ex_flag : {dod!? or enc_ren=1 or ref_ren=1  or dmg_source=0 or age>69 or csu_act_dt!? or dmg_source=999=> 1},{=>0};
 
-tg4610 : {
+[[rb_id]] : {
                 ckd>0 and ckd<6 and nvl(eb,0)<eb_thresh
                 and egfr_l_dt - egfr_max_dt >180
                 and egfr_l_val<80 and egfr_max_val is not null
@@ -105,7 +105,7 @@ tg4610 : {
             },{=>0};
 
 #define_attribute(
-        tg4610,
+        [[rb_id]],
         {
             label:"Alert:Unmanaged possible early CKD with rapid progression",
             desc:"Integer [0-1] if meets criteria ",

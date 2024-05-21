@@ -1,6 +1,6 @@
 /*  AF  */
 
-#define_ruleblock(cd_cardiac_af,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a assess chadvas score in AF",
         is_active:2
@@ -78,9 +78,9 @@ echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
 
 
 
-cd_cardiac_af : {af=1 =>1},{=>0};
+[[rb_id]] : {af=1 =>1},{=>0};
 
-#define_attribute(cd_cardiac_af,
+#define_attribute([[rb_id]],
     {
         label: "Presence of AF",
         desc: "Presence of AF",

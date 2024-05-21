@@ -33,7 +33,7 @@ If rrt_assert  = 1000100                   Possible Acute only at some stage in 
     txt:"rrt assertion is calculated only when a client has been assigned a modality by the rrt ruleblock, rout.rrt table.
     1. import results already calculated in rrt ruleblock 
     rrt modality, latest Tx Date, latest PD Date, latest HomeD date, latest HD date, number of same day dialysis treatments, latest pd clinic date, latest HomeD clinic date"
-
+                 
 });
 
 rrt => rout_rrt.rrt.val.bind();

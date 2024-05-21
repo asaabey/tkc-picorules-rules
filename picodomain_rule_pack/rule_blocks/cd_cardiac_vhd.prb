@@ -1,6 +1,6 @@
 /* Algorithm to assess cardiac disease  */
 
-#define_ruleblock(cd_cardiac_vhd, {
+#define_ruleblock([[rb_id]], {
     description: "Algorithm to assess cardiac disease",
     is_active:2
 });
@@ -122,11 +122,11 @@ echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
 
 
 
-cd_cardiac_vhd : {.=>vhd};
+[[rb_id]] : {.=>vhd};
 
 
 #define_attribute(
-cd_cardiac_vhd,
+[[rb_id]],
     {
         label: "Valvular heart disease",
         desc: "Presence of Valvular heart disease",

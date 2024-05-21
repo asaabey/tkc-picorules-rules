@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify hypothyroidism  */
 
-#define_ruleblock(cd_endo_hypothyroid,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify hypothyroidism",
         is_active:2
@@ -20,9 +20,9 @@ code_fd : { . => least_date(cong_fd,rx_induced_fd,post_mx_fd,nos_fd)};
 
 rx_h03aa_ld => eadv.[rxnc_h03aa].dt.max().where(val=1);
 
-cd_endo_hypothyroid : { coalesce(code_fd,rx_h03aa_ld)!? =>1},{=>0};
+[[rb_id]] : { coalesce(code_fd,rx_h03aa_ld)!? =>1},{=>0};
 
-#define_attribute(cd_endo_hypothyroid,
+#define_attribute([[rb_id]],
     {
         label: "Presence of hypothyroidism"
     }

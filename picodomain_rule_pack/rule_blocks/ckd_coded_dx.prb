@@ -1,6 +1,6 @@
 /*  Evaluate existing coded ckd diagnoses  */
 
-#define_ruleblock(ckd_coded_dx,
+#define_ruleblock([[rb_id]],
     {
         description: "Evaluate existing coded ckd diagnoses",
         is_active:2
@@ -56,10 +56,10 @@ n18v : {. => to_number(substr(n18_att,-1))},{=>0};
 
 
 
-ckd_coded_dx : { u99_dt > u88_dt => u99v },{ u88_dt > u99_dt => u88v},{ => greatest(u88v,u99v)};
+[[rb_id]] : { u99_dt > u88_dt => u99v },{ u88_dt > u99_dt => u88v},{ => greatest(u88v,u99v)};
 
 
-#define_attribute(ckd_coded_dx,
+#define_attribute([[rb_id]],
     {
         label: "Existing coded ckd diagnoses"
     }

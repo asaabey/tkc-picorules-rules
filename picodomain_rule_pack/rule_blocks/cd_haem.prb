@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify haematological disease  */
 
-#define_ruleblock(cd_haem,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify haematological disease",
         is_active:2
@@ -34,9 +34,9 @@ low_cat : { (hb_low + wcc_low + plt_low=3) => 3},
             { (hb_low + wcc_low + plt_low=1) =>1},
             { =>0};
 
-cd_haem : { low_cat>0 =>1},{=>0};
+[[rb_id]] : { low_cat>0 =>1},{=>0};
 
-#define_attribute(cd_haem,
+#define_attribute([[rb_id]],
     {
         label: "Presence of haematological disease",
         is_reportable:1,

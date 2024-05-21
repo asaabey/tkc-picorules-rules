@@ -1,6 +1,6 @@
 /* Algorithm to assess hypertension  */
 
-#define_ruleblock(cd_htn,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess hypertension",
         is_active:2
@@ -131,12 +131,12 @@ htn_prev : { htn_fd!? => 1 },{=>0};
 
 htn_incd : { htn_fd > sysdate - 365 => 1},{=>0};
 
-cd_htn : {.=> htn};
+[[rb_id]] : {.=> htn};
 
 htn_dx_uncoded : {htn_obs>=3 and coalesce(htn_icd,htn_icpc)? => 1},{=>0};
 
 #define_attribute(
-    cd_htn,
+    [[rb_id]],
     {
         label:"Hypertension",
         desc:"Presence of Hypertension",

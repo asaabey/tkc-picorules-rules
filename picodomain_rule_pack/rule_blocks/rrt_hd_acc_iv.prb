@@ -1,6 +1,6 @@
 /* Rule block to determine Fistula intervention*/
 
-#define_ruleblock(rrt_hd_acc_iv,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine Fistula intervention",
         is_active:2
@@ -47,10 +47,10 @@ iv_periodicity : {plasty_gap between 0 and 100 => 3},
 
 av_iv : {av_plasty_ld!? => 1},{=>0};
 
-rrt_hd_acc_iv : { rrt in (1,4) and (av_surv_ld!? or avf_dt!? or acc_detail=1)=>1},{=>0};
+[[rb_id]] : { rrt in (1,4) and (av_surv_ld!? or avf_dt!? or acc_detail=1)=>1},{=>0};
 
 #define_attribute(
-    rrt_hd_acc_iv ,
+    [[rb_id]] ,
     {
         label:"AV fistuloplasty",
         is_reportable:1,

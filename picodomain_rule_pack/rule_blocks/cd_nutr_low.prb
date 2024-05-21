@@ -1,6 +1,6 @@
 /* Ruleblock to assess loss of weight */
 
-#define_ruleblock(cd_nutr_low,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess loss of weight",
         is_active:2
@@ -28,11 +28,11 @@ wt_qt : { nvl(wt0_val,0)>0 => round((wt0_val - wt_val)/wt0_val,2)},{=>0};
     );
 
 
-cd_nutr_low : { bmi0<20 and wt_qt>0.1 => 1 },{=>0};
+[[rb_id]] : { bmi0<20 and wt_qt>0.1 => 1 },{=>0};
 
 
 #define_attribute(
-    cd_nutr_low,
+    [[rb_id]],
         {
             label:"Loss of weight",
             is_reportable:1,

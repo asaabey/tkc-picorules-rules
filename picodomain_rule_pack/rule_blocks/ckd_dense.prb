@@ -1,6 +1,6 @@
 /* Optimized Rule block for cube generation in CKD*/
 
-#define_ruleblock(ckd_dense,
+#define_ruleblock([[rb_id]],
     {
         description: "Optimized Rule block for cube generation in CKD",
         is_active:0,
@@ -177,4 +177,4 @@ dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
 
 assert_level : {. => 100000 + ckd_pers*10000 + asm_viol_ex*1000 + ckd_prog*100};
 
-ckd_dense : { . => 1 },{ => 0 };
+[[rb_id]] : { . => 1 },{ => 0 };

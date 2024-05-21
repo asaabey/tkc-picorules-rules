@@ -14,7 +14,7 @@ ca_fd => eadv.[icd_c%].dt.first().where(att=ca_att);
 
 ca_misc : { ca_att!? =>1},{=>0};
 
-#define_attribute(ca_misc,
+#define_attribute([[rb_id]],
     {
         label: "Presence of misc carcinoma",
         is_reportable: 1,

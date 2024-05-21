@@ -1,6 +1,6 @@
 /* Algorithm to assess Outpatient activity*/
 
-#define_ruleblock(opa_sep,
+#define_ruleblock([[rb_id]],
     {
         description: "Outpatient activity with exclusions",
         is_active:2
@@ -15,10 +15,10 @@ op_fd => eadv.[enc_op_%].dt.first();
 
 op_att => eadv.[enc_op_%].att.last();
 
-opa_sep : { op_ld!? => 1 },{=>0};
+[[rb_id]] : { op_ld!? => 1 },{=>0};
 
 #define_attribute(
-    opa_sep,
+    [[rb_id]],
     {
         label:"Outpatient activity",
         is_reportable:0,

@@ -1,6 +1,6 @@
 /* Algorithm to assess abdominal colorectal surgical procedures */
 
-#define_ruleblock(sx_abdo,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess abdominal colorectal surgical procedures",
         is_active:2
@@ -24,10 +24,10 @@ ar : {coalesce(h_ar_fd,l_ar_fd)!? =>1},{=>0};
 
 hartmann_fd => eadv.[caresys_32051%].dt.first();
 
-sx_abdo : { coalesce(exp_lap_fd, r_hemi_fd, l_hemi_fd, h_ar_fd,l_ar_fd,hartmann_fd)!? => 1},{=>0};
+[[rb_id]] : { coalesce(exp_lap_fd, r_hemi_fd, l_hemi_fd, h_ar_fd,l_ar_fd,hartmann_fd)!? => 1},{=>0};
 
 #define_attribute(
-    sx_abdo,{
+    [[rb_id]],{
         label:"Major abdominal colorectal surgery",
         type:1001,
         is_reportable:0

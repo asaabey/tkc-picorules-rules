@@ -81,4 +81,4 @@ crp1 => eadv.lab_bld_crp._.lastdv().where(dt>sysdate-730);
 crp2 => eadv.lab_bld_crp._.lastdv(1).where(dt>sysdate-730);
 crp3 => eadv.lab_bld_crp._.lastdv(2).where(dt>sysdate-730);
 
-ckd_labs : {ex_flag=0 => 1 },{=>0};
+[[rb_id]] : {ex_flag=0 => 1 },{=>0};

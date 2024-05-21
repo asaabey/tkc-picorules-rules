@@ -1,6 +1,6 @@
 /*  Observation view model  */
 
-#define_ruleblock(obs_vm,
+#define_ruleblock([[rb_id]],
     {
         description: "Observation view model",
         is_active:2

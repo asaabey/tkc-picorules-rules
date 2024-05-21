@@ -1,6 +1,6 @@
 /*  cardiac investigations  */
 
-#define_ruleblock(cd_cardiac_device,
+#define_ruleblock([[rb_id]],
     {
         description: "assess cardiac device",
         is_active:2
@@ -19,9 +19,9 @@ defib_fd => eadv.[caresys_3839002, caresys_3839300].dt.first();
 
 
 
-cd_cardiac_device : {coalesce(ppm_fd, defib_fd)!? =>1},{=>0};
+[[rb_id]] : {coalesce(ppm_fd, defib_fd)!? =>1},{=>0};
 
-#define_attribute(cd_cardiac_device,
+#define_attribute([[rb_id]],
     {
         label: "Presence of cardiac device",
         type : 1001,

@@ -1,7 +1,7 @@
 /* Algorithm to plot bp graph  */
 
 
- #define_ruleblock(bp_graph,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot bp graph",
 
@@ -68,4 +68,4 @@ line_target_upper_y : {bp_graph_y_min< sbp_target_max and bp_graph_y_max> sbp_ta
 
 
 
-bp_graph : {  sbp_graph_n>2 and sbp_graph_val!? =>1},{=>0};
+[[rb_id]] : {  sbp_graph_n>2 and sbp_graph_val!? =>1},{=>0};

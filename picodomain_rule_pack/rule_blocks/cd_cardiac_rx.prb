@@ -1,6 +1,6 @@
 /* Algorithm to assess cardiac medication  */
 
-#define_ruleblock(cd_cardiac_rx, {
+#define_ruleblock([[rb_id]], {
     description: "Algorithm to assess cardiac medication",
     is_active:2
 });
@@ -66,10 +66,10 @@ rxn_statin => eadv.[rxnc_c10aa,rxnc_c10bx,rxnc_c10ba].dt.min().where(val=1);
 rxn : {coalesce(rxn_statin,rxn_diu_k_sp,rxn_diu_low_ceil,rxn_diu_loop,rxn_chrono,rxn_anticoag,rxn_ap)!? =>1},{=>0};
 
 
-cd_cardiac_rx : {rxn=1 =>1},{=>0};
+[[rb_id]] : {rxn=1 =>1},{=>0};
 
 #define_attribute(
-cd_cardiac_rx,
+[[rb_id]],
     {
         label:"Rx cardiac meds",
         desc:"Presence of cardiac",

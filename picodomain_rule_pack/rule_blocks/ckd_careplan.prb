@@ -1,6 +1,6 @@
 /* Rule block to assess careplan */
 
-  #define_ruleblock(ckd_careplan,
+  #define_ruleblock([[rb_id]],
     {
         description: "Rule block to assess careplan",
         is_active:2
@@ -35,7 +35,7 @@ rsc : {rsc_ld!? =>1},{=>0};
 
 ckd_careplan_doc : {. => cp_ckd_val};
 
-ckd_careplan : { ckd_careplan_doc>0 or rsc=1=> 1},{=>0};
+[[rb_id]] : { ckd_careplan_doc>0 or rsc=1=> 1},{=>0};
 
 
  #define_attribute(

@@ -1,6 +1,6 @@
 /* Assemble hd progress view model */
 
-#define_ruleblock(rrt_hd_prog_vm,
+#define_ruleblock([[rb_id]],
     {
         description: "Assemble hd progress view model",
         is_active:2
@@ -40,4 +40,4 @@ hours => rout_rrt_hd_param.hours_val.val.bind();
 
 
 
-rrt_hd_prog_vm : { rrt in (1,3) => 1};
+[[rb_id]] : { rrt in (1,3) => 1};

@@ -1,6 +1,6 @@
 /* Algorithm to assess TKC user interaction */
 
-#define_ruleblock(dmg_tkcuser_interact,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess TKC user interaction",
         is_active:2
@@ -11,7 +11,7 @@ corr_ld => eadv.tkc_corresp.dt.max();
 
 tag_sys_pr => eadv.[sys_record_partial]._.lastdv();
 
-dmg_tkcuser_interact : { coalesce(corr_ld,tag_sys_pr_dt)!? => 1 },{=>0};
+[[rb_id]] : { coalesce(corr_ld,tag_sys_pr_dt)!? => 1 },{=>0};
 
 #define_attribute(
     tag_sys_pr_dt,

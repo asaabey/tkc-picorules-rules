@@ -1,6 +1,6 @@
 /*  algorithm to identify covid19  */
 
-#define_ruleblock(id_covid19,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify covid19",
         is_active:2
@@ -10,9 +10,9 @@
 
 covid19_icpc => eadv.[icpc_r83015].dt.last();
 
-id_covid19 : { covid19_icpc!? => 1 },{=>0};
+[[rb_id]] : { covid19_icpc!? => 1 },{=>0};
 
-#define_attribute(id_covid19,
+#define_attribute([[rb_id]],
     {
         label: "Presence of covid19 infection",
         is_reportable:1,

@@ -1,6 +1,6 @@
 /* Rule block to Calculate egfr metrics */
 
-  #define_ruleblock(ckd_egfr_metrics,
+  #define_ruleblock([[rb_id]],
     {
         description: "Rule block to Calculate egfr metrics",
         is_active:2
@@ -124,7 +124,7 @@ g_stage_prog : {l_l2_delta < -15 =>1},{=>0};
 
 
 
-ckd_egfr_metrics:  {egfr_base>=90 => 1},
+[[rb_id]]:  {egfr_base>=90 => 1},
         {egfr_base<90 AND egfr_base>=60 => 2},
         {egfr_base<60 AND egfr_base>=45 => 3},
         {egfr_base<45 AND egfr_base>=30 => 4},

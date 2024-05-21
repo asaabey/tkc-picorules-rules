@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify renal cell carcinoma  */
 
-#define_ruleblock(ca_rcc,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify renal cell carcinoma",
         is_active:2
@@ -15,9 +15,9 @@ icpc_fd => eadv.[icpc_u75003].dt.first();
 
 code_fd : { . => least_date(icd_fd,icpc_fd)};
 
-ca_rcc : { code_fd!? =>1},{=>0};
+[[rb_id]] : { code_fd!? =>1},{=>0};
 
-#define_attribute(ca_rcc,
+#define_attribute([[rb_id]],
     {
         label: "Presence of Renal cell carcinoma RCC",
         is_reportable: 1,

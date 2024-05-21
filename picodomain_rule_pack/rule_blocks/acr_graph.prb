@@ -1,7 +1,7 @@
 /* Algorithm to plot acr graph  */
 
 
- #define_ruleblock(acr_graph,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot acr graph ",
 
@@ -49,4 +49,4 @@ line_upper_y : {.=> 0};
 line_lower_y : {. => (acr_graph_y_max-acr_graph_y_min) * acr_graph_y_scale};
 
 
-acr_graph : { acr_n_30>3 and rrt=0 =>1},{=>0};
+[[rb_id]] : { acr_n_30>3 and rrt=0 =>1},{=>0};

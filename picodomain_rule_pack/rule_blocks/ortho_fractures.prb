@@ -1,6 +1,6 @@
 /*  Identify fractures phenotypes */
 
-#define_ruleblock(ortho_fractures,
+#define_ruleblock([[rb_id]],
     {
         description: "Identify fracture phenotypes",
         is_active:2
@@ -12,9 +12,9 @@ pelvic_frac_ld => eadv.[icd_s32_1].dt.last();
 
 pelvic_frac : {pelvic_frac_ld!? => 1},{=>0};
 
-ortho_fractures : { coalesce(pelvic_frac,0)>0 =>1},{=>0};
+[[rb_id]] : { coalesce(pelvic_frac,0)>0 =>1},{=>0};
 
-#define_attribute(ortho_fractures,
+#define_attribute([[rb_id]],
     {
         label: "Presence of fracture",
         is_reportable:1,

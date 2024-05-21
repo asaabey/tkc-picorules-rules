@@ -16,7 +16,7 @@ code_fd : { . => least_date(icd_fd,icpc_fd)};
 
 ca_ovarian : { code_fd!? =>1},{=>0};
 
-#define_attribute(ca_ovarian,
+#define_attribute([[rb_id]],
     {
         label: "Presence of ovarian carcinoma",
         is_reportable:1,

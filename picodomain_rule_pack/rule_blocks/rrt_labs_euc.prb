@@ -1,6 +1,6 @@
  /* Rule block to gather lab tests */
 
- #define_ruleblock(rrt_labs_euc,
+ #define_ruleblock([[rb_id]],
      {
          description: "Rule block to gather lab tests",
          is_active:2,
@@ -16,4 +16,4 @@ potassium1 => eadv.lab_bld_potassium.val.lastdv().where(dt>sysdate-60);
 
 bicarb1 => eadv.lab_bld_bicarbonate.val.lastdv().where(dt>sysdate-60);
 
-rrt_labs_euc : {rrt=1 => 1},{=>0};
+[[rb_id]] : {rrt=1 => 1},{=>0};

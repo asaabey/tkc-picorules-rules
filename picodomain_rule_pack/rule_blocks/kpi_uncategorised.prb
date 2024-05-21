@@ -1,4 +1,4 @@
-#define_ruleblock(kpi_uncategorised,
+#define_ruleblock([[rb_id]],
     {
         description: "these are the rules for KPIs which do not fit into other categories",
         is_active:0
@@ -42,4 +42,4 @@ z491_dc_n => eadv.[icd_z49_1].dt.distinct_count(0).where(dt > sysdate-365);
     }
 );
 
-kpi_uncategorised : { . => 1 },{ => 0 };
+[[rb_id]] : { . => 1 },{ => 0 };

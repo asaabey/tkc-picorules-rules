@@ -1,6 +1,6 @@
 /*  This is a algorithm to identify CNS disorders */
 
-#define_ruleblock(cd_cns,
+#define_ruleblock([[rb_id]],
     {
         description: "This is a algorithm to identify CNS disorders",
         is_active:2
@@ -70,9 +70,9 @@ rx_n04_dt => eadv.[rxnc_n04%].dt.max().where(val=1);
 
 pd : {code_pd_dt!? and rx_n04_dt!? => 1},{=>0};
 
-cd_cns : { greatest(md,epil,pd,schiz)>0 =>1},{=>0};
+[[rb_id]] : { greatest(md,epil,pd,schiz)>0 =>1},{=>0};
 
-#define_attribute(cd_cns,
+#define_attribute([[rb_id]],
     {
         label: "Presence of CNS disorder"
     }

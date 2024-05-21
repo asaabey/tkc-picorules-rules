@@ -1,6 +1,6 @@
 /* Algorithm to assess alternative eid */
 
-#define_ruleblock(dmg_eid_alt,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess alternative eid",
         is_active:2
@@ -12,10 +12,10 @@ alt_eid_last => eadv.dmg_eid_alt.val.last();
 
 alt_eid_last_1 => eadv.dmg_eid_alt.val.last(1);
 
-dmg_eid_alt : { alt_eid_last!? => 1 },{=>0};
+[[rb_id]] : { alt_eid_last!? => 1 },{=>0};
 
 #define_attribute(
-    dmg_eid_alt,
+    [[rb_id]],
     {
         label:"Demography: Potential duplicate client",
         is_reportable:1,

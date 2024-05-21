@@ -1,6 +1,6 @@
 /* Ruleblock to assess diabetic diagnosis */
 
-#define_ruleblock(cd_dm_dx,
+#define_ruleblock([[rb_id]],
     {
         description: "Ruleblock to assess diabetic diagnosis",
         is_active:2
@@ -208,7 +208,7 @@ dm2_mm_4 : { dm3_fd!? and dm2_fd? and dm1_fd? and predm_fd? =>1},{=>0};
 
 cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_lab*100 + dm_rxn*10};
 
-cd_dm_dx : { . => dm};
+[[rb_id]] : { . => dm};
 
 #define_attribute(
     dm,

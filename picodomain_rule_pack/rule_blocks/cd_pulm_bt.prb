@@ -1,6 +1,6 @@
 /*  Algorithm to identify bronchiectasis  */
 
-#define_ruleblock(cd_pulm_bt,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to identify bronchiectasis",
         is_active:2

@@ -1,6 +1,6 @@
     /*  mbs715  */
 #define_ruleblock(
-    mbs715,
+    [[rb_id]],
     {
         description: "Annual health check mbs 715",
         is_active : 0
@@ -39,4 +39,4 @@ mbs_715_elig : { (sysdate - mbs_ld > 270) and (age > 25 and age <50) => 1},{=>0}
 
 ex_flag : { mbs_715_elig = 0 =>1 },{=> 0};
 
-mbs715 : {ex_flag=0 and mbs_ld!?=> 1},{=>0};
+[[rb_id]] : {ex_flag=0 and mbs_ld!?=> 1},{=>0};

@@ -1,7 +1,7 @@
 /* Algorithm to compute acr metrics  */
 
 
- #define_ruleblock(acr_metrics,
+ #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to derive uACR metrics",
         is_active:0
@@ -31,4 +31,4 @@ cga_a_val: {acr_l_val<3 => 1},
     {acr_l_val>300 => 4},{=>0};
 
 
-acr_metrics : { . => 1 },{ => 0 };
+[[rb_id]] : { . => 1 },{ => 0 };

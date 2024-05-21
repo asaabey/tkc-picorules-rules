@@ -1,6 +1,6 @@
 /* Rule block to determine RRT 1 metrics*/
 
-#define_ruleblock(rrt_journey,
+#define_ruleblock([[rb_id]],
     {
         description: "Rule block to determine RRT 1 metrics",
         is_active:2
@@ -37,4 +37,4 @@ hd_clinic_ld => eadv.[
   enc_op_med_rpc
 ].dt.max();
 
-rrt_journey : {. =>1};
+[[rb_id]] : {. =>1};

@@ -1,6 +1,6 @@
 /* Algorithm to assess HRN */
 
-#define_ruleblock(dmg_hrn,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess HRN",
         is_active:2
@@ -12,7 +12,7 @@ hrn_last_val_ => eadv.dmg_hrn.val.last();
 
 hrn_last : { . => substr(`00000000` + to_char(hrn_last_val_), -7) };
 
-dmg_hrn : { hrn_last_val_!? => 1 },{=>0};
+[[rb_id]] : { hrn_last_val_!? => 1 },{=>0};
 
 #define_attribute(
     hrn_last,

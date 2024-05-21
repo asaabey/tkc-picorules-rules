@@ -1,6 +1,6 @@
 /* Algorithm to assess demographic view model */
 
-#define_ruleblock(dmg_vm,
+#define_ruleblock([[rb_id]],
     {
         description: "Algorithm to assess demographic view model",
         is_active:2
@@ -77,10 +77,10 @@ preg_ld => rout_pregnancy.preg_ld.val.bind();
 
 preg_1y_f => rout_pregnancy.preg_1y_f.val.bind();
 
-dmg_vm : { .=> dmg_source};
+[[rb_id]] : { .=> dmg_source};
 
 #define_attribute(
-    dmg_vm,
+    [[rb_id]],
     {
         label:"Demographic phc source",
         type:2,
