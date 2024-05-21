@@ -39,16 +39,16 @@ cd_cns_ch : { coalesce(code_sdh_fd,code_ich_fd,code_ech_fd)!? => 1},{=>0};
 #define_attribute(sdh,
     {
         label: "Presence of Subdural Haemorrhage",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );
 
 #define_attribute(ich,
     {
         label: "Presence of Intracerebral Haemorrhage",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );
 
@@ -56,6 +56,6 @@ cd_cns_ch : { coalesce(code_sdh_fd,code_ich_fd,code_ech_fd)!? => 1},{=>0};
     {
         label: "Presence of Extradural Haemorrhage",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

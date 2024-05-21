@@ -31,4 +31,4 @@ cga_a_val: {acr_l_val<3 => 1},
     {acr_l_val>300 => 4},{=>0};
 
 
-acr_metrics : {1=1 =>1},{=>0};
+acr_metrics : { . => 1 },{ => 0 };

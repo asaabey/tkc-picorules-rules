@@ -33,17 +33,17 @@ cd_dm_mx : {dm=1 and (cp_dm>0 or coalesce(rv_pod_ld, rv_edu_ld)!?) => 1},{=>0};
 #define_attribute(
     cd_dm_mx,
     {
-        label:"Diabetes management plan __b__",
-        desc:"Diabetic management",
-        is_reportable:1,
-        type:2
+        label: "Diabetes management plan",
+        desc: "Diabetic management",
+        is_reportable: 1,
+        type: 1001
     }
 );
 
 #define_attribute(
     rv_pod_ld,
     {
-        label:"Diabetes mx last podiatry review date __t__",
+        label:"Diabetes mx last podiatry review date",
         is_reportable:1,
         type:12
     }
@@ -52,7 +52,7 @@ cd_dm_mx : {dm=1 and (cp_dm>0 or coalesce(rv_pod_ld, rv_edu_ld)!?) => 1},{=>0};
 #define_attribute(
      rv_edu_ld,
     {
-         label:"Diabetes mx last diabetic educator review date __t__",
+         label:"Diabetes mx last diabetic educator review date",
          is_reportable:1,
          type:12
     }
@@ -61,7 +61,7 @@ cd_dm_mx : {dm=1 and (cp_dm>0 or coalesce(rv_pod_ld, rv_edu_ld)!?) => 1},{=>0};
 #define_attribute(
      cp_dm_ld,
     {
-         label:"Diabetes mx last careplan",
+         label:"Diabetes mx last careplan date",
          is_reportable:1,
          type:12
     }

@@ -21,6 +21,6 @@ ca_prostate : { code_fd!? =>1},{=>0};
     {
         label: "Presence of prostate carcinoma",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

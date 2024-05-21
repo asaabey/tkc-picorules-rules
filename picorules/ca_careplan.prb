@@ -18,6 +18,6 @@ ca_careplan : { op_enc_ld!? => 1},{=>0};
     {
         label: "Attendance at oncology clinic",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

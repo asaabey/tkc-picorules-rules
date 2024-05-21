@@ -1,12 +1,9 @@
 /* Algorithm to assess cardiac medication  */
 
-#define_ruleblock(cd_cardiac_rx,
-{
+#define_ruleblock(cd_cardiac_rx, {
     description: "Algorithm to assess cardiac medication",
     is_active:2
-
-}
-);
+});
 
 
 #doc(,
@@ -76,7 +73,7 @@ cd_cardiac_rx,
     {
         label:"Rx cardiac meds",
         desc:"Presence of cardiac",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );

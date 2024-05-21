@@ -122,7 +122,7 @@ ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_
         label:"CKD complication present",
         desc:"Integer [0-1] if CKD current complication present",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -131,7 +131,7 @@ ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_
     {
         label:"Hyperphosphataemia due to CKD",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 #define_attribute(
@@ -139,7 +139,7 @@ ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_
     {
         label:"Likely secondary hyperparathyroidism due to CKD",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 #define_attribute(
@@ -147,7 +147,7 @@ ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_
     {
         label:"Hypoalbuminaemia in CKD",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -156,7 +156,7 @@ ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_
     {
         label:"Hyperkalaemia in CKD",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -165,6 +165,6 @@ ckd_complications : {ckd>=3 and greatest(hco3_low,k_high,pth_high,phos_high,alb_
     {
         label:"Anaemia in CKD without ESA",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

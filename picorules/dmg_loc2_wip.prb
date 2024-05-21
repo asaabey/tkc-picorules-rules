@@ -22,6 +22,38 @@ Key index
 
 */
 
+
+/*
+
+The following locality codes are excluded when trying to determine if client a is originally from a remote locality. .
+This exclusion occurs irrespective of provider. Exclusion also occurs for ACCHOs based in a major centre such as URBAN CONGRESS.
++---------------+------------------------------+
+| LOCALITY_CODE | Mapped_Geographical_Locality |
++---------------+------------------------------+
+|         00001 | ALICE SPRINGS                |
+|         00011 | ALICE SPRINGS                |
+|         11460 | ALICE SPRINGS                |
+|         00002 | DARWIN                       |
+|         10857 | DARWIN                       |
+|         10878 | DARWIN                       |
+|         11471 | DARWIN                       |
+|         11479 | DARWIN                       |
+|         10916 | JABIRU                       |
+|         00008 | KATHERINE                    |
+|         00016 | KATHERINE                    |
+|         00018 | KATHERINE                    |
+|         11495 | KATHERINE                    |
+|         90139 | KATHERINE                    |
+|         11547 | NHULUNBUY                    |
+|         00004 | TENNANT CREEK                |
+|         00012 | TENNANT CREEK                |
+|         00019 | TENNANT CREEK                |
+|         00000 | UNKNOWN                      |
++---------------+------------------------------+
+
+
+*/
+
 #doc(,{
             txt:"most likely location is calculated based on frequent location of services in order of merit
                  1. rural primary care location 
@@ -36,9 +68,9 @@ Key index
 });
 
 
-first_remote => eadv.[mbs_715].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
-frequent_remote_2y => eadv.[mbs_%].loc.stats_mode().where(  (dt>sysdate-740)     and (substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`)) ); 
-frequent_remote_alltime => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00011`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) ); 
+first_remote            => eadv.[mbs_715].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00004`,`00008`,`00011`,`00012`,`00016`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`));
+frequent_remote_2y      => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00004`,`00008`,`00011`,`00012`,`00016`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`) and (dt > sysdate - 740));
+frequent_remote_alltime => eadv.[mbs_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`,`00001`,`00002`,`00004`,`00008`,`00011`,`00012`,`00016`,`00018`,`00019`,`10857`,`10878`,`10916`,`11460`,`11471`,`11479`,`11495`,`11547`,`90139`));
 
 remote_ph_location : { . => to_number(substr(coalesce(first_remote, frequent_remote_2y, frequent_remote_alltime),-12))};
 
@@ -60,8 +92,8 @@ any_ph_location  : {.=>  to_number(substr(coalesce(frequent_ph_2y,frequent_ph_al
 });
 
 
-rural_hospital_enc_n => eadv.[enc_%].dt.distinct_count().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`));
-rural_hospital_icd_n => eadv.[icd_%].dt.distinct_count().where((att <> `icd_z49_1`) and (substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`)));
+rural_hospital_enc_n => eadv.[enc_%].dt.distinct_count().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`) and (dt > sysdate - 1825));
+rural_hospital_icd_n => eadv.[icd_%].dt.distinct_count().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`) and (dt > sysdate - 1825));
 rural_hospital_enc_loc  => eadv.[enc_%].loc.stats_mode().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`)); 
 rural_hospital_icd_loc  => eadv.[icd_%].loc.stats_mode().where(substr(loc,8,5) in (`00004`,`00008`,`00012`,`00016`));
 
@@ -103,11 +135,9 @@ possible_origin_location : { . => coalesce(possible_origin_location_1, 700000000
 #doc(,{
 	txt:"Locality of latest service of type MBS Ite, Outpatient Clinic Encounter or Hospital Admission coding"
 });
+ latest_locality_1_ => eadv.[mbs_%,enc_%,icd_%].loc.last();
 
-latest_locality1 => eadv.[mbs_%,enc_%,icd_%].loc.last();
-latest_locality : {.=> to_number(substr(latest_locality1,-12))};
-
-
+ latest_locality : {.=>  to_number(substr(latest_locality_1_,-12))};
 
 #define_attribute(
     possible_origin_location,

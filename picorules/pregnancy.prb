@@ -33,6 +33,6 @@ pregnancy : { coalesce(us_ld,gravid_icpc_ld,partum_ld,gdm_code_fd)!? => 1},{=>0}
 #define_attribute(
     pregnancy,{
         label:"Pregnancy",
-        type:2,
-        is_reportable:0
+        is_reportable:0,
+        type:1001
 });

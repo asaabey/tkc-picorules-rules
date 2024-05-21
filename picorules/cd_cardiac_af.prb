@@ -83,9 +83,9 @@ cd_cardiac_af : {af=1 =>1},{=>0};
 #define_attribute(cd_cardiac_af,
     {
         label: "Presence of AF",
-        desc:"Presence of AF",
-        is_reportable:1,
-        type:2
+        desc: "Presence of AF",
+        is_reportable: 1,
+        type: 1001
 
     }
 );
@@ -93,9 +93,9 @@ cd_cardiac_af : {af=1 =>1},{=>0};
 #define_attribute(nv_af,
     {
         label: "Presence of Non-Valvular AF",
-        desc:"Presence of Non-Valvular AF",
-        is_reportable:1,
-        type:2
+        desc: "Presence of Non-Valvular AF",
+        is_reportable: 1,
+        type: 1001
 
     }
 );

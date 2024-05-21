@@ -91,7 +91,7 @@ mbs_721 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
 mbs_723 => eadv.mbs_721.dt.count().where(dt > sysdate -365);
 
 mbs_flag : { . => coalesce(mbs_715,mbs_721,mbs_723)};
-at_risk_dense : {1=1 =>1};
+at_risk_dense : { . => 1 },{ => 0 };
 
 #define_attribute(at_risk_dense,
     {

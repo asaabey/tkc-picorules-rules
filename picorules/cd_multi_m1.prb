@@ -71,6 +71,6 @@ cd_multi_m1 : { dm_type>0 =>1},{=>0};
 #define_attribute(cd_multi_m1,
     {
         label: "Multimorb M1",
-        type:2
+        type:1001
     }
 );

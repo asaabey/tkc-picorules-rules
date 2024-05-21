@@ -32,7 +32,7 @@ ca_mets : { any_met_fd!? =>1},{=>0};
 #define_attribute(ca_mets,
     {
         label: "Presence of metastatic carcinoma",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );

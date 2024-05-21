@@ -20,7 +20,7 @@ ca_skin_melanoma : { code_fd!? =>1},{=>0};
 #define_attribute(ca_skin_melanoma,
     {
         label: "Presence of melanoma",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );

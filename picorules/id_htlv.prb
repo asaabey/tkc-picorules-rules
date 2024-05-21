@@ -1,0 +1,20 @@
+/*  Algorithm to identify HTLV1-2*/
+
+#define_ruleblock(id_htlv,{
+        description: "Algorithm to identify HTLV1-2",
+        is_active:2
+});
+
+lab_last => eadv.lab_bld_htlv._.lastdv();
+
+icd => eadv.icd_b97_33.dt.last();
+
+id_htlv : { lab_last_val=1 or icd!? => 1 },{=>0};
+
+#define_attribute(id_htlv,
+    {
+        label: "Presence of HTLV1-2",
+        is_reportable:1,
+        type:1001
+    }
+);

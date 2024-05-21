@@ -54,6 +54,6 @@ rrt_hd_acc_iv : { rrt in (1,4) and (av_surv_ld!? or avf_dt!? or acc_detail=1)=>1
     {
         label:"AV fistuloplasty",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

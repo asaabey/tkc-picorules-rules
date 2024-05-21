@@ -213,30 +213,30 @@ cd_dm_dx : { . => dm};
 #define_attribute(
     dm,
     {
-        label:"Diabetes",
-        desc:"Presence of Type 2/1 Diabetes mellitus",
-        is_reportable:1,
-        type:2
+        label: "Diabetes",
+        desc: "Presence of Type 2/1 Diabetes mellitus",
+        is_reportable: 1,
+        type: 2
     }
 );
 
 #define_attribute(
     dm_prev,
     {
-        label:"Prevalent Diabetes Mellitus",
-        desc:"Presence of Type 2/1 Diabetes mellitus",
-        is_reportable:1,
-        type:2
+        label: "Prevalent Diabetes Mellitus",
+        desc: "Presence of Type 2/1 Diabetes mellitus",
+        is_reportable: 1,
+        type: 2
     }
 );
 
 #define_attribute(
     dm_incd,
     {
-        label:"Incident Diabetes Mellitus",
-        desc:"Presence of Type 2/1 Diabetes mellitus",
-        is_reportable:1,
-        type:2
+        label: "Incident Diabetes Mellitus",
+        desc: "Presence of Type 2/1 Diabetes mellitus",
+        is_reportable: 1,
+        type: 2
     }
 );
 
@@ -244,9 +244,8 @@ cd_dm_dx : { . => dm};
 #define_attribute(
     dm_dx_uncoded,
     {
-        label:"Absent ICPC2+ coding indicating Diabetes Mellitus",
-        desc:"",
-        is_reportable:1,
-        type:2
+        label: "Absent ICPC2+ coding indicating Diabetes Mellitus",
+        is_reportable: 1,
+        type: 1001
     }
 );

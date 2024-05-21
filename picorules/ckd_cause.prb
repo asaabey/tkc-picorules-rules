@@ -261,6 +261,6 @@ ckd_cause : { coalesce(aet_gn,aet_tid,aet_aki,aet_calc,aet_struc,aet_bladder,aet
            label:"CKD cause",
            desc:"Integer [0-1] if CKD aetiology found ",
            is_reportable:0,
-           type:2
+           type:1001
        }
 );

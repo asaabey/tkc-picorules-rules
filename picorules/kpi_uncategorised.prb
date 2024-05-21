@@ -42,10 +42,4 @@ z491_dc_n => eadv.[icd_z49_1].dt.distinct_count(0).where(dt > sysdate-365);
     }
 );
 
-kpi_uncategorised : {. =>1};
-
-#define_attribute(kpi_uncategorised,
-    {
-        label: "This is a placeholder variable, useful info stored in other variables in this block"
-    }
-);
+kpi_uncategorised : { . => 1 },{ => 0 };

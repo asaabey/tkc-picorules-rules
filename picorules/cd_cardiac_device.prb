@@ -19,12 +19,12 @@ defib_fd => eadv.[caresys_3839002, caresys_3839300].dt.first();
 
 
 
-cd_cardiac_device : {coalesce(ppm_fd,defib_fd)!? =>1},{=>0};
+cd_cardiac_device : {coalesce(ppm_fd, defib_fd)!? =>1},{=>0};
 
 #define_attribute(cd_cardiac_device,
     {
-        label: "presence of cardiac device",
-        type : 2,
+        label: "Presence of cardiac device",
+        type : 1001,
         is_reportable:1
     }
 );

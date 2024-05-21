@@ -1,4 +1,4 @@
-   /* Rule block to determine coded tubulointerstitial disease */
+/* Rule block to determine coded tubulointerstitial disease */
 
 
 #define_ruleblock(ckd_c_tid,
@@ -44,8 +44,8 @@ ckd_c_tid : { coalesce(c_n11,c_n12,c_n13,c_n14,c_n15,c_n16,c_n25)!? =>1 },{=>0};
        ckd_c_tid,
        {
            label:"Renal Tubulo-interstitial disease Chronic",
-           desc:"Integer [0-1] if found ",
+           desc:"Integer [0-1] if found",
            is_reportable:1,
-           type:2
+           type:1001
        }
 );

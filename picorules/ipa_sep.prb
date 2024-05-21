@@ -22,7 +22,7 @@ ipa_sep : { icd_ld!? => 1 },{=>0};
     ipa_sep,
     {
         label:"Inpatient activity",
-        type:2,
-        is_reportable:0
+        is_reportable:0,
+        type:1001
     }
 );

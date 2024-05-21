@@ -19,7 +19,7 @@ ca_thyroid : { code_fd!? =>1},{=>0};
 #define_attribute(ca_thyroid,
     {
         label: "Presence of thyroid carcinoma",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );

@@ -317,7 +317,7 @@ dx_ckd_diff :{abs(ckd-dx_ckd)>=2 => 1 },{=>0};
         label:"Difference between coded and calculated",
         desc:"Algebraic difference between numeric stages ",
         is_reportable:0,
-        type:2
+        type:1001
     }
 );
 
@@ -366,7 +366,7 @@ avf_dt => rout_ckd_access.avf_dt.val.bind();
         label:"Misclassifcation occured",
         desc:"Integer [0-1]",
         is_reportable:0,
-        type:2
+        type:1001
     }
 );
 

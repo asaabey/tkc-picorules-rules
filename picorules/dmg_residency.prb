@@ -18,7 +18,7 @@ dmg_residency : { nhr=1 => 1 },{=>0};
     dmg_residency,
     {
         label:"Nursing home resident",
-        type:2,
-        is_reportable:1
+        is_reportable:1,
+        type:1001
     }
 );

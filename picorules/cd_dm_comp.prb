@@ -97,33 +97,33 @@ cd_dm_comp : { coalesce(dm_micvas,dm_dka)>0 and dm=1 =>1},{=>0};
 #define_attribute(
     cd_dm_comp,
     {
-        label:"Diabetic complications",
-        desc:"Presence of Diabetic complications",
-        is_reportable:1,
-        type:2
+        label: "Diabetic complications",
+        desc: "Presence of Diabetic complications",
+        is_reportable: 1,
+        type: 1001
     }
 );
 
 #define_attribute(dm_foot_ulc,
     {
-        label:"Diabetic foot ulcer __b__",
-        is_reportable:1,
-        type:2
+        label: "Diabetic foot ulcer",
+        is_reportable: 1,
+        type: 2
     }
 );
 
 #define_attribute(dm_micvas_retino,
     {
-        label:"Diabetic retinopathy __b__",
-        is_reportable:1,
-        type:2
+        label: "Diabetic retinopathy",
+        is_reportable: 1,
+        type: 2
     }
 );
 
 #define_attribute(dm_micvas_neuro,
     {
-        label:"Diabetic neuropathy __b__",
-        is_reportable:1,
-        type:2
+        label: "Diabetic neuropathy",
+        is_reportable: 1,
+        type: 2
     }
 );

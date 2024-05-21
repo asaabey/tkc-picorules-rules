@@ -7,8 +7,6 @@
     }
 );
 
-
-
 op_ld => eadv.[enc_op_%].dt.last();
 
 op_n => eadv.[enc_op_%].dt.distinct_count();
@@ -22,8 +20,8 @@ opa_sep : { op_ld!? => 1 },{=>0};
 #define_attribute(
     opa_sep,
     {
-        label:"Inpatient activity",
-        type:2,
-        is_reportable:0
+        label:"Outpatient activity",
+        is_reportable:0,
+        type:1001
     }
 );

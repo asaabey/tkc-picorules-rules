@@ -40,6 +40,6 @@ cd_haem : { low_cat>0 =>1},{=>0};
     {
         label: "Presence of haematological disease",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

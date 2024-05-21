@@ -1,12 +1,9 @@
 /* Algorithm to assess rheumatic heart disease  */
 
-#define_ruleblock(cd_cardiac_rhd,
-{
+#define_ruleblock(cd_cardiac_rhd, {
     description: "Algorithm to assess rheumatic heart disease",
     is_active:2
-
-}
-);
+});
 
 #doc(,
     {
@@ -27,7 +24,7 @@ cd_cardiac_rhd,
     {
         label:"rheumatic heart disease",
         desc:"Presence of rheumatic heart disease",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 2
     }
 );

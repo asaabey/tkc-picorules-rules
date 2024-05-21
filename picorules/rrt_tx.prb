@@ -56,7 +56,7 @@ rrt_tx : { cr_min_val!? and rxn>0 =>1},{=>0};
     rrt_tx,{
         label:"Graft function known and therapy",
         is_reportable:1,
-        type:2
+        type:1001
 });
 #define_attribute(
     cr_last_val,{

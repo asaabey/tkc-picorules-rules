@@ -30,6 +30,6 @@ ca_breast : { code_fd!? =>1},{=>0};
     {
         label: "Presence of breast carcinoma",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

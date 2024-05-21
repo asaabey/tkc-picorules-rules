@@ -1,12 +1,9 @@
 /* Algorithm to assess VTE  */
 
-#define_ruleblock(cd_cardiac_vte,
-{
+#define_ruleblock(cd_cardiac_vte, {
     description: "Algorithm to assess VTE",
     is_active:2
-
-}
-);
+});
 
 
 #doc(,{
@@ -43,9 +40,9 @@ cd_cardiac_vte : { coalesce(pe_fd,dvt_fd,budd_chiari_fd,svt_fd)!? =>1},{=>0};
 #define_attribute(
 cd_cardiac_vte,
     {
-        label:"VTE",
-        desc:"Venous-thrombo embolism",
-        is_reportable:1,
-        type:2
+        label: "VTE",
+        desc: "Venous-thrombo embolism",
+        is_reportable: 1,
+        type: 1001
     }
 );

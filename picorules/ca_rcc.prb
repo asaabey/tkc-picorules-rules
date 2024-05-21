@@ -20,7 +20,7 @@ ca_rcc : { code_fd!? =>1},{=>0};
 #define_attribute(ca_rcc,
     {
         label: "Presence of Renal cell carcinoma RCC",
-        is_reportable:1,
-        type:2
+        is_reportable: 1,
+        type: 1001
     }
 );

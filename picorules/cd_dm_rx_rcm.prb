@@ -71,16 +71,6 @@ glp1_3y_dt => eadv.[rxnc_a10bj].dt.min().where(dt > sysdate - 1080);
 
 glp1_3y : {glp1_3y_dt!? => 1},{=>0};
 
-#define_attribute(ins_long_f,{label:"Diabetes long acting insulin __b__",is_reportable:1,type:2});
-#define_attribute(ins_int_f,{label:"Diabetes intermediate acting insulin __b__",is_reportable:1,type:2});
-#define_attribute(ins_mix_f,{label:"Diabetes mixed insulin __b__",is_reportable:1,type:2});
-#define_attribute(ins_short_f,{label:"Diabetes short acting insulin __b__",is_reportable:1,type:2});
-#define_attribute(bg_f,{label:"Diabetes biguanides __b__",is_reportable:1,type:2});
-#define_attribute(su_f,{label:"Diabetes sulphonylurea __b__",is_reportable:1,type:2});
-#define_attribute(glp1_f,{label:"Diabetes GLP1a __b__",is_reportable:1,type:2});
-#define_attribute(sglt2_f,{label:"Diabetes SGLT2i __b__",is_reportable:1,type:2});
-#define_attribute(glp1_3y,{label:"Diabetes GLP1a use in 3 years __b__",is_reportable:1,type:2});
-
 #doc(,{
         txt:"Derive contraindications"
 });
@@ -94,3 +84,58 @@ panc_dt => eadv.[icpc_d99058,icpc_d99043,icd_k86%,icd_k85%].dt.max();
 
 
 cd_dm_rx_rcm : {dm=1 => 1},{=>0};
+
+
+#define_attribute(ins_long_f, {
+    label: "Diabetes long acting insulin",
+    is_reportable: 1,
+    type: 1001
+});
+
+#define_attribute(ins_int_f, {
+    label: "Diabetes intermediate acting insulin",
+    is_reportable: 1,
+    type: 1001
+});
+
+#define_attribute(ins_mix_f, {
+    label: "Diabetes mixed insulin",
+    is_reportable: 1,
+    type: 1001
+});
+
+#define_attribute(ins_short_f, {
+    label: "Diabetes short acting insulin",
+    is_reportable: 1,
+    type: 1001
+});
+
+#define_attribute(bg_f, {
+    label: "Diabetes biguanides",
+    is_reportable: 1,
+    type: 1001
+});
+
+#define_attribute(su_f, {
+    label: "Diabetes sulphonylurea",
+    is_reportable: 1,
+    type: 1001
+});
+
+#define_attribute(glp1_f, {
+    label: "Diabetes GLP1a",
+    is_reportable: 1,
+    type: 2
+});
+
+#define_attribute(sglt2_f, {
+    label: "Diabetes SGLT2i",
+    is_reportable: 1,
+    type: 2
+});
+
+#define_attribute(glp1_3y, {
+    label: "Diabetes GLP1a use in 3 years",
+    is_reportable: 1,
+    type: 1001
+});

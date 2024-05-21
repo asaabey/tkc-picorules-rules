@@ -26,9 +26,9 @@ cd_cva :  {cva_dt!? => 1},{=>0};
 #define_attribute(
     cd_cva,
     {
-        label:"Stroke",
-        desc:"Presence of haemorrhagic or thromboembolic stroke",
-        is_reportable:1,
-        type:2
+        label: "Stroke",
+        desc: "Presence of haemorrhagic or thromboembolic stroke",
+        is_reportable: 1,
+        type: 2
     }
 );

@@ -19,7 +19,7 @@
    enc_op_po_* will become enc_op_pno_*
    removed enc_op__* attributes because they are gone now
 */
-prost_clinic_fd => eadv.[enc_op_po_kpt,enc_op_po_prd,enc_op_po_pot,enc_op_pno_kpt,enc_op_pno_prd,enc_op_pno_pot].dt.first();
+prost_clinic_fd => eadv.[enc_op_po_kpt, enc_op_po_prd, enc_op_po_pot, enc_op_pno_kpt, enc_op_pno_prd, enc_op_pno_pot].dt.first();
 
 icd_fd => eadv.[icd_y83_5].dt.first();
 

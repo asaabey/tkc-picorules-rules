@@ -18,6 +18,6 @@ ortho_fractures : { coalesce(pelvic_frac,0)>0 =>1},{=>0};
     {
         label: "Presence of fracture",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

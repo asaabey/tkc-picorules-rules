@@ -1,5 +1,4 @@
-   /* Rule block to determine coded conditions leading to reduced nephron mass */
-
+/* Rule block to determine coded conditions leading to reduced nephron mass */
 
 #define_ruleblock(ckd_c_rnm,
        {
@@ -48,9 +47,9 @@ ckd_c_rnm : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 },{=>0
        ckd_c_rnm,
        {
            label:"Renal structural anatomical anomaly",
-           desc:"Integer [0-1] if found ",
+           desc:"Integer [0-1] if found",
            is_reportable:1,
-           type:2
+           type:1001
        }
 );
 
@@ -58,7 +57,7 @@ ckd_c_rnm : { coalesce(c_q60,c_q61,c_q62,c_q63,c_q64,c_c64,c_z90_5)!? =>1 },{=>0
        apkd,
        {
            label:"Adult polycystic kidney disease",
-           desc:"Integer [0-1] if found ",
+           desc:"Integer [0-1] if found",
            is_reportable:1,
            type:2
        }
