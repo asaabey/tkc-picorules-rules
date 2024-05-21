@@ -1,9 +1,9 @@
 {
   "author": null,
-  "description": "Matching Feedback",
+  "description": "TKC - CQI Advice",
   "last_updated": null,
-  "is_active": false,
-  "name": "matching_feedback",
+  "is_active": true,
+  "name": "TKC - CQI Advice",
   "related_ruleblock": null,
   "is_composition": true,
   "is_mhr": false,

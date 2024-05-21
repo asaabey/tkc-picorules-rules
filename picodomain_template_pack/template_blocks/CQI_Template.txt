@@ -1,0 +1,20 @@
+<H3>Territory Kidney Care - Demographic Record - CQI Linkage Information </H3>
+<P>The following information is the result of the matching analysis conducted by the Territory Kidney Care team. Data has been compiled from all available records in TKC and includes information from your health service and other health services the patient (with the same demographic details) has attended.</P>
+
+<P>Records have not been linked due to: </P>
+<br/>
+<h4>Actions</h4> 
+<p><strong>Please click one of the following options corresponding to the action you took.</strong></p>
+<UL> 
+<li>
+<a href="mailto://Renal.CSU@nt.gov.au?subject=TKC%20CQI%20linking%20response&body=I%20updated%20the%20record%20in%20our%20system%20for%20EID:%20{{ picoformat('dmg_vm.eid') }}%20HRN:%20{{ picoformat('dmg_vm.hrn') }}">Click Here</a> Linked (ie the health service has updated the record in Communicare)
+</li> 
+<Li>
+<a href="mailto://Renal.CSU@nt.gov.au?subject=TKC%20CQI%20linking%20response&body=I%20want%20TKC%20to%20link%20record%20for%20EID:%20{{ picoformat('dmg_vm.eid') }}%20HRN:%20{{ picoformat('dmg_vm.hrn') }}">Click Here</a> To Be Linked (advising TKC administrator to Link)
+</li> 
+<Li>
+<a href="mailto://Renal.CSU@nt.gov.au?subject=TKC%20CQI%20linking%20response&body=Please%20do%20not%20link%20record%20for%20EID:%20{{ picoformat('dmg_vm.eid') }}%20HRN:%20{{ picoformat('dmg_vm.hrn') }}">Click Here</a> Never Link (These Records are for Different Patients)
+</li> 
+<Li>
+<a href="mailto://Renal.CSU@nt.gov.au?subject=TKC%20CQI%20linking%20response&body=The%20record%20does%20not%20have%20enough%20information%20to%20make%20a%20decision%20for%20EID:%20{{ picoformat('dmg_vm.eid') }}%20HRN:%20{{ picoformat('dmg_vm.hrn') }}">Click Here</a> Indeterminate (There is Insufficient Information to Make a Decision)</li>
+</UL>

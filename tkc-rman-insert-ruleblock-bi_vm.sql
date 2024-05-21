@@ -31,6 +31,7 @@ BEGIN
         dmg_gender => rout_dmg.gender._.bind();
         dmg_dod => rout_dmg.dod._.bind();
         dmg_dob => rout_dmg.dob._.bind();
+        dmg_indig => rout_dmg.indig._.bind();
 
         at_risk_is_active => rout_at_risk.is_active._.bind();
         at_risk_tkc_cohort => rout_at_risk.tkc_cohort._.bind();
@@ -52,8 +53,11 @@ BEGIN
 
         ckd_assert_level => rout_ckd.assert_level._.bind();
         ckd_access => rout_ckd_access.ckd_access._.bind();
+        
+        tx_assert_level => rout_rrt.tx_assert_level._.bind();
+        tx_enc_active => rout_rrt.tx_enc_active._.bind();
 
-        bi_vm: { . => 1 }
+        bi_vm: { . => 1 },{ => 0 };
     ';
     
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);

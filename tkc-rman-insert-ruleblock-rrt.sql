@@ -198,11 +198,11 @@ BEGIN
         /* adjusted mbs_13105 11-02-2023*/
         /* adjusted to order tx hhd pd hd 29-11-2023*/
         rrt:
-            {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt,pd_dt-30,homedx_dt-30),lower__bound__dt) => 3},
+            {tx_dt!? and tx_dt >= nvl(greatest_date(hd_dt-30,pd_dt-30,homedx_dt-30),lower__bound__dt) => 3},
             {tx_dt!? and tx_multi_current=1 => 3},
             {tx_active=1 => 3},
-            {homedx_dt > nvl(greatest_date(hd_dt,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
-            {pd_dt > nvl(greatest_date(hd_dt,tx_dt,homedx_dt),lower__bound__dt) and pd_dt>coalesce(pd_ex_dt,lower__bound__dt) and tx_multi_current=0 => 2},
+            {homedx_dt > nvl(greatest_date(hd_dt-30,pd_dt,tx_dt),lower__bound__dt) and tx_multi_current=0  => 4},
+            {pd_dt > nvl(greatest_date(hd_dt-30,tx_dt,homedx_dt),lower__bound__dt) and pd_dt>coalesce(pd_ex_dt,lower__bound__dt) and tx_multi_current=0 => 2},
             {hd_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and (hd_z49_n>10 or hd_131_n>10 or nvl(pd_dt, homedx_dt)!?) and tx_multi_current=0 and tx_active=0 => 1},
             {hd_icpc_dt > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt) and coalesce(hd_dt,mbs_13105_dt_max)>sysdate-90 =>1},
             {mbs_13105_dt_max > nvl(greatest_date(pd_dt,tx_dt,homedx_dt),lower__bound__dt)=> 1},

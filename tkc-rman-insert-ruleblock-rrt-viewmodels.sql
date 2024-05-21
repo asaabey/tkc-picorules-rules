@@ -38,6 +38,12 @@ BEGIN
        
        loc_1s_txt => rout_rrt_hd_location.loc_mode_1m_txt.val.bind();
        
+       loc_1s_code => rout_rrt_hd_location.hd_131000_pri_loc.val.bind();
+
+       loc_13105_code => rout_rrt_hd_location.hd_13105_loc.val.bind();
+
+       loc_mode => rout_rrt_hd_location.hd_loc_mode.val.bind();
+       
        hd_recent_flag => rout_rrt.hd_recent_flag.val.bind();
        
        sodium1_val => rout_rrt_labs_euc.sodium1_val.val.bind();
@@ -288,6 +294,22 @@ BEGIN
                 label:"Dialysis (HD) commencement date",
                 is_reportable:1,
                 type:12
+        });
+
+       #define_attribute(loc_1s_code ,{
+                label:"Dialysis panel satellite facility code",
+                is_reportable:1,
+                type:2
+        });
+       #define_attribute(loc_13105_code  ,{
+                label:"Dialysis panel remote facility code for 13105",
+                is_reportable:1,
+                type:2
+        });
+       #define_attribute(loc_mode  ,{
+                label:"Dialysis panel most dialysed satellite facility code",
+                is_reportable:1,
+                type:2
         });
     ';
     rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
