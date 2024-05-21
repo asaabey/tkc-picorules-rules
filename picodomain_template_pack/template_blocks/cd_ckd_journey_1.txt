@@ -2,12 +2,12 @@
         <li>Renal services engagement
         <ol>
             {% if ckd_journey.enc_multi == 0 %}{% if ckd_journey.enc_ld %}<li>Nephrologist reviews {{ picodate('ckd_journey.enc_ld') }}</li>{% endif %}{% endif %}
-            {% if ckd_journey.enc_multi %}{% if ckd_journey.enc_fd %}<li>Nephrologist reviews: \t{{ picodate('ckd_journey.enc_fd') }}-{{ picodate('ckd_journey.enc_ld') }} [{{ picoformat('ckd_journey.enc_n') }}]</li>{% endif %}{% endif %}
-            {% if ckd_journey.edu_init %}<li>CKD Education (initial): \t{{ picodate('ckd_journey.edu_init') }}</li>{% endif %}
-            {% if ckd_journey.edu_rv %}<li>CKD Education review (last): \t{{ picodate('ckd_journey.edu_rv') }}</li>{% endif %}
-            {% if ckd_journey.dietn %}<li>Renal Dietician review (last): \t{{ picodate('ckd_journey.dietn') }}</li>{% endif %}
-            {% if ckd_journey.sw %}<li>Renal social work review (last): \t{{ picodate('ckd_journey.sw') }}</li>{% endif %}
-            {% if ckd_journey.avf_ld %}<li>CKD Access (AVF) formation date: \t\t{{ picoformat('ckd_journey.avf_ld') }}</li>{% endif %}
+            {% if ckd_journey.enc_multi %}{% if ckd_journey.enc_fd %}<li>Nephrologist reviews: {{ picodate('ckd_journey.enc_fd') }}-{{ picodate('ckd_journey.enc_ld') }} [{{ picoformat('ckd_journey.enc_n') }}]</li>{% endif %}{% endif %}
+            {% if ckd_journey.edu_init %}<li>CKD Education (initial): {{ picodate('ckd_journey.edu_init') }}</li>{% endif %}
+            {% if ckd_journey.edu_rv %}<li>CKD Education review (last): {{ picodate('ckd_journey.edu_rv') }}</li>{% endif %}
+            {% if ckd_journey.dietn %}<li>Renal Dietician review (last): {{ picodate('ckd_journey.dietn') }}</li>{% endif %}
+            {% if ckd_journey.sw %}<li>Renal social work review (last): {{ picodate('ckd_journey.sw') }}</li>{% endif %}
+            {% if ckd_journey.avf_ld %}<li>CKD Access (AVF) formation date: {{ picoformat('ckd_journey.avf_ld') }}</li>{% endif %}
         </ol></li>
     </ol>
     

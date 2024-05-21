@@ -1,9 +1,9 @@
     <div class="alert alert-warning" role="alert">
     <h5>Alert: High haemoglobin on the background of ESA therapy  (Trigger 4810)</h5>
-    Current haemoglobin is {{ picoformat('tg4810.hb_i_val') }} g/L which has increased from a previous hb of {{ picoformat('tg4810.hb_i1_val') }} g/L. <br />
-    The ESA was last prescribed on \t {{ picodate('tg4810.esa_dt') }}. 
-    This finding is associated with a higher all-cause mortality in CKD and RRT patients.\n 
-    It is possible that the medication is not administered,or an undocumented dose reduction has occured.
+    Current haemoglobin is {{ picoformat('tg4810.hb_i_val') }} g/L which has increased from a previous hb of {{ picoformat('tg4810.hb_i1_val') }} g/L.<br />
+    The ESA was last prescribed on {{ picodate('tg4810.esa_dt') }}.<br />
+    This finding is associated with a higher all-cause mortality in CKD and RRT patients.<br />
+    It is possible that the medication is not administered, or an undocumented dose reduction has occured.
     </div>
 
     
