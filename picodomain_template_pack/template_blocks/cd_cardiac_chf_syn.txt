@@ -1,10 +1,10 @@
         <br />
         {% if cd_cardiac_chf.chf %}<li><b>Congestive heart failure</b>
-            {% if cd_cardiac_chf.dcm %}<ol><li>Dilated cardiomyopathy {{ picodate('cd_cardiac_chf.dcm') }}</li></ol>{% endif %}
-            {% if cd_cardiac_chf.hocm %}<ol><li>Hypertrophic obstructive cardiomyopathy {{ picodate('cd_cardiac_chf.hocm') }}</li></ol>{% endif %}
-            {% if cd_cardiac_chf.rcm %}<ol><li>Restrictive cardiomyopathy {{ picodate('cd_cardiac_chf.rcm') }}</li></ol>{% endif %}
-            {% if cd_cardiac_chf.ethocm %}<ol><li>Alcohol related cardiomyopathy {{ picodate('cd_cardiac_chf.ethocm') }}</li></ol>{% endif %}
-            {% if cd_cardiac_chf.noscm %}<ol><li>Cardiomyopathy NOS {{ picodate('cd_cardiac_chf.noscm') }}</li></ol>{% endif %}
+            {% if cd_cardiac_chf.dcm_fd %}<ol><li>Dilated cardiomyopathy {{ picodate('cd_cardiac_chf.dcm_fd') }}</li></ol>{% endif %}
+            {% if cd_cardiac_chf.hocm_fd %}<ol><li>Hypertrophic obstructive cardiomyopathy {{ picodate('cd_cardiac_chf.hocm_fd') }}</li></ol>{% endif %}
+            {% if cd_cardiac_chf.rcm_fd %}<ol><li>Restrictive cardiomyopathy {{ picodate('cd_cardiac_chf.rcm_fd') }}</li></ol>{% endif %}
+            {% if cd_cardiac_chf.ethocm_fd %}<ol><li>Alcohol related cardiomyopathy {{ picodate('cd_cardiac_chf.ethocm_fd') }}</li></ol>{% endif %}
+            {% if cd_cardiac_chf.noscm_fd %}<ol><li>Cardiomyopathy NOS {{ picodate('cd_cardiac_chf.noscm_fd') }}</li></ol>{% endif %}
             {% if cd_cardiac_chf.echo_ld %}<ol><li>Last Echocardiogram {{ picodate('cd_cardiac_chf.echo_ld') }}</li></ol>{% endif %}
             </li>
         {% endif %}   
