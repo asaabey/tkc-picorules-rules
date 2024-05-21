@@ -1,0 +1,5 @@
+Tso GJ, Tu SW, Oshiro C, Martins S, Ashcraft M, Yuen KW, Wang D, Robinson A,
+Heidenreich PA, Goldstein MK. Automating Guidelines for Clinical Decision
+Support: Knowledge Engineering and Implementation. AMIA Annu Symp Proc. 2017 Feb 
+10;2016:1189-1198. eCollection 2016. PubMed PMID: 28269916; PubMed Central PMCID:
+PMC5333329

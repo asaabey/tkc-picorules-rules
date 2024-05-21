@@ -1,0 +1,6 @@
+Horth RZ, Wagstaff S, Jeppson T, Patel V, McClellan J, Bissonette N,
+Friedrichs M, Dunn AC. Use of electronic health records from a statewide health
+information exchange to support public health surveillance of diabetes and
+hypertension. BMC Public Health. 2019 Aug 14;19(1):1106. doi:
+10.1186/s12889-019-7367-z. PubMed PMID: 31412826; PubMed Central PMCID:
+PMC6694493.

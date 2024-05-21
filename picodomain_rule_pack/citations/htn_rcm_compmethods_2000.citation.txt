@@ -1,0 +1,3 @@
+Persson M, Bohlin J, Eklund P. Development and maintenance of guideline-based 
+decision support for pharmacological treatment of hypertension. Comput Methods
+Programs Biomed. 2000 Mar;61(3):209-19. PubMed PMID: 10710183

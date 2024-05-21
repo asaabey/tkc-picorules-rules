@@ -1,0 +1,129 @@
+CLEAR SCREEN;
+SET SERVEROUTPUT ON;
+SET FEEDBACK ON;
+
+DECLARE
+    rb          RMAN_RULEBLOCKS%ROWTYPE;
+
+
+    
+
+BEGIN
+    
+   
+   -- BEGINNING OF RULEBLOCK --
+
+    rb.blockid:='cd_cardiac_chf';
+    
+    DELETE FROM rman_ruleblocks WHERE blockid=rb.blockid;
+    
+    rb.picoruleblock:='
+        /*  CHF  */
+
+        #define_ruleblock([[rb_id]],
+            {
+                description: "This is a assess CHF",
+                is_active:2
+
+            }
+        );
+
+        #doc(,
+                {
+                    section:"CHF"
+                }
+            );
+
+        /* 2024-04-20 (BC): upgrade 'Presense of' defined attributes to boolean (from date)
+        [x] Step 1. add _fd versions of dcm,hocm,rcm,ethocm,noscm
+        [x] Step 2. refer to _fd versions in chf compute rule
+        [x] Step 3. wait for one overnight rule engine run (30/04/2024) and then check that _fd columns exist
+        [x] Step 4. update 'cd_cardiac_chf_syn' template block to refer to new _fd versions 
+        [x] Step 5. confirm template still works
+        [x] Step 6. convert dcm,hocm etc to boolean compute statements (like rx_arni)
+        [x] Step 7. update defined_atribute for dcm,hocm etc to boolean data type (1001)
+        [x] Step 8. wait for one overnight rule engine run (01/05/2024) and confirm dcm,hocm etc rules (and columns) are now boolean
+        */
+
+        chf_code_fd => eadv.[icd_i50%,icpc_k77%].dt.min();
+        chf_code : { chf_code_fd!? => 1 },{=>0};
+
+        dcm_fd => eadv.[icd_i42_0].dt.min();
+        dcm : { dcm_fd!? => 1 },{=>0};
+
+        hocm_fd => eadv.[icd_i42_1,icd_i42_2].dt.min();
+        hocm : { hocm_fd!? => 1 },{=>0};
+
+        rcm_fd => eadv.[icd_i42_5].dt.min();
+        rcm : { rcm_fd!? => 1 },{=>0};
+
+        ethocm_fd => eadv.[icd_i42_6].dt.min();
+        ethocm : { ethocm_fd!? => 1 },{=>0};
+
+        noscm_fd => eadv.[icd_i42_8,icd_i42_9,icpc_k84041].dt.min();
+        noscm : { noscm_fd !? => 1 },{=>0};
+
+        echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
+
+        rx_arni_fd => eadv.[rxnc_c09dx04].dt.min();
+        rx_arni : { rx_arni_fd!? => 1 },{=>0};
+
+        #define_attribute(rx_arni,{
+              label: "Prescribed ARNI",
+              type: 2,
+              is_reportable: 1
+        });
+
+
+         /* NT cardiac report hot linking*/
+        echo_rep => eadv.[ntc_rep_tte]._.lastdv();
+
+        chf : {coalesce(chf_code_fd, dcm_fd, hocm_fd, rcm_fd, ethocm_fd, noscm_fd, rx_arni_fd)!? =>1},{=>0};
+
+        [[rb_id]] : {chf=1 =>1},{=>0};
+
+        #define_attribute([[rb_id]],
+            {
+                label: "Presence of CHF",
+                type: 2,
+                is_reportable:1
+            }
+        );
+
+        #define_attribute(dcm,{
+                label: "Presence of dilated cardiomyopathy",
+                type: 1001,
+                is_reportable:1
+        });
+
+        #define_attribute(hocm,{
+                label: "Presence of hypertrophic cardiomyopathy",
+                type: 1001,
+                is_reportable:1
+        });
+
+        #define_attribute(rcm,{
+                label: "Presence of restrictive cardiomyopathy",
+                type: 1001,
+                is_reportable:1
+        });
+    ';
+    
+    rb.picoruleblock := replace(rb.picoruleblock,'[[rb_id]]',rb.blockid);
+    
+    rb.picoruleblock:=rman_pckg.sanitise_clob(rb.picoruleblock);
+    
+    
+    
+    INSERT INTO rman_ruleblocks(blockid,picoruleblock) VALUES(rb.blockid,rb.picoruleblock);
+
+        COMMIT;
+    -- END OF RULEBLOCK --
+
+   
+END;
+
+
+
+
+
