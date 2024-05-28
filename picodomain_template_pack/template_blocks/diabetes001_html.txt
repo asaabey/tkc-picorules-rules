@@ -32,10 +32,10 @@
 {{ pico_template_block('cd_htn_syn_end') }}
 {{ pico_template_block('__synth_left_end__') }}
 {{ pico_template_block('__synth_right_begin__') }}
-{{ pico_template_block('multi disease m1 level') }}
+{{ pico_template_block('multi_disease_m1_level') }}
 {{ pico_template_block('rx_syn_2') }}
 {{ pico_template_block('ckd_labs_ga') }}
-{{ pico_template_block('Observation synth') }}
+{{ pico_template_block('obs_syn') }}
 {{ pico_template_block('__synth_right_end__') }}
 {{ pico_template_block('__frame_end__') }}
 {{ pico_template_block('hba1c_graph') }}

@@ -1,11 +1,12 @@
 {
   "author": null,
-  "description": "TKC - CQI Advice",
+  "description": "MBS 715 VR228",
   "last_updated": null,
-  "is_active": true,
-  "name": "TKC - CQI Advice",
+  "is_active": false,
+  "name": "mbs_715_html",
   "related_ruleblock": null,
   "is_composition": true,
   "is_mhr": false,
+  "message_type": null,
   "version": null
 }

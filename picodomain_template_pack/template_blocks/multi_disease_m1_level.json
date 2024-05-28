@@ -3,9 +3,10 @@
   "description": null,
   "last_updated": null,
   "is_active": false,
-  "name": "multi disease m1 level",
+  "name": "multi_disease_m1_level",
   "related_ruleblock": "cd_multi_m1",
   "is_composition": false,
   "is_mhr": false,
+  "message_type": null,
   "version": null
 }

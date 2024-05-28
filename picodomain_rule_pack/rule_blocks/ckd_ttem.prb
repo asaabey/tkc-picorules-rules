@@ -1,0 +1,131 @@
+ /* CKD time to event modelling */
+
+            #define_ruleblock(ckd_ttem,
+                {
+                    description: "CKD time to event modelling",
+                    is_active:2
+            
+                }
+            );
+            
+            hd_icpc_dt_min => eadv.[icpc_u59001,icpc_u59008].dt.min();
+             
+            hd_icd_dt_min => eadv.[caresys_1310000,icd_z49_1,mbs_13105].dt.min();
+            
+            pd_dt_min => eadv.[caresys_1310006,caresys_1310007,caresys_1310008,icpc_u59007,icpc_u59009,icd_z49_2].dt.min();
+            
+            rrt_dt_min : {. => coalesce(hd_icd_dt_min,hd_icpc_dt_min,pd_dt_min)};
+            
+            g5 => eadv.lab_bld_egfr_c._.firstdv().where(val<15 and dt < coalesce(rrt_dt_min,sysdate));
+            g4 => eadv.lab_bld_egfr_c._.firstdv().where(val<30 and val>15 and dt < coalesce(g5_dt, rrt_dt_min, sysdate));            
+            g3b => eadv.lab_bld_egfr_c._.firstdv().where(val<45 and val>30 and dt < coalesce(g4_dt, g5_dt, rrt_dt_min, sysdate));        
+            g3a => eadv.lab_bld_egfr_c._.firstdv().where(val<60 and val>45 and dt < coalesce(g3b_dt,g4_dt, g5_dt, rrt_dt_min, sysdate));
+            g2 => eadv.lab_bld_egfr_c._.firstdv().where(val<90 and val>60 and dt < coalesce(g3a_dt, g3b_dt,g4_dt, g5_dt, rrt_dt_min, sysdate));
+            g1 => eadv.lab_bld_egfr_c._.firstdv().where(val>90 and dt < coalesce(g2_dt, g3a_dt, g3b_dt,g4_dt, g5_dt, rrt_dt_min, sysdate));
+            
+            g_f => eadv.lab_bld_egfr_c._.firstdv();
+            
+            a3 => eadv.lab_ua_acr._.firstdv().where(val>300 and dt < coalesce(rrt_dt_min,sysdate));
+            a2 => eadv.lab_ua_acr._.firstdv().where(val>30 and val<300 and dt < coalesce(a3_dt, rrt_dt_min,sysdate));
+            a1 => eadv.lab_ua_acr._.firstdv().where(val>3 and val<30 and dt < coalesce(a2_dt, a3_dt, rrt_dt_min,sysdate));
+            
+            
+
+            ckd_ttem : {coalesce(g_f_val, g1_val, g2_val, g3a_val, g3b_val, g4_val, g5_val)!? =>1},{=>0};   
+            
+            #define_attribute(rrt_dt_min, {
+                    label:"CKD TTEM : RRT start date",
+                    is_reportable:1,
+                    type:12
+            });
+            
+            #define_attribute(g5_dt, {
+                    label:"CKD TTEM : CKD-G5 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(g5_val, {
+                    label:"CKD TTEM : CKD-G5 val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(g4_dt, {
+                    label:"CKD TTEM : CKD-G4 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(g4_val, {
+                    label:"CKD TTEM : CKD-G4 val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(g3b_dt, {
+                    label:"CKD TTEM : CKD-G3b date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(g3b_val, {
+                    label:"CKD TTEM : CKD-G3b val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(g3a_dt, {
+                    label:"CKD TTEM : CKD-G3a date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(g3a_val, {
+                    label:"CKD TTEM : CKD-G3a val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(g2_dt, {
+                    label:"CKD TTEM : CKD-G2 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(g2_val, {
+                    label:"CKD TTEM : CKD-G2 val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(g1_dt, {
+                    label:"CKD TTEM : CKD-G1 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(g1_val, {
+                    label:"CKD TTEM : CKD-G1 val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(a3_dt, {
+                    label:"CKD TTEM : CKD-A3 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(a3_val, {
+                    label:"CKD TTEM : CKD-A3 val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(a2_dt, {
+                    label:"CKD TTEM : CKD-A2 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(a2_val, {
+                    label:"CKD TTEM : CKD-A2 val",
+                    is_reportable:1,
+                    type:2
+            });
+            #define_attribute(a1_dt, {
+                    label:"CKD TTEM : CKD-A1 date",
+                    is_reportable:1,
+                    type:12
+            });
+            #define_attribute(a1_val, {
+                    label:"CKD TTEM : CKD-A1 val",
+                    is_reportable:1,
+                    type:2
+            });
