@@ -3,9 +3,10 @@
   "description": "Default Template for Dietitians",
   "last_updated": null,
   "is_active": false,
-  "name": "Dietetic Standard Template",
+  "name": "dietetic_standard_template",
   "related_ruleblock": null,
   "is_composition": true,
   "is_mhr": false,
+  "message_type": null,
   "version": null
 }
