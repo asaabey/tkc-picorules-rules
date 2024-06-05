@@ -1,7 +1,8 @@
-#define_ruleblock(global,{
-        description: "Global TKC interface",
-        is_active:2
+#define_ruleblock(global, {
+    description: "Global TKC interface",
+    is_active: 2
 });
+
 
 tkc_cat => rout_at_risk.tkc_cat.val.bind();
 
@@ -9,11 +10,28 @@ opt_out_ld => eadv.dmg_opted_out.dt.last();
 
 tkc_visible : {tkc_cat < 3 or opt_out_ld!? =>1},{=>0};
 
-global : { . => tkc_visible};
+most_frequented_clinic_loc_key => rout_dmg_loc.loc_mode_24._.bind();
 
-#define_attribute(tkc_visible,{
-            label:"Visible in TKC app",
-            is_reportable:1,
-            is_bi_obj:1,
-            type:1001
+most_recent_clinic_loc_key => rout_dmg_loc.loc_last_val._.bind();
+
+global : { . => tkc_visible };
+
+
+#define_attribute(tkc_visible, {
+    label: "Visible in TKC app",
+    type: 1001,
+    is_reportable: 1,
+    is_bi_obj: 1
+});
+
+#define_attribute(most_frequented_clinic_loc_key, {
+    label: "Most Frequented Health Centre",
+    type: 1002,
+    is_reportable: 1
+});
+
+#define_attribute(most_recent_clinic_loc_key, {
+    label: "Most Recent Health Centre",
+    type: 1002,
+    is_reportable: 1
 });

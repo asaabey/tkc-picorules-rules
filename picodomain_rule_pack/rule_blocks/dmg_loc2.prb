@@ -123,9 +123,19 @@ dmg_loc2 : { possible_origin_location_1!? => 1 }, { => 0 };
     txt:"Locality of latest service of type MBS Ite, Outpatient Clinic Encounter or Hospital Admission coding"
 });
 
-latest_loc_val => eadv.[mbs_%, enc_%, icd_%].loc.last();
+latest_loc_val => eadv.[mbs_%, enc_%, icd_%].loc.last().where(substr(loc,8,5) not in (`00000`));
 
 latest_locality : { .=> to_number(substr(latest_loc_val, -12)) };
+
+freq_loc_val => eadv.[mbs_%, enc_%, icd_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`) and (dt > sysdate - 750));
+
+freq_locality : { .=> to_number(substr(freq_loc_val, -12)) };
+
+freq_loc_no_icd_val => eadv.[mbs_%, enc_%].loc.stats_mode().where(substr(loc,8,5) not in (`00000`) and (dt > sysdate - 750));
+
+freq_loc_no_icd : { .=> to_number(substr(freq_loc_no_icd_val, -12)) };
+
+
 
 #define_attribute(possible_origin_location, {
     label:"Possible location of origin",
