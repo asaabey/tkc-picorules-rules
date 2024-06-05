@@ -113,7 +113,7 @@ t4420_code : {ua_rbc>100 and ua_leu<40 and ua_acr>30 => 2},
         desc:"Integer [0-1] if meets criteria ",
         is_reportable:1,
         is_trigger:1,
-        type:2,
+        type:1001,
         priority:1
     }
 );

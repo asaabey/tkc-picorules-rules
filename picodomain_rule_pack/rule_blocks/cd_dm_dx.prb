@@ -216,7 +216,7 @@ cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_
         label: "Diabetes",
         desc: "Presence of Type 2/1 Diabetes mellitus",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 
@@ -226,7 +226,7 @@ cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_
         label: "Prevalent Diabetes Mellitus",
         desc: "Presence of Type 2/1 Diabetes mellitus",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 
@@ -236,7 +236,7 @@ cd_dm_dx_code : { dm=1 => 100000 + dm_icd_coded*10000 + dm_icpc_coded*1000 + dm_
         label: "Incident Diabetes Mellitus",
         desc: "Presence of Type 2/1 Diabetes mellitus",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 

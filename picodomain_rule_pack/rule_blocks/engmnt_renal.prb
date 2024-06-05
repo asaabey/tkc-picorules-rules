@@ -32,7 +32,7 @@ enc_null : { coalesce(enc_n,0)=0 =>1},{=>0};
 #define_attribute(enc_renal, {
     label:"Encounter with renal services",
     is_reportable:1,
-    type:2
+    type:1001
 });
 
 #define_attribute(ref_renal, {

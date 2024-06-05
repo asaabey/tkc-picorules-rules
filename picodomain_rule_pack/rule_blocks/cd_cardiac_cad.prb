@@ -205,7 +205,7 @@ cd_cardiac_cad,
         label:"Coronary artery disease",
         desc:"Presence of Coronary artery disease",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 #define_attribute(
@@ -214,6 +214,6 @@ cabg_flag,
         label:"CABG",
         desc:"Coronary artery bypass graft",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );

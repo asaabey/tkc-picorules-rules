@@ -29,6 +29,6 @@ rxn_h02ab => eadv.[rxnc_h02ab].dt.max().where(val=1);
     {
         label: "Presence of vasculitis",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

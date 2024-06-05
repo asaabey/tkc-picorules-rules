@@ -141,7 +141,7 @@ htn_dx_uncoded : {htn_obs>=3 and coalesce(htn_icd,htn_icpc)? => 1},{=>0};
         label:"Hypertension",
         desc:"Presence of Hypertension",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -151,7 +151,7 @@ htn_dx_uncoded : {htn_obs>=3 and coalesce(htn_icd,htn_icpc)? => 1},{=>0};
         label:"Incident Hypertension",
         desc:"Presence of Hypertension",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -161,7 +161,7 @@ htn_dx_uncoded : {htn_obs>=3 and coalesce(htn_icd,htn_icpc)? => 1},{=>0};
         label:"Prevalent Hypertension",
         desc:"Presence of Hypertension",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 

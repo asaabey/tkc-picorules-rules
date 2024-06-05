@@ -61,7 +61,7 @@ ex_flag : {dod!? or enc_ren_1y=1 or age>69 or assert_level<111100 or csu_act_dt!
             desc:"Integer [0-1] if meets criteria ",
             is_reportable:1,
             is_trigger:1,
-            type:2,
+            type:1001,
             priority:1
         }
     );

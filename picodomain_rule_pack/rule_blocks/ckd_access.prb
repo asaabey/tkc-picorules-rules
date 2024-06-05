@@ -31,6 +31,6 @@ avf_dt : { coalesce(avf_proc,avf_icd,avf_icpc)!? => least_date(avf_proc,avf_icd,
     {
         label:"Prevalent arteriovenous fistula for haemodialysis",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

@@ -25,6 +25,6 @@ echo_ld => rout_cd_cardiac_ix.echo_ld.val.bind();
         label:"rheumatic heart disease",
         desc:"Presence of rheumatic heart disease",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );

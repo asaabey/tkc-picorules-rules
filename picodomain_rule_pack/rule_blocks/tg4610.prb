@@ -111,7 +111,7 @@ ex_flag : {dod!? or enc_ren=1 or ref_ren=1  or dmg_source=0 or age>69 or csu_act
             desc:"Integer [0-1] if meets criteria ",
             is_reportable:1,
             is_trigger:1,
-            type:2,
+            type:1001,
             priority:1
         }
     );

@@ -35,7 +35,7 @@ tg4122 : {ckd = 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};
             desc:"Integer [0-1] if meets criteria ",
             is_reportable:1,
             is_trigger:1,
-            type:2,
+            type:1001,
             priority:1
         }
     );

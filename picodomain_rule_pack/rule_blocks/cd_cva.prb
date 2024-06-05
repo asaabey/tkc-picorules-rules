@@ -29,6 +29,6 @@ cva_dt : {.=> least_date(cva_infarct_dt,cva_nos_dt,cva_hmrage_dt,cva_icpc_dt)};
         label: "Stroke",
         desc: "Presence of haemorrhagic or thromboembolic stroke",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );

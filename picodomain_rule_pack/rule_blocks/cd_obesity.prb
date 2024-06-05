@@ -61,6 +61,6 @@ obs_dx_uncoded : {bmi>30 and greatest(obs_icd,obs_icpc)=0 =>1},{=>0};
             label:"Obesity",
             desc:"Integer [0-1] if Obesity based on code and observation criteria",
             is_reportable:1,
-            type:2
+            type:1001
         }
 );

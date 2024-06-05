@@ -26,6 +26,6 @@ gout_fd : { .=> least_date(icd_fd,icpc_fd,rxnc_m04aa_fd)};
     {
         label: "Presence of Gout",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

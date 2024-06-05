@@ -29,6 +29,6 @@ sle_fd : { .=> least_date(icd_fd,icpc_fd)};
     {
         label: "Presence of SLE",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

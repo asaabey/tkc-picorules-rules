@@ -125,13 +125,13 @@ panc_dt => eadv.[icpc_d99058,icpc_d99043,icd_k86%,icd_k85%].dt.max();
 #define_attribute(glp1_f, {
     label: "Diabetes GLP1a",
     is_reportable: 1,
-    type: 2
+    type: 1001
 });
 
 #define_attribute(sglt2_f, {
     label: "Diabetes SGLT2i",
     is_reportable: 1,
-    type: 2
+    type: 1001
 });
 
 #define_attribute(glp1_3y, {

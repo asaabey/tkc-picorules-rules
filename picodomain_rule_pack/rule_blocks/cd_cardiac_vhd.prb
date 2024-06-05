@@ -181,7 +181,7 @@ av_i,
         label: "Aortic valve insufficiency",
         desc: "Presence of Aortic valve insufficiency or regurgitation",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 
@@ -201,6 +201,6 @@ rhd_aet,
         label: "Rheumatic heart disease",
         desc: "Presence of Rheumatic heart disease",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );

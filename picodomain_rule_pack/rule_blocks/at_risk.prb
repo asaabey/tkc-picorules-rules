@@ -190,7 +190,7 @@ screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
             label:"TKC cohort",
             is_reportable:1,
             is_bi_obj:1,
-            type:2
+            type:1001
 });
 
 #define_attribute(tkc_cat,{
@@ -206,7 +206,7 @@ screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
             label:"Is Active within last 2y",
             is_reportable:1,
             is_bi_obj:1,
-            type:2
+            type:1001
         }
 );
 #define_attribute(
@@ -225,7 +225,7 @@ screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
             label:"Screened by egfr within last 1y",
             is_reportable:1,
             is_bi_obj:1,
-            type:2
+            type:1001
         }
 );
 
@@ -235,7 +235,7 @@ screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
             label:"Screened by uACR within last 1y",
             is_reportable:1,
             is_bi_obj:1,
-            type:2
+            type:1001
         }
 );
 
@@ -255,7 +255,7 @@ screen_4 : { . => screen_egfr + screen_acr + screen_bp + screen_hba1c};
             label:"Screened by HbA1c within last 1y",
             is_reportable:1,
             is_bi_obj:1,
-            type:2
+            type:1001
         }
 );
 

@@ -202,7 +202,7 @@ ckd_stage_5 : { ckd=6 => 1},{=>0};
 
         label:"CKD stage 1",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -211,7 +211,7 @@ ckd_stage_5 : { ckd=6 => 1},{=>0};
     {
         label:"CKD stage 2",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -220,7 +220,7 @@ ckd_stage_5 : { ckd=6 => 1},{=>0};
     {
         label:"CKD stage 3A",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -229,7 +229,7 @@ ckd_stage_5 : { ckd=6 => 1},{=>0};
     {
         label:"CKD stage 3B",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -238,7 +238,7 @@ ckd_stage_5 : { ckd=6 => 1},{=>0};
     {
         label:"CKD stage 4",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -247,7 +247,7 @@ ckd_stage_5 : { ckd=6 => 1},{=>0};
     {
         label:"CKD stage 5",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 

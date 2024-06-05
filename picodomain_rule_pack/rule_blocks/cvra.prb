@@ -134,6 +134,6 @@ cvra_dx_uncoded : {cvra_cat=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
     {
         label:"High CVRA",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

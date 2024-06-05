@@ -18,6 +18,6 @@ icd_code => eadv.[icd_b18_2%].dt.min();
     {
         label: "Presence of Chronic Hepatitis C",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

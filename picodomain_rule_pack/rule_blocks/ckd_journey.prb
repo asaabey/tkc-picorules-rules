@@ -74,6 +74,6 @@ enc_multi : { nvl(enc_n,0)>1 =>1},{=>0};
         label:"Renal services interaction",
         desc:"Integer [0-1] if Renal services interaction found",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

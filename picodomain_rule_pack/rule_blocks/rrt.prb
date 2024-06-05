@@ -260,7 +260,7 @@ tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
     {
         label:"RRT Haemodialysis",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -269,7 +269,7 @@ tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
     {
         label:"RRT Peritoneal dialysis",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -278,7 +278,7 @@ tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
     {
         label:"RRT Renal transplant",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -287,7 +287,7 @@ tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
     {
         label:"RRT Home haemodialysis",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 

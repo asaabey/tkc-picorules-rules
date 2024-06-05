@@ -110,5 +110,5 @@ enc_d90 : { enc_op_ld > sysdate -90 => 1},{=>0};
     enc_d90,{
         label:"transplant_panel:active follow up within 90 days",
         is_reportable:1,
-        type:2
+        type:1001
 });

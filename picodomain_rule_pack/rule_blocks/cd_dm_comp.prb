@@ -108,7 +108,7 @@ dm_dka : { dka_ld!? => 1};
     {
         label: "Diabetic foot ulcer",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 
@@ -116,7 +116,7 @@ dm_dka : { dka_ld!? => 1};
     {
         label: "Diabetic retinopathy",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );
 
@@ -124,6 +124,6 @@ dm_dka : { dka_ld!? => 1};
     {
         label: "Diabetic neuropathy",
         is_reportable: 1,
-        type: 2
+        type: 1001
     }
 );

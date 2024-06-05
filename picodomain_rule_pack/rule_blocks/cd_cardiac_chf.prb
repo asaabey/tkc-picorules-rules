@@ -50,7 +50,7 @@ rx_arni : { rx_arni_fd!? => 1 },{=>0};
 
 #define_attribute(rx_arni,{
       label: "Prescribed ARNI",
-      type: 2,
+      type: 1001,
       is_reportable: 1
 });
 
@@ -65,7 +65,7 @@ chf : {coalesce(chf_code_fd, dcm_fd, hocm_fd, rcm_fd, ethocm_fd, noscm_fd, rx_ar
 #define_attribute([[rb_id]],
     {
         label: "Presence of CHF",
-        type: 2,
+        type: 1001,
         is_reportable:1
     }
 );

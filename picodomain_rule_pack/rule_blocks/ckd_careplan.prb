@@ -43,6 +43,6 @@ ckd_careplan_doc : {. => cp_ckd_val};
     {
         label:"Renal supportive care",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );

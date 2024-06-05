@@ -188,28 +188,28 @@ hepb_status_lbl => rout_cd_hepb_coded.hepb_status_lbl.val.bind();
 #define_attribute(chb_imm_tol_flg,{
                 label: "Chronic HepB : Immune tolerance phase",
                 is_reportable:1,
-                type:2
+                type:1001
 });
 #define_attribute(chb_imm_clr_flg,{
                 label: "Chronic HepB : Immune clearance phase",
                 is_reportable:1,
-                type:2
+                type:1001
 });
 #define_attribute(chb_imm_ctr_flg,{
                 label: "Chronic HepB : Immune control phase",
                 is_reportable:1,
-                type:2
+                type:1001
 });
 #define_attribute(chb_imm_esc_flg,{
                 label: "Chronic HepB : Immune escape phase",
                 is_reportable:1,
-                type:2
+                type:1001
 });
 
 #define_attribute(chb_flag,{
                 label: "Chronic HepB",
                 is_reportable:1,
-                type:2
+                type:1001
 });
 #define_attribute(c_s_cngr_lbl,{
                 label: "Chronic HepB : Coding vs Serology",

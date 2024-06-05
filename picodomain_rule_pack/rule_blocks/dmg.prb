@@ -53,7 +53,7 @@ st_rman_rb_err : {. => 2014};
     {
         label:"Demography: Female Gender",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 
@@ -89,7 +89,7 @@ st_rman_rb_err : {. => 2014};
     {
         label:"Demography: Alive with absent DOD",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 #define_attribute(
@@ -97,7 +97,7 @@ st_rman_rb_err : {. => 2014};
     {
         label:"Demography: Aboriginal Ethnicity",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
 #define_attribute(
@@ -105,6 +105,6 @@ st_rman_rb_err : {. => 2014};
     {
         label:"Demography: Torres Strait Islander Ethnicity",
         is_reportable:1,
-        type:2
+        type:1001
     }
 );
