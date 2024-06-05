@@ -22,7 +22,7 @@
 
 cabg => eadv.[icd_z95_1,icpc_k54007].dt.min();
 
-
+cabg_flag : { cabg!? =>1},{=>0};
 
 #doc(,
     {
@@ -204,6 +204,15 @@ cd_cardiac_cad,
     {
         label:"Coronary artery disease",
         desc:"Presence of Coronary artery disease",
+        is_reportable: 1,
+        type: 2
+    }
+);
+#define_attribute(
+cabg_flag,
+    {
+        label:"CABG",
+        desc:"Coronary artery bypass graft",
         is_reportable: 1,
         type: 2
     }
