@@ -1,0 +1,61 @@
+#define_ruleblock(
+    [[rb_id]],
+    {
+        description: "MBS billing last dates",
+        is_active : 2
+    }
+);
+
+mbs_715_ld => eadv.mbs_715.dt.last();
+
+mbs_721_ld => eadv.mbs_721.dt.last();
+
+mbs_732_ld => eadv.mbs_732.dt.last();
+
+mbs_723_ld => eadv.mbs_723.dt.last();
+
+mbs_705_ld => eadv.mbs_705.dt.last();
+
+#define_attribute(
+    mbs_715_ld,
+    {
+        label:"MBS 715 Health Assesment Last date",
+        is_reportable:1,
+        type:12
+    }
+);
+
+#define_attribute(
+    mbs_721_ld,
+    {
+        label:"MBS 721 GP MP Last date",
+        is_reportable:1,
+        type:12
+    }
+);
+
+#define_attribute(
+    mbs_732_ld,
+    {
+        label:"MBS 732 Review GP MP Last date",
+        is_reportable:1,
+        type:12
+    }
+);
+#define_attribute(
+    mbs_723_ld,
+    {
+        label:"MBS 723 Team Care Arrangement Last date",
+        is_reportable:1,
+        type:12
+    }
+);
+
+#define_attribute(
+    mbs_705_ld,
+    {
+        label:"MBS 705 Long Health Assesment Last date",
+        is_reportable:1,
+        type:12
+    }
+);

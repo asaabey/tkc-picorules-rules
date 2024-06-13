@@ -8,6 +8,8 @@
 
 dod => rout_dmg.dod.val.bind();
 
+rrt => rout_rrt.rrt.val.bind();
+
 #doc(,{
         txt:"previous CSU action and assumes that the trigger will never fire again"
 });
@@ -29,7 +31,7 @@ egfr_outdt => rout_ckd.egfr_outdated.val.bind();
 
 res_outdt : { greatest(acr_outdt,egfr_outdt)>0 =>1},{=>0};
 
-ckd_met : { (cga_g <5 or cga_a>1) and res_outdt=0 =>1},{=>0};
+ckd_met : { (cga_g <5 or cga_a>1) and res_outdt=0 and rrt=0 =>1 },{=>0};
 
 
 
