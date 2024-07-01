@@ -9,9 +9,13 @@ ss => rout_cd_hep_b_sero.hbv_status.val.bind();
 
 sp => rout_cd_hep_b_sero.hbv_phase.val.bind();
 
-vl_val => rout_cd_hep_b_sero.vl_val.val.bind();
-
 vl_dt => rout_cd_hep_b_sero.vl_dt.val.bind();
+
+alt_dt => rout_cd_hep_b_sero.alt_dt.val.bind();
+
+hbv_status_dt => rout_cd_hep_b_sero.hbv_status_date_upper_dt.val.bind();
+
+hbv_phase_dt  => rout_cd_hep_b_sero.hbv_phase_date_upper_dt.val.bind();
 
 
 /* Hep B Coding (cd_hepb_coded) */
@@ -22,6 +26,7 @@ rx => rout_cd_hepb_coded.rx_av_ld.val.bind();
 
 ck : {. => (coalesce(cs,0) * 1000) + (coalesce(ss,0) * 100) + coalesce(sp,0)};
 
+us_ld => eadv.[enc_ris_usabkid, enc_ris_usabdo, enc_ris_usabpel, enc_ris_usupper].dt.max();
 
 /* Rx: Nucleoside and nucleotide reverse transcriptase inhibitors (rx_av_nrti) */
 
@@ -185,6 +190,12 @@ hepb_status_lbl => rout_cd_hepb_coded.hepb_status_lbl.val.bind();
                 type:1
 });
 
+#define_attribute(hbv_phase_dt, {
+                label: "Chronic HepB : Immune Phase Date",
+                is_reportable:1,
+                type:12
+});
+
 #define_attribute(chb_imm_tol_flg,{
                 label: "Chronic HepB : Immune tolerance phase",
                 is_reportable:1,
@@ -204,6 +215,24 @@ hepb_status_lbl => rout_cd_hepb_coded.hepb_status_lbl.val.bind();
                 label: "Chronic HepB : Immune escape phase",
                 is_reportable:1,
                 type:1001
+});
+
+#define_attribute(us_ld, {
+                label: "Chronic HepB : Ultrasound Last Date",
+                is_reportable:1,
+                type:12
+});
+
+#define_attribute(vl_dt, {
+                label: "Chronic HepB : HepB Viral Load Last Result Date",
+                is_reportable:1,
+                type:12
+});
+
+#define_attribute(alt_dt, {
+                label: "Chronic HepB : ALT Last Result Date",
+                is_reportable:1,
+                type:12
 });
 
 #define_attribute(chb_flag,{
@@ -228,11 +257,16 @@ hepb_status_lbl => rout_cd_hepb_coded.hepb_status_lbl.val.bind();
                 type:2
 });
 
-
 #define_attribute(hbv_status_lbl,{
                 label: "Chronic HepB : Serological Status Label",
                 is_reportable:1,
                 type:1
+});
+
+#define_attribute(hbv_status_dt,{
+                label: "Chronic HepB : Serological Status Date",
+                is_reportable:1,
+                type:12
 });
 
 #define_attribute(cs,{
