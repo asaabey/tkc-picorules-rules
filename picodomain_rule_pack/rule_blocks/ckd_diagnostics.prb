@@ -52,7 +52,7 @@ gbma => eadv.[lab_code_c333n]._.lastdv();
 asot => eadv.[lab_code_s2136]._.lastdv();
 
 ris_ctab_ld => eadv.[enc_ris_ctab%].dt.max();
-ris_usk_ld => eadv.[enc_ris_usk,ris_code_uskidney,usk,icpc_u41010,enc_ris_uskidney,enc_ris_usabkid].dt.max();
+ris_usk_ld => eadv.[enc_ris_usk, enc_ris_uskidney, enc_ris_uskidpel, enc_ris_usabkid, icpc_u41010].dt.max();
 ris_bxk_ld => eadv.[lab_code_t141,enc_ris_usbiokidney].dt.max();
 
 

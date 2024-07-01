@@ -26,15 +26,15 @@ avf_dt => rout_ckd_access.avf_dt.val.bind();
 
 avf_us_ld => eadv.enc_ris_usavfist.dt.last();
 
-av_gram_ld => eadv.[enc_ris_dshfist,enc_ris_dsarenal].dt.last();
+av_gram_ld => eadv.[enc_ris_dshfist, enc_ris_dsarenal].dt.last();
 
-av_plasty_ld => eadv.[enc_ris_dshplas%, enc_ris_angplas%,enc_ris_dsarenal].dt.last();
+av_plasty_ld => eadv.[enc_ris_dshplas%, enc_ris_angplas%, enc_ris_dsarenal].dt.last();
 
-av_plasty_1_ld => eadv.[enc_ris_dshplas%, enc_ris_angplas%,enc_ris_dsarenal].dt.last(1);
+av_plasty_1_ld => eadv.[enc_ris_dshplas%, enc_ris_angplas% ,enc_ris_dsarenal].dt.last(1);
 
-av_plasty_fd => eadv.[enc_ris_dshplas%, enc_ris_angplas%,enc_ris_dsarenal].dt.first();
+av_plasty_fd => eadv.[enc_ris_dshplas%, enc_ris_angplas%, enc_ris_dsarenal].dt.first();
 
-av_plasty_n => eadv.[enc_ris_dshplas1%, enc_ris_angplas%,enc_ris_dsarenal].dt.count();
+av_plasty_n => eadv.[enc_ris_dshplas%, enc_ris_angplas%, enc_ris_dsarenal].dt.count();
 
 av_surv_ld : {.=> greatest(avf_us_ld,av_gram_ld,av_plasty_ld)};
 
