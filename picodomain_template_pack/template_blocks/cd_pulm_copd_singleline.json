@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": "COPD single line",
+  "last_updated": null,
+  "is_active": true,
+  "name": "cd_pulm_copd_singleline",
+  "related_ruleblock": "cd_pulm_copd",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

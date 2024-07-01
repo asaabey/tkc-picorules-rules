@@ -1,0 +1,2 @@
+    <br />
+    <li><b>Obesity</b> BMI {{ picoformat('cd_obesity.bmi') }} kg/m2 </li>

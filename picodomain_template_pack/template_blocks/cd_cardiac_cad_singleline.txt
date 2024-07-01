@@ -1,0 +1,3 @@
+            <br />
+            <li><span><b>CAD</b> {% if cd_cardiac_cad.cabg %} CABG {{ picodate('cd_cardiac_cad.cabg') }}{% endif %}</span></li>
+               

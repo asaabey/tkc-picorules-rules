@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": "CAD single line",
+  "last_updated": null,
+  "is_active": true,
+  "name": "cd_cardiac_cad_singleline",
+  "related_ruleblock": "cd_cardiac_cad",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

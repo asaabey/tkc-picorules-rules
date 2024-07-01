@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": "Peritoneal dialysis single line",
+  "last_updated": null,
+  "is_active": true,
+  "name": "rrt_2_singleline",
+  "related_ruleblock": "rrt",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

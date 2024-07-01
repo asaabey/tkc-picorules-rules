@@ -1,0 +1,4 @@
+    {% if rrt.rrt == 4 %}
+    <li><b>ESRD: HHD ({{ picodate('rrt.homedx_dt') }})</b></li>
+    {% endif %}
+    

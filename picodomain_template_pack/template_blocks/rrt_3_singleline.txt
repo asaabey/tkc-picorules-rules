@@ -1,0 +1,4 @@
+    {% if rrt.rrt == 3 %}
+    <li><b>ESRD: Renal Tx ({{ picodate('rrt.tx_dt') }})</b><li>
+    {% endif %}
+    

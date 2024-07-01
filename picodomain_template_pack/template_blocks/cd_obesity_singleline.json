@@ -1,0 +1,11 @@
+{
+  "author": null,
+  "description": "obesity single line",
+  "last_updated": null,
+  "is_active": true,
+  "name": "cd_obesity_singleline",
+  "related_ruleblock": "cd_obesity",
+  "is_composition": false,
+  "is_mhr": false,
+  "version": null
+}

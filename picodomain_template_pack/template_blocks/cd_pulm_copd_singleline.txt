@@ -1,0 +1,1 @@
+<li><b>COPD ({{ picodate('cd_pulm_copd.code_copd_dt') }})</b></li>

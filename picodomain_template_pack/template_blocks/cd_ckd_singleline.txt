@@ -1,0 +1,4 @@
+<li><b><span>CKD {{ picoformat('ckd.ckd_stage') }} {{ picoformat('ckd.cga_g') }}{{ picoformat('ckd.cga_a') }}</span></b></li>
+<ol>
+{% if ckd.avf %}<li><strong>AVF</strong>  {{ picodate('ckd.avf_dt') }}</li>{% endif %}
+</ol>

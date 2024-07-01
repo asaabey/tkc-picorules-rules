@@ -1,0 +1,9 @@
+<br />
+{% if cd_cardiac_vhd.vhd %}
+<li>
+<b>Valvular heart disease</b>
+{% if cd_cardiac_vhd.mv_r %} MVR {{ picodate('cd_cardiac_vhd.mv_r_dt') }}{% endif %}
+{% if cd_cardiac_vhd.av_r %} AoVR {{ picodate('cd_cardiac_vhd.av_r_dt') }}{% endif %}
+{% if cd_cardiac_vhd.tv_r %} TrVR {{ picodate('cd_cardiac_vhd.tv_r_dt') }}{% endif %}
+</li>{% endif %}
+    

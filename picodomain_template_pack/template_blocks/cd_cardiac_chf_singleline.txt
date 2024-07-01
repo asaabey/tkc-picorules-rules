@@ -1,0 +1,8 @@
+{% if cd_cardiac_chf.chf %}<li><b>Congestive heart failure</b>
+            {% if cd_cardiac_chf.dcm_fd %} : Dilated cardiomyopathy {{ picodate('cd_cardiac_chf.dcm_fd') }}{% endif %}
+            {% if cd_cardiac_chf.hocm_fd %} : Hypertrophic obstructive cardiomyopathy {{ picodate('cd_cardiac_chf.hocm_fd') }}{% endif %}
+            {% if cd_cardiac_chf.rcm_fd %} : Restrictive cardiomyopathy {{ picodate('cd_cardiac_chf.rcm_fd') }}{% endif %}
+            {% if cd_cardiac_chf.ethocm_fd %} : Alcohol related cardiomyopathy {{ picodate('cd_cardiac_chf.ethocm_fd') }}{% endif %}
+            {% if cd_cardiac_chf.noscm_fd %} : Cardiomyopathy NOS {{ picodate('cd_cardiac_chf.noscm_fd') }}{% endif %}
+</li>
+{% endif %}   

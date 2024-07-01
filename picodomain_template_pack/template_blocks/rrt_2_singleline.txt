@@ -1,0 +1,4 @@
+    {% if rrt.rrt == 2 %}
+    <li><b>ESRD: PD ({{ picodate('rrt.pd_dt_min') }})</b></li>
+    {% endif %}
+    
