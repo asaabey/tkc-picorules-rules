@@ -1,9 +1,7 @@
-#define_ruleblock(cd_hep_b_sero,
-    {
-        description: "Algorithm to detect Chronic hepatitis B from serology",
-        is_active: 2
-    }
-);
+#define_ruleblock(cd_hep_b_sero, {
+    description: "Algorithm to detect Chronic hepatitis B from serology",
+    is_active: 2
+});
 
 /* HepB Surface antibody and antigen */
 
@@ -47,11 +45,36 @@ ast => eadv.[lab_bld_ast]._.lastdv();
 alt => eadv.[lab_bld_alt]._.lastdv();
 
 /*
++-------------------------------------------------------------------------------------------------------------------------+
+| Glossary of relevant variables                                                                                          |
++---------------+---------+------------------------------------+----------------------------+-----------------------------+
+| variable name |  type   |            description             |            AKA             |            note             |
++---------------+---------+------------------------------------+----------------------------+-----------------------------+
+| s_ab_level    | number  | Hepatitis B surface antibody level | anti-HBs                   |                             |
+| s_ab_val      | pos/neg | Hepatitis B surface antibody       | anti-HBs                   |                             |
+| c_ab_val      | pos/neg | Hepatitis B core antibody          | anti-HBc                   |                             |
+| s_ag_val      | pos/neg | Hepatitis B surface antigen        | HBsAg                      |                             |
+| vl_val        | number  | Hepatitis B virus DNA              | HBV / HBV DNA / Viral Load |                             |
+| e_ab          | pos/neg | Hepatitis B e antibody             | anti-HBe                   |                             |
+| e_ag          | pos/neg | Hepatitis B e antigen              | HBeAg                      |                             |
+| alt_val       | number  | Alanine transaminase               | ALT                        | 'normal' is gender specific |
+| c_ab_igm_val  | pos/neg | Hepatitis B surface antibody (IgM) | IgM anti-HBc               | not available               |
+| -             | -       | Immunoglobulin G                   | IgG                        |                             |
+| -             | -       | Immunoglobulin M                   | IgM                        |                             |
++---------------+---------+------------------------------------+----------------------------+-----------------------------+
+*/
+
+
+#doc(, {
+    section: "Hepatitis B Status"
+});
+
+/*
 +--------------------------------------------------------------------------------------------------------------------------------------------+
 | Hepatitis B virus testing and interpreting test results                                                                                    |
 | https:\\hepatitisb.org.au/hepatitis-b-virus-testing-and-interpreting-test-results/                                                         |
 +----------+----------+----------+--------------+------------------------------------------+----------+--------------------------------------+
-| HBsAg    | anti-HBc | Anti-HBs | IgM anti-HBc | Interpretation                           | Status # |            Status Label              |
+| HBsAg    | anti-HBc | anti-HBs | IgM anti-HBc | Interpretation                           | Status # |            Status Label              |
 | s_ag_val | c_ab_val | s_ab_val | c_ab_igm_val |                                          |          |                                      |
 +----------+----------+----------+--------------+------------------------------------------+----------+--------------------------------------+
 | pos      | pos      | neg      | neg          | Chronic HBV infection                    |        1 | HepB Positive: Chronic Infection *1  |
@@ -69,6 +92,7 @@ alt => eadv.[lab_bld_alt]._.lastdv();
 +--------------------------------------------------------------------------------------------------------------------------------------------|
 */
 
+
 hbv_status :
     { s_ag_val=1 and c_ab_val=1 and s_ab_val=0 => 1 },
     { s_ag_val=0 and c_ab_val=0 and s_ab_val=0 => 3 },
@@ -80,18 +104,10 @@ hbv_status :
     { s_ag_val=1 and c_ab_val=0 and s_ab_val=0 => 9 };
 
 /*
+    If we get Igm anti-HBc data we can add in the following:
     { s_ag_val=1 and c_ab_val=1 and s_ab_val=0 and c_ab_igm_val=0 => 1 }
     { s_ag_val=1 and c_ab_val=1 and s_ab_val=0 and c_ab_igm_val=1 => 2 }
 */
-
-hbv_status_date_upper_dt :
-    { hbv_status!? => greatest_date(s_ag_dt, c_ab_dt, s_ab_dt) };
-
-hbv_status_date_lower_dt :
-    { hbv_status!? => least_date(s_ag_dt, c_ab_dt, s_ab_dt) };
-
-hbv_status_date_spread :
-    { hbv_status!? => hbv_status_date_upper_dt - hbv_status_date_lower_dt };
 
 hbv_status_lbl :
     { hbv_status=1 => `HepB Positive: Chronic Infection` },
@@ -104,6 +120,19 @@ hbv_status_lbl :
     { hbv_status=8 => `Uninterpreted Serological Results: +-+` },
     { hbv_status=9 => `Uninterpreted Serological Results: +--` };
 
+hbv_status_date_upper_dt :
+    { hbv_status!? => greatest_date(s_ag_dt, c_ab_dt, s_ab_dt) };
+
+hbv_status_date_lower_dt :
+    { hbv_status!? => least_date(s_ag_dt, c_ab_dt, s_ab_dt) };
+
+hbv_status_date_spread :
+    { hbv_status!? => hbv_status_date_upper_dt - hbv_status_date_lower_dt };
+
+#doc(, {
+    section: "Hepatitis B Virus Phase"
+});
+
 /*
 +--------------------------+----------------------------------+
 | Hep B Virus Phase        |                                  |
@@ -115,12 +144,6 @@ hbv_status_lbl :
 |     3 | Immune control   | HBeAg-negative chronic infection |
 |     4 | Immune escape    | HBeAg-negative chronic hepatitis |
 +-------+------------------+----------------------------------+
-*/
-
-
-/*
-ALT and HBV VL are ok as long as within 15 months of each other
-eAg and eAb can just be the most recent available
 */
 
 alt_vs_vl_date_spread :
@@ -137,13 +160,9 @@ alt_uln :
     { gender = 1 => 30 },
     { gender = 0 => 19 };
 
-alt_is_normal :
-    { alt_val <  alt_uln => 1 },
-    { alt_val >= alt_uln => 0 };
-
 alt_is_elevated :
-    { alt_is_normal = 0 => 1 },
-    { alt_is_normal = 1 => 0 };
+    { alt_val >= alt_uln => 1 },
+    { alt_val <  alt_uln => 0 };
 
 vl_bucket :
     {                        vl_val <     2000 => '0-LOW'      },
@@ -153,56 +172,79 @@ vl_bucket :
     { vl_val >= 10000000                       => '4-HIGH10^7' };
 
 /*
-Australian consensus recommendations for the management of hepatitis B infection
-https:\\www.gesa.org.au/public/13/files/Education%20%26%20Resources/Clinical%20Practice%20Resources/Hep%20B/HBV%20consensus%20Mar%202022%20Updated.pdf
-Page 21-28
+Phase parameter values are gleaned from:
+    Australian consensus recommendations for the management of hepatitis B infection
+    https:\\www.gesa.org.au/public/13/files/Education%20%26%20Resources/Clinical%20Practice%20Resources/Hep%20B/HBV%20consensus%20Mar%202022%20Updated.pdf
+    Page 21-28
+
+And modified with input from SME Jane Davies.
 
 5.2.3.1 Phase I: immune tolerant (HBeAg-positive chronic infection)
-    e_ag=1
-    vl_val >= 20,000
-    alt <= ULN (19/30)
+    +--------+----+-------------+
+    | e_ag   | =  | 1           |
+    | vl_val | >= | 20,000      |
+    | alt    | <  | ULN (19/30) |
+    +--------+----+-------------+
 
 5.2.3.2 Phase II: immune clearance (HBeAg-positive chronic hepatitis)
-    e_ag=1
-    vl_val >= 20,000 (HBV DNA levels remain high, where is high defined?) should we use 20,000 or 10^6 or 10^7
-    alt > ULN (19/30)
+    +--------+----+--------------------------------+
+    | e_ag   | =  | 1                              |
+    | vl_val | >= | ? "HBV DNA levels remain high" |
+    | alt    | >  | ULN (19/30)                    |
+    +--------+----+--------------------------------+
+
+    SME Advice:
+        * vl_val >= 20,000
+        * use alt >= ULN rather than alt > ULN otherwise we miss out those where vl_val = the ULN
 
 5.2.3.3 Phase III: immune control (HBeAg-negative chronic infection)
-    e_ag=0
-    vl_val < 2,000
-    alt <= ULN (19/30)
-    e_ab = 1 (ignore this)
+    +--------+---+-------------+
+    | e_ag   | = | 0           |
+    | vl_val | < | 2,000       |
+    | alt    | < | ULN (19/30) |
+    | e_ab   | = | 1           |
+    +--------+---+-------------+
+
+    SME Advice:
+        *ignore e_ab value
 
 5.2.3.4 Phase IV: immune escape (HBeAg-negative chronic hepatitis)
-    e_ag=0
-    vl_val > 2,000
-    alt > ULN (19/30)
-    e_ab = 1 (ignore this)
-*/
+    +--------+----+-------------+
+    | e_ag   | =  | 0           |
+    | vl_val | >  | 2,000       |
+    | alt    | >= | ULN (19/30) |
+    | e_ab   | =  | 1           |
+    +--------+----+-------------+
 
+    SME Advice:
+        * ignore e_ab value
+        * use "vl_val >= 2,000" rather than "vl_val > 2,000" otherwise we miss out on the exactly 2,000 records
+        * use alt >= ULN rather than alt > ULN otherwise we miss out those where vl_val = the ULN
+
+SME Advice:
+    * alt and vl are ok as long as within 15 months of each other
+    * e_ag and e_ab can just be the most recent available
+    * only calculate phase where s_ag_val = 1
+    * capture and give information about those people who don't fit into the standard phases:
+        1a: ALT Normal, Viral Load < 2,000
+        2a: ALT Elevated, Viral Load < 20,000
+        3a: ALT Elevated, Viral Load < 2,000
+        4a: ALT Normal, Viral Load >= 2,000
+*/
 
 hbv_phase_tmp :
     { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 0 and vl_val >=  2000 => `4a` },
-    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 1 and vl_val >=  2000 => `4` },
+    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 1 and vl_val >=  2000 => `4`  },
     { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 1 and vl_val <   2000 => `3a` },
-    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 0 and vl_val <   2000 => `3` },
+    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 0 and vl_val <   2000 => `3`  },
     { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 1 and vl_val <  20000 => `2a` },
-    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 1 and vl_val >= 20000 => `2` },
+    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 1 and vl_val >= 20000 => `2`  },
     { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 0 and vl_val <  20000 => `1a` },
-    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 0 and vl_val >= 20000 => `1` },
+    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 0 and vl_val >= 20000 => `1`  },
     { s_ag_val!? and e_ag!? and alt_is_elevated!? and vl_val!? => `0` };
 
 hbv_phase :
     { alt_vs_vl_date_spread_ok = 1 => hbv_phase_tmp };
-
-hbv_phase_date_upper_dt :
-    { hbv_phase!? => greatest_date(e_ag_0_dt, e_ab_0_dt, alt_dt, vl_dt) };
-
-hbv_phase_date_lower_dt :
-    { hbv_phase!? => least_date(e_ag_0_dt, e_ab_0_dt, alt_dt, vl_dt) };
-
-hbv_phase_date_spread :
-    { hbv_phase!? => hbv_phase_date_upper_dt - hbv_phase_date_lower_dt };
 
 hbv_phase_lbl :
     { hbv_phase?       => `Insufficient Blood results` },
@@ -214,7 +256,17 @@ hbv_phase_lbl :
     { hbv_phase = `3`  => `Immune control phase (HBeAg-negative chronic infection)` },
     { hbv_phase = `3a` => `ALT Elevated, Viral Load < 2,000` },
     { hbv_phase = `4`  => `Immune escape phase (HBeAg-negative chronic hepatitis)` },
-    { hbv_phase = `4a` => `ALT Normal, High Viral Load` };
+    { hbv_phase = `4a` => `ALT Normal, Viral Load >= 2,000` };
+
+hbv_phase_date_upper_dt :
+    { hbv_phase!? => greatest_date(e_ag_0_dt, s_ag_dt, alt_dt, vl_dt) };
+
+hbv_phase_date_lower_dt :
+    { hbv_phase!? => least_date(e_ag_0_dt, s_ag_dt, alt_dt, vl_dt) };
+
+hbv_phase_date_spread :
+    { hbv_phase!? => hbv_phase_date_upper_dt - hbv_phase_date_lower_dt };
+
 
 cd_hep_b_sero :
     { hbv_status in (1,6) => 1 },
