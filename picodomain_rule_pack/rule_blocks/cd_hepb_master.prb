@@ -24,8 +24,6 @@ cs => rout_cd_hepb_coded.hepb_status.val.bind();
 
 rx => rout_cd_hepb_coded.rx_av_ld.val.bind();
 
-ck : {. => (coalesce(cs,0) * 1000) + (coalesce(ss,0) * 100) + coalesce(sp,0)};
-
 us_ld => eadv.[enc_ris_usabkid, enc_ris_usabdo, enc_ris_usabpel, enc_ris_usupper].dt.max();
 
 /* Rx: Nucleoside and nucleotide reverse transcriptase inhibitors (rx_av_nrti) */
@@ -163,12 +161,12 @@ chb_flag : { c_s_cngr in (     1001,1008,     1010,1011,1018,1019,    1091) => 1
            {=>0};
 */
 
-cd_hepb_master : { coalesce(ss, sp, cs)!? => 1},{ => 0 };
+cd_hepb_master : { sp!? and ss!? and cs!? => 1},{ => 0 };
 
-chb_imm_tol_flg : { sp = 1 => 1 },{ => 0 };
-chb_imm_clr_flg : { sp = 2 => 1 },{ => 0 };
-chb_imm_ctr_flg : { sp = 3 => 1 },{ => 0 };
-chb_imm_esc_flg : { sp = 4 => 1 },{ => 0 };
+chb_imm_tol_flg : { sp = `1` => 1 },{ => 0 };
+chb_imm_clr_flg : { sp = `2` => 1 },{ => 0 };
+chb_imm_ctr_flg : { sp = `3` => 1 },{ => 0 };
+chb_imm_esc_flg : { sp = `4` => 1 },{ => 0 };
 
 
 chb_imm_lbl => rout_cd_hep_b_sero.hbv_phase_lbl.val.bind();
@@ -181,7 +179,7 @@ hepb_status_lbl => rout_cd_hepb_coded.hepb_status_lbl.val.bind();
 #define_attribute(sp,{
                 label: "Chronic HepB : Immune Phase Code",
                 is_reportable:1,
-                type:2
+                type:1
 });
 
 #define_attribute(chb_imm_lbl, {

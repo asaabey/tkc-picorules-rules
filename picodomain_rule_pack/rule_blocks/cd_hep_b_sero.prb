@@ -138,8 +138,8 @@ alt_uln :
     { gender = 0 => 19 };
 
 alt_is_normal :
-    { alt_val <= alt_uln => 1 },
-    { alt_val >  alt_uln => 0 };
+    { alt_val <  alt_uln => 1 },
+    { alt_val >= alt_uln => 0 };
 
 alt_is_elevated :
     { alt_is_normal = 0 => 1 },
@@ -153,36 +153,6 @@ vl_bucket :
     { vl_val >= 10000000                       => '4-HIGH10^7' };
 
 /*
-https:\\ashm.org.au/wp-content/uploads/2023/08/ASHM_Decision-Making-in-Hepatitis-B-Toolkit-Update_Nov.pdf
-*/
-
-hbv_phase_v1_tmp :
-    { e_ag = 0 and e_ab = 1 and alt_is_elevated = 1 and vl_val >    2000 => 4 },
-    { e_ag = 0 and e_ab = 1 and alt_is_elevated = 0 and vl_val <    2000 => 3 },
-    { e_ag = 1              and alt_is_elevated = 1 and vl_val >   20000 => 2 },
-    { e_ag = 1              and alt_is_elevated = 0 and vl_val > 1000000 => 1 };
-
-hbv_phase : { hbv_status = 1 and alt_vs_vl_date_spread_ok = 1 => hbv_phase_v1_tmp };
-
-/*
-hbv_phase_v2 is based on the following Example Stata code:
-    gen phase=1 if hbsag0==1 & hbeag0==1
-    replace phase=2 if phase==1 & sex==0 & alt0>=19 & alt0!=. & hbvdna0>=2000 & hbvdna0!=.
-    replace phase=2 if phase==1 & sex==1 & alt0>=30 & alt0!=. & hbvdna0>=2000 & hbvdna0!=.
-    replace phase=3 if hbsag0==1 & hbeag0==0
-    replace phase=4 if phase==3 & hbvdna0>=2000 & hbvdna0!=.
-*/
-
-hbv_phase_v2_tmp :
-    { e_ag = 0 and s_ag_val = 1 and vl_val >= 2000                         => 4 },
-    { e_ag = 0 and s_ag_val = 1                                            => 3 },
-    { e_ag = 1 and s_ag_val = 1 and vl_val >= 2000 and alt_is_elevated = 1 => 2 },
-    { e_ag = 1 and s_ag_val = 1                                            => 1 };
-
-hbv_phase_v2 :
-    { hbv_status = 1 and alt_vs_vl_date_spread_ok = 1 => hbv_phase_v2_tmp };
-
-/*
 Australian consensus recommendations for the management of hepatitis B infection
 https:\\www.gesa.org.au/public/13/files/Education%20%26%20Resources/Clinical%20Practice%20Resources/Hep%20B/HBV%20consensus%20Mar%202022%20Updated.pdf
 Page 21-28
@@ -194,30 +164,36 @@ Page 21-28
 
 5.2.3.2 Phase II: immune clearance (HBeAg-positive chronic hepatitis)
     e_ag=1
-    vl_val >= ? (HBV DNA levels remain high, where is high defined?) should we use 20,000 or 10^6 or 10^7
+    vl_val >= 20,000 (HBV DNA levels remain high, where is high defined?) should we use 20,000 or 10^6 or 10^7
     alt > ULN (19/30)
 
 5.2.3.3 Phase III: immune control (HBeAg-negative chronic infection)
     e_ag=0
     vl_val < 2,000
     alt <= ULN (19/30)
-    e_ab = 1
+    e_ab = 1 (ignore this)
 
 5.2.3.4 Phase IV: immune escape (HBeAg-negative chronic hepatitis)
     e_ag=0
     vl_val > 2,000
     alt > ULN (19/30)
-    e_ab = 1
+    e_ab = 1 (ignore this)
 */
 
-hbv_phase_v3_tmp :
-    { e_ag = 0 and e_ab = 1 and alt_is_elevated = 1 and vl_val >=  2000 => 4 },
-    { e_ag = 0 and e_ab = 1 and alt_is_elevated = 0 and vl_val <   2000 => 3 },
-    { e_ag = 1              and alt_is_elevated = 1 and vl_val >= 20000 => 2 },
-    { e_ag = 1              and alt_is_elevated = 0 and vl_val >= 20000 => 1 };
 
-hbv_phase_v3 :
-    { hbv_status = 1 and alt_vs_vl_date_spread_ok = 1 => hbv_phase_v3_tmp };
+hbv_phase_tmp :
+    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 0 and vl_val >=  2000 => `4a` },
+    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 1 and vl_val >=  2000 => `4` },
+    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 1 and vl_val <   2000 => `3a` },
+    { s_ag_val = 1 and e_ag = 0 and alt_is_elevated = 0 and vl_val <   2000 => `3` },
+    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 1 and vl_val <  20000 => `2a` },
+    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 1 and vl_val >= 20000 => `2` },
+    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 0 and vl_val <  20000 => `1a` },
+    { s_ag_val = 1 and e_ag = 1 and alt_is_elevated = 0 and vl_val >= 20000 => `1` },
+    { s_ag_val!? and e_ag!? and alt_is_elevated!? and vl_val!? => `0` };
+
+hbv_phase :
+    { alt_vs_vl_date_spread_ok = 1 => hbv_phase_tmp };
 
 hbv_phase_date_upper_dt :
     { hbv_phase!? => greatest_date(e_ag_0_dt, e_ab_0_dt, alt_dt, vl_dt) };
@@ -229,22 +205,16 @@ hbv_phase_date_spread :
     { hbv_phase!? => hbv_phase_date_upper_dt - hbv_phase_date_lower_dt };
 
 hbv_phase_lbl :
-    { hbv_phase = 1 => `Immune tolerance phase` },
-    { hbv_phase = 2 => `Immune clearance phase` },
-    { hbv_phase = 3 => `Immune control phase` },
-    { hbv_phase = 4 => `Immune escape phase` };
-
-hbv_phase_v2_lbl :
-    { hbv_phase_v2 = 1 => `Immune tolerance phase` },
-    { hbv_phase_v2 = 2 => `Immune clearance phase` },
-    { hbv_phase_v2 = 3 => `Immune control phase` },
-    { hbv_phase_v2 = 4 => `Immune escape phase` };
-
-hbv_phase_v3_lbl :
-    { hbv_phase_v3 = 1 => `Immune tolerance phase` },
-    { hbv_phase_v3 = 2 => `Immune clearance phase` },
-    { hbv_phase_v3 = 3 => `Immune control phase` },
-    { hbv_phase_v3 = 4 => `Immune escape phase` };
+    { hbv_phase?       => `Insufficient Blood results` },
+    { hbv_phase = `0`  => `Bloods available but unable to determine phase` },
+    { hbv_phase = `1`  => `Immune tolerant (HBeAg-positive chronic infection)` },
+    { hbv_phase = `1a` => `ALT Normal, Viral Load < 2,000` },
+    { hbv_phase = `2`  => `Immune clearance phase (HBeAg-positive chronic hepatitis)` },
+    { hbv_phase = `2a` => `ALT Elevated, Viral Load < 20,000` },
+    { hbv_phase = `3`  => `Immune control phase (HBeAg-negative chronic infection)` },
+    { hbv_phase = `3a` => `ALT Elevated, Viral Load < 2,000` },
+    { hbv_phase = `4`  => `Immune escape phase (HBeAg-negative chronic hepatitis)` },
+    { hbv_phase = `4a` => `ALT Normal, High Viral Load` };
 
 cd_hep_b_sero :
     { hbv_status in (1,6) => 1 },
