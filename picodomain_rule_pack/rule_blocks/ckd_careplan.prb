@@ -46,3 +46,11 @@ ckd_careplan_doc : {. => cp_ckd_val};
         type:1001
     }
 );
+#define_attribute(
+    rsc_ld,
+    {
+        label:"Renal Supportive Care Last date",
+        is_reportable:1,
+        type:12
+    }
+);
