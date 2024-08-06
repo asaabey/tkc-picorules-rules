@@ -16,6 +16,8 @@ loc_first => eadv.[mbs_715, mbs_723, mbs_13105].loc.first();
 
 loc_code : {loc_first!? => substr(loc_first,4)};
 
+loc_key : {loc_first!? => to_number(substr(loc_first,4))};
+
 loc_district : {loc_first!? => substr(loc_first,6,2)};
 
 loc_region : {loc_first!? => substr(loc_first,5,1)};
@@ -30,6 +32,13 @@ loc_source : {loc_first!? => substr(loc_first,2,2)};
 {
         label:"Origin PHC Location code",
         type:1,
+        is_reportable:1
+});
+
+#define_attribute(loc_key,
+{
+        label:"Origin PHC Location",
+        type:1002,
         is_reportable:1
 });
 
