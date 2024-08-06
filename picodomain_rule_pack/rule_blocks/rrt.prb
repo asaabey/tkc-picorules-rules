@@ -75,10 +75,6 @@ tx_dt_icd_last => eadv.icd_z94_0.dt.max();
 
 tx_dt : { . => least_date(tx_dt_icpc,tx_dt_icd)};
 
-
-
-
-
 #doc(,{
     txt : "Number and last date of hd between transplant codes indicating graft failure and multi parity"
 } );

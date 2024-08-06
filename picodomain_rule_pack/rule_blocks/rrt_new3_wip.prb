@@ -17,9 +17,12 @@ New Calculations
 
 
 /*
-Calculation Earliest and Latest Transplant ICPC code 28001 Dates (PCIS Only)
+Calculation Earliest and Latest Transplantdate. Note for ICPC code 28001 only PCIS data is used as other data is unreliable date wise.
 */
 
+/*
+Calculating Latest HD, PD and HomeD dates
+*/
 
 hd_dt_ld => eadv.[caresys_1310000,icd_z49_1,mbs_13105].dt.max();
 pd_dt_ld => eadv.[enc_op_ren_hpd, enc_op_rdu_hpd].dt.max();
@@ -30,6 +33,25 @@ hhd_dt_ld => eadv.[
   enc_op_rdu_rhd
 ].dt.max();
 
+tx_enc_dt_ld => eadv.[
+  enc_op_ren_rnt,
+  enc_op_ren_rtc,
+  enc_op_rdu_rth,
+  enc_op_rdu_rtn,
+  enc_op_ren_rtr,
+  enc_op_ren_rtu,
+  enc_op_rdu_trc
+].dt.max();
+
+
+
+
+
+
+
+/*
+Calculating First (Earliest date on record) and last Tx date (latest Tx date on record).
+*/
 
 tx_icpc_dt_fd => eadv.[icpc_u28001].dt.min().where(to_number(substr(loc,2,2))=90);
 tx_icpc_dt_ld => eadv.[icpc_u28001].dt.max().where(to_number(substr(loc,2,2))=90);
@@ -37,23 +59,27 @@ tx_icd_dt_fd  => eadv.[icd_z94_0].dt.min();
 
 tx_dt_fd : { . => least_date(tx_icpc_dt_fd,tx_icd_dt_fd )};
 tx_dt_ld : { . => greatest_date(tx_dt_fd,tx_icpc_dt_ld )};
-      
+ 
+
+/*
+Calculating If client has had a Renal Transplant and if records show more than one Renal Transplant date
+*/
+     
 tx_ind : { tx_dt_fd!? => 1 },{ => 0 };  
-tx_multi_ind : { (tx_dt_ld > tx_dt_fd + 150) => 1 },{ => 0 };     
+tx_multi_ind : { (tx_ind!? And (tx_dt_ld > tx_dt_fd + 365)) => 1 },{ => 0 };     
+
+
+/*
+Calculating If client is current Tx client
+*/
 
 tx_latest_plus40days: {. => tx_dt_ld + 40};
 
-hd_n_12months => eadv.[caresys_1310000, mbs_13105].dt.count().where(dt> sysdate-365);
-hd_n_posttx  => eadv.[caresys_1310000, mbs_13105].dt.count().where(dt >= (tx_dt_ld + 90) and dt < sysdate);
-enc_n  => eadv.[enc_op%].dt.count();
-enc_n_posttx  => eadv.[enc_op%].dt.count().where(dt >= (tx_dt_ld ) and dt < sysdate);
-enc_fd  => eadv.[enc_op%].dt.min();
-enc_ld  => eadv.[enc_op%].dt.max();
+hd_n_6months => eadv.[caresys_1310000, mbs_13105].dt.count().where(dt> sysdate-190);
+hd_n_posttx  => eadv.[caresys_1310000, mbs_13105].dt.count().where(dt >= tx_latest_plus40days and dt < sysdate);
        
-hd_revert_post_tx :  { (tx_latest_plus40days < hd_dt_ld) and (hd_n_12months > 35) and (hd_n_posttx > 35)   => 1 },
-                     { (tx_latest_plus40days < hd_dt_ld) and (hd_n_posttx > 100)  => 1 },
-                     { => 0 };
-pd_revert_post_tx :  { (tx_latest_plus40days < pd_dt_ld) => 1 }, { => 0 };
+hd_revert_post_tx :  { (tx_latest_plus40days < hd_dt_ld) and (hd_n_6months > 30) and (hd_n_posttx > 30)  => 1},{ => 0 };
+pd_revert_post_tx :  { (tx_latest_plus40days < pd_dt_ld) => 1 },{ => 0 };
 hhd_revert_post_tx : { (tx_latest_plus40days < hhd_dt_ld) => 1 },{ => 0 };
 
 
