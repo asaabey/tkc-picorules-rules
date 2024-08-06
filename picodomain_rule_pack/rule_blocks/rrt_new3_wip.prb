@@ -1,0 +1,67 @@
+
+
+#define_ruleblock(rrt_new3_wip,
+    {
+        description: "Algorithm to assign tx ",
+        is_active:2
+
+    }
+);
+
+
+
+/*
+New Calculations
+*/
+
+
+
+/*
+Calculation Earliest and Latest Transplant ICPC code 28001 Dates (PCIS Only)
+*/
+
+
+hd_dt_ld => eadv.[caresys_1310000,icd_z49_1,mbs_13105].dt.max();
+pd_dt_ld => eadv.[enc_op_ren_hpd, enc_op_rdu_hpd].dt.max();
+hhd_dt_ld => eadv.[
+  enc_op_ren_hdp,
+  enc_op_ren_rhd,
+  enc_op_rdu_hdp,
+  enc_op_rdu_rhd
+].dt.max();
+
+
+tx_icpc_dt_fd => eadv.[icpc_u28001].dt.min().where(to_number(substr(loc,2,2))=90);
+tx_icpc_dt_ld => eadv.[icpc_u28001].dt.max().where(to_number(substr(loc,2,2))=90);
+tx_icd_dt_fd  => eadv.[icd_z94_0].dt.min();
+
+tx_dt_fd : { . => least_date(tx_icpc_dt_fd,tx_icd_dt_fd )};
+tx_dt_ld : { . => greatest_date(tx_dt_fd,tx_icpc_dt_ld )};
+      
+tx_ind : { tx_dt_fd!? => 1 },{ => 0 };  
+tx_multi_ind : { (tx_dt_ld > tx_dt_fd + 150) => 1 },{ => 0 };     
+
+tx_latest_plus40days: {. => tx_dt_ld + 40};
+
+hd_n_12months => eadv.[caresys_1310000, mbs_13105].dt.count().where(dt> sysdate-365);
+hd_n_posttx  => eadv.[caresys_1310000, mbs_13105].dt.count().where(dt >= (tx_dt_ld + 90) and dt < sysdate);
+enc_n  => eadv.[enc_op%].dt.count();
+enc_n_posttx  => eadv.[enc_op%].dt.count().where(dt >= (tx_dt_ld ) and dt < sysdate);
+enc_fd  => eadv.[enc_op%].dt.min();
+enc_ld  => eadv.[enc_op%].dt.max();
+       
+hd_revert_post_tx :  { (tx_latest_plus40days < hd_dt_ld) and (hd_n_12months > 35) and (hd_n_posttx > 35)   => 1 },
+                     { (tx_latest_plus40days < hd_dt_ld) and (hd_n_posttx > 100)  => 1 },
+                     { => 0 };
+pd_revert_post_tx :  { (tx_latest_plus40days < pd_dt_ld) => 1 }, { => 0 };
+hhd_revert_post_tx : { (tx_latest_plus40days < hhd_dt_ld) => 1 },{ => 0 };
+
+
+
+tx_current : { tx_ind!? And ( hd_revert_post_tx = 0 ) And ( pd_revert_post_tx = 0 ) And ( hhd_revert_post_tx = 0 ) => 1},{ => 0 };
+
+
+
+
+
+rrt_new3_wip : { tx_ind!? => 1 }, { => 0 };

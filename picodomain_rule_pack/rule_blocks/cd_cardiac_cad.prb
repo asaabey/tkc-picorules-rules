@@ -1,7 +1,7 @@
-/* Algorithm to assess cardiac disease  */
+/* Algorithm to assess cardiac disease (coronary artery disease) */
 
 #define_ruleblock(cd_cardiac_cad, {
-    description: "Algorithm to assess cardiac disease",
+    description: "Algorithm to assess cardiac disease (coronary artery disease)",
     is_active:2
 });
 
@@ -213,6 +213,15 @@ cabg_flag,
     {
         label:"CABG",
         desc:"Coronary artery bypass graft",
+        is_reportable: 1,
+        type: 1001
+    }
+);
+#define_attribute(
+ami,
+    {
+        label:"AMI",
+        desc:"Acute myocardial infarction",
         is_reportable: 1,
         type: 1001
     }
