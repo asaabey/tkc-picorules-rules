@@ -8,6 +8,33 @@
     }
 );
 
+/*
++----------------------------------------------------------------------------------------------------------+
+| ICD-10-AM Diagnosis Codes containing 'cirrhosis'                                                         |
++---------------+-----------+-------+-----------+----------------------------------------------------------+
+| EadvAttribute | CodeType  | Code  | Collected |                       Description                        |
++---------------+-----------+-------+-----------+----------------------------------------------------------+
+| icd_k70_3     | ICD-10-AM | K70.3 | False     | Alcoholic cirrhosis of liver                             |
+| icd_k71_7     | ICD-10-AM | K71.7 | False     | Toxic liver disease with fibrosis and cirrhosis of liver |
+| icd_k74       | ICD-10-AM | K74   | False     | Fibrosis and cirrhosis of liver                          |
+| icd_k74_3     | ICD-10-AM | K74.3 | False     | Primary biliary cirrhosis                                |
+| icd_k74_4     | ICD-10-AM | K74.4 | False     | Secondary biliary cirrhosis                              |
+| icd_k74_5     | ICD-10-AM | K74.5 | False     | Biliary cirrhosis, unspecified                           |
+| icd_k74_6     | ICD-10-AM | K74.6 | True      | Other and unspecified cirrhosis of liver                 |
++---------------+-----------+-------+-----------+----------------------------------------------------------+
+/*
+
+/*
++------------------------------------------------------------------------------+
+| ICPC-2 Plus Codes containing 'cirrhosis'                                     |
++---------------+-------------+--------+-----------+---------------------------+
+| EadvAttribute |  CodeType   |  Code  | Collected |        Description        |
++---------------+-------------+--------+-----------+---------------------------+
+| icpc_d97005   | ICPC-2 PLUS | D97005 | True      | Cirrhosis (of);liver      |
+| icpc_d97011   | ICPC-2 PLUS | D97011 | True      | Cirrhosis;biliary;primary |
++---------------+-------------+--------+-----------+---------------------------+
+*/
+
 cirr_pbc_fd => eadv.[icpc_d97011,icd_k74_3].dt.min();
 
 cirr_nos_fd => eadv.[icpc_d97005,icd_k74_6].dt.min();
@@ -30,9 +57,26 @@ cps_abbr_class : { cps_abbr_scr >9 => 3},{cps_abbr_scr >6 => 2},{cps_abbr_scr <=
 
 code_fd : {.=> least_date(cirr_pbc_fd,cirr_nos_fd)};
 
-
+fibroscan => eadv.[rad_vcte_stiffness]._.lastdv();
 
 cd_cirrhosis : { code_fd!? =>1},{=>0};
+
+
+#define_attribute(fibroscan_val,
+    {
+        label: "Last Fibroscan Value",
+        is_reportable: 1,
+        type: 2
+    }
+);
+
+#define_attribute(fibroscan_dt,
+    {
+        label: "Last Fibroscan Date",
+        is_reportable: 1,
+        type: 12
+    }
+);
 
 #define_attribute(cd_cirrhosis,
     {
