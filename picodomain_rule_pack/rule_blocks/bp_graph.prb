@@ -1,12 +1,9 @@
 /* Algorithm to plot bp graph  */
 
-
  #define_ruleblock([[rb_id]],
     {
         description: "Algorithm to plot bp graph",
-
         is_active:2
-
     }
 );
 
@@ -17,10 +14,6 @@ bp_graph_canvas_x : {1=1 => 350};
 bp_graph_canvas_y : {1=1 => 100};
 
 htn => rout_cd_htn.cd_htn.val.bind();
-
-/*avg_bp_1y => rout_cd_htn.avg_bp_1y.val.bind();*/
-
-/*sigma_1 => rout_cd_htn.sigma_1.val.bind();*/
 
 sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind();
 
@@ -45,19 +38,13 @@ bp_graph_x_scale : {1=1 => round(bp_graph_canvas_x/730,5)};
 bp_graph_y_scale : { bp_graph_y_max > bp_graph_y_min => round(bp_graph_canvas_y/(bp_graph_y_max-bp_graph_y_min),5)},{=>round(bp_graph_canvas_y/10,5)};
 
 
-
+/*
 tir_pct : {1=1 => tir*100};
-
-
-
 radius : {1=1 => 25};
-
 circum : {1=1 => radius * 2* 3.14159 };
-
 tir_arc : {1=1 => tir_pct * circum/100};
-
 pie_colour : { tir>=0.7 => `green`},{ tir>=0.5 and tir<0.7=> `orange`},{ tir<0.5 => `tomato`};
-
+*/
 
 line_upper_y : {1=1 => 0};
 
@@ -68,4 +55,4 @@ line_target_upper_y : {bp_graph_y_min< sbp_target_max and bp_graph_y_max> sbp_ta
 
 
 
-[[rb_id]] : {  sbp_graph_n>2 and sbp_graph_val!? =>1},{=>0};
+[[rb_id]] : {  sbp_graph_n>2 and sbp_max!? and sbp_min!?  =>1},{=>0};

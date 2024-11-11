@@ -1,0 +1,17 @@
+/* Ruleblock to assess mobility functional state */
+
+#define_ruleblock(frm_func_assm,{
+        description: "Ruleblock to mobility functional state",
+        is_active:2
+});
+
+is_active => rout_at_risk.is_active.val.bind();
+
+ckd => rout_ckd.ckd.val.bind();
+
+rrt => rout_rrt.rrt.val.bind();
+
+dm => rout_cd_dm_dx.dm.val.bind();
+
+frm_func_assm : { is_active = 1 => 1};
+

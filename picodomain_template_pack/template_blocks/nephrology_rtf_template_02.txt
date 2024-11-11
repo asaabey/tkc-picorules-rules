@@ -20,8 +20,8 @@
 {{ pico_template_block('cd_cardiac_device') }}
 {{ pico_template_block('cd_cardiac_vte') }}
 {{ pico_template_block('cd_dyslip_singleline') }}
-{{ pico_template_block('cd_cns') }}
-{{ pico_template_block('cd_haem') }}
+{{ pico_template_block('cd_cns_singleline') }}
+{{ pico_template_block('cd_haem_singleline') }}
 {{ pico_template_block('cd_rheum_sle') }}
 {{ pico_template_block('cd_imm_vasculitis') }}
 {{ pico_template_block('cd_rheum_aps') }}

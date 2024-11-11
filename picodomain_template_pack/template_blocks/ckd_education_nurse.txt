@@ -1,7 +1,11 @@
 {% extends 'master_template' %}
 {% block content %}
 {{ pico_template_block('ckd_edu_heading') }}
-{{ pico_template_block('ckd_edu_my_ckd') }}
+
+<div style="display: flex;">
+<div style="padding: 20px;">{{ pico_template_block('ckd_edu_my_ckd') }}</div>
+<div style="padding: 20px;">{{ pico_template_block('ckd_kdigo_heatmap') }}</div>
+</div>
 {{ pico_template_block('graph_egfr2') }}
 {{ pico_template_block('ckd_edu_ckd_stages_pic') }}
 {{ pico_template_block('ckd_edu_bp') }}

@@ -33,6 +33,10 @@ prem_ascvd_wt :     { gender=0 and age<55 and ascvd=1 and cad=0 => 1},
 
 
 dyslip_code_dt => eadv.[icd_e78%,icpc_t93%].dt.min();
+tc => eadv.lab_bld_cholesterol_total._.lastdv().where(dt>sysdate-365);
+hdl => eadv.lab_bld_cholesterol_hdl._.lastdv().where(dt>sysdate-365);
+
+tg => eadv.lab_bld_cholesterol_tg._.lastdv().where(dt>sysdate-365);
 
 ldl => eadv.lab_bld_cholesterol_ldl._.lastdv().where(dt>sysdate-365);
 
@@ -65,7 +69,13 @@ fhc_prob1 : { fhc_prob=1 =>1},{=>0};
 
 ldl_subopt : { (ldl_val/ldl_unl)>1.2 =>1},{=>0};
 
+rx_statin_dt => eadv.[rxnc_c10aa].dt.last().where(val=1);
+rx_ezet_dt => eadv.[rxnc_c10ax09].dt.last().where(val=1);
+rx_evolocumab_dt => eadv.[rxnc_c10ax13].dt.last().where(val=1);
 
+rx_statin : { rx_statin_dt!? =>1  },{=>0};
+rx_ezet : { rx_ezet_dt!? =>1  },{=>0};
+rx_evolocumab : {rx_evolocumab_dt!? =>1 },{=>0};
 
 
 [[rb_id]] :  {((ascvd=1 and nvl(ldl_val,0)>1.8)) or nvl(ldl_val,0)>4.9 or dyslip_code_dt!? or fhc_prob>1 => 1},{=>0};
@@ -111,6 +121,69 @@ ldl_subopt : { (ldl_val/ldl_unl)>1.2 =>1},{=>0};
         type:2
     }
 );
+#define_attribute(ldl_val,
+{
+        label:"LDL cholesterol concentration",
+        desc:"LDL cholesterol concentration",
+        is_reportable:1,
+        type:2
+});
+#define_attribute(tc_val,
+{
+        label:"Total cholesterol concentration",
+        desc:"Total cholesterol concentration",
+        is_reportable:1,
+        type:2
+});
+#define_attribute(hdl_val,
+{
+        label:"HDL cholesterol concentration",
+        desc:"HDL cholesterol concentration",
+        is_reportable:1,
+        type:2
+});
+#define_attribute(tg_val,
+{
+        label:"Triglyceride concentration",
+        desc:"Triglyceride concentration",
+        is_reportable:1,
+        type:2
+});
+#define_attribute(tc_dt,
+{
+        label:"Total cholesterol test date",
+        desc:"Total cholesterol test date",
+        is_reportable:1,
+        type:12
+});
+#define_attribute(rx_statin,
+{
+        label:"Statin Prescribed",
+        desc:"Statin Prescribed",
+        is_reportable:1,
+        type:1001
+});
+#define_attribute(rx_ezet,
+{
+        label:"Ezetimibe Prescribed",
+        desc:"Ezetimibe Prescribed",
+        is_reportable:1,
+        type:1001
+});
+#define_attribute(rx_evolocumab,
+{
+        label:"Evolocumab Prescribed",
+        desc:"Evolocumab Prescribed",
+        is_reportable:1,
+        type:1001
+});
+#define_attribute(ascvd,
+{
+        label:"Previous atherosclerotic cardio vascular disease",
+        desc:"Previous atherosclerotic cardio vascular disease",
+        is_reportable:1,
+        type:1001
+});
 #define_attribute(
     [[rb_id]],
     {

@@ -103,8 +103,13 @@ rxac : {.=> oatm};
 acr3 : { acr > 3 and acr<= 30 =>1},{=>0};
 acr30 : { acr > 30 =>1},{=>0};
 
-
-eq : { .=> 3};
+/*
+eq 1: Male Non-diabetic
+eq 2: Female Non-diabetic
+eq 3: Male diabetic
+eq 4: Female diabetic
+*/
+eq : { male = 1 and dm=0 => 1}, { male = 0 and dm=0 => 2},{ male = 1 and dm=1 => 3},{ male = 0 and dm=1 => 4};
 
 
 

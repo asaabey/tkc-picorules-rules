@@ -1,0 +1,110 @@
+<style>
+        .heatmap-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            max-width: 540px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .heatmap-table td {
+            border: 1px solid #ccc;
+            padding: 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .heatmap-table .header {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .heatmap-table .left-header {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            padding: 10px 0;
+            width: 20px;
+        }
+        .heatmap-table .gfr-column {
+            width: 60px;
+        }
+        .heatmap-table .green { background-color: #90EE90; }
+        .heatmap-table .yellow { background-color: #FFFFE0; }
+        .heatmap-table .orange { background-color: #FFA500; }
+        .heatmap-table .red { background-color: #FF6347; }
+        .heatmap-table .small-text {
+            font-size: 10px;
+        }
+        .heatmap-table .marker {
+            position: relative;
+            z-index: 1;
+        }
+        .heatmap-table .marker::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 3px solid black;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+ <table class="heatmap-table">
+        <tr class="header">
+            <td colspan="2"></td>
+            <td colspan="3">Persistent albuminuria categories</td>
+        </tr>
+        <tr class="header">
+            <td colspan="2"></td>
+            <td>A1</td>
+            <td>A2</td>
+            <td>A3</td>
+        </tr>
+        <tr class="header small-text">
+            <td colspan="2"></td>
+            <td>&lt;3 mg/mmol</td>
+            <td>3-30 mg/mmol</td>
+            <td>&gt;30 mg/mmol</td>
+        </tr>
+        <tr>
+            <td rowspan="6" class="left-header">GFR categories (ml/min/1.73 m²)</td>
+            <td class="header gfr-column {% if ckd.cga_g=="G1" and ckd.cga_a=="NA"%}marker{% endif %}">G1 =90</td>
+            {% if ckd.cga_g=="G1" and ckd.cga_a=="A1"  %} <td class="green marker"></td>{% else %}<td class="green"></td>{% endif %}
+            {% if ckd.cga_g=="G1" and ckd.cga_a=="A2"  %} <td class="yellow marker"></td>{% else %}<td class="yellow"></td>{% endif %}
+            {% if ckd.cga_g=="G1" and (ckd.cga_a=="A3" or ckd.cga_a=="A4")  %} <td class="orange marker"></td>{% else %}<td class="orange"></td>{% endif %}
+        </tr>
+        <tr>
+            <td class="header gfr-column {% if ckd.cga_g=="G2" and ckd.cga_a=="NA"%}marker{% endif %}">G2 60-89</td>
+            {% if ckd.cga_g=="G2" and ckd.cga_a=="A1"  %} <td class="green marker"></td>{% else %}<td class="green"></td>{% endif %}
+            {% if ckd.cga_g=="G2" and ckd.cga_a=="A2"  %} <td class="yellow marker"></td>{% else %}<td class="yellow"></td>{% endif %}
+            {% if ckd.cga_g=="G2" and (ckd.cga_a=="A3" or ckd.cga_a=="A4")  %} <td class="orange marker"></td>{% else %}<td class="orange"></td>{% endif %}
+        </tr>
+        <tr>
+            <td class="header gfr-column {% if ckd.cga_g=="G3A" and ckd.cga_a=="NA"%}marker{% endif %}">G3a 45-59</td>
+            {% if ckd.cga_g=="G3A" and ckd.cga_a=="A1"  %} <td class="yellow marker"></td>{% else %}<td class="yellow"></td>{% endif %}
+            {% if ckd.cga_g=="G3A" and ckd.cga_a=="A2"  %} <td class="orange marker"></td>{% else %}<td class="orange"></td>{% endif %}
+            {% if ckd.cga_g=="G3A" and (ckd.cga_a=="A3" or ckd.cga_a=="A4")  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+        </tr>
+        <tr>
+            <td class="header gfr-column {% if ckd.cga_g=="G3B" and ckd.cga_a=="NA"%}marker{% endif %}">G3b 30-44</td>
+            {% if ckd.cga_g=="G3B" and ckd.cga_a=="A1"  %} <td class="orange marker"></td>{% else %}<td class="orange"></td>{% endif %}
+            {% if ckd.cga_g=="G3B" and ckd.cga_a=="A2"  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+            {% if ckd.cga_g=="G3B" and (ckd.cga_a=="A3" or ckd.cga_a=="A4")  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+        </tr>
+        <tr>
+            <td class="header gfr-column {% if ckd.cga_g=="G4" and ckd.cga_a=="NA"%}marker{% endif %}">G4 15-29</td>
+            {% if ckd.cga_g=="G4" and ckd.cga_a=="A1"  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+            {% if ckd.cga_g=="G4" and ckd.cga_a=="A2"  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+            {% if ckd.cga_g=="G4" and (ckd.cga_a=="A3" or ckd.cga_a=="A4")  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+        </tr>
+        <tr>
+            <td class="header gfr-column {% if ckd.cga_g=="G5" and ckd.cga_a=="NA"%}marker{% endif %}">G5 &lt;15</td>
+            {% if ckd.cga_g=="G5" and ckd.cga_a=="A1"  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+            {% if ckd.cga_g=="G5" and ckd.cga_a=="A2"  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+            {% if ckd.cga_g=="G5" and (ckd.cga_a=="A3" or ckd.cga_a=="A4")  %} <td class="red marker"></td>{% else %}<td class="red"></td>{% endif %}
+        </tr>
+    </table>

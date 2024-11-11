@@ -1,10 +1,10 @@
 {
   "author": null,
-  "description": "",
+  "description": "cd_cns_singleline",
   "last_updated": null,
   "is_active": true,
-  "name": "__labs_panel_begin__",
-  "related_ruleblock": "dmg",
+  "name": "cd_cns_singleline",
+  "related_ruleblock": "cd_cns",
   "is_composition": false,
   "is_mhr": false,
   "version": null

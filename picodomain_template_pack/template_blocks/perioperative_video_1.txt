@@ -1,4 +1,4 @@
 <br />
 <h1>The Elective Surgery Story</h1>
 <br />
-<video src="https://digitallibrary.health.nt.gov.au/prodjspui/bitstream/10137/599/16/ENGLISHfinal.mp4" controls />
+<video src="https://digitallibrary.health.nt.gov.au/nthealthserver/api/core/bitstreams/45145ffc-985e-46a7-bd20-b4499d8f8e26/content" controls />

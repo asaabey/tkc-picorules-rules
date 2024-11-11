@@ -1,0 +1,3 @@
+{% if cd_haem.hb_low == 1 %}<li>Anaemia</li>{% endif %}
+{% if cd_haem.plt_low == 1 %}<li>Thrombocytopaenia</li>{% endif %}
+{% if cd_haem.wcc_low == 1 %}<li>Leucopaenia</li>{% endif %}

@@ -1,40 +1,39 @@
-    <hr />
-    <div class="syn_synopsis_box">
-    <div class="card" style="width: 640px;">
-        <div class="card-header">
-            uACR profile for the last {{ picoformat('acr_graph.dspan_y') }} years
+<div class="col-md-6">
+    <div class="card mb-4" style="max-width: 800px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);">
+        <div class="card-header text-white" style="background-color: #8e44ad;">
+            <h5 class="mb-0" style="font-size: 1.2rem; font-weight: 700;">uACR profile for the last {{ picoformat('acr_graph.dspan_y') }} years</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
-                      <svg height={{ picoformat('acr_graph.acr_graph_canvas_y') }} width={{ picoformat('acr_graph.acr_graph_canvas_x') }}>
-                            <style> .small { font:Ariel 8px;font-weight:normal;} </style>
-                            <defs>
-                                <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
-                                  <circle cx="5" cy="5" r="10" fill="blue" />
-                                </marker>
-                            </defs>
+                    <svg class="svg-graph" height={{ picoformat('acr_graph.acr_graph_canvas_y') }} width={{ picoformat('acr_graph.acr_graph_canvas_x') }} viewBox="0 0 {{ picoformat('acr_graph.acr_graph_canvas_x') }} {{ picoformat('acr_graph.acr_graph_canvas_y') }}" preserveAspectRatio="xMidYMid meet">
+                        <style> .small { font: 12px Arial; font-weight: normal; } </style>
+                        <defs>
+                            <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+                                <circle cx="5" cy="5" r="2.5" fill="#8e44ad" />
+                            </marker>
+                        </defs>
                         <polyline points="{{ picoformat('acr_graph.xy_coords') }}" 
-                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-                          <line x1="0" x2="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-                          <line x1="0" x2="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y1="{{ picoformat('acr_graph.line_lower_y') }}" y2="{{ picoformat('acr_graph.line_lower_y') }}" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('acr_graph.acr_graph_y_max') }}</text>
-                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('acr_graph.acr_graph_y_min') }}</text>
+                            style="fill:none;stroke:#8e44ad;stroke-width:2;" marker-start="url(#dot)" marker-mid="url(#dot)" marker-end="url(#dot)" />
+                        <line x1="0" x2="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y1="0" y2="0" style="stroke:#6c757d;stroke-width:1;stroke-dasharray:4 2"/>
+                        <line x1="0" x2="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y1="{{ picoformat('acr_graph.line_lower_y') }}" y2="{{ picoformat('acr_graph.line_lower_y') }}" style="stroke:#6c757d;stroke-width:1;stroke-dasharray:4 2"/>
+                        <text x="5" y="12" class="small" style="fill:#495057;">{{ picoformat('acr_graph.acr_graph_y_max') }}</text>
+                        <text x="5" y="{{ picoformat('acr_graph.line_lower_y') }}" class="small" style="fill:#495057;">{{ picoformat('acr_graph.acr_graph_y_min') }}</text>
+                        <text x="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y="12" class="small" style="fill:#495057;text-anchor:end;">{{ picoformat('acr_graph.acr_graph_y_max') }}</text>
+                        <text x="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y="{{ picoformat('acr_graph.line_lower_y') }}" class="small" style="fill:#495057;text-anchor:end;">{{ picoformat('acr_graph.acr_graph_y_min') }}</text>
                     </svg>
-                    <svg height=10 width={{ picoformat('acr_graph.acr_graph_canvas_x') }}>
-
-                        <text x="0" y="10" style="fill: #000000; stroke: none; font-size: 10px;">{{ picodate('acr_graph.acr_f_dt') }}</text>  
-                        <text x="290" y="10" style="fill: #000000; stroke: none; font-size: 10px;">{{ picodate('acr_graph.acr_l_dt') }}</text> 
+                    <svg height="20" width={{ picoformat('acr_graph.acr_graph_canvas_x') }}>
+                        <text x="5" y="15" class="small" style="fill:#495057;">{{ picodate('acr_graph.acr_f_dt') }}</text>  
+                        <text x="{{ picoformat('acr_graph.acr_graph_canvas_x') }}" y="15" class="small" style="fill:#495057;text-anchor:end;">{{ picodate('acr_graph.acr_l_dt') }}</text> 
                     </svg>
                 </div>
                 <div class="col-md-4">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><small><strong>Last {{ picoformat('acr_graph.acr_l_val') }} ({{ picodate('acr_graph.acr_l_dt') }}) </strong></small></li>
-                        <li class="list-group-item"><small>Max {{ picoformat('acr_graph.acr_max_val') }} ({{ picodate('acr_graph.acr_max_dt') }}) </small></li>
-                    </ol>
+                        <li class="list-group-item"><small><strong style="color: #8e44ad;">Last:</strong> {{ picoformat('acr_graph.acr_l_val') }} ({{ picodate('acr_graph.acr_l_dt') }})</small></li>
+                        <li class="list-group-item"><small><strong style="color: #8e44ad;">Max:</strong> {{ picoformat('acr_graph.acr_max_val') }} ({{ picodate('acr_graph.acr_max_dt') }})</small></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-
-    
+</div>

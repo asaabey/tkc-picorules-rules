@@ -2,7 +2,7 @@
   "author": null,
   "description": "Cardiologists standard composition",
   "last_updated": null,
-  "is_active": true,
+  "is_active": false,
   "name": "card001_html",
   "related_ruleblock": null,
   "is_composition": true,

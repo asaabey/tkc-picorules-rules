@@ -1,41 +1,38 @@
-    <hr />
-    <div class="syn_synopsis_box">
-
-    <div class="card" style="width: 640px;">
-        <div class="card-header">
-            Blood pressure profile for the last 5 years
+<div class="col-md-6">
+    <div class="card mb-4" style="max-width: 800px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);">
+        <div class="card-header text-white" style="background-color: #66bb6a;">
+            <h5 class="mb-0" style="font-size: 1.2rem; font-weight: 700;">Blood pressure profile for the last 5 years</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
-                     <svg height={{ picoformat('bp_graph.bp_graph_canvas_y') }} width={{ picoformat('bp_graph.bp_graph_canvas_x') }}>
+                    <svg class="svg-graph" height={{ picoformat('bp_graph.bp_graph_canvas_y') }} width={{ picoformat('bp_graph.bp_graph_canvas_x') }} viewBox="0 0 {{ picoformat('bp_graph.bp_graph_canvas_x') }} {{ picoformat('bp_graph.bp_graph_canvas_y') }}" preserveAspectRatio="xMidYMid meet">
                         <defs>
                             <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
-                              <circle cx="5" cy="5" r="10" fill="blue" />
+                                <circle cx="5" cy="5" r="2.5" fill="#66bb6a" />
                             </marker>
                         </defs>
+                        <rect x="0" y="{{ picoformat('bp_graph.line_target_upper_y') }}" width="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" height="40" style="fill:rgba(102, 187, 106, 0.2);stroke:none;" />
                         <polyline points="{{ picoformat('bp_graph.xy_coords') }}" 
-                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-                          <line x1="0" x2="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-                          <line x1="0" x2="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" y1="{{ picoformat('bp_graph.line_lower_y') }}" y2="{{ picoformat('bp_graph.line_lower_y') }}" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
-                          <rect x="0" y="{{ picoformat('bp_graph.line_target_upper_y') }}"  width="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" height="40" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
-                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('bp_graph.bp_graph_y_max') }}</text>
-                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('bp_graph.bp_graph_y_min') }}</text>
+                            style="fill:none;stroke:#66bb6a;stroke-width:2;stroke-opacity:0.6;" marker-start="url(#dot)" marker-mid="url(#dot)" marker-end="url(#dot)" />
+                        <line x1="0" x2="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" y1="0" y2="0" style="stroke:#6c757d;stroke-width:1;stroke-dasharray:4 2"/>
+                        <line x1="0" x2="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" y1="{{ picoformat('bp_graph.line_lower_y') }}" y2="{{ picoformat('bp_graph.line_lower_y') }}" style="stroke:#6c757d;stroke-width:1;stroke-dasharray:4 2"/>
+                        <text x="5" y="12" style="fill:#495057;font-size:12px;font-weight:700;">{{ picoformat('bp_graph.bp_graph_y_max') }}</text>
+                        <text x="5" y="{{ picoformat('bp_graph.line_lower_y') }}" style="fill:#495057;font-size:12px;font-weight:700;">{{ picoformat('bp_graph.bp_graph_y_min') }}</text>
+                        <text x="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" y="12" style="fill:#495057;font-size:12px;font-weight:700;text-anchor:end;">{{ picoformat('bp_graph.bp_graph_y_max') }}</text>
+                        <text x="{{ picoformat('bp_graph.bp_graph_canvas_x') }}" y="{{ picoformat('bp_graph.line_lower_y') }}" style="fill:#495057;font-size:12px;font-weight:700;text-anchor:end;">{{ picoformat('bp_graph.bp_graph_y_min') }}</text>
                     </svg>
                 </div>
                 <div class="col-md-4">
                     <ul class="list-group list-group-flush">
-                        {% if bp_graph.tir %}<li class="list-group-item"><small>Time in range {{ picoformat('bp_graph.tir') }}%</small></li>{% endif %}
-                        <li class="list-group-item"><small>Maximum {{ picoformat('bp_graph.sbp_max') }} mmHg</small></li>
-                        <li class="list-group-item"><small>Minimum {{ picoformat('bp_graph.sbp_min') }} mmHg</small></li>
-                        {% if bp_graph.avg_bp_1y %}<li class="list-group-item"><small>Average (1y) {{ picoformat('bp_graph.avg_bp_1y') }} mmHg</small></li>{% endif %}
+                        {% if bp_graph.tir %}<li class="list-group-item"><small><strong style="color: #66bb6a;">Time in range:</strong> {{ picoformat('bp_graph.tir') }}%</small></li>{% endif %}
+                        <li class="list-group-item"><small><strong style="color: #66bb6a;">Maximum:</strong> {{ picoformat('bp_graph.sbp_max') }} mmHg</small></li>
+                        <li class="list-group-item"><small><strong style="color: #66bb6a;">Minimum:</strong> {{ picoformat('bp_graph.sbp_min') }} mmHg</small></li>
+                        {% if bp_graph.avg_bp_1y %}<li class="list-group-item"><small><strong style="color: #66bb6a;">Average (1y):</strong> {{ picoformat('bp_graph.avg_bp_1y') }} mmHg</small></li>{% endif %}
                     </ul>
                 </div>
             </div>
         </div>
 
     </div>
-
-    </div>
-
-    
+</div>

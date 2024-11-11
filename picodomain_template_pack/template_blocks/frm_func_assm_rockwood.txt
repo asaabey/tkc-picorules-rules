@@ -1,0 +1,169 @@
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+.radio-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+input[type="number"], input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .frailty-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .frailty-option:hover {
+            background-color: #f0f0f0;
+        }
+        .frailty-option img {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+        .frailty-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #9a4caf;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+ <h1>Physical Frailty Assessment</h1>
+    <form action="#" method="post">
+    <h2>Physical frailty battery</h2>
+            <div class="form-group">
+                <label>MRC Dyspnoea Scale:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="mrc" value="1" required> 1</label>
+                    <label><input type="radio" name="mrc" value="2"> 2</label>
+                    <label><input type="radio" name="mrc" value="3"> 3</label>
+                    <label><input type="radio" name="mrc" value="4"> 4</label>
+                    <label><input type="radio" name="mrc" value="5"> 5</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="hand-grip">Hand Grip Strength (kg):</label>
+                <input type="number" id="hand-grip" name="hand-grip" min="0" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="sts">1-minute STS Count:</label>
+                <input type="number" id="sts" name="sts" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="demmi">DEMMI Score:</label>
+                <input type="number" id="demmi" name="demmi" min="0" max="100" required>
+            </div>
+<h2>Rockwood frailty score</h2>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="1" required>
+                <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-1.png" style="width: auto; height: 48px;" />
+
+
+                <span>1. Very Fit: People who are robust, active, energetic and motivated.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="2">
+                <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-2.png" style="width: auto; height: 48px;" />
+                <span>2. Well: People who have no active disease symptoms but are less fit than category 1.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="3">
+                <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-3.png" style="width: auto; height: 48px;" />
+                <span>3. Managing Well: People whose medical problems are well controlled, but are not regularly active beyond routine walking.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="4">
+                <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-4.png" style="width: auto; height: 48px;" />
+                <span>4. Vulnerable: While not dependent on others for daily help, often symptoms limit activities.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="5">
+               <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-5.png" style="width: auto; height: 48px;" />
+                <span>5. Mildly Frail: These people often have more evident slowing, and need help in high order IADLs.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="6">
+              <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-6.png" style="width: auto; height: 48px;" />
+                <span>6. Moderately Frail: People need help with all outside activities and with keeping house.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="7">
+               <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-7.png" style="width: auto; height: 48px;" />
+                <span>7. Severely Frail: Completely dependent for personal care, from whatever cause (physical or cognitive).</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="8">
+               <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-8.png" style="width: auto; height: 48px;" />
+                <span>8. Very Severely Frail: Completely dependent, approaching the end of life.</span>
+            </label>
+        </div>
+        <div class="frailty-option">
+            <label>
+                <input type="radio" name="frailty" value="9">
+                <img src="https://tkc-webassets.s3.ap-southeast-2.amazonaws.com/images/rockwoodcfs/rockwood-cfs-9.png" style="width: auto; height: 48px;" />
+                <span>9. Terminally Ill: Approaching the end of life. This category applies to people with a life expectancy &lt;6 months, who are not otherwise evidently frail.</span>
+            </label>
+        </div>
+        <input type="submit" value="Submit">
+    </form>

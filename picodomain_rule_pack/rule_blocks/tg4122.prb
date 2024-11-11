@@ -15,6 +15,9 @@ dod => rout_dmg.dod.val.bind();
 
 ckd => rout_ckd.ckd.val.bind();
 
+/* has a blood test within the last 1 year */
+egfr_ld => eadv.lab_bld_egfr_c.dt.last();
+
 csu_act => eadv.[csu_action_tg4122]._.lastdv();
 
 ren_enc => rout_engmnt_renal.enc_renal.val.bind();
@@ -23,7 +26,10 @@ mbs => eadv.[mbs_%].dt.last().where(dt > sysdate - 365);
 
 dmg_source => rout_dmg_source.dmg_source.val.bind();
 
-ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 => 1  },{=>0};
+/*
+Exlcusions: Dead, already actioned, unknown source, or no eGFR in 1 year
+*/
+ex_flag : {dod!? or csu_act_dt!? or dmg_source=999 or egfr_ld < (sysdate -365) => 1  },{=>0};
 
 
 tg4122 : {ckd = 5 and ren_enc=0 and mbs? and ex_flag=0 => 1} , {=>0};

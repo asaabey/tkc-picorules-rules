@@ -30,7 +30,7 @@ acr_n_30 => eadv.lab_ua_acr.val.count();
 
 acr_graph_canvas_x : {1=1 => 350};
 
-acr_graph_canvas_y : {1=1 => 100};
+acr_graph_canvas_y : {1=1 => 200};
 
 acr_graph => eadv.lab_ua_acr.val.serializedv2(round(val,0)~dt);
 

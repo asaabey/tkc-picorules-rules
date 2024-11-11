@@ -1,27 +1,17 @@
-        <tr>
-            <td><strong>Lab</strong></td>
-            <td></td>
-            <td></td>
-            <td></td>
 
-        </tr>
-        <tr>
-            <td>Creatinine (umol)</td>
-            <td>{% if ckd_labs.creat1_val %}<strong>{{ picoformat('ckd_labs.creat1_val') }}</strong>({{ picodate('ckd_labs.creat1_dt') }}) {% endif %}</td>
-            <td>{% if ckd_labs.creat2_val %}<strong>{{ picoformat('ckd_labs.creat2_val') }}</strong> ({{ picodate('ckd_labs.creat2_dt') }}){% endif %}</td>
-            <td>{% if ckd_labs.creat3_val %}<strong>{{ picoformat('ckd_labs.creat3_val') }}</strong> ({{ picodate('ckd_labs.creat3_dt') }}){% endif %}</td>
-
-            <td></td>
-        </tr>
-        {% if ckd_labs.rrt == 0 %}
-        <tr>
-
-            <td>eGFR (ml/min/1.72m)</td>
-            <td>{% if ckd_labs.egfr1_val %}<strong>{{ picoformat('ckd_labs.egfr1_val') }}</strong>({{ picodate('ckd_labs.egfr1_dt') }}) {% endif %}</td>
-            <td>{% if ckd_labs.egfr2_val %}<strong>{{ picoformat('ckd_labs.egfr2_val') }}</strong>({{ picodate('ckd_labs.egfr2_dt') }}) {% endif %}</td>
-            <td>{% if ckd_labs.egfr3_val %}<strong>{{ picoformat('ckd_labs.egfr3_val') }}</strong>({{ picodate('ckd_labs.egfr3_dt') }}) {% endif %}</td>
-
-        </tr>
+      <tr>
+        <td>Creatinine (umol)</td>
+        <td>{% if ckd_labs.creat1_val %}<span class="strong">{{ picoformat('ckd_labs.creat1_val') }}</span> <span class="date">({{ picodate('ckd_labs.creat1_dt') }})</span>{% endif %}</td>
+        <td>{% if ckd_labs.creat2_val %}<span class="strong">{{ picoformat('ckd_labs.creat2_val') }}</span> <span class="date">({{ picodate('ckd_labs.creat2_dt') }})</span>{% endif %}</td>
+        <td>{% if ckd_labs.creat3_val %}<span class="strong">{{ picoformat('ckd_labs.creat3_val') }}</span> <span class="date">({{ picodate('ckd_labs.creat3_dt') }})</span>{% endif %}</td>
+      </tr>
+      {% if ckd_labs.rrt == 0 %}
+      <tr>
+        <td>eGFR (ml/min/1.72m)</td>
+        <td>{% if ckd_labs.egfr1_val %}<span class="strong">{{ picoformat('ckd_labs.egfr1_val') }}</span> <span class="date">({{ picodate('ckd_labs.egfr1_dt') }})</span>{% endif %}</td>
+        <td>{% if ckd_labs.egfr2_val %}<span class="strong">{{ picoformat('ckd_labs.egfr2_val') }}</span> <span class="date">({{ picodate('ckd_labs.egfr2_dt') }})</span>{% endif %}</td>
+        <td>{% if ckd_labs.egfr3_val %}<span class="strong">{{ picoformat('ckd_labs.egfr3_val') }}</span> <span class="date">({{ picodate('ckd_labs.egfr3_dt') }})</span>{% endif %}</td>
+      </tr>
         {% endif %}
 
 

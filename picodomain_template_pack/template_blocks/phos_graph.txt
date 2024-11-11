@@ -1,43 +1,39 @@
-    <hr />
-    <div class="syn_synopsis_box">
-
-    <div class="card" style="width: 640px;">
-        <div class="card-header">
-            Phosphate profile for the last 2 years
+<div class="col-md-6">
+    <div class="card mb-4" style="max-width: 800px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);">
+        <div class="card-header text-white" style="background-color: #D35400;">
+            <h5 class="mb-0" style="font-size: 1.2rem; font-weight: 700;">Phosphate profile for the last 2 years</h5>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
-
-
-                    <svg height={{ picoformat('phos_graph.phos_graph_canvas_y') }} width={{ picoformat('phos_graph.phos_graph_canvas_x') }}>
+                    					<svg class="svg-graph" height={{ picoformat('phos_graph.phos_graph_canvas_y') }} width={{ picoformat('phos_graph.phos_graph_canvas_x') }} viewBox="0 0 {{ picoformat('phos_graph.phos_graph_canvas_x') }} {{ picoformat('phos_graph.phos_graph_canvas_y') }}" preserveAspectRatio="xMidYMid meet">
                             <defs>
                                 <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
                                     markerWidth="5" markerHeight="5">
-                                  <circle cx="5" cy="5" r="10" fill="blue" />
+                                  <circle cx="5" cy="5" r="2.5" fill="#D35400" />
                                 </marker>
                             </defs>
+<rect x="0" y="{{ picoformat('phos_graph.line_target_upper_y') }}" width="{{ picoformat('phos_graph.phos_graph_canvas_x') }}" height="{{ picoformat('phos_graph.line_target_lower_y') }}" style="fill:rgba(211, 84, 0, 0.1);stroke:none;" />
                         <polyline points="{{ picoformat('phos_graph.xy_coords') }}" 
-                          style="fill:none;stroke:black;stroke-width:1;"marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
-                          <line x1="0" x2="{{ picoformat('phos_graph.phos_graph_canvas_x') }}" y1="0" y2="0" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          style="fill:none;stroke:#D35400;stroke-width:2;stroke-opacity:0.6;" marker-start="url(#dot)" marker-mid="url(#dot)"  marker-end="url(#dot)" />
+                          <line x1="0" x2="{{ picoformat('phos_graph.phos_graph_canvas_x') }}" y1="0" y2="0" style="stroke:#6c757d;stroke-width:1;stroke-dasharray:4 2"/>
 
-                          <line x1="0" x2="{{ picoformat('phos_graph.phos_graph_canvas_x') }}" y1="{{ picoformat('phos_graph.line_lower_y') }}" y2="{{ picoformat('phos_graph.line_lower_y') }}" style="fill:none;stroke:black;stroke-width:4;stroke-dasharray: 1 2"/>
+                          <line x1="0" x2="{{ picoformat('phos_graph.phos_graph_canvas_x') }}" y1="{{ picoformat('phos_graph.line_lower_y') }}" y2="{{ picoformat('phos_graph.line_lower_y') }}" style="stroke:#6c757d;stroke-width:1;stroke-dasharray:4 2"/>
 
-                          <rect x="0" y="{{ picoformat('phos_graph.line_target_upper_y') }}"  width="{{ picoformat('phos_graph.phos_graph_canvas_x') }}" height="{{ picoformat('phos_graph.line_target_lower_y') }}" style="fill:green;stroke:black;stroke-width:5;opacity:0.3" />
+                          
 
-                          <text x="330" y="12" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('phos_graph.phos_graph_y_max') }}</text>
-                          <text x="330" y="94" style="fill: #000000; stroke: none; font-size: 8px;">{{ picoformat('phos_graph.phos_graph_y_min') }}</text>
+                          <text x="5" y="12" style="fill:#D35400;font-size:12px;font-weight:700;">{{ picoformat('phos_graph.phos_graph_y_max') }}</text>
+                          <text x="5" y="{{ picoformat('phos_graph.line_lower_y') }}" style="fill:#D35400;font-size:12px;font-weight:700;">{{ picoformat('phos_graph.phos_graph_y_min') }}</text>
                     </svg>
-
-                 </div>
-                 <div class="col-md-4">
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><small>Max {{ picoformat('phos_graph.phos_max_val') }} ({{ picodate('phos_graph.phos_max_dt') }})</small></li>
-                        <li class="list-group-item"><small>Min {{ picoformat('phos_graph.phos_min_val') }} ({{ picodate('phos_graph.phos_min_dt') }})</small></li>                        
-                        </ul>
                 </div>
+                <div class="col-md-4">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><small><strong style="color: #D35400;">Last:</strong> {{ picoformat('phos_graph.phos_last_val') }} ({{ picodate('phos_graph.phos_last_dt') }})</small></li>
+                        <li class="list-group-item"><small><strong style="color: #D35400;">Max:</strong> {{ picoformat('phos_graph.phos_max_val') }} ({{ picodate('phos_graph.phos_max_dt') }})</small></li>
+                        <li class="list-group-item"><small><strong style="color: #D35400;">Min:</strong> {{ picoformat('phos_graph.phos_min_val') }} ({{ picodate('phos_graph.phos_min_dt') }})</small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
-    </div>
-
-    
+</div>

@@ -1,6 +1,6 @@
 {% extends 'master_template' %}
 {% block content %}
-{{ pico_template_block('__header__') }}
+{{ pico_template_block('__header2__') }}
 {{ pico_template_block('dmg_phc_null') }}
 {{ pico_template_block('dmg_eid_alt') }}
 {{ pico_template_block('dmg_tkcuser_interact') }}
@@ -90,16 +90,19 @@
 {{ pico_template_block('__synth_left_end__') }}
 {{ pico_template_block('__synth_right_begin__') }}
 {{ pico_template_block('graph_egfr2') }}
+{{ pico_template_block('ckd_kdigo_heatmap') }}
 {{ pico_template_block('rx_syn_2') }}
 {{ pico_template_block('ckd_labs_block') }}
 {{ pico_template_block('__synth_right_end__') }}
 {{ pico_template_block('__frame_end__') }}
+{{ pico_template_block('__graph_frame_begin__') }}
 {{ pico_template_block('acr_graph_acr') }}
 {{ pico_template_block('hb_graph') }}
 {{ pico_template_block('phos_graph') }}
 {{ pico_template_block('hba1c_graph') }}
 {{ pico_template_block('graph_bp') }}
 {{ pico_template_block('ldl_graph') }}
+{{ pico_template_block('__graph_frame_end__') }}
 {{ pico_template_block('egfr_metrics') }}
 {{ pico_template_block('__labs_panel_begin__') }}
 {{ pico_template_block('ckd_labs_tbl1') }}

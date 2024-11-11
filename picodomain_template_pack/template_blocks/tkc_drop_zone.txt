@@ -1,5 +1,2 @@
-    <tkc_drop_zone><div class="card">
-        <div class="card-body">
-            ..<br /><br/>..
-        </div></div></tkc_drop_zone>
+<tkc_drop_zone></tkc_drop_zone>
     

@@ -1,0 +1,5 @@
+{% if cd_cns.md %}<li><b>Mood disorder ?</b></li>{% endif %}
+{% if cd_cns.schiz %}<li><b>Psychotic disorder ?</b></li>{% endif %}
+{% if cd_cns.epil %}<li><b>Seizure disorder ?</b></li>{% endif %}
+{% if cd_cns.pd %}<li><b>Parkinson disease ({{ picodate('cd_cns.code_pd_dt') }})</b></li>{% endif %}
+    

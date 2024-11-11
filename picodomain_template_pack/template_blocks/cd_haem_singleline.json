@@ -3,8 +3,8 @@
   "description": "",
   "last_updated": null,
   "is_active": true,
-  "name": "__labs_panel_begin__",
-  "related_ruleblock": "dmg",
+  "name": "cd_haem_singleline",
+  "related_ruleblock": "cd_haem",
   "is_composition": false,
   "is_mhr": false,
   "version": null

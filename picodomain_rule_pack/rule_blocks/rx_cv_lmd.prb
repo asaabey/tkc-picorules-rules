@@ -1,0 +1,30 @@
+/* Rx: Lipid Modifying drugs*/
+
+
+#define_ruleblock(rx_cv_lmd,{
+        description: "Rx: Lipid Modifying drugs",
+        is_active:2
+});
+
+/* Statins */
+#doc(,{txt:"Statins"});
+/* Atorvastatin */
+ator_10 => eadv.[rxn_cui_1422086,rxn_cui_597971,rxn_cui_597977,rxn_cui_597987,rxn_cui_617312,rxn_cui_597970].dt.last();
+ator_20 => eadv.[rxn_cui_1422093,rxn_cui_597967,rxn_cui_597974,rxn_cui_597980,rxn_cui_617310,rxn_cui_597966].dt.last();
+ator_40 => eadv.[rxn_cui_1422096,rxn_cui_597984,rxn_cui_597990,rxn_cui_597993,rxn_cui_617311,rxn_cui_597983].dt.last();
+ator_80 => eadv.[rxn_cui_1422099,rxn_cui_259255,rxn_cui_404011,rxn_cui_404013,rxn_cui_329299].dt.last();
+
+/* Simvastatin */
+/* TBI */
+/* Rosuvastatin */
+/* TBI */
+
+/* Absorption inhibitor */
+ezetimibe_10 => eadv.[rxn_cui_350671,rxn_cui_1422086,rxn_cui_1422093,rxn_cui_1422096,rxn_cui_1422099,rxn_cui_2283230,rxn_cui_2535745,rxn_cui_2535747,rxn_cui_2535749,rxn_cui_2535750,rxn_cui_349556,rxn_cui_476345,rxn_cui_476349,rxn_cui_476350,rxn_cui_476351].dt.last();
+
+
+/* PCSK9 inhibitor */
+evolocumab_120 => eadv.[rxn_cui_1665892].dt.last();
+evolocumab_420 => eadv.[rxn_cui_1801322].dt.last();
+
+rx_cv_lmd: {coalesce(ezetimibe_10 , evolocumab_120 , evolocumab_420)!? =>1},{=>0};

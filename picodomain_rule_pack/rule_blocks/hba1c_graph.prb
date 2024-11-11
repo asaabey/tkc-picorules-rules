@@ -27,7 +27,7 @@ hba1c_n => eadv.lab_bld_hba1c_ngsp.dt.count();
 
 hba1c_graph_canvas_x : {1=1 => 350};
 
-hba1c_graph_canvas_y : {1=1 => 100};
+hba1c_graph_canvas_y : {1=1 => 200};
 
 dm => rout_cd_dm_dx.cd_dm_dx.val.bind();
 
@@ -47,16 +47,16 @@ hba1c_graph_y_min : {hba1c_min_val < hba1c_target_min => hba1c_min_val},{=> hba1
 
 hba1c_graph_x_scale : {. => round(hba1c_graph_canvas_x/dspan,5)};
 
-hba1c_graph_y_scale : { hba1c_graph_y_max > hba1c_graph_y_min => round(hba1c_graph_canvas_y/(hba1c_graph_y_max-hba1c_graph_y_min),5)},{=>round(hba1c_graph_canvas_y/10,5)};
-
-
+graph_y_scale : { hba1c_graph_y_max > hba1c_graph_y_min => round(hba1c_graph_canvas_y/(hba1c_graph_y_max - hba1c_graph_y_min),2)};
 
 
 line_upper_y : {.=> 0};
 
-line_lower_y : {. => (hba1c_graph_y_max-hba1c_graph_y_min) * hba1c_graph_y_scale};
+line_lower_y : {. => (hba1c_graph_y_max-hba1c_graph_y_min) * graph_y_scale};
 
-line_target_upper_y : {hba1c_graph_y_min< hba1c_target_max and hba1c_graph_y_max> hba1c_target_max => (hba1c_graph_y_max-10) * hba1c_graph_y_scale};
+line_target_upper_y : { . => (hba1c_max_val-hba1c_target_max)* graph_y_scale  };
+line_target_lower_y : { . => (hba1c_max_val-hba1c_target_min )* graph_y_scale  };
+line_target_delta_y : { . => line_target_lower_y - line_target_upper_y};
 
 
 
