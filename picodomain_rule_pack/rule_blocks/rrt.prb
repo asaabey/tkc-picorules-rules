@@ -245,6 +245,8 @@ rrt_past :  {rrt=1 and coalesce(pd_dt,tx_dt,homedx_dt)!? => 1},
             {rrt=4 and coalesce(hd_dt,tx_dt,pd_dt)!? => 1},
             {rrt=0 and hd_icpc_dt!? =>1 },
             {=>0};
+rrt_past_pd : { pd_dt!? => 1},{=>0};
+
 ;
 #doc(,{
         txt:"Satellite Hd recency"
@@ -349,6 +351,23 @@ tx_current : { rrt_tx=1 and ren_enc>sysdate-731 => 1 },{=>0};
     tx_multi_flag,
     {
         label:"Renal transplant multi-parity",
+        is_reportable:1,
+        type:1001
+    }
+);
+#define_attribute(
+    pd_dt,
+    {
+        label:"PD Start Date",
+        is_reportable:1,
+        type:12
+    }
+);
+
+#define_attribute(
+    rrt_past_pd,
+    {
+        label:"PD in the past",
         is_reportable:1,
         type:1001
     }
