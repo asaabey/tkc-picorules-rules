@@ -49,7 +49,7 @@ sbp => eadv.obs_bp_systolic.val.last();
 
 smoke0 => eadv.status_smoking_h2_v1.val.last();
 
-hba1c => eadv.lab_bld_hba1c_ifcc.val.last().where(dt > sysdate -365);
+hba1c => eadv.lab_bld_hba1c_ngsp.val.last().where(dt > sysdate -365);
 
 dm_ins => rout_cd_dm_dx.dm_rxn_ins.val.bind();
 
@@ -74,18 +74,15 @@ smoke : {smoke0>=29 =>1},{=>0};
 
 
 
-
-#doc(,{
-        txt:"Determine if overide criteria are met",
-        cite:"cvra_nsf_2019"
-});
-
+/* not used
 dmckd1 : {dm=1 and ckd>=1 => 1},{=>0};
 dm60 : {dm=1 and age>=60 => 1},{=>0};
-ckd3 : {ckd>=3 => 1},{=>0};
+
 tc7 : {tc>=7 => 1},{=>0};
 sbp180 : {sbp >=180 => 1},{=>0};
 age74 : {age>74 => 1},{=>0};
+*/
+ckd3 : {ckd>=3 => 1},{=>0};
 
 /* mock vars*/
 seifa : {.=>2};
@@ -113,7 +110,7 @@ eq : { male = 1 and dm=0 => 1}, { male = 0 and dm=0 => 2},{ male = 1 and dm=1 =>
 
 
 
-risk_high_ovr : { greatest(dm60,dmckd1,ckd3,tc7,sbp180,age74,cvd_prev)>0 =>1},{=>0};
+risk_high_ovr : { ckd3=1 =>1},{=>0};
 
 age_i : { eq=1  => (age - 53.77579) * 0.0691512},{ eq=2 => (age - 58.47472) * 0.0905192},{ eq=3 => (age - 56.57672) * 0.0510591},{eq=4 => (age - 57.8318) * 0.0607418 }  ;
 
@@ -160,32 +157,27 @@ var_x : {eq=1 or eq=2 => wt_t },{eq=3 => -.0616832 * llm},{eq=4 => -.2702909 * l
 
 var_f : {eq=3 => .0273617 * oatm},{eq=4 => 0.1205109 * oatm};
 
-var_b : {eq=3 or eq=4 => wt_t };
+var_xb : {eq=3 => 0.1316217},{eq=4 => 0.1594838};
 
-var_w : {eq=3 => age_i + seifa_t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_c + var_d + var_p + var_h + var_u + var_g + 0.1316217 +var_m + var_x + var_f},
-        {eq=4 => age_i + seifa_t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_c + var_d + var_p + var_h + var_u + var_g + 0.1594838 +var_m + var_x + var_f};
+var_b : {eq in (3,4) => age_i + seifa_t + sm_a + sm_n + 0 + af_o + dm_s + var_r + var_l +var_c + var_d + var_p + var_h + var_u + var_g + var_xb +var_m + var_x + var_f};
 
-
-
-var_prob : {eq=1 => 1-(power(0.9728782,(exp(var_m))))*100},
-            {eq=2 => 1-(power(0.9828361,(exp(var_m))))*100},
-            {eq=3 => 1-(power(0.9483001,(exp(var_m))))*100},
-            {eq=4 => 1-(power(0.9664823,(exp(var_m))))*100};
+var_prob : {eq=1 => (1-power(0.9728782,exp(var_m)))*100},
+            {eq=2 => (1-power(0.9828361,exp(var_m)))*100},
+            {eq=3 => (1-power(0.9483001,exp(var_b)))*100},
+            {eq=4 => (1-power(0.9664823,exp(var_b)))*100};
 
 adj_prob : {eq in (1,2) and var_prob<1 => round(var_prob * var_x,0)},
-           {eq in (3,4) and var_prob<1 => round(var_prob * var_b,0)};
+           {eq in (3,4)  => round(var_prob * wt_t ,0)};
+
+scale_ub : { adj_prob > 15 => 15},{adj_prob <1 => 1},{=>adj_prob};
+
+scale_pct : { . => round((scale_ub/15) * 100,0)};
+
+cvra_cat : {risk_high_ovr=1 => 3},       /* High risk from override conditions */
+           {adj_prob >= 0 and adj_prob <= 4 => 1},  /* Low risk */
+           {adj_prob >= 5 and adj_prob <= 9 => 2},  /* Intermediate risk */
+           {adj_prob >= 10 => 3},                   /* High risk */
+           {. => 0};
 
 
-
-risk_5 : { . => 2};
-
-
-
-cvra_cat :  {risk_high_ovr=1 => 3},
-            { risk_5 >=15 => 3},
-            { risk_5 >=10 and risk_5 <15 => 2},
-            { risk_5 <10 => 1},{=>0};
-
-cvra_dx_uncoded : {cvra_cat=3 and nvl(asm_cvra_val,0)=0=>1},{=>0};
-
-cvra_predict1_aus :  { cvra_cat>2 => 1},{=>0};
+cvra_predict1_aus :  { . =>1},{=>0};
