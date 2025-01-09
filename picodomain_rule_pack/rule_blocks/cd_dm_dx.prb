@@ -157,11 +157,11 @@ dm_fd :{ . => least_date(dm_code_fd,dm_rxn1_fd,gluc_hba1c_high_f_dt)  };
 
 dm_fd_year :{ . => extract(year from dm_fd) };
 
-dm_vintage_yr_ : { dm_fd!? => round((sysdate-dm_fd)/365,0)},{=>0};
+dm_vintage_yr : { dm_fd!? => round((sysdate-dm_fd)/365,0)},{=>0};
 
-dm_vintage_cat : { dm_vintage_yr_>=0 and dm_vintage_yr_ <10 => 1 },
-                    { dm_vintage_yr_>=10 and dm_vintage_yr_ <20 => 2 },
-                    { dm_vintage_yr_>=20=> 3 },{=>0};
+dm_vintage_cat : { dm_vintage_yr>=0 and dm_vintage_yr <10 => 1 },
+                    { dm_vintage_yr>=10 and dm_vintage_yr <20 => 2 },
+                    { dm_vintage_yr>=20=> 3 },{=>0};
 
 
 dm_icpc_coded : { dm_icpc_fd!? =>1},{=>0};

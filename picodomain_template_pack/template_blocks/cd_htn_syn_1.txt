@@ -9,7 +9,7 @@
                 {% if cd_htn.htn_rxn_acei %}<li>ACE inhibitor</li>{% endif %}
                 {% if cd_htn.htn_rxn_ccb %}<li>Calcium channel blocker (CCB)</li>{% endif %}
                 {% if cd_htn.htn_rxn_bb %}<li>Beta blocker</li>{% endif %}
-                {% if cd_htn.htn_rxn_diuretic_thiazide %}<li>Thiazide diuretic</li>{% endif %}
+                {% if cd_htn.htn_rxn_diuretic_thiaz %}<li>Thiazide diuretic</li>{% endif %}
                 {% if cd_htn.htn_rxn_diuretic_loop %}<li>Loop diuretic</li>{% endif %}
             </ol>
             </li>

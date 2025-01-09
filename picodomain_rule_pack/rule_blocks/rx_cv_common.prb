@@ -1,6 +1,5 @@
 /* Rx: Common cardiac drugs */
 
-
 #define_ruleblock(rx_cv_common,{
         description: "Rx: Common cardiac drugs",
         is_active:2
@@ -16,6 +15,9 @@ irb_300 => eadv.[rxn_cui_316099].dt.last();
 
 irb : {coalesce(irb_75,irb_150,irb_300)!? =>1};
 
+rxn_arb => eadv.[rxnc_c09ca].dt.count(0).where(val=1);
+
+arb : {coalesce(irb, rxn_arb)!? =>1};
 
 #doc(,{txt:"ACEI"});
 /* Perindopril */
@@ -33,6 +35,13 @@ ram_5 => eadv.[rxn_cui_317482].dt.last();
 ram_10 => eadv.[rxn_cui_316627].dt.last();
 
 ram : {coalesce(ram_2_5,ram_5,ram_10)!? =>1};
+rxn_acei => eadv.[rxnc_c09aa].dt.count(0).where(val=1);
+
+/* ACEi */
+acei : {coalesce(ram,per,rxn_acei)!? =>1};
+
+/* RAAS */
+raas : {coalesce(acei,arb)!?=>1};
 
 #doc(,{txt:"CCB"});
 /* Amlodipine */
@@ -41,6 +50,9 @@ amlo_10 => eadv.[rxn_cui_329526].dt.last();
 
 amlo :{ coalesce(amlo_5, amlo_10)!?=>1};
 
+rxn_ccb => eadv.[rxnc_c08%].dt.count(0).where(val=1);
+
+ccb :{ coalesce(amlo,rxn_ccb)!?=>1};
 
 #doc(,{txt:"Beta blockers"});
 /* Metoprolol succinate */
@@ -75,6 +87,10 @@ carv_25 => eadv.[rxn_cui_315576].dt.last();
 
 carv : { coalesce(carv_6_25, carv_12_5, carv_25)!?=>1};
 
+rxn_bb => eadv.[rxnc_c07%].dt.count(0).where(val=1);
+
+betablocker : {coalesce(carv,atn,bis,mtprl, rxn_bb)!? =>1};
+
 /* Diuretics */
 fru_20 => eadv.[rxn_cui_315970].dt.last();
 fru_40 => eadv.[rxn_cui_315971].dt.last();
@@ -82,10 +98,25 @@ fru_500 => eadv.[rxn_cui_331965].dt.last();
 
 fru : { coalesce(fru_20, fru_40, fru_500)!? =>1};
 
+rxn_diuretic_thiaz => eadv.[rxnc_c03aa].dt.count(0).where(val=1);
+rxn_diuretic_loop => eadv.[rxnc_c03c%].dt.count(0).where(val=1);
+
+diuretic : { coalesce(fru, rxn_diuretic_thiaz , rxn_diuretic_loop )!? =>1};
+
+
 /* Nitrates */
 ismn_60  =>  eadv.[rxn_cui_381044].dt.last();
 ismn_120  =>  eadv.[rxn_cui_353420].dt.last();
 
 ismn : { coalesce(ismn_60, ismn_120)!? => 1};
 
-rx_cv_common : {coalesce(irb, per, ram, amlo, mtprl, atn, bis, carv, fru, ismn)!? =>1},{=>0};
+/* ARNI */
+arni_1 => eadv.[rxn_cui_1656340].dt.last();
+
+arni : { arni_1!? => 1};
+
+/* Central */
+rxn_c02 => eadv.[rxnc_c02%].dt.count(0).where(val=1);
+
+rx_cv_common : {coalesce(arb, acei, ccb, betablocker, diuretic, ismn,arni)!? =>1},{=>0};
+

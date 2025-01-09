@@ -31,7 +31,7 @@ egfr_outdt => rout_ckd.egfr_outdated.val.bind();
 
 res_outdt : { greatest(acr_outdt,egfr_outdt)>0 =>1},{=>0};
 
-ckd_met : { cga_g <5 and cga_a>1 and res_outdt=0 and rrt=0 =>1 },{=>0};
+ckd_met : { cga_g <5 and cga_a>2 and res_outdt=0 and rrt=0 =>1 },{=>0};
 
 
 
@@ -39,8 +39,15 @@ raas => eadv.[rxnc_c09aa,rxnc_c09ca].dt.min().where(val=1);
 
 sglt2i => eadv.[rxnc_a10bk].dt.min().where(val=1);
 
+smra => eadv.[rxnc_c03da].dt.min().where(val=1);
+
 nsmra =>eadv.[rxn_cui_2562812,rxn_cui_2562823].dt.last();
 
+
+raas_b : { raas!? =>1},{=>0};
+sglt2i_b : { sglt2i!? =>1},{=>0};
+smra_b : { smra!? =>1},{=>0};
+nsmra_b : { nsmra!? =>1},{=>0};
 
 sbp => eadv.obs_bp_systolic.val.lastdv();
 
@@ -51,9 +58,9 @@ sbp_safe : { sbp_val> 110 and sbp_dt>sysdate-365 =>1},{=>0};
 k_safe : { k_val< 5 and k_dt>sysdate-365 => 1},{=>0};
 
 
-recm : { ckd_met=1 and dm=1 and raas? and sglt2i? and nsmra? => 11},
-	{ ckd_met=1 and dm=1  and raas!? and sglt2i? and nsmra? => 12},
-	{ ckd_met=1 and dm=1 and raas!? and sglt2i!? and nsmra? => 13},
+recm : { ckd_met=1 and dm=1 and raas? and sglt2i? and nsmra? and smra?=> 11},
+	{ ckd_met=1 and dm=1  and raas!? and sglt2i? and nsmra? and smra?=> 12},
+	{ ckd_met=1 and dm=1 and raas!? and sglt2i!? and nsmra? and smra? => 13},
         { ckd_met=1 and dm=0 and raas? and sglt2i? => 21},
 	{ ckd_met=1 and dm=0 and raas!? and sglt2i? => 22};
 
@@ -81,3 +88,8 @@ tg4630 : { recm!? and ex_flag=0 => 1},{=>0};
             priority:2
         }
     );
+
+#define_attribute(raas_b,{ label: "RAAS", is_reportable:1,type:1001});
+#define_attribute(sglt2i_b, { label: "SGLT2i", is_reportable:1,type:1001});
+#define_attribute(smra_b, { label: "Steroidal MRA", is_reportable:1,type:1001});
+#define_attribute(nsmra_b, { label: "Non-steroidal MRA", is_reportable:1,type:1001});

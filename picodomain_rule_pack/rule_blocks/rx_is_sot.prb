@@ -17,25 +17,30 @@ tac : {coalesce(tac_0_5_ir,tac_1_ir)!? =>1};
 
 
 #doc(,{txt:"Everolimus"});
-
+evl_0_25 => eadv.[rxn_cui_998188].dt.last();
 evl_0_5 => eadv.[rxn_cui_977437].dt.last();
-
-evl_0_75 => eadv.[rxn_cui_977437].dt.last();
-
+evl_0_75 => eadv.[rxn_cui_977433].dt.last();
 evl_1 => eadv.[rxn_cui_2056894].dt.last();
-
+evl_3 => eadv.[rxn_cui_1869518].dt.last();
 evl_5 => eadv.[rxn_cui_845514].dt.last();
-
-evl : {coalesce(evl_0_5,evl_0_75,evl_1,evl_5)!? =>1};
+evl_10 => eadv.[rxn_cui_845505].dt.last();
+evl : {coalesce(evl_0_25,evl_0_5,evl_0_75,evl_1,evl_3,evl_5,evl_10)!? =>1};
 
 
 #doc(,{txt:"MMF"});
-
+mmf_gen => eadv.[rxn_cui_68149].dt.last();
+mmf_200_ml => eadv.[rxn_cui_331587].dt.last();
 mmf_250 => eadv.[rxn_cui_316316].dt.last();
-
 mmf_500 => eadv.[rxn_cui_316317].dt.last();
+mmf : {coalesce(mmf_gen, mmf_200_ml,  mmf_250, mmf_500)!? =>1};
 
-mmf : {coalesce(mmf_250,mmf_500)!? =>1};
+#doc(,{txt:"MPA"});
+mpa_gen => eadv.[rxn_cui_7145].dt.last();
+mpa_180 => eadv.[rxn_cui_485018].dt.last();
+mpa_360 => eadv.[rxn_cui_485022].dt.last();
+
+mpa : {coalesce(mpa_gen, mpa_180, mpa_360)!? =>1};
+
 
 
 #doc(,{txt:"Prednisolone"});
