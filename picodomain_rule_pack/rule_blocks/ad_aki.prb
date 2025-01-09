@@ -1,0 +1,23 @@
+/*  Algorithm to identify AKI in last 12 months  */
+
+#define_ruleblock(ad_aki,
+    {
+        description: "Algorithm to identify AKI in last 12 months",
+        is_active:2
+
+    }
+);
+
+aki_lab1 => rout_tg4100.cr_base_max_1y_qt.val.bind();
+aki_lab2 => rout_tg4100.akin_stage.val.bind();
+aki_lab3 => rout_tg4100.aki_outcome.val.bind();
+
+aki_lab : {aki_lab1>4 and aki_lab2>=2 and aki_lab3>=2 => 1 },{=>0};
+
+aki_icd_code => eadv.[icd_n17%].dt.min().where(dt>sysdate-365);
+
+aki_icd : { aki_icd_code!? => 1}, {=>0};
+
+aki : {(aki_lab=1 or aki_icd=1) =>1}, {=>0};
+
+#define_attribute(aki,{label:"AKI in last 12 months",is_reportable:1,type:1001});

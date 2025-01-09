@@ -1,0 +1,38 @@
+/* View model for ckd info card */
+
+#define_ruleblock(ckd_card,
+    {
+        description: "View model for ckd info card",
+        is_active:2
+    }
+);
+
+ckd => rout_ckd.ckd.val.bind();
+
+rrt => rout_rrt.rrt.val.bind();
+
+cga_g_txt => rout_ckd.cga_g.val.bind();
+cga_a_txt => rout_ckd.cga_a.val.bind();
+
+egfr_l_val => rout_ckd_egfr_metrics.egfr_l_val.val.bind();
+egfr_l_dt => rout_ckd_egfr_metrics.egfr_l_dt.val.bind();
+
+
+egfr_slope2 => rout_ckd_egfr_metrics.egfr_slope2.val.bind();
+
+acr_l_dt => rout_ckd_uacr_metrics.acr_l_dt.val.bind();
+acr_l_val => rout_ckd_uacr_metrics.acr_l_val.val.bind();
+
+edu_rv_dt => rout_ckd_journey.edu_rv.val.bind();
+avf_dt => rout_ckd_access.avf_dt.val.bind();
+
+ris_bxk_ld => rout_ckd_diagnostics.ris_bxk_ld.val.bind();
+
+raas => rout_tg4630.raas.val.bind();
+sglt2i => rout_tg4630.sglt2i.val.bind();
+smra => rout_tg4630.smra.val.bind();
+nsmra => rout_tg4630.nsmra.val.bind();
+
+
+
+ckd_card : { ckd>0 and rrt=0 => 1},{=>0};

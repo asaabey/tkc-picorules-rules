@@ -1,0 +1,15 @@
+/*  Algorithm to identify presence of PD catheter  */
+
+#define_ruleblock(rrt_pd,
+    {
+        description: "Algorithm to identify presence of PD catheter",
+        is_active:2
+
+    }
+);
+
+pd_cath_icd_ld => eadv.[caresys_1310900, caresys_1310901].dt.max();
+
+pd_cath : { pd_cath_icd_ld!? => 1}, {=>0};
+
+#define_attribute(pd_cath,{label:"Presence of PD catheter",is_reportable:1,type:1001});

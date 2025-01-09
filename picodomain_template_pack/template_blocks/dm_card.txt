@@ -1,0 +1,140 @@
+{% macro icon_dm_micvas_neuro() %}
+<svg class="svg-icon" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.997 511.997" xml:space="preserve">
+                <g>
+                  <g>
+                    <path d="M317.276,116.749c-60.041-37.086-139.059-18.406-176.145,41.643L13.344,365.291
+                                        c-25.958,42.035-12.885,97.348,29.15,123.307c42.035,25.958,97.348,12.885,123.307-29.15l33.63-54.443
+                                        c15.693-25.412,39.62-34.799,67.319-45.67c31.642-12.425,67.507-26.496,92.169-66.424
+                                        C395.996,232.854,377.317,153.835,317.276,116.749z M337.133,279.446c-40.354,65.34-119.142,46.763-159.488,112.102
+                                        c-13.449,21.777-17.357,28.109-33.63,54.443c-18.569,30.071-58.001,39.39-88.073,20.821
+                                        c-30.071-18.569-39.39-58.001-20.821-88.073C46.087,360.982,149.349,193.788,162.9,171.841
+                                        c29.713-48.111,92.8-63.027,140.919-33.314C351.939,168.24,366.846,231.335,337.133,279.446z" />
+                  </g>
+                </g>
+                <g>
+                  <g>
+                    <path d="M484.683,132.895c-8.841-5.461-18.594-7.979-28.305-8.294c3.703-17.92-3.703-37.052-20.156-47.206
+                                        c-9.233-5.7-19.729-7.441-29.722-6.025c-1.434-11.076-7.492-21.47-17.715-27.785c-10.214-6.306-22.212-7.074-32.759-3.405
+                                        c-3.029-6.784-8.047-12.766-14.839-16.964c-13.577-8.38-30.37-7.253-42.59,1.519c-2.697-3.43-5.922-6.536-9.847-8.96
+                                        c-18.014-11.128-41.719-5.521-52.847,12.493c-11.128,18.014-5.521,41.719,12.493,52.847c13.577,8.38,30.37,7.245,42.59-1.519
+                                        c2.705,3.43,5.922,6.536,9.847,8.96c10.214,6.306,22.212,7.074,32.76,3.405c3.029,6.784,8.047,12.766,14.839,16.964
+                                        c6.135,3.789,12.928,5.495,19.661,5.572c-0.324,15.352,7.066,30.49,21.052,39.125c4.062,2.509,8.397,4.07,12.8,5.154
+                                        c-11.392,25.865-2.5,56.858,22.212,72.124c27.025,16.691,62.575,8.286,79.266-18.739
+                                        C520.105,185.144,511.7,149.586,484.683,132.895z M279.465,55.164c-3.712,6.007-11.597,7.885-17.613,4.164
+                                        c-6.016-3.712-7.876-11.605-4.164-17.613c3.712-6.016,11.605-7.876,17.613-4.164C281.317,41.264,283.177,49.157,279.465,55.164z
+                                         M331.902,62.605c-3.712,6.016-11.597,7.885-17.613,4.164c-6.016-3.712-7.876-11.605-4.164-17.613
+                                        c3.712-6.016,11.605-7.876,17.613-4.164C333.754,48.705,335.614,56.598,331.902,62.605z M379.501,82.975
+                                        c-3.712,6.016-11.605,7.885-17.613,4.164c-6.016-3.712-7.876-11.605-4.164-17.613c3.712-6.016,11.605-7.876,17.613-4.164
+                                        C381.344,69.074,383.213,76.967,379.501,82.975z M402.601,131.836c-9.02-5.564-11.819-17.399-6.246-26.419
+                                        c5.572-9.02,17.408-11.819,26.419-6.246c9.02,5.572,11.819,17.399,6.246,26.419C423.448,134.61,411.621,137.409,402.601,131.836z
+                                         M481.645,198.712c-9.284,15.036-29.005,19.695-44.041,10.411c-15.027-9.284-19.695-29.005-10.411-44.041
+                                        s29.005-19.695,44.041-10.411C486.27,163.956,490.929,183.676,481.645,198.712z" />
+                  </g>
+                </g>
+              </svg>
+{% endmacro %}
+
+{% macro icon_dm_micvas_retino() %}
+<svg class="svg-icon" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.5 12.714C18.5 15.081 15.366 17 11.5 17C7.634 17 4.5 15.081 4.5 12.714C4.5 10.347 7.634 8.42896 11.5 8.42896C15.366 8.42896 18.5 10.347 18.5 12.714Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M13.2501 12.714C13.2647 13.4249 12.8477 14.074 12.1951 14.3562C11.5424 14.6384 10.7839 14.4977 10.2759 14.0002C9.76792 13.5027 9.61148 12.7472 9.8801 12.0889C10.1487 11.4305 10.789 11.0001 11.5001 11C11.9594 10.9952 12.4019 11.1731 12.7301 11.4945C13.0583 11.816 13.2453 12.2546 13.2501 12.714V12.714Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M10.75 8.429C10.75 8.84321 11.0858 9.179 11.5 9.179C11.9142 9.179 12.25 8.84321 12.25 8.429H10.75ZM12.25 5C12.25 4.58579 11.9142 4.25 11.5 4.25C11.0858 4.25 10.75 4.58579 10.75 5H12.25ZM18.2931 7.05471C18.4813 6.68571 18.3347 6.23403 17.9657 6.04586C17.5967 5.85769 17.145 6.00428 16.9569 6.37329L18.2931 7.05471ZM15.5199 9.19129C15.3317 9.5603 15.4783 10.012 15.8473 10.2001C16.2163 10.3883 16.668 10.2417 16.8561 9.87271L15.5199 9.19129ZM6.04314 6.37329C5.85497 6.00428 5.40329 5.85769 5.03429 6.04586C4.66528 6.23403 4.51869 6.68571 4.70686 7.05471L6.04314 6.37329ZM6.14386 9.87271C6.33203 10.2417 6.78371 10.3883 7.15271 10.2001C7.52172 10.012 7.66831 9.5603 7.48014 9.19129L6.14386 9.87271ZM12.25 8.429V5H10.75V8.429H12.25ZM16.9569 6.37329L15.5199 9.19129L16.8561 9.87271L18.2931 7.05471L16.9569 6.37329ZM4.70686 7.05471L6.14386 9.87271L7.48014 9.19129L6.04314 6.37329L4.70686 7.05471Z" fill="#000000" />
+</svg>
+{% endmacro %}
+
+{% macro icon_dm_nephropathy() %}
+<svg class="svg-icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512">
+<g><path d="m423,26.5c-13.8-10.4-29.6-16-45.7-16-44.3,0-80.1,39.6-81.3,90.1-0.6,23 6.3,45.1 19.5,62.7-9.3,12.4-15.5,27.1-18.1,42.8-11.4,11.8-27.4,36.1-40.4,59.6-14-25.3-31.3-51.4-42.9-62.1-2.8-14.7-8.9-28.6-17.7-40.3 13.2-17.6 20.1-39.7 19.5-62.7-1.3-50.5-37-90.1-81.3-90.1-16.1,0-31.9,5.5-45.7,16-57.6,43.8-82.5,154.3-77.2,240.9 4.7,77.2 31.5,133.8 75.4,159.4 13.2,7.7 27.9,11.7 42.8,11.7 47,0 84-37.5 86.1-87.2 1-24.5-6.3-47.9-20.7-66.2 5.2-6.6 9.5-14 12.8-21.8 9.3,14.6 21.8,34.8 28.6,49.2v167.6c0,11.3 9.1,20.5 20.4,20.5 11.3,0 20.4-9.2 20.4-20.5v-167.2c6.4-13.8 18.3-33.3 27.4-47.7 3.2,7.1 7.2,13.8 12,19.9-14.4,18.3-21.8,41.7-20.7,66.2 2.1,49.7 39.1,87.2 86.1,87.2 14.8,0 29.6-4.1 42.8-11.7 43.9-25.6 70.7-82.2 75.4-159.4 5.1-86.6-19.8-197.1-77.5-240.9zm-261.1,282.4c9,10.7 13.9,25.5 13.2,40.6-1.3,31.2-24.3,48-45.3,48-7.7,0-15.2-2.1-22.2-6.2-31.3-18.2-51.4-64.3-55.1-126.5-5.2-85.4 21.7-175.8 61.2-205.8 6.7-5.1 13.8-7.7 21-7.7 18.9,0 39.7,19.2 40.5,50.2 0.4,14.4-4.1,28.1-12.5,38.6-10.7,13.2-10.7,33.1-0.1,46.1 8.1,10 12.6,23.2 12.6,37.1 0,14.4-4.8,27.9-13.4,38-11.5,13.6-11.5,34 0.1,47.6zm297.7-44c-3.8,62.2-23.9,108.3-55.1,126.5-7,4.1-14.5,6.2-22.2,6.2-21,0-44-16.8-45.3-48-0.6-15.2 4.2-30 13.2-40.6 11.6-13.6 11.6-34.1 0.1-47.5-8.6-10.1-13.4-23.6-13.4-38 0-13.9 4.5-27 12.6-37 10.6-13.1 10.6-32.9-0.1-46.1-8.4-10.4-12.8-24.1-12.5-38.5 0.8-31 21.6-50.2 40.5-50.2 7.3,0 14.3,2.6 21,7.7 39.5,29.7 66.3,120.1 61.2,205.5z" /></g>
+</svg>
+{% endmacro %}
+
+
+<div class="col-12 col-lg-6 mt-4">
+    <div class="card h-100 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pb-0">
+            <h5 class="card-title mb-0">Diabetes</h5>
+            <small class="text-muted">Last HbA1c: {{ picoformat('dm_card.hba1c_n0_dt') }}</small>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <img src="https://d1xcrowuazv720.cloudfront.net/images/bsl.png" height="60" />
+                </div>
+                <div class="col">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="metric-label">Years with Diabetes</div>
+                            <div class="metric-value">{{ picoformat('dm_card.dm_vintage_yr') }}</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-label">Current HbA1c</div>
+                            {% if dm_card.n0_st==1 %}<div class="metric-light-green metric-value">{{ picoformat('dm_card.hba1c_n0_val') }}%</div>{% endif %}
+                            {% if dm_card.n0_st==2 %}<div class="metric-light-orange metric-value">{{ picoformat('dm_card.hba1c_n0_val') }}%</div>{% endif %}
+                            {% if dm_card.n0_st==3 %}<div class="metric-orange metric-value">{{ picoformat('dm_card.hba1c_n0_val') }}%</div>{% endif %}
+                            {% if dm_card.n0_st==4 %}<div class="metric-red metric-value">{{ picoformat('dm_card.hba1c_n0_val') }}%</div>{% endif %}
+                        </div>
+                        {% if dm_card.hba1c_delta is not none %}
+                        <div class="col-6">
+                            <div class="metric-label">HbA1c Change</div>
+                            {% if dm_card.hba1c_delta>0 %}<span class="metric-value">+</span>{% endif %}
+                            <span class="metric-value">{{ picoformat('dm_card.hba1c_delta') }}%</span>
+                        </div>
+                        {% endif %}
+                        <div class="col-6">
+                            <div class="metric-label">Time in Range</div>
+                            <div class="metric-value">{{ picoformat('dm_card.n_opt_qt') }}%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-12">
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between align-items-center">
+{% if dm_card.dm_micvas_retino %}
+                        <div class="text-center" style="flex: 1;">
+                            <div class="d-flex flex-column align-items-center">
+                                {{ icon_dm_micvas_retino() }}
+                                <small>Retinopathy</small>
+                            </div>
+                        </div>
+{% endif %}
+{% if dm_card.dm_micvas_neuro %}
+                        <div class="text-center" style="flex: 1;">
+                            <div class="d-flex flex-column align-items-center">
+                                {{ icon_dm_micvas_neuro() }}
+                                <small>Neuropathy</small>
+                            </div>
+                        </div>
+{% endif %}
+
+                        <div class="text-center" style="flex: 1;">
+                            <div class="d-flex flex-column align-items-center">
+                                {{ icon_dm_nephropathy() }}
+                                <small>Nephropathy</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!-- Medications Section -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <hr class="my-2">
+                    <div class="d-flex flex-wrap justify-content-start gap-2">
+                        {% if dm_card.dm_rxn_ins %}<div class="rx-icon" title="Insulin">INS</div> {% endif %}
+                        {% if dm_card.dm_rxn_su %}<div class="rx-icon">SU</div>{% endif %}
+                        {% if dm_card.dm_rxn_bg%}<div class="rx-icon" title="Biguanide">BG</div>{% endif %}
+                        {% if dm_card.dm_rxn_dpp4 %}<div class="rx-icon" title="DPP4 Inhibitor">DPP4</div>{% endif %}
+                        {% if dm_card.dm_rxn_glp1 %}<div class="rx-icon" title="GLP1 Agonist">GLP1</div>{% endif %}
+                        {% if dm_card.dm_rxn_sglt2 %}<div class="rx-icon" title="SGLT2 Inhibitor">SGLT2</div>{% endif %}
+                        {% if dm_card.dm_rxn==0 %}<div class="rx-icon" title="Unmedicated">Unmedicated</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

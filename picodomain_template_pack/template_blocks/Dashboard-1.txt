@@ -1,0 +1,12 @@
+{% extends 'master_template' %}
+{% block content %}
+{{ pico_template_block('__dashboard_header__') }}
+{{ pico_template_block('rrt_1_card_1') }}
+{{ pico_template_block('rrt_pd_card') }}
+{{ pico_template_block('rrt_tx_card') }}
+{{ pico_template_block('ckd_card') }}
+{{ pico_template_block('cd_htn_card') }}
+{{ pico_template_block('dm_card') }}
+{{ pico_template_block('cardiac_cad_card') }}
+{{ pico_template_block('__dashboard_footer__') }}
+{% endblock content %}

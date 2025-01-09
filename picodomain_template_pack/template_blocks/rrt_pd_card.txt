@@ -1,0 +1,69 @@
+<!-- Generic Medical Card Template -->
+<div class="col-12 col-lg-6 mt-4">
+    <div class="card h-100 shadow-sm">
+        <!-- Card Header -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pb-0">
+            <h5 class="card-title mb-0">Peritoneal Dialysis</h5>
+            <small class="text-muted">Date commenced: {{ picoformat('rrt_pd_card.pd_dt_min') }}</small>
+        </div>
+        
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="row align-items-center">
+                <!-- Icon Column -->
+                <div class="col-auto">
+                    <!-- SVG Icon Placeholder -->
+                </div>
+                
+                <!-- Metrics Column -->
+                <div class="col">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="metric-label">Mode</div>
+                            <div class="metric-value-container">
+                            {% if rrt_pd_card.pd_mode == 1 %}<div class="metric-value metric-green">CAPD</div>{% endif %}
+                            {% if rrt_pd_card.pd_mode == 2 %}<div class="metric-value metric-green">APD</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                        {%  if rrt_pd_card.pd_mode == 2 %}
+                            <div class="metric-label">Cycles</div>
+                            <div class="metric-value-container">
+                            <div class="metric-value metric-green">{{ picoformat('rrt_pd_card.apd_cycles_val')}}</div>
+                            </div>
+                        {% endif %}
+                        </div>
+                        <div class="col-6">
+                        {%  if rrt_pd_card.pet_trans_mode %}
+                            <div class="metric-label">Transporter status</div>
+                            <div class="metric-value-container">
+                            <div class="metric-value metric-green">{{ picoformat('rrt_pd_card.pet_trans_mode')}}</div>
+                            </div>
+                        {% endif %}
+                        </div>
+                        <div class="col-6">
+                        {%  if rrt_pd_card.pd_adequacy_ktv_total_val %}
+                            <div class="metric-label">Kt/V</div>
+                            <div class="metric-value-container">
+                        {% if rrt_pd_card.pd_adequacy_ktv_total_val < 1.7 %}<div class="metric-value metric-red">{% endif %}
+                        {% if rrt_pd_card.pd_adequacy_ktv_total_val >= 1.7 %}<div class="metric-value metric-green">{% endif %}
+                               {{ picoformat('rrt_pd_card.pd_adequacy_ktv_total_val')}} [{{ picoformat('rrt_pd_card.pd_adequacy_ktv_dialysis_val')}} + {{ picoformat('rrt_pd_card.pd_adequacy_ktv_renal_val')}}]</div>
+                            </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications/Tags Section -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <hr class="my-2">
+                    <div class="d-flex flex-wrap justify-content-start gap-2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

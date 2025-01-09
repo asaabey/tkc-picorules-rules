@@ -1,0 +1,41 @@
+/* View model for haemodialysis vascular access info card */
+
+#define_ruleblock(rrt_hd_acc_card,{
+        description: "View model for haemodialysis vascular access info card",
+        is_active:2
+});
+
+rrt => rout_rrt.rrt.val.bind();
+
+acc_side => rout_rrt_hd_acc_iv.acc_side_val.val.bind();
+
+acc_type => rout_rrt_hd_acc_iv.acc_type_val.val.bind();
+
+acc_detail => rout_rrt_hd_acc_iv.acc_detail.val.bind();
+
+avf_dt => rout_rrt_hd_acc_iv.avf_dt.val.bind();
+
+avf_us_ld => rout_rrt_hd_acc_iv.avf_us_ld.val.bind();
+
+av_gram_ld => rout_rrt_hd_acc_iv.av_gram_ld.val.bind();
+
+av_plasty_ld => rout_rrt_hd_acc_iv.av_plasty_ld.val.bind();
+
+av_plasty_1_ld => rout_rrt_hd_acc_iv.av_plasty_1_ld.val.bind();
+
+av_plasty_fd => rout_rrt_hd_acc_iv.av_plasty_fd.val.bind();
+
+av_plasty_n => rout_rrt_hd_acc_iv.av_plasty_n.val.bind();
+
+av_surv_ld => rout_rrt_hd_acc_iv.av_surv_ld.val.bind();
+
+plasty_gap => rout_rrt_hd_acc_iv.plasty_gap.val.bind();
+
+iv_periodicity => rout_rrt_hd_acc_iv.iv_periodicity.val.bind();
+
+av_iv  =>  rout_rrt_hd_acc_iv.av_iv.val.bind();
+
+
+rrt_hd_acc_card : { acc_detail=1 => 1},{=>0};
+
+

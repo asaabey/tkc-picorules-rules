@@ -1,0 +1,78 @@
+<style>
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .metric-unit {
+            color: #6c757d;
+            font-size: 0.875rem;
+            font-weight: normal;
+        }
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .metric-light-green {
+            color: #28d183;
+        }
+        .metric-green {
+            color: #198754;
+        }
+        .metric-light-orange {
+            color: #ffb005;
+        }
+        .metric-orange {
+            color: #cc6c06;
+        }
+        .metric-light-red {
+            color: #f5712f;
+        }
+        .metric-red {
+            color: #bf4204;
+        }
+        .info-icon {
+            width: 128px;
+            height: 128px;
+        }
+        .svg-icon {
+          color: #6c757d;
+          opacity: 0.4;
+          width: 64px;
+          height: 64px;
+         }
+        .rx-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.15rem 0.5rem;
+          font-size: 1.25rem;
+          font-weight: 600;
+          border-radius: 0.5rem;
+          background-color: #786c7d;
+          color: #f4f0f5;
+          box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .pill-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.15rem 0.5rem;
+          font-size: 1.25rem;
+          font-weight: 600;
+          border-radius: 2.5rem;
+          border-color: black;
+          background-color: red;
+          color: #f4f0f5;
+          box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+    </style>
+
+    <!-- Cards Container -->
+    <div class="container">
+        <div class="row g-4">

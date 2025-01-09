@@ -1,0 +1,153 @@
+/* View model for coronary artery disease info card */
+
+#define_ruleblock(cardiac_cad_card,{
+        description: "View model for coronary artery disease info card",
+        is_active:2
+});
+
+dob => rout_dmg.dob.val.bind();
+gender => rout_dmg.gender.val.bind();
+
+
+/* First date of coronary bypass surgery */
+cabg => rout_cd_cardiac_cad.cabg.val.bind();
+
+/* Binary flag indicating presence of coronary artery bypass graft */
+cabg_flag => rout_cd_cardiac_cad.cabg_flag.val.bind();
+
+/* First date of non-ST elevation myocardial infarction from ICD codes */
+nstemi_fd_icd => rout_cd_cardiac_cad.nstemi_fd_icd.val.bind();
+
+/* First date of non-ST elevation myocardial infarction from ICPC codes */
+nstemi_fd_icpc => rout_cd_cardiac_cad.nstemi_fd_icpc.val.bind();
+
+/* Combined first date of NSTEMI from all coding systems */
+nstemi_fd => rout_cd_cardiac_cad.nstemi_fd.val.bind();
+
+/* First date of ST elevation myocardial infarction from ICD codes */
+stemi_fd_icd => rout_cd_cardiac_cad.stemi_fd_icd.val.bind();
+
+/* First date of ST elevation myocardial infarction from ICPC codes */
+stemi_fd_icpc => rout_cd_cardiac_cad.stemi_fd_icpc.val.bind();
+
+/* Combined first date of STEMI from all coding systems */
+stemi_fd => rout_cd_cardiac_cad.stemi_fd.val.bind();
+
+/* Last recorded date of NSTEMI */
+nstemi_ld => rout_cd_cardiac_cad.nstemi_ld.val.bind();
+
+/* Last recorded date of STEMI */
+stemi_ld => rout_cd_cardiac_cad.stemi_ld.val.bind();
+
+/* Flag indicating if AMI ICD codes are null */
+ami_icd_null => rout_cd_cardiac_cad.ami_icd_null.val.bind();
+
+/* STEMI anatomical region initial code */
+stemi_anat_0 => rout_cd_cardiac_cad.stemi_anat_0.val.bind();
+
+/* Processed STEMI anatomical region number */
+stemi_anat => rout_cd_cardiac_cad.stemi_anat.val.bind();
+
+/* Date of AMI complications */
+ami_i23 => rout_cd_cardiac_cad.ami_i23.val.bind();
+
+/* Binary flag indicating presence of acute myocardial infarction */
+ami => rout_cd_cardiac_cad.ami.val.bind();
+
+/* First date of chronic coronary artery disease from ICD codes */
+cad_chronic_icd => rout_cd_cardiac_cad.cad_chronic_icd.val.bind();
+
+/* First date of ischemic heart disease from ICPC codes */
+cad_ihd_icpc => rout_cd_cardiac_cad.cad_ihd_icpc.val.bind();
+
+/* Flag for coronary artery disease excluding acute MI */
+cad_ex_ami => rout_cd_cardiac_cad.cad_ex_ami.val.bind();
+
+/* First date of any coronary artery disease */
+cad_fd => rout_cd_cardiac_cad.cad_fd.val.bind();
+
+/* Age at first event */
+cad_fd_age : { cad_fd!? => round((cad_fd-dob)/365.25,0)}; 
+
+/* Flag indicating previous coronary artery disease */
+cad_prev => rout_cd_cardiac_cad.cad_prev.val.bind();
+
+/* Flag indicating incident (new) CAD within last 365 days */
+cad_incd => rout_cd_cardiac_cad.cad_incd.val.bind();
+
+
+
+/* Date of cerebrovascular event */
+cva_dt => rout_cd_cardiac_cad.cva_dt.val.bind();
+
+/* Date of peripheral vascular disease diagnosis */
+pvd_dt => rout_cd_cardiac_cad.pvd_dt.val.bind();
+
+/* Flag indicating presence of cerebrovascular event */
+cva => rout_cd_cardiac_cad.cva.val.bind();
+
+/* Flag indicating presence of peripheral vascular disease */
+pvd => rout_cd_cardiac_cad.pvd.val.bind();
+
+/* Current date of antiplatelet medication */
+rxn_ap => rout_cd_cardiac_cad.rxn_ap.val.bind();
+
+/* Current date of anticoagulation medication including NOAC */
+rxn_anticoag => rout_cd_cardiac_cad.rxn_anticoag.val.bind();
+
+/* Current date of beta blocker (ag type) medication */
+rxn_bb_ag => rout_cd_cardiac_cad.rxn_bb_ag.val.bind();
+
+/* Current date of beta blocker (aa type) medication */
+rxn_bb_aa => rout_cd_cardiac_cad.rxn_bb_aa.val.bind();
+
+/* Current date of beta blocker (ab type) medication */
+rxn_bb_ab => rout_cd_cardiac_cad.rxn_bb_ab.val.bind();
+
+/* Combined first date of any beta blocker medication */
+rxn_bb => rout_cd_cardiac_cad.rxn_bb.val.bind();
+
+/* Current date of ACE inhibitor medication */
+rxn_ace_aa => rout_cd_cardiac_cad.rxn_ace_aa.val.bind();
+
+/* Current  date of ARB medication */
+rxn_arb_aa => rout_cd_cardiac_cad.rxn_arb_aa.val.bind();
+
+/* Current  Combined first date of any RAAS blocker medication */
+rxn_raas => rout_cd_cardiac_cad.rxn_raas.val.bind();
+
+/* Current lipid lowering medication */
+rxn_statin => rout_cd_dyslip.rx_statin_dt.val.bind();
+rxn_ezet => rout_cd_dyslip.rx_ezet_dt.val.bind();
+rxn_evolocumab => rout_cd_dyslip.rx_evolocumab_dt.val.bind();
+
+/* Flag indicating presence of any cardiac medication */
+rxn => rout_cd_cardiac_cad.rxn.val.bind();
+
+/* Date of last echocardiogram */
+echo_ld => rout_cd_cardiac_cad.echo_ld.val.bind();
+
+/* Date of last cardiac angiogram */
+cardang_ld => rout_cd_cardiac_cad.cardang_ld.val.bind();
+
+/* Link to NT cardiac report */
+cardang_l_dt => rout_cd_cardiac_cad.cardang_l_dt.val.bind();
+
+/* Final flag indicating presence of coronary artery disease */
+cd_cardiac_cad => rout_cd_cardiac_cad.cd_cardiac_cad.val.bind();
+
+/* lipids */
+tc_dt => rout_cd_dyslip.tc_dt.val.bind();
+tc => rout_cd_dyslip.tc_val.val.bind();
+hdl => rout_cd_dyslip.hdl_val.val.bind();
+ldl => rout_cd_dyslip.ldl_val.val.bind();
+
+/* recommended ldl level */
+ldl_unl => rout_cd_dyslip.ldl_unl.val.bind();
+
+
+
+/* Overall flag for presence of coronary artery disease */
+cad => rout_cd_cardiac_cad.cad.val.bind();
+
+cardiac_cad_card: { cad=1 => 1},{=>0};

@@ -1,0 +1,35 @@
+<div class="col-12 col-lg-6 mt-4">
+    <div class="card h-100 shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pb-0">
+                        <h5 class="card-title mb-0">Haemodialysis</h5>
+                        <small class="text-muted">Last visit: 20/12/2024</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                               <img src="https://d1xcrowuazv720.cloudfront.net/images/hd-icon.png" height="60" />
+                            </div>
+                            <div class="col">
+                                <div class="row g-3">
+<div class="col-6">
+                                        <div class="metric-label">Commenced</div>
+                                        <div class="metric-value">{{ picoformat('rrt_1_card.hd_dt_min') }}</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric-label">Years on Dialysis</div>
+                                        <div class="metric-value metric-green">{{ picoformat('rrt_1_card.hd_vintage_yrs') }}</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric-label">Attendance Rate</div>
+                                        <div class="metric-value attendance-rate">{{ picoformat('rrt_1_card.attend_pct') }} %</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric-label">Hours per Session</div>
+                                        <div class="metric-value">{{ picoformat('rrt_1_card.hd_hours') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>

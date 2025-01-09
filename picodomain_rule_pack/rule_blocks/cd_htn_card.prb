@@ -1,0 +1,33 @@
+/* View model for hypertension info card */
+
+#define_ruleblock(cd_htn_card,
+    {
+        description: "View model for hypertension info card",
+        is_active:2
+    }
+);
+
+htn => rout_cd_htn.htn.val.bind();
+
+sbp_mu_1 => rout_cd_htn_bp_control.sbp_mu_1.val.bind();
+dbp_mu_1 => rout_cd_htn_bp_control.dbp_mu_1.val.bind();
+
+sbp_dt => rout_cd_htn_bp_control.sbp_dt.val.bind();
+
+sbp_min => rout_cd_htn_bp_control.sbp_min.val.bind();
+sbp_max => rout_cd_htn_bp_control.sbp_max.val.bind();
+sbp_tir_1y => rout_cd_htn_bp_control.sbp_tir_1y.val.bind();
+
+rxn_arb => rout_cd_htn.htn_rxn_arb.val.bind();
+rxn_acei => rout_cd_htn.htn_rxn_acei.val.bind();
+rxn_ccb => rout_cd_htn.htn_rxn_ccb.val.bind();
+rxn_bb => rout_cd_htn.htn_rxn_bb.val.bind();
+rxn_diuretic_thiaz => rout_cd_htn.htn_rxn_diuretic_thiaz.val.bind();
+rxn_diuretic_loop => rout_cd_htn.htn_rxn_diuretic_loop.val.bind();
+
+
+
+cd_htn_card: { htn=1 => 1},{=>0};
+
+
+

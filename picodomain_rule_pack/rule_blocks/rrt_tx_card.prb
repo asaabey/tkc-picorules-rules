@@ -1,0 +1,56 @@
+/* View model for renal transplant info card */
+
+#define_ruleblock(rrt_tx_card,
+    {
+        description: "View model for renal transplant info card",
+        is_active:2
+    }
+);
+
+rrt => rout_rrt.rrt.val.bind();
+
+tx_dt => rout_rrt.tx_dt.val.bind();
+
+/* Best creatinine post tx */
+cr_min => eadv.lab_bld_creatinine._.minfdv().where(dt > tx_dt);
+
+/* Last creatinine post tx */
+cr_last => eadv.lab_bld_creatinine._.lastdv().where(dt > tx_dt);
+
+/* Last clinic */
+enc_op_ld => rout_rrt_tx.enc_op_ld.val.bind(); 
+
+
+/* Current CNI presc dt */
+rx_l04ad => rout_rrt_tx.rx_l04ad.val.bind(); 
+
+/* Tac level within last 1 year */
+tdm_tac_val => rout_rrt_tx.tdm_tac_val.val.bind(); 
+tdm_tac_dt => rout_rrt_tx.tdm_tac_dt.val.bind(); 
+
+/* Current MTOR and MPA by class presc dt*/
+rx_l04aa => rout_rrt_tx.rx_l04aa.val.bind(); 
+
+/* Current Evl by rxcui presc dt*/
+evl => rout_rx_is_sot.evl.val.bind();
+
+/* Current MMF MPA by rxcui presc dt*/
+mmf => rout_rx_is_sot.mmf.val.bind();
+mpa => rout_rx_is_sot.mpa.val.bind();
+
+/* Evl level within last 1 year*/
+tdm_evl_val =>  rout_rrt_tx.tdm_evl_val.val.bind(); 
+tdm_evl_dt =>  rout_rrt_tx.tdm_evl_dt.val.bind(); 
+
+/* Current azathioprine presc dt*/
+rx_l04ax => rout_rrt_tx.rx_l04ax.val.bind(); 
+
+/* Current corticosteroid presc dt*/
+rx_h02ab => rout_rrt_tx.rx_h02ab.val.bind(); 
+
+/* Current corticosteroid by rxcui presc dt*/
+prd => rout_rx_is_sot.prd.val.bind();
+
+/* Clinic encounter more than 90 days */
+enc_90 : { (sysdate - enc_op_ld) <= 90 => 1},{(sysdate - enc_op_ld) > 90 => 2},{=>0};
+rrt_tx_card: { rrt=3 => 1},{=>0};

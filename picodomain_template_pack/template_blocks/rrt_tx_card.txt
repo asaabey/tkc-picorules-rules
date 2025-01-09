@@ -1,0 +1,97 @@
+<!-- Generic Medical Card Template -->
+<div class="col-12 col-lg-6 mt-4">
+    <div class="card h-100 shadow-sm">
+        <!-- Card Header -->
+        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pb-0">
+            <h5 class="card-title mb-0">Renal Transplant</h5>
+            <small class="text-muted">Date of transplant {{ picoformat('rrt_tx_card.tx_dt') }}</small>
+        </div>
+        
+        <!-- Card Body -->
+        <div class="card-body">
+            <div class="row align-items-center">
+                <!-- Icon Column -->
+                <div class="col-auto">
+                    <img src="https://d1xcrowuazv720.cloudfront.net/images/tx-icon.png" height="60" />
+                </div>
+                
+                <!-- Metrics Column -->
+                <div class="col">
+                    <div class="row g-3">
+                        {% if rrt_tx_card.enc_op_ld %}
+                        <div class="col-6">
+                            <div class="metric-label">Last Clinic</div>
+                            {% if enc_90 == 1 %}<div class="metric-value metric-light-green">{{ picoformat('rrt_tx_card.enc_op_ld') }}</div>
+                            {% elif enc_90 == 2 %}<div class="metric-value metric-red">{{ picoformat('rrt_tx_card.enc_op_ld') }}</div>
+                            {% else %}<div class="metric-value">{{ picoformat('rrt_tx_card.enc_op_ld') }}</div>{% endif %}
+                        </div>
+                        <div class="col-6">
+                        </div>
+                        {% endif %}
+
+                        {% if rrt_tx_card.cr_last_val %}
+                        <div class="col-6">
+                            <div class="metric-label">Last Creatinine</div>
+                            <span class="metric-value metric-light-green">{{ picoformat('rrt_tx_card.cr_last_val') }}</span>
+                            <span class="metric-unit"> umol/l</span>
+                        </div>
+                        {% endif %}
+
+                        {% if rrt_tx_card.cr_last_dt %}
+                        <div class="col-6">
+                            <div class="metric-label">Date</div>
+                            <div class="metric-value metric-light-green">{{ picoformat('rrt_tx_card.cr_last_dt') }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if rrt_tx_card.tdm_tac_val %}
+                        <div class="col-6">
+                            <div class="metric-label">Tacrolimus C0</div>
+                            <span class="metric-value metric-light-green">{{ picoformat('rrt_tx_card.tdm_tac_val') }}</span>
+                            <span class="metric-unit"> ug/l</span>
+                        </div>
+                        {% endif %}
+
+                        {% if rrt_tx_card.tdm_tac_dt %}
+                        <div class="col-6">
+                            <div class="metric-label">Date</div>
+                            <div class="metric-value metric-light-green">{{ picoformat('rrt_tx_card.tdm_tac_dt') }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if rrt_tx_card.tdm_evl_val %}
+                        <div class="col-6">
+                            <div class="metric-label">Everolimus C0</div>
+                            <span class="metric-value metric-light-green">{{ picoformat('rrt_tx_card.tdm_evl_val') }}</span>
+                            <span class="metric-unit"> ug/l</span>
+                        </div>
+                        {% endif %}
+
+                        {% if rrt_tx_card.tdm_evl_dt %}
+                        <div class="col-6">
+                            <div class="metric-label">Date</div>
+                            <div class="metric-value">{{ picoformat('rrt_tx_card.tdm_evl_dt') }}</div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medications/Tags Section -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <hr class="my-2">
+                    <div class="d-flex flex-wrap justify-content-start gap-2">
+                          {% if rrt_tx_card.rx_l04ad %}<div class="rx-icon">CNI</div>{% endif %}
+                          {% if rrt_tx_card.evl %}<div class="rx-icon">EVL</div>{% endif %}
+                          {% if rrt_tx_card.mmf %}<div class="rx-icon">MMF</div>{% endif %}
+                          {% if rrt_tx_card.mpa %}<div class="rx-icon">MPA</div>{% endif %}
+                          {% if rrt_tx_card.rx_l04ax %}<div class="rx-icon">AZA</div>{% endif %}
+                          {% if rrt_tx_card.rx_h02ab or rrt_tx_card.prd %}<div class="rx-icon">CS</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

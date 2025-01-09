@@ -1,0 +1,56 @@
+/* View model for diabetes info card */
+
+#define_ruleblock(dm_card,
+    {
+        description: "View model for diabetes info card",
+        is_active:2
+    }
+);
+
+/* Diabetes diagnosis and vintage*/ 
+dm => rout_cd_dm_dx.dm.val.bind();
+dm_vintage_yr => rout_cd_dm_dx.dm_vintage_yr.val.bind(); 
+
+/* Diabetes pharmacotherapy  result as the first date*/
+dm_rxn_su => rout_cd_dm_dx.dm_rxn_su.val.bind();
+dm_rxn_ins => rout_cd_dm_dx.dm_rxn_ins.val.bind();
+dm_rxn_bg => rout_cd_dm_dx.dm_rxn_bg.val.bind();
+dm_rxn_dpp4 => rout_cd_dm_dx.dm_rxn_dpp4.val.bind();
+dm_rxn_glp1 => rout_cd_dm_dx.dm_rxn_glp1.val.bind();
+dm_rxn_sglt2 => rout_cd_dm_dx.dm_rxn_sglt2.val.bind();
+dm_rxn => rout_cd_dm_dx.dm_rxn.val.bind();
+
+
+/* Glycaemic control */
+/* last HbA1c (NGSP) */
+hba1c_n0_val => rout_cd_dm_glyc_cntrl.hba1c_n0_val.val.bind();
+hba1c_n0_dt => rout_cd_dm_glyc_cntrl.hba1c_n0_dt.val.bind();
+
+/* HbA1c difference from previous reading */
+hba1c_delta => rout_cd_dm_glyc_cntrl.hba1c_delta.val.bind();
+
+/* Glycaemic control category 1-4 */
+n0_st => rout_cd_dm_glyc_cntrl.n0_st.val.bind();
+
+/* Maximum HbA1c (NGSP) assessing for past glycaemic control */
+hba1c_max_val => rout_cd_dm_glyc_cntrl.hba1c_max_val.val.bind();
+hba1c_max_dt => rout_cd_dm_glyc_cntrl.hba1c_max_dt.val.bind();
+
+/* Proportion of HbA1c readings between 6-8 and for the last 2 years */
+n_opt_qt => rout_cd_dm_glyc_cntrl.n_opt_qt.val.bind();
+
+/* Presence of microvascular complications */
+dm_micvas_retino => rout_cd_dm_comp.dm_micvas_retino.val.bind();
+dm_micvas_neuro => rout_cd_dm_comp.dm_micvas_neuro.val.bind();
+dm_dfu => rout_cd_dm_comp.dm_foot_ulc.val.bind();
+
+/* Review by podiatry as the last date */
+rv_pod_ld => rout_cd_dm_mx.rv_pod_ld.val.bind();
+
+/* Review by educator as the last date*/
+rv_edu_ld => rout_cd_dm_mx.rv_edu_ld.val.bind();
+
+dm_card : { dm=1 => 1},{=>0};
+
+
+

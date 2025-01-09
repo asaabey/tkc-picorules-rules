@@ -1,0 +1,39 @@
+/* View model for haemodialysis info card */
+
+#define_ruleblock(rrt_1_card,
+    {
+        description: "View model for haemodialysis info card",
+        is_active:2
+    }
+);
+
+rrt => rout_rrt.rrt.val.bind();
+
+calc_spktv => rout_rrt_hd_adequacy.spktv.val.bind();
+
+/* TODO get document ktv */
+
+hd_vintage_yrs => rout_rrt_1_metrics.tspan_y.val.bind();
+
+attend_pct => rout_rrt_1_metrics.hd_oe.val.bind();
+
+hd_dt_min => rout_rrt.hd_dt_min.val.bind();
+
+flag_mm => rout_rrt.rrt_mm1.val.bind();
+
+hd_mode => rout_rrt_hd_param.mode_val.val.bind();
+
+hd_hours => rout_rrt_hd_param.hours_val.val.bind();
+
+ibw => rout_rrt_hd_param.ibw_val.val.bind();
+
+
+
+
+
+
+
+
+
+rrt_1_card : { rrt=1 => 1},{=>0};
+

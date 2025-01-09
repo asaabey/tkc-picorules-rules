@@ -1,0 +1,92 @@
+<div class="col-12 col-lg-6 mt-4">
+    <div class="card h-100 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pb-0">
+            <h5 class="card-title mb-0">Coronary Artery Disease</h5>
+            {% if cardiac_cad_card.cardang_ld %}
+            <small class="text-muted">Last visit: {{ picoformat('cardiac_cad_card.cardang_ld') }}</small>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+<img src="https://d1xcrowuazv720.cloudfront.net/images/heart-icon.png" height="60" />
+
+                </div>
+                <div class="col">
+                    <div class="row g-3">
+                        {% if cardiac_cad_card.cad_fd_age %}
+                        <div class="col-6">
+                            <div class="metric-label">Age at first event</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.cad_fd_age') }}</div>
+                        </div>
+                        {% endif %}
+                        {% if cardiac_cad_card.ldl %}
+                        <div class="col-6">
+                            <div class="metric-label">LDL</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.ldl') }}</div>
+                        </div>
+                        {% endif %}
+                        {% if cardiac_cad_card.stemi_fd %}
+                        <div class="col-6">
+                            <div class="metric-label">STEMI First</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.stemi_fd') }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if cardiac_cad_card.stemi_ld %}
+                        <div class="col-6">
+                            <div class="metric-label">STEMI Last</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.stemi_ld') }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if cardiac_cad_card.nstemi_fd %}
+                        <div class="col-6">
+                            <div class="metric-label">NSTEMI First</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.nstemi_fd') }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if cardiac_cad_card.nstemi_ld %}
+                        <div class="col-6">
+                            <div class="metric-label">NSTEMI Last</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.nstemi_ld') }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if cardiac_cad_card.cabg %}
+                        <div class="col-6">
+                            <div class="metric-label">CABG</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.cabg') }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if cardiac_cad_card.echo_ld %}
+                        <div class="col-6">
+                            <div class="metric-label">Last Echo</div>
+                            <div class="metric-value">{{ picoformat('cardiac_cad_card.echo_ld') }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        
+                    </div>
+                </div>
+            </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <hr class="my-2">
+                                <div class="d-flex flex-wrap justify-content-start gap-2">
+                                    {% if cardiac_cad_card.rxn_ap %}<div class="rx-icon">AP</div>{% endif %}
+                                    {% if cardiac_cad_card.rxn_bb %}<div class="rx-icon">BB</div>{% endif %}
+                                    {% if cardiac_cad_card.rxn_raas %}<div class="rx-icon">RAAS</div>{% endif %}
+                                    {% if cardiac_cad_card.rxn_statin %}<div class="rx-icon">Statin</div>{% endif %}
+                                    {% if cardiac_cad_card.rxn_ezet %}<div class="rx-icon">Ezetimibe</div>{% endif %}
+                                    {% if cardiac_cad_card.rxn_evolocumab %}<div class="rx-icon">Evolocumab</div>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+              
+        </div>
+    </div>
+</div>

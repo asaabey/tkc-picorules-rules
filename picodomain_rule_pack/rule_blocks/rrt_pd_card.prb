@@ -1,0 +1,37 @@
+/* View model for PD info card */
+
+#define_ruleblock(rrt_pd_card,
+    {
+        description: "View model for PD info card",
+        is_active:2
+    }
+);
+
+rrt => rout_rrt.rrt.val.bind();
+pd_dt => rout_rrt.pd_dt.val.bind();
+pd_dt_min => rout_rrt.pd_dt_min.val.bind();
+
+apd_cycles => eadv.pd_regimen_apd_cycles._.lastdv();
+
+pd_mode : { apd_cycles_dt!? and (sysdate - apd_cycles_dt)<30  => 2},{=>1};
+
+pet_trans_mode => eadv.pd_pet_transporter_stat.val.last();
+
+pd_adequacy_ktv_dialysis => eadv.pd_adequacy_ktv_dialysis._.lastdv();
+pd_adequacy_ktv_renal=> eadv.pd_adequacy_ktv_renal._.lastdv();
+pd_adequacy_ktv_total => eadv.pd_adequacy_ktv_total._.lastdv();
+
+pd_adequacy_ktv_total_prev => eadv.pd_adequacy_ktv_total._.lastdv(1);
+
+ktv_trend : { pd_adequacy_ktv_total_prev_val < pd_adequacy_ktv_total_val => 1},
+            { pd_adequacy_ktv_total_prev_val > pd_adequacy_ktv_total_val  => 2},
+            { =>0};
+
+
+
+
+
+rrt_pd_card : { rrt=2 => 1},{=>0};
+
+
+

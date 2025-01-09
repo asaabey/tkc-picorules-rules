@@ -1,0 +1,58 @@
+<div class="col-12 col-lg-6 mt-4">
+    <div class="card h-100 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom-0 pb-0">
+            <h5 class="card-title mb-0">Hypertension</h5>
+            {% if cd_htn_card.sbp_dt %}
+                <small class="text-muted">Last BP: {{ picoformat('cd_htn_card.sbp_dt') }}</small>
+            {% endif%}
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <img src="https://d1xcrowuazv720.cloudfront.net/images/bp.png" height="60" />
+                </div>
+                <div class="col">
+                    <div class="row g-3">
+                        {% if cd_htn_card.sbp_mu_1 %}
+                        <div class="col-6">
+                            <div class="metric-label">Average BP</div>
+                            <div class="metric-light-green metric-value">
+                                {{ picoformat('cd_htn_card.sbp_mu_1') }}/{{ picoformat('cd_htn_card.dbp_mu_1') }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if cd_htn_card.sbp_min %}
+                        <div class="col-6">
+                            <div class="metric-label">Systolic BP range</div>
+                            <div class="metric-value">
+                                {{ picoformat('cd_htn_card.sbp_min') }}-{{ picoformat('cd_htn_card.sbp_max') }} mmHg
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if cd_htn_card.sbp_tir_1y %}
+                        <div class="col-6">
+                            <div class="metric-label">Systolic TIR</div>
+                            <div class="metric-value">{{ picoformat('cd_htn_card.sbp_tir_1y') }} %</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <hr class="my-2">
+                    <div class="d-flex flex-wrap justify-content-start gap-2">
+                        {% if cd_htn_card.rxn_arb %}<div class="rx-icon">ARB</div> {% endif %}
+                        {% if cd_htn_card.rxn_acei %}<div class="rx-icon">ACEi</div>{% endif %}
+                        {% if cd_htn_card.rxn_ccb %}<div class="rx-icon">CCB</div>{% endif %}
+                        {% if cd_htn_card.rxn_bb %}<div class="rx-icon">BB</div>{% endif %}
+                        {% if cd_htn_card.rxn_diuretic_thiaz %}<div class="rx-icon">THIAZ</div>{% endif %}
+                        {% if cd_htn_card.rxn_diuretic_loop %}<div class="rx-icon">LOOP</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
