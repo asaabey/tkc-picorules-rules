@@ -103,34 +103,34 @@ cad : { greatest(ami,cad_ex_ami)>0 or cabg!? =>1 },{=>0};
     }
 );
 
-#doc(,
-    {
+#doc(,{
         txt:"Other atherosclerotic disease"
-    }
-);
+});
 
 
 cva_dt => eadv.[icd_g46%,icpc_k89%,icpc_k90%,icpc_k91%].dt.min();
 
 pvd_dt => eadv.[icd_i70%,icd_i71%,icd_i72%,icd_i73%,icpc_k92%].dt.min();
 
+pad_dt => eadv.[icd_i70_2%].dt.min();
+
 cva : { cva_dt!? =>1},{=>0};
 
 pvd : { pvd_dt!? =>1},{=>0};
 
+pad : { pad_dt!? =>1},{=>0};
 
 
-#doc(,
-    {
-        txt:"Medication"
-    }
-);
+#doc(,{
+        txt:"Major adverse cardiovascular events(MACE)"
+});
 
-#doc(,
-    {
-        txt: "antiplatelet agents"
-    }
-);
+mace_fdt : { . => least_date(nstemi_fd, stemi_fd, cabg, cva_dt)};
+
+
+#doc(,{ txt:"Medication" });
+
+#doc(,{ txt: "antiplatelet agents" });
 
 
 rxn_ap => eadv.[rxnc_b01ac].dt.min().where(val=1);
@@ -199,30 +199,59 @@ cardang_l => eadv.[ntc_rep_cangio]._.lastdv();
 
 cd_cardiac_cad : {cad=1 =>1},{=>0};
 
-#define_attribute(
-cd_cardiac_cad,
-    {
+#define_attribute(cd_cardiac_cad, {
         label:"Coronary artery disease",
         desc:"Presence of Coronary artery disease",
         is_reportable: 1,
         type: 1001
-    }
-);
-#define_attribute(
-cabg_flag,
-    {
+});
+
+#define_attribute(cabg_flag, {
         label:"CABG",
         desc:"Coronary artery bypass graft",
         is_reportable: 1,
         type: 1001
-    }
-);
-#define_attribute(
-ami,
-    {
+});
+
+#define_attribute(ami,{
         label:"AMI",
         desc:"Acute myocardial infarction",
         is_reportable: 1,
         type: 1001
-    }
-);
+});
+
+#define_attribute(stemi_fd,{
+        label:"STEMI-FDT",
+        desc:"STEMI First date",
+        is_reportable: 1,
+        type: 12
+});
+
+#define_attribute(nstemi_fd,{
+        label:"NSTEMI-FDT",
+        desc:"NSTEMI First date",
+        is_reportable: 1,
+        type: 12
+});
+
+#define_attribute(cabg,{
+        label:"CABG-FDT",
+        desc:"CABG First date",
+        is_reportable: 1,
+        type: 12
+});
+#define_attribute(cva_dt,{
+        label:"CVA-FDT",
+        desc:"CVA First date",
+        is_reportable: 1,
+        type: 12
+});
+
+#define_attribute(mace_fdt,{
+        label:"MACE-FDT",
+        desc:"MACE First date",
+        is_reportable: 1,
+        type: 12
+});
+
+
