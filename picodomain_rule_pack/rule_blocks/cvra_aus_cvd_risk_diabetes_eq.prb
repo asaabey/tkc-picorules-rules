@@ -1,0 +1,171 @@
+#define_ruleblock([[rb_id]], {
+    description: "Assess CVD risk based on AusCVDRisk Diabetes Equation (WIP)",
+    is_active:2,
+});
+
+#doc(, { txt:"work in progress" });
+
+/* Reference Specification: AusCVDRisk calculator - Technical specifications_20240926.pdf */
+
+#doc(,{ section:"Gather precursor variables" });
+
+tkc_cat => rout_at_risk.tkc_cat._.bind();
+
+has_high_risk_factors => rout_cvra_aus_cvd_risk_pre.has_high_risk_factors._.bind();
+has_mandatory_vars_for_diabetes_eq => rout_cvra_aus_cvd_risk_pre.has_mandatory_vars_for_general_equation._.bind();
+vars_are_in_range_for_diabetes_equation => rout_cvra_aus_cvd_risk_pre.vars_are_in_range_for_general_equation._.bind();
+recalibration_factor => rout_cvra_aus_cvd_risk_pre.recalibration_factor._.bind();
+
+sex => rout_cvra_aus_cvd_risk_pre.sex._.bind();
+age => rout_cvra_aus_cvd_risk_pre.age._.bind();
+
+has_dm => rout_cvra_aus_cvd_risk_pre.has_dm._.bind();
+nzdep_quintile => rout_cvra_aus_cvd_risk_pre.nzdep_quintile._.bind();
+is_smoker => rout_cvra_aus_cvd_risk_pre.is_smoker._.bind();
+is_exsmoker => rout_cvra_aus_cvd_risk_pre.is_exsmoker._.bind();
+is_nonsmoker => rout_cvra_aus_cvd_risk_pre.is_nonsmoker._.bind();
+has_hist_of_af => rout_cvra_aus_cvd_risk_pre.has_hist_of_af._.bind();
+dm_yr => rout_cvra_aus_cvd_risk_pre.dm_yr._.bind();
+bmi => rout_cvra_aus_cvd_risk_pre.bmi._.bind();
+sbp_val => rout_cvra_aus_cvd_risk_pre.sbp_val._.bind();
+hdl_ratio => rout_cvra_aus_cvd_risk_pre.hdl_ratio._.bind();
+egfr_val => rout_cvra_aus_cvd_risk_pre.egfr_val._.bind();
+hba1c_mmol_per_mol => rout_cvra_aus_cvd_risk_pre.hba1c_mmol_per_mol._.bind();
+acr_3_to_30 => rout_cvra_aus_cvd_risk_pre.acr_3_to_30._.bind();
+acr_gt_30 => rout_cvra_aus_cvd_risk_pre.acr_gt_30._.bind();
+is_on_bplm => rout_cvra_aus_cvd_risk_pre.is_on_bplm._.bind();
+is_on_llm => rout_cvra_aus_cvd_risk_pre.is_on_llm._.bind();
+is_on_atm => rout_cvra_aus_cvd_risk_pre.is_on_atm._.bind();
+is_on_ins => rout_cvra_aus_cvd_risk_pre.is_on_ins._.bind();
+is_on_dm => rout_cvra_aus_cvd_risk_pre.is_on_dm._.bind();
+
+/*
+eq 1: Male General Equation
+eq 2: Female General Equation
+eq 3: Male Diabetes Equation
+eq 4: Female Diabetes Equation
+*/
+eq :
+    {has_mandatory_vars_for_diabetes_eq = 0 or vars_are_in_range_for_diabetes_equation = 0 or has_high_risk_factors = 1 => null },
+    {sex = 1 and has_dm = 1 => 3},
+    {sex = 0 and has_dm = 1 => 4};
+
+age_product :
+    {eq = 3 => (age - 56.57672) * 0.0510591},
+    {eq = 4 => (age - 57.8318) * 0.0607418};
+
+seifa_product :
+    {eq = 3 => (nzdep_quintile - 2.906154) * 0.0931026},
+    {eq = 4 => (nzdep_quintile - 3.033218) * 0.1111981};
+
+smoker_product :
+    {eq = 3 => (is_smoker) * 0.318424},
+    {eq = 4 => (is_smoker) * 0.7319247};
+
+exsmoker_product :
+    {eq = 3 => (is_exsmoker) * 0},
+    {eq = 4 => (is_exsmoker) * 0};
+
+nonsmoker_product :
+    {eq = 3 => (is_nonsmoker) * 0},
+    {eq = 4 => (is_nonsmoker) * 0};
+
+af_product :
+    {eq = 3 => (has_hist_of_af) * 0.3149766},
+    {eq = 4 => (has_hist_of_af) * 0.4150528};
+
+year_product :
+    {eq = 3 => (dm_yr - 5.255285 ) * 0.0117042},
+    {eq = 4 => (dm_yr - 5.222868 ) * 0.011011};
+
+bmi_product :
+    {eq = 3 => (bmi - 29.21475) * 0.0156861},
+    {eq = 4 => (bmi - 30.33892) * 0.0112387};
+
+sbp_product :
+    {eq = 3 => (sbp_val - 131.8995) * 0.004488},
+    {eq = 4 => (sbp_val - 132.2317) * 0.0084873};
+
+hdl_ratio_product :
+    {eq = 3 => (hdl_ratio - 4.267316) * 0.0858267},
+    {eq = 4 => (hdl_ratio - 3.882821) * 0.1025064};
+
+egfr_product :
+    {eq = 3 => (egfr_val - 88.15267) * -0.002239},
+    {eq = 4 => (egfr_val - 88.38233) * -0.0082137};
+
+hba1c_product :
+    {eq = 3 => (hba1c_mmol_per_mol - 57.84909) * 0.0065082},
+    {eq = 4 => (hba1c_mmol_per_mol - 56.06538) * 0.0109019};
+
+acr_3_to_30_product :
+    {eq = 3 => (acr_3_to_30) * 0.4277236},
+    {eq = 4 => (acr_3_to_30) * 0.2030524};
+
+acr_gt_30_product :
+    {eq = 3 => (acr_gt_30) * 0.803022},
+    {eq = 4 => (acr_gt_30) * 0.7023991};
+
+obplm_product :
+    {eq = 3 => (is_on_bplm) * 0.1674871},
+    {eq = 4 => (is_on_bplm) * 0.1671067};
+
+ollm_product :
+    {eq = 3 => (is_on_llm) * -0.0616832},
+    {eq = 4 => (is_on_llm) * -0.2702909};
+
+oatm_product :
+    {eq = 3 => (is_on_atm) * 0.0273617},
+    {eq = 4 => (is_on_atm) * 0.1205109};
+
+oins_product :
+    {eq = 3 => (is_on_ins) * 0.3899748},
+    {eq = 4 => (is_on_ins) * 0.2966913};
+
+odm_product :
+    {eq = 3 => (is_on_dm) * 0.1316217},
+    {eq = 4 => (is_on_dm) * 0.1594838};
+
+sum_product : { eq!? => 0
+    + age_product
+    + seifa_product
+    + smoker_product
+    + exsmoker_product
+    + nonsmoker_product
+    + af_product
+    + year_product
+    + bmi_product
+    + sbp_product
+    + hdl_ratio_product
+    + egfr_product
+    + hba1c_product
+    + acr_3_to_30_product
+    + acr_gt_30_product
+    + obplm_product
+    + ollm_product
+    + oatm_product
+    + oins_product
+    + odm_product
+};
+
+bsf :
+    {eq = 3 => 0.9483001},
+    {eq = 4 => 0.9664823};
+
+raw_risk_percent :
+    {. => (1 - power(bsf, exp(sum_product))) * 100};
+
+recalibrated_risk_percent :
+    {raw_risk_percent < 1 => 1},
+    { => raw_risk_percent * recalibration_factor};
+
+rounded_risk_percent :
+    { . => round(recalibrated_risk_percent, 0)};
+
+risk_cat :
+    {has_high_risk_factors = 1                               => 3}, /* High risk from override conditions */
+    {rounded_risk_percent >= 0 and rounded_risk_percent < 5  => 1}, /* Low risk */
+    {rounded_risk_percent >= 5 and rounded_risk_percent < 10 => 2}, /* Intermediate risk */
+    {rounded_risk_percent >= 10                              => 3}; /* High risk */
+
+[[rb_id]] : { risk_cat!? => 1},{ => 0};

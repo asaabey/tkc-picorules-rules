@@ -1,0 +1,76 @@
+#define_ruleblock([[rb_id]], {
+    description: "Assess CVD risk assessment cohesion",
+    is_active:2
+});
+
+dm => rout_cd_dm_dx.dm._.bind();
+
+age => rout_cvra_aus_cvd_risk_pre.age.val.bind();
+
+sex => rout_cvra_aus_cvd_risk_pre.sex.val.bind();
+
+fnp => rout_dmg.fnp._.bind();
+
+seifa_quintile => rout_cvra_aus_cvd_risk_pre.seifa_irsd_quintile.val.bind();
+
+smoking_status_code => rout_cvra_aus_cvd_risk_pre.smoking_status_code.val.bind();
+
+sbp => rout_cvra_aus_cvd_risk_pre.sbp_val.val.bind();
+
+sbp_dt => rout_cvra_aus_cvd_risk_pre.sbp_0_dt.val.bind();
+
+
+hdl_ratio => rout_cvra_aus_cvd_risk_pre.hdl_ratio.val.bind();
+
+hdl_ratio_dt => rout_cvra_aus_cvd_risk_pre.tc_dt.val.bind();
+
+bplm => rout_cvra_aus_cvd_risk_pre.is_on_bplm.val.bind();
+
+llm => rout_cvra_aus_cvd_risk_pre.is_on_llm.val.bind();
+
+atm => rout_cvra_aus_cvd_risk_pre.is_on_atm.val.bind();
+
+af => rout_cvra_aus_cvd_risk_pre.has_hist_of_af.val.bind();
+
+rounded_risk_percent_general_eq=> rout_cvra_aus_cvd_risk_general_eq.rounded_risk_percent.val.bind();
+
+hba1c_mmol_per_mol => rout_cvra_aus_cvd_risk_pre.hba1c_mmol_per_mol.val.bind();
+
+bmi => rout_cvra_aus_cvd_risk_pre.bmi.val.bind();
+
+ins  => rout_cvra_aus_cvd_risk_pre.is_on_ins.val.bind();
+
+dm_yr  => rout_cvra_aus_cvd_risk_pre.dm_yr.val.bind();
+
+acr => rout_cvra_aus_cvd_risk_pre.acr_val.val.bind();
+
+egfr => rout_cvra_aus_cvd_risk_pre.egfr_val.val.bind();
+
+rounded_risk_percent => rout_cvra_aus_cvd_risk.rounded_risk_percent.val.bind();
+
+has_high_risk_factors => rout_cvra_aus_cvd_risk.has_high_risk_factors.val.bind(); 
+
+risk_cat => rout_cvra_aus_cvd_risk.risk_cat.val.bind();
+
+reclass_risk_cat : { fnp = 1 and risk_cat <3 => risk_cat  + 1},{=>0};
+
+scale_ub => rout_cvra_aus_cvd_risk.scale_ub.val.bind();
+
+/* Legacy cvra */
+
+has_high_risk_factors_legacy => rout_cvra.risk_high_ovr._.bind();
+
+cvd_prev => rout_cvra.cvd_prev._.bind();
+
+tc => rout_cvra.tc_val._.bind();
+
+hdl => rout_cvra.hdl_val._.bind();
+
+risk_5_chd => rout_cvra.risk_5_chd._.bind();
+
+risk_5_mi => rout_cvra.risk_5_mi._.bind();
+
+cvra_cat => rout_cvra.cvra_cat._.bind();
+
+[[rb_id]] : { risk_cat!? => 1},{=>0};
+

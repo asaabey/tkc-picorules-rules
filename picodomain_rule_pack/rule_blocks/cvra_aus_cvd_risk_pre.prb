@@ -1,0 +1,288 @@
+#define_ruleblock([[rb_id]], {
+    description: "Assess CVD risk based on AusCVDRisk Diabetes Equation (WIP)",
+    is_active:2,
+});
+
+#doc(, { txt:"work in progress" });
+
+/* Reference Specification: AusCVDRisk calculator - Technical specifications_20240926.pdf */
+
+
+#doc(,{ section:"Gather precursor variables" });
+
+
+ckd => rout_ckd.ckd._.bind();
+cvd_prev => rout_cvra.cvd_prev._.bind();
+
+fhc_icpc_dt => rout_cd_dyslip.fhc_icpc_dt._.bind();
+dls => rout_cd_dyslip.dls._.bind();
+
+smoking_status_val_from_h2 => rout_cd_smoking.status_val_from_h2._.bind();
+smoking_status_dt_from_h2 => rout_cd_smoking.status_dt_from_h2._.bind();
+
+current_cs_rx  => rout_cd_smoking.current_cs_rx ._.bind();
+status_dt_from_rx => rout_cd_smoking.status_dt_from_rx._.bind();
+
+llm_dt => rout_cd_cardiac_rx.rxn_statin._.bind();
+atm_dt => rout_cd_cardiac_rx.rxn_anticoag._.bind();
+
+#doc(, { section: "Diabetes Equation Parameters" });
+
+age => rout_dmg.age._.bind();
+
+sex => rout_dmg.gender._.bind();
+fnp => rout_dmg.fnp._.bind();
+
+/* 1 - Most Disadvantaged, 5 - Least Disadvantaged */
+seifa_irsd_quintile : { . => 1 };
+
+/* 1 - Least Disadvantaged, 5 - Most Disadvantaged */
+nzdep_quintile : { . => 6 - seifa_irsd_quintile };
+
+
+smoking_status_dt: { .=> smoking_status_dt_from_h2 };
+smoking_status_code :
+    { smoking_status_val_from_h2? and current_cs_rx = 1 => 3 },
+    { smoking_status_val_from_h2? and current_cs_rx = 0 => 1 },
+    { => smoking_status_val_from_h2 }
+    ;
+
+upgraded_to_smoker_based_on_rx : { smoking_status_val_from_h2? and current_cs_rx = 1 => 1 },{ => 0 };
+upgraded_to_missing_smoking_to_non_smoker : { smoking_status_val_from_h2? and current_cs_rx = 0 => 1 },{ => 0 };
+
+is_smoker:    { smoking_status_code = 3 => 1 },{ => 0 };
+is_exsmoker:  { smoking_status_code = 2 => 1 },{ => 0 };
+is_nonsmoker: { smoking_status_code = 1 => 1 },{ => 0 };
+
+/* Average of the 2 most recent Blood Pressure readings */
+sbp_0 => eadv.[obs_bp_systolic]._.lastdv();
+sbp_1 => eadv.[obs_bp_systolic]._.lastdv(1);
+sbp_val :
+    { sbp_0_val!? and sbp_1_val!? => (sbp_0_val + sbp_1_val) / 2 },
+    { => sbp_0_val };
+
+hdl => eadv.[lab_bld_cholesterol_hdl]._.lastdv();
+tc => eadv.[lab_bld_cholesterol_total]._.lastdv();
+hdl_ratio : { coalesce(hdl_val, 0) > 0 => tc_val / hdl_val };
+
+egfr => eadv.[lab_bld_egfr_c]._.lastdv();
+acr => eadv.[lab_ua_acr]._.lastdv();
+
+acr_3_to_30 : { acr_val >= 3 and acr_val <= 30 => 1 },{ => 0 };
+acr_gt_30 : { acr_val > 30 => 1 },{ => 0 };
+
+hba1c_ngsp => eadv.[lab_bld_hba1c_ngsp]._.lastdv();
+hba1c_mmol_per_mol : { . => (hba1c_ngsp_val - 2.152) / 0.09148 };
+hba1c_mmol_per_mol_dt : { . => hba1c_ngsp_dt };
+
+
+hba1c_ifcc => eadv.[lab_bld_hba1c_ifcc]._.lastdv();
+hba1c_ngsp_as_ifcc_1 : { . => (hba1c_ngsp_val - 2.15) * 10.929 };
+hba1c_ngsp_as_ifcc_2 : { . => (hba1c_ngsp_val - 2.152) / 0.09148 };
+hba1c_mmol_per_mol_latest_of_ifcc_or_ngsp_prefer_ngsp :
+    { hba1c_ngsp_dt!? and (hba1c_ifcc_dt? or (hba1c_ngsp_dt <  hba1c_ifcc_dt)) => (hba1c_ngsp_val - 2.15) * 10.929 },
+    { => hba1c_ifcc_val };
+hba1c_mmol_per_mol_ngsp : { . => hba1c_ngsp_as_ifcc_1 };
+hba1c_mmol_per_mol_ifcc : { . => hba1c_ifcc_val };
+
+hba1c_ifcc_cmp_ngsp :
+    { hba1c_ifcc_dt < hba1c_ngsp_dt => -1 },
+    { hba1c_ifcc_dt = hba1c_ngsp_dt => 0 },
+    { hba1c_ifcc_dt > hba1c_ngsp_dt => 1 };
+
+
+height_cm => eadv.[obs_height]._.lastdv();
+height_m : { . => height_cm_val / 100 };
+weight_kg => eadv.[obs_weight]._.lastdv();
+bmi : { weight_kg_val >= 30 and weight_kg_val <= 350 and (height_m >= 1 and height_m <= 2.3)
+        => round(weight_kg_val / power(height_m, 2), 1) };
+
+/* Observations or results that are out of date */
+sbp_out_of_date : { sbp_0_dt < (sysdate - 365) => 1 },{ => 0 };
+hdl_out_of_date : { hdl_dt < (sysdate - 365) => 1 },{ => 0 };
+tc_out_of_date : { tc_dt < (sysdate - 365) => 1 },{ => 0 };
+egfr_out_of_date : { egfr_dt < (sysdate - 365) => 1 },{ => 0 };
+acr_out_of_date : { acr_dt < (sysdate - 365) => 1 },{ => 0 };
+hba1c_mmol_per_mol_out_of_date : { hba1c_mmol_per_mol_dt < (sysdate - 365) => 1 },{ => 0 };
+height_cm_out_of_date : { height_cm_dt < (sysdate - 365) => 1 },{ => 0 };
+weight_kg_out_of_date : { weight_kg_dt < (sysdate - 365) => 1 },{ => 0 };
+smoking_status_dt_out_of_date : { smoking_status_dt < (sysdate - 365) => 1 },{ => 0 };
+
+is_on_bplm => rout_cd_htn.htn_rxn._.bind();
+
+is_on_llm : { llm_dt!? => 1 },{ => 0 };
+
+is_on_atm : { atm_dt!? => 1 },{ => 0 };
+
+is_on_ins => rout_cd_dm_dx.dm_rxn_ins._.bind();
+
+is_on_dm : { . => 1 },{ => 0 }; /* Assumed per tech spec */
+
+has_hist_of_af => rout_cd_cardiac_af.af._.bind();
+
+has_dm => rout_cd_dm_dx.dm._.bind();
+
+/* The risk equation is not validated for type 1 diabetes. Using the Aus CVD risk calculator in people with type 1 diabetes is likely to give an inaccurate risk score. */
+dm_type => rout_cd_dm_dx.dm_type._.bind();
+
+dm_fd => rout_cd_dm_dx.dm_fd._.bind();
+dm_yr : { dm_fd!? => round((sysdate - dm_fd) / 365, 0) };
+
+
+#doc(, { section: "High Risk Indicators" });
+
+hr_ckd : { ckd >= 4 => 1 },{ => 0 }; /* Moderate-severe chronic kidney disease (3B and above) */
+
+hr_atherosclerotic_cvd: { . => cvd_prev };
+
+fh_from_coding : { fhc_icpc_dt!? => 1 }, { => 0 }; /* Familial hypercholesterolaemia */
+
+hr_fh : { fhc_icpc_dt!? or dls >= 6 => 1 }, { => 0 }; /* Familial hypercholesterolaemia */
+
+/*
+TODO: hr_ckd (base on eGFR & uACR)
+  ? sustained eGFR <45 mL/min/1.73 m² or
+  ? persistent uACR >25 mg/mmol (men) or persistent uACR >35 mg/mmol(women)
+*/
+
+egfr_low_if_lt_cutoff_by_gender :
+    { . => 45 };
+
+uacr_high_if_gt_cutoff_by_gender :
+    { sex = 0 => 35 },
+    { sex = 1 => 25 };
+
+/* Latest */
+last_egfr_was_low : { egfr_val < egfr_low_if_lt_cutoff_by_gender => 1 },{ => 0};
+last_acr_was_high : { egfr_val > uacr_high_if_gt_cutoff_by_gender => 1 },{ => 0};
+
+/* Sustained */
+low_egfr_l => eadv.[lab_bld_egfr_c]._.lastdv().where(val < egfr_low_if_lt_cutoff_by_gender);
+low_egfr_l3m => eadv.[lab_bld_egfr_c]._.lastdv().where(val < egfr_low_if_lt_cutoff_by_gender and dt < low_egfr_l_dt - 90);
+sustained_low_egfr : { low_egfr_l3m_dt!? => 1 },{ => 0 };
+/* aka stage 3b or worse */
+
+high_uacr_l => eadv.[lab_ua_acr]._.lastdv().where(val > uacr_high_if_gt_cutoff_by_gender);
+high_uacr_l3m => eadv.[lab_ua_acr]._.lastdv().where(val > uacr_high_if_gt_cutoff_by_gender and dt < high_uacr_l_dt - 90);
+sustained_high_uacr : { high_uacr_l3m_dt!? => 1 },{ => 0 };
+/* aka macroalbuminuria */
+
+hr_sustained_albuminaria : { . => sustained_high_uacr };
+
+has_high_risk_factors :
+    { 
+           hr_ckd = 1
+        or hr_sustained_albuminaria = 1
+        or hr_fh = 1
+        or hr_atherosclerotic_cvd = 1
+      => 1 },
+    { => 0 };
+
+/* Mandatory Values and Range Validation */
+has_mandatory_vars_for_diabetes_eq : {
+    age!? 
+    and sex!?
+    and nzdep_quintile!?
+    and is_smoker!?
+    and is_exsmoker!?
+    and is_nonsmoker!?
+    and dm_yr!?
+    and bmi!?
+    and sbp_val!?
+    and hdl_ratio!?
+    and acr_val!?
+    and acr_3_to_30!?
+    and acr_gt_30!?
+    and egfr_val!?
+    and hba1c_mmol_per_mol!?
+    and is_on_bplm!?
+    and is_on_llm!?
+    and is_on_atm!?
+    and is_on_ins!?
+    and is_on_dm!?
+    and has_hist_of_af!?
+    and has_dm!?
+    => 1 },{ => 0 };
+
+vars_are_in_range_for_diabetes_equation : {
+    has_mandatory_vars_for_diabetes_eq = 1
+    and (age >= 30 and age <= 79)
+    and (sbp_val >= 75 and sbp_val <= 220)
+    and (hdl_ratio >= 1.08 and hdl_ratio <= 30.1)
+    and (weight_kg_val >= 30 and weight_kg_val <= 350)
+    and (height_m >= 1 and height_m <= 2.3)
+    and (dm_yr >= 0 and dm_yr <= 100)
+    and (acr_val >= 0.1 and acr_val <= 5650)
+    and (egfr_val >= 1 and egfr_val <= 199)
+    and (hba1c_mmol_per_mol >= 11 and hba1c_mmol_per_mol <= 194)
+    => 1 },{ => 0 };
+
+has_mandatory_vars_for_general_equation : {
+    age!? 
+    and sex!?
+    and nzdep_quintile!?
+    and is_smoker!?
+    and is_exsmoker!?
+    and is_nonsmoker!?
+    and sbp_val!?
+    and hdl_ratio!?
+    and is_on_bplm!?
+    and is_on_llm!?
+    and is_on_atm!?
+    and has_hist_of_af!?
+    and has_dm!?
+    => 1 },{ => 0 };
+
+vars_are_in_range_for_general_equation : {
+    has_mandatory_vars_for_general_equation = 1
+    and (age >= 30 and age <= 79)
+    and (sbp_val >= 75 and sbp_val <= 220)
+    and (hdl_ratio >= 1.08 and hdl_ratio <= 30.1)
+    => 1 },{ => 0 };
+
+recalibration_factor :
+    { sex = 0 and age >= 30 and age < 45 => 1.3 },
+    { sex = 0 and age >= 45 and age < 50 => 1.2 },
+    { sex = 0 and age >= 50 and age < 55 => 1.2 },
+    { sex = 0 and age >= 55 and age < 60 => 1.0 },
+    { sex = 0 and age >= 60 and age < 65 => 0.9 },
+    { sex = 0 and age >= 65 and age < 70 => 0.8 },
+    { sex = 0 and age >= 70 and age < 75 => 0.7 },
+    { sex = 0 and age >= 75 and age < 80 => 0.7 },
+    { sex = 1 and age >= 30 and age < 45 => 1.1 },
+    { sex = 1 and age >= 45 and age < 50 => 1.1 },
+    { sex = 1 and age >= 50 and age < 55 => 1.1 },
+    { sex = 1 and age >= 55 and age < 60 => 1.0 },
+    { sex = 1 and age >= 60 and age < 65 => 0.9 },
+    { sex = 1 and age >= 65 and age < 70 => 0.8 },
+    { sex = 1 and age >= 70 and age < 75 => 0.8 },
+    { sex = 1 and age >= 75 and age < 80 => 0.8 };
+
+
+/*
+TODO: Prompts
+
+TKC will add footnote if Diabetes Type 1
+The risk equation is not validated for type 1 diabetes. Using the Aus CVD risk calculator in people with type 1 diabetes is likely to give an inaccurate risk score.
+
+Add general disclaimer:
+The diabetes specific equation provides a more accurate CVD risk estimate for people with type 2 diabetes. Please note that this may give an inaccurate risk estimate in people with type 1 diabetes.
+*/
+
+#doc(,{ section:"Gather some variables to help with debugging" });
+hrn => rout_dmg_hrn.hrn_last._.bind();
+tkc_cat => rout_at_risk.tkc_cat._.bind();
+ckd_stage => rout_ckd.ckd_stage._.bind();
+is_active_2y => rout_at_risk.is_active_2y._.bind();
+icpc_n => eadv.[icpc_%].dt.count(0).where(dt > sysdate - 730);
+age_in_range : { age!? and (age >= 30 and age <= 79) => 1 }, { => 0 };
+
+has_smoking_status : { smoking_status_code!? => 1 }, { => 0 };
+has_hdl_ratio : { hdl_ratio!? => 1}, { => 0 };
+has_sbp : { sbp_val!? => 1 }, { => 0 };
+
+
+is_at_risk_or_ckd_1_2 : { tkc_cat = 2 or ckd_stage in ('1','2') => 1 }, { => 0 };
+has_icpc : { icpc_n!? and icpc_n > 0 => 1 }, { => 0 };
+
+[[rb_id]] : { . => 1 }, { => 0 };

@@ -1,0 +1,22 @@
+#define_ruleblock(cvra_ensemble,{
+    description: "Ensemble CVRA",
+    is_active:2
+});
+dob => eadv.dmg_dob.dt.max();
+age : { dob < sysdate => round(((sysdate-dob)/365.25),0)};
+
+frmnghm_cat => rout_cvra.cvra_cat.val.bind();
+
+frmnghm_ovr => rout_cvra.risk_high_ovr.val.bind();
+
+frmnghm_p => rout_cvra.risk_5.val.bind();
+
+auspredict_cat => rout_cvra_aus_cvd_risk.risk_cat.val.bind();
+
+auspredict_ovr => rout_cvra_aus_cvd_risk.has_high_risk_factors.val.bind();
+
+auspredict_p => rout_cvra_aus_cvd_risk.rounded_risk_percent.val.bind();
+
+ensemble_cat : { . => greatest(frmnghm_cat, auspredict_cat)};
+
+cvra_ensemble : { ensemble_cat >0 =>1},{=>0};

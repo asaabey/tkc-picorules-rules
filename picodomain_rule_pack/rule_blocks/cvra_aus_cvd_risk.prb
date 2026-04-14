@@ -1,0 +1,68 @@
+#define_ruleblock([[rb_id]],{
+    description: "Ruleblock to combine results from the AusCVDRisk 'general' and 'diabetes' equations",
+    is_active:2
+});
+
+/*
+Extra flags to show on the templates:
+  age is outside the supported range
+  dutch lipid score (probable/definite) so possible FH
+  smoking status is absent so "Never smoked" has been assumed, please consider updating their clinical record
+  flag if diabetes is type 1
+*/
+
+has_high_risk_factors_general_eq  => rout_cvra_aus_cvd_risk_general_eq.has_high_risk_factors._.bind();
+has_high_risk_factors_diabetes_eq => rout_cvra_aus_cvd_risk_diabetes_eq.has_high_risk_factors._.bind();
+
+rounded_risk_percent_general_eq  => rout_cvra_aus_cvd_risk_general_eq.rounded_risk_percent._.bind();
+rounded_risk_percent_diabetes_eq => rout_cvra_aus_cvd_risk_diabetes_eq.rounded_risk_percent._.bind();
+
+/*
+1: General Equation
+2: Diabetes Equation
+*/
+
+best_equation :
+    { rounded_risk_percent_diabetes_eq!? => 2 },
+    { rounded_risk_percent_general_eq!? => 1 };
+
+rounded_risk_percent :
+    { best_equation = 1 => rounded_risk_percent_general_eq },
+    { best_equation = 2 => rounded_risk_percent_diabetes_eq };
+
+has_high_risk_factors :
+    { has_high_risk_factors_general_eq = 1 or has_high_risk_factors_general_eq = 1 => 1 },
+    { => 0 };
+
+risk_cat :
+    { has_high_risk_factors = 1                               => 3 }, /* High risk from override conditions */
+    { rounded_risk_percent >= 0 and rounded_risk_percent < 5  => 1 }, /* Low risk */
+    { rounded_risk_percent >= 5 and rounded_risk_percent < 10 => 2 }, /* Intermediate risk */
+    { rounded_risk_percent >= 10                              => 3 }; /* High risk */
+
+scale_ub :
+    { rounded_risk_percent > 15 => 15 },
+    { rounded_risk_percent < 1 => 1 },
+    { => rounded_risk_percent };
+
+scale_pct : { . => round((scale_ub/15) * 100,0) };
+
+[[rb_id]] :  { risk_cat!? => 1},{ => 0 };
+
+#define_attribute(rounded_risk_percent, {
+    label:"cvra-aus-cvd-risk adjusted probability",
+    is_reportable:1,
+    type:2
+});
+
+#define_attribute(risk_cat, {
+    label:"cvra-aus-cvd-risk category",
+    is_reportable:1,
+    type:2
+});
+
+#define_attribute(has_high_risk_factors, {
+    label:"cvra-aus-cvd-risk overide",
+    is_reportable:1,
+    type:1001
+});
