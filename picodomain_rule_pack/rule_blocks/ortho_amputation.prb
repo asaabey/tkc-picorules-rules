@@ -25,21 +25,42 @@ icd_fd => eadv.[icd_y83_5].dt.first();
 
 icpc_fd => eadv.[icpc_a87010].dt.first();
 
-amp_ld => eadv.[caresys_443%].dt.last();
+/* 2026-11-03: aligned with the full ACHI amputation code set (12 codes).
+   - aka_ld previously used 44367-01 (knee disarticulation); corrected to 44367-00
+   - added 90557-00 (toe disarticulation), which falls outside caresys_443%
+   - added ad_ld (44361-00), kd_ld (44367-01), hqa_ld (44373-00)
+*/
+amp_ld => eadv.[caresys_443%,caresys_9055700].dt.last();
 
-ta_ld => eadv.[caresys_4433800,caresys_4435800].dt.last();
+/* 44338-00 toe, 44358-00 toe incl metatarsal, 90557-00 toe disarticulation */
+ta_ld => eadv.[caresys_4433800,caresys_4435800,caresys_9055700].dt.last();
 
+/* 44361-00 disarticulation through ankle */
+ad_ld => eadv.[caresys_4436100].dt.last();
+
+/* 44361-01 ankle through malleoli of tibia and fibula */
 aa_ld => eadv.[caresys_4436101].dt.last();
 
+/* 44364-00 midtarsal */
 mta_ld => eadv.[caresys_4436400].dt.last();
 
+/* 44364-01 transmetatarsal */
 tma_ld => eadv.[caresys_4436401].dt.last();
 
-aka_ld => eadv.[caresys_4436701].dt.last();
+/* 44367-01 disarticulation at knee */
+kd_ld => eadv.[caresys_4436701].dt.last();
 
+/* 44367-00 above knee */
+aka_ld => eadv.[caresys_4436700].dt.last();
+
+/* 44367-02 below knee */
 bka_ld => eadv.[caresys_4436702].dt.last();
 
+/* 44370-00 amputation at hip */
 ha_ld => eadv.[caresys_4437000].dt.last();
+
+/* 44373-00 hindquarter */
+hqa_ld => eadv.[caresys_4437300].dt.last();
 
 
 amp_fd : {. =>least_date(prost_clinic_fd, icd_fd, icpc_fd)};
